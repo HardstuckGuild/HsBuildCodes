@@ -34,81 +34,74 @@ The first line contains a v1 buildcode with only two weapons and uniform stats f
 ```
 a c e ccabbc bgcbbcSUT       R        ge-cfc-cfm_GTxg _if t_ik     m        +  +
 V T P STSTST WS..wS..WS..wS..WS..wS.. S..S..S..S..S.. R.. A..n,,,, I..n,,,, F..U.. A,,,,,
-┎ ┎ ┎ ┎────╴ ┎──────────────────────╴ ┎─────────────╴ ┎─╴ ┎──────╴ ┎──────╴ ┎────╴ ┎────╴
-┃ ┃ ┃ ┃ ┏━━━━┛                        ┃               ┃   ┃        ┃        ┃      ┃
-┃ ┃ ┃ ┃ ┃ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┛               ┃   ┃        ┃        ┃      ┃
-┃ ┃ ┃ ┃ ┃ ┃ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛   ┃        ┃        ┃      ┃
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛        ┃        ┃      ┃
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛        ┃      ┃
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛      ┃
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ Arbitrary data [0-n characters]
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ Currently used for
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┠┬ Ranger pets: [3-8 characters]
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃│ assume the following pet order: land1, land2, water1, water2
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃├ ~ (tilde): omit the whole block (land / water)
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃├ _ (underscore): empty pet slot
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃└ 2 characters: encode(pet_id, 2) from /v2/pets
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┖┬ Revenant Legends: [1-2 characters]
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃  ├ _ (underscore): empty legend slot
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃  └ A-F: legend index from /v2/legends to index character_set
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ Food + Utility [2-6 characters] pair of 1-3 characters
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┠─ _ (underscore): empty food or utility
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┖─ 1-3 characters: skill id resolved by /v2/items, encode(id, 3)
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ Infusions [1-n characters]
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┠─ For pvp codes encodes omit this section completely.
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┠─ To omit infusions replace this section with a single ~ (tilde).
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┖┬ Encoded in the same way as attribute ids, except with encode(item_id, 3).
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃  ├ Use _ (underscore) to encode an empty slot,
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃  └ this also requires the usual repetition indicator.
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ Attribute ids [1-n characters] itemstat id resolved by /v2/itemstats
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┠─ For pvp codes encode the of the amulet with encode(id, 2)
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┖┬ For other gammodes:
-┃ ┃ ┃ ┃ ┃ ┃ ┃  │ Order the equipment in the following way: armor (helmet to boots), 
-┃ ┃ ┃ ┃ ┃ ┃ ┃  │ backpiece, accessory1, accessory2, ring1, ring2,
-┃ ┃ ┃ ┃ ┃ ┃ ┃  │ weapons (main hand then offhand for all sets), aquabreather, amulet.
-┃ ┃ ┃ ┃ ┃ ┃ ┃  │ Only include weapons in this list that actually exist in the code.
-┃ ┃ ┃ ┃ ┃ ┃ ┃  │ going trough that list encode(itemstat_id, 2) of the first item, then append 
-┃ ┃ ┃ ┃ ┃ ┃ ┃  │ A-S (one char) for the amount of times this stat type repeats in the list. 
-┃ ┃ ┃ ┃ ┃ ┃ ┃  ├ Omit the repetition count if there is only one item left as it would always be 1. 
-┃ ┃ ┃ ┃ ┃ ┃ ┃  └─ Repeat until the whole list has been processed.
-┃ ┃ ┃ ┃ ┃ ┃ ┖─ Rune [1-3 characters] resolved by /v2/items, encode(id, 3), _ (underscore) if empty
-┃ ┃ ┃ ┃ ┃ ┣ Slot skills [5 * 1-3 characters]
-┃ ┃ ┃ ┃ ┃ ┠─ _ (underscore): empty skill slot
-┃ ┃ ┃ ┃ ┃ ┖─ 1-3 characters: skill id resolved by /v2/skills, encode(id, 3)
-┃ ┃ ┃ ┃ ┣ Weapons [3 * 3-8 characters] pairs of 
-┃ ┃ ┃ ┃ ┃ 1 char weapon type id, 1-3 char sigil id, 0-1 char weapon type id, 1-3 char sigil id
-┃ ┃ ┃ ┃ ┃ if the first weapon is two handed, the second weapon id in the set is omitted
-┃ ┃ ┃ ┃ ┠┬─ _ (underscore): empty weapon slot
-┃ ┃ ┃ ┃ ┃└─ A-T: weapon type id (resolved by hardstuck.gg/api/weapon_types)
-┃ ┃ ┃ ┃ ┖┬─ _ (underscore): empty sigil slot
-┃ ┃ ┃ ┃  └─ 1-3 characters: sigil id resolved by /v2/items, encode(id, 3)
-┃ ┃ ┃ ┃   The second and underwater weapon set may be omitted from the code by replacing 
-┃ ┃ ┃ ┃   the whole second or third set (WS..wS..) with a ~ (tilde). This section can be
-┃ ┃ ┃ ┃   omitted completely by replacing the whole section with a single ~ (tilde).
-┃ ┃ ┃ ┣ Specializations [3 * 2 characters] pairs of (1 char specialization + 1 char selected traits):
-┃ ┃ ┃ ┠┬─ _ (underscore): empty trait line
-┃ ┃ ┃ ┃│ Spec index resolved by /v2/professions/<profession>$specializations after ordering by id ascending:
-┃ ┃ ┃ ┃└─ A-H: specialization index depending on the profession 
-┃ ┃ ┃ ┣ Trait choices are encoded as follows:
-┃ ┃ ┃ ┃  Let pos(c) : {1, 2, 3} => {0, 1, 2, 3} be the position of the selected trait
-┃ ┃ ┃ ┃  in the current trait line in column 'c' as it appears in game: 
-┃ ┃ ┃ ┃  pos(c) := { 0 if empty, 1 if top, 2 if mid, 3 if bottom }.
-┃ ┃ ┃ ┃  Calculate an index by index = 0; for(c: 1..3) index |= pos(c) << (6 - c * 2);
-┃ ┃ ┃ ┃  This effectively constructs 0b00aabbcc with aa = pos of first choice, 
-┃ ┃ ┃ ┃  bb = pos of second choice, cc = pos of third choice.
-┃ ┃ ┃ ┖─ With a max value of 63 this can be used to index character_set and obtain the final encoding.
-┃ ┃ ┣ Profession [1 character]
-┃ ┃ ┃ resolved by /v2/professions:
-┃ ┃ ┖─ A-I: Guardian, Warrior, Engineer, Ranger, Thief, Elementalist, Mesmer, Necromancer, Revenant
-┃ ┣ Type [1 character]
-┃ ┠─ p: pvp
-┃ ┠─ w: wvw
-┃ ┖─ o: other(pve)
-┗┳ Version [1 character. currently B] used for backwards compatibility. 
- ┠─ Not contained in codes below version B.
- ┖─ Lower case letters indicate binary format base64 encoded.
 ```
+
+`[V]` Version [1 character. currently `B`] used for backwards compatibility.
+  - Not contained in codes below version `B`.
+  - Lower case letters indicate binary format base64 encoded.
+
+`[T]` Type [1 character] `p`: pvp, `w`: wvw, `o`: other(pve)
+
+`[P]` Profession [1 character] resolved by `/v2/professions`
+  - `A-I`: Guardian, Warrior, Engineer, Ranger, Thief, Elementalist, Mesmer, Necromancer, Revenant
+
+`[STSTST]` Specializations [3 * 2 characters] pairs of (1 char specialization + 1 char selected traits):
+  - `_` (underscore): empty trait line
+  - `A-H`: specialization index depending on the profession. Spec index is resolved by `/v2/professions/<profession>$specializations` after ordering by id ascending
+  - Trait choices [6 characters] encoded as follows:
+    1. Let `pos(c) : {1, 2, 3} => {0, 1, 2, 3}` be the position of the selected trait in the current trait line in column `c` as it appears in game: `pos(c) := { 0 if empty, 1 if top, 2 if mid, 3 if bottom }`.
+    2. Calculate an index by `index = 0; for(c: 1..3) index |= pos(c) << (6 - c * 2)`.
+
+        This effectively constructs `0b00aabbcc` with `aa` = pos of first choice, `bb` = pos of second choice, `cc` = pos of third choice. With a max value of 63 this can be used to index `character_set` and obtain the final encoding.
+
+`[WS..wS..WS..wS..WS..wS..]` Weapons [3 * 3-8 characters] pairs of (1 char weapon type id, 1-3 char sigil id, 0-1 char weapon type id, 1-3 char sigil id):
+  - if the first weapon is two handed, the second weapon id in the set is omitted
+  1. - `_` (underscore): empty weapon slot
+     - `A-T`: weapon type id (resolved by `hardstuck.gg/api/weapon_types`)
+  2. - `_` (underscore): empty sigil slot
+     - `1-3 characters`: sigil id resolved by `/v2/items`, `encode(id, 3)`
+
+  - The second and underwater weapon set may be omitted from the code by replacing 
+the whole second or third set (`[WS..wS..]`) with a `~` (tilde). This section can be
+omitted completely by replacing the whole section with a single `~` (tilde).
+
+`[S..S..S..S..S..]` Slot skills [5 * 1-3 characters] each:
+  - `_` (underscore): empty skill slot
+  - `1-3 characters` skill id resolved by `/v2/skills`, `encode(id, 3)`
+
+`[R..]` Rune [1-3 characters]. Always the same for all slots.
+ - `_` (underscore): if empty
+ - `1-3 characters`: item id resolved by `/v2/items`, `encode(id, 3)`
+
+`[A..n,,,,]` Attribute ids [1-n characters] itemstat id resolved by `/v2/itemstats`
+  - For pvp codes encode the stat id of the amulet with `encode(id, 2)`
+  - For other gamemodes:
+    1. Order the equipment in the following way: armor (helmet to boots), backpiece, accessory1, accessory2, ring1, ring2, weapons (main hand then offhand for all sets), aquabreather, amulet.
+       - Only include weapons in this list that actually exist in the code.
+    2. Going trough that list `encode(itemstat_id, 2)` of the current item,
+    3. then append `A-S` (one char) for the amount of times this stat type repeats in the list. 
+       - Omit the repetition count if there is only one item left as it would always be 1. 
+    4. Repeat step 2. and 3. until the whole list has been processed.
+
+`[I..n,,,,]` Infusions [1-n characters]
+  - For pvp codes encodes omit this section completely.
+  - To omit infusions replace this section with a single `~` (tilde).
+  - Encoded in the same way as attribute ids, except with `encode(item_id, 3)`.
+  - Use `_` (underscore) to encode an empty slot, this also requires the usual repetition indicator.
+
+`[F..U..]` Food + Utility [2-6 characters] pair of 1-3 characters, each:
+  - `_` (underscore): empty food or utility
+  - `1-3 characters`: item id resolved by `/v2/items`, `encode(id, 3)`
+
+`[A,,,,,]` Arbitrary data [0-n characters], currently used for:
+  - Ranger pets: [3-8 characters]
+    - assume the following pet order: land1, land2, water1, water2
+    - `~` (tilde): omit the whole block (land / water)
+    - `_` (underscore): empty pet slot
+    - `2 characters`: `encode(pet_id, 2)` from `/v2/pets`
+  - Revenant Legends: [1-2 characters]
+    - `_` (underscore): empty legend slot
+    - `A-F` : legend index from `/v2/legends` to index `character_set`
 
 ## Binary (compressed) spec
 
