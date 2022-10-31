@@ -32,8 +32,8 @@ All references to an API without hostname (e.g: `/v2/pets`) reference the offici
 
 The first line contains a v1 buildcode with only two weapons and uniform stats for width comparison. It is aligned to cover the width of fields that would be present, not rearranged to match the fields that exist in v1.
 ```
-a c e ccabbc bgcbbcSUT       R        ge-cfc-cfm_GTxg _if t_ik     m        +  +
-V T P STSTST WS..wS..WS..wS..WS..wS.. S..S..S..S..S.. R.. A..n,,,, I..n,,,, F..U.. A,,,,,
+a c e ccabbc bgcbbcSUT       R              ge-cfc-cfm_GTxg _if t_ik     m        +  +
+V T P STSTST WS..wS..WS..wS..WS..S..wS..S.. S..S..S..S..S.. R.. A..n,,,, I..n,,,, F..U.. A,,,,,
 ```
 
 `[V]` Version [1 character. currently `B`] used for backwards compatibility.
@@ -52,14 +52,16 @@ V T P STSTST WS..wS..WS..wS..WS..wS.. S..S..S..S..S.. R.. A..n,,,, I..n,,,, F..U
     1. Let `pos(c) : {1, 2, 3} => {0, 1, 2, 3}` be the position of the selected trait in the current trait line in column `c` as it appears in game: `pos(c) := { 0 if empty, 1 if top, 2 if mid, 3 if bottom }`.
     2. Calculate an index by `index = 0; for(c: 1..3) index |= pos(c) << (6 - c * 2)`.
 
-        This effectively constructs `0b00aabbcc` with `aa` = pos of first choice, `bb` = pos of second choice, `cc` = pos of third choice. With a max value of 63 this can be used to index `character_set` and obtain the final encoding.
+        This effectively constructs `0b00aabbcc` with `aa` = pos of first choice, `bb` = pos of second choice, `cc` = pos of third choice. With a max value of 63 this can be used to index `character_set` and obtain the final encoding. Omit if trait line is empty.
 
-`[WS..wS..WS..wS..WS..wS..]` Weapons [3 * 3-8 characters] pairs of (1 char weapon type id, 1-3 char sigil id, 0-1 char weapon type id, 1-3 char sigil id):
-  - if the first weapon is two handed, the second weapon id in the set is omitted
+`[WS..wS..WS..wS..WS..S..wS..S..]` Weapons [3 * 3-8 characters] pairs of (1 char weapon type id, 1-3 char sigil id, 0-1 char weapon type id, 1-3 char sigil id):
+  - if the first weapon is two handed, the second weapon id in the set is omitted (doesn't apply to underwater set)
   1. - `_` (underscore): empty weapon slot
      - `A-T`: weapon type id (resolved by `hardstuck.gg/api/weapon_types`)
   2. - `_` (underscore): empty sigil slot
      - `1-3 characters`: sigil id resolved by `/v2/items`, `encode(id, 3)`
+
+  - Third set represents the two underwater weapon slots. Those are always two handed and therefore need two sigils each. Omit the sigils of the second weapon if the second weapon is empty (`_` (underscore)).
 
   - The second and underwater weapon set may be omitted from the code by replacing 
 the whole second or third set (`[WS..wS..]`) with a `~` (tilde). This section can be
@@ -90,6 +92,7 @@ omitted completely by replacing the whole section with a single `~` (tilde).
   - Use `_` (underscore) to encode an empty slot, this also requires the usual repetition indicator.
 
 `[F..U..]` Food + Utility [2-6 characters] pair of 1-3 characters, each:
+	- For pvp codes encodes omit this section completely.
   - `_` (underscore): empty food or utility
   - `1-3 characters`: item id resolved by `/v2/items`, `encode(id, 3)`
 
@@ -99,7 +102,7 @@ omitted completely by replacing the whole section with a single `~` (tilde).
     - `~` (tilde): omit the whole block (land / water)
     - `_` (underscore): empty pet slot
     - `2 characters`: `encode(pet_id, 2)` from `/v2/pets`
-  - Revenant Legends: [1-2 characters]
+  - Revenant Legends: [2 characters]
     - `_` (underscore): empty legend slot
     - `A-F` : legend index from `/v2/legends` to index `character_set`
 
@@ -116,30 +119,35 @@ Field widths are measured in bits. See textual specification for details on how 
 
 repeat 3
 	4 : specializations: 0 if trait line is empty, 1 + index otherwise
-	repeat 3
-		2 : selected trait position. 0 if nothing selected, position otherwise
+	either
+		omitted
+	or
+		repeat 3
+			2 : selected trait position. 0 if nothing selected, position otherwise
 
 either
 	5 : 0 if code does not contain weapons 
 or
-	5  : set1 main hand weapon. 1 if slot is empty, 2 + weapon type id
+	5  : set1 main hand weapon. 1 if slot is empty, 2 + weapon type id otherwise
 	24 : slot 1 sigil. 0 if no sigil in slot1, 1 + sigil item id otherwise
-	5  : set1 offhand weapon. 1 if slot is empty, 2 + weapon type id. omit this if set1 main hand is two handed
+	5  : set1 offhand weapon. 1 if slot is empty, 2 + weapon type id otherwise. omit this if set1 main hand is two handed
 	24 : slot 2 sigil. 0 if no sigil in slot2, 1 + sigil item id otherwise
 	either
 		5 : 0 if code des not contain second weapon set
 	or
-		5  : set2 main hand weapon. 1 if slot is empty, 2 + weapon type id
+		5  : set2 main hand weapon. 1 if slot is empty, 2 + weapon type id otherwise
 		24 : slot 1 sigil. 0 if no sigil in slot1, 1 + sigil item id otherwise
-		5  : set2 offhand weapon. 1 if slot is empty, 2 + weapon type id. omitted if set2 main hand is two handed
+		5  : set2 offhand weapon. 1 if slot is empty, 2 + weapon type id otherwise. omitted if set2 main hand is two handed
 		24 : slot 2 sigil. 0 if no sigil in slot2, 1 + sigil item id otherwise
 	either
 		5 : 0 if code des not contain third (underwater) weapon set
 	or
-		5  : set3 main hand weapon. 1 if slot is empty, 2 + weapon type id
-		24 : slot 1 sigil. 0 if no sigil in slot1, 1 + sigil item id otherwise
-		5  : set3 offhand weapon. 1 if slot is empty, 2 + weapon type id. omitted if set3 main hand is two handed
-		24 : slot 2 sigil. 0 if no sigil in slot2, 1 + sigil item id otherwise
+		5  : underwater first weapon. 1 if slot is empty, 2 + weapon type id otherwise
+		24 : slot 1 sigil 1. 0 if no sigil in slot1, 1 + sigil item id otherwise
+		24 : slot 1 sigil 2. 0 if no sigil in slot1, 1 + sigil item id otherwise
+		5  : underwater second weapon. 1 if slot is empty, 2 + weapon type id otherwise 
+		24 : slot 2 sigil 1. 0 if no sigil in slot2, 1 + sigil item id otherwise. omit if second UW weapon slot is empty
+		24 : slot 2 sigil 2. 0 if no sigil in slot1, 1 + sigil item id otherwise. omit if second UW weapon slot is empty
 
 
 repeat 5
@@ -158,8 +166,8 @@ or
 		24 : 1 if empty slot, 2 + infusion item id otherwise
 		5  : repeat count
 
-24 : food item. 0 if none, 1 + item_id otherwise
-24 : utility item. 0 if none, 1 + item_id otherwise
+24 : food item. 0 if none, 1 + item_id otherwise, omit for pvp codes
+24 : utility item. 0 if none, 1 + item_id otherwise, omit for pvp codes
 
 either
 	no additional data
