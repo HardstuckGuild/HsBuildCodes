@@ -1,10 +1,10 @@
-# HS BuildCode v2 Spec
+# HS BuildCode v2 Spec RFC
 
 ## Ethos
 The following considerations were taken into account in descending priority:
 
 1. Printable characters only: The codes are meant to be used in chats and urls, so the codes must only use standard printable ASCII/UTF8 characters. They should avoid 'special characters' as to not break urls (_or commonly used url highlighters/parsers!_) that contain them. This basically means the character pool is reduced to the alphanumerical set (character code 0x30 - 0x39, 0x41 - 0x5A, 0x6A - 0x7A).
-4. Completeness: The codes must cover all possible scenarios. This includes all gamemodes, professions, (elite-)specializations, trait choices, weapon sets (weapon types), slot skills, stat attributes, sigils, runes, infusions and all special class features. [RFC] Underwater weapons were deemed irrelevant, aswell as Rune mixing. [/RFC]
+4. Completeness: The codes must cover all possible scenarios. This includes all gamemodes, professions, (elite-)specializations, trait choices, weapon sets (weapon types), slot skills, stat attributes, sigils, runes, infusions and all special class features. [RFC] Rune mixing was deemed irrelevant. [/RFC]
 3. Compactness: The codes must be as short as possible. Allow omission of fields where sensible.
 2. Robustness: The codes should be as robust to further game (content-) updates as possible. It is, however, quite hard to anticipate game-mechanical updates and the changes introduced by those. This mostly boils down to use or enforce stable ordering wherever possible and using sufficiently large fields to store ids that won't overflow in the forseeable future.
 
@@ -32,16 +32,16 @@ All references to an API without hostname (e.g: `/v2/pets`) reference the offici
 
 The first line contains a v1 buildcode with only two weapons and uniform stats for width comparison. It is aligned to cover the width of fields that would be present, not rearranged to match the fields that exist in v1.
 ```
-a c e ccabbc bgcbbcSUT        Rge-cfc-cfm_GTx g_i ft_i     k        m  ,
-V T P STSTST WS..wS..WS..wS.. S..S..S..S..S.. R.. A..n,,,, I..n,,,, F..U.. A,,,,,
-┎ ┎ ┎ ┎────╴ ┎──────────────╴ ┎─────────────╴ ┎─╴ ┎──────╴ ┎──────╴ ┎────╴ ┎────╴
-┃ ┃ ┃ ┃ ┏━━━━┛                ┃               ┃   ┃        ┃        ┃      ┃
-┃ ┃ ┃ ┃ ┃ ┏━━━━━━━━━━━━━━━━━━━┛               ┃   ┃        ┃        ┃      ┃
-┃ ┃ ┃ ┃ ┃ ┃ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛   ┃        ┃        ┃      ┃
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛        ┃        ┃      ┃
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛        ┃      ┃
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛      ┃
-┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+a c e ccabbc bgcbbcSUT       R        ge-cfc-cfm_GTxg _if t_ik     m        +  +
+V T P STSTST WS..wS..WS..wS..WS..wS.. S..S..S..S..S.. R.. A..n,,,, I..n,,,, F..U.. A,,,,,
+┎ ┎ ┎ ┎────╴ ┎──────────────────────╴ ┎─────────────╴ ┎─╴ ┎──────╴ ┎──────╴ ┎────╴ ┎────╴
+┃ ┃ ┃ ┃ ┏━━━━┛                        ┃               ┃   ┃        ┃        ┃      ┃
+┃ ┃ ┃ ┃ ┃ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┛               ┃   ┃        ┃        ┃      ┃
+┃ ┃ ┃ ┃ ┃ ┃ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛   ┃        ┃        ┃      ┃
+┃ ┃ ┃ ┃ ┃ ┃ ┃ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛        ┃        ┃      ┃
+┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛        ┃      ┃
+┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛      ┃
+┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ Arbitrary data [0-n characters]
 ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ Currently used for
 ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┠┬ Ranger pets: [3-8 characters]
@@ -65,26 +65,27 @@ V T P STSTST WS..wS..WS..wS.. S..S..S..S..S.. R.. A..n,,,, I..n,,,, F..U.. A,,,,
 ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┠─ For pvp codes encode the of the amulet with encode(id, 2)
 ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┖┬ For other gammodes:
 ┃ ┃ ┃ ┃ ┃ ┃ ┃  │ Order the equipment in the following way: armor (helmet to boots), 
-┃ ┃ ┃ ┃ ┃ ┃ ┃  │ backpiece, accessory1, accessory2, amulet, ring1, ring2,
-┃ ┃ ┃ ┃ ┃ ┃ ┃  │ weapons (main hand set 1, offhand set 1, main hand set 2, offhand set 2).
+┃ ┃ ┃ ┃ ┃ ┃ ┃  │ backpiece, accessory1, accessory2, ring1, ring2,
+┃ ┃ ┃ ┃ ┃ ┃ ┃  │ weapons (main hand then offhand for all sets), aquabreather, amulet.
 ┃ ┃ ┃ ┃ ┃ ┃ ┃  │ Only include weapons in this list that actually exist in the code.
 ┃ ┃ ┃ ┃ ┃ ┃ ┃  │ going trough that list encode(itemstat_id, 2) of the first item, then append 
-┃ ┃ ┃ ┃ ┃ ┃ ┃  │ B-Q (one char) for the amount of times this stat type repeats in the list. 
+┃ ┃ ┃ ┃ ┃ ┃ ┃  │ A-S (one char) for the amount of times this stat type repeats in the list. 
+┃ ┃ ┃ ┃ ┃ ┃ ┃  ├ Omit the repetition count if there is only one item left as it would always be 1. 
 ┃ ┃ ┃ ┃ ┃ ┃ ┃  └─ Repeat until the whole list has been processed.
 ┃ ┃ ┃ ┃ ┃ ┃ ┖─ Rune [1-3 characters] resolved by /v2/items, encode(id, 3), _ (underscore) if empty
 ┃ ┃ ┃ ┃ ┃ ┣ Slot skills [5 * 1-3 characters]
 ┃ ┃ ┃ ┃ ┃ ┠─ _ (underscore): empty skill slot
 ┃ ┃ ┃ ┃ ┃ ┖─ 1-3 characters: skill id resolved by /v2/skills, encode(id, 3)
-┃ ┃ ┃ ┃ ┣ Weapons [2 * 3-8 characters] pairs of 
+┃ ┃ ┃ ┃ ┣ Weapons [3 * 3-8 characters] pairs of 
 ┃ ┃ ┃ ┃ ┃ 1 char weapon type id, 1-3 char sigil id, 0-1 char weapon type id, 1-3 char sigil id
 ┃ ┃ ┃ ┃ ┃ if the first weapon is two handed, the second weapon id in the set is omitted
 ┃ ┃ ┃ ┃ ┠┬─ _ (underscore): empty weapon slot
 ┃ ┃ ┃ ┃ ┃└─ A-T: weapon type id (resolved by hardstuck.gg/api/weapon_types)
 ┃ ┃ ┃ ┃ ┖┬─ _ (underscore): empty sigil slot
 ┃ ┃ ┃ ┃  └─ 1-3 characters: sigil id resolved by /v2/items, encode(id, 3)
-┃ ┃ ┃ ┃   The second weapon set may be omitted from the code by replacing 
-┃ ┃ ┃ ┃   the whole second set (WS..wS..) with a ~ (tilde). [RFC] This section can be omitted completely 
-┃ ┃ ┃ ┃   by replacing the whole section with a single ~ (tilde). [/RFC]
+┃ ┃ ┃ ┃   The second and underwater weapon set may be omitted from the code by replacing 
+┃ ┃ ┃ ┃   the whole second or third set (WS..wS..) with a ~ (tilde). This section can be
+┃ ┃ ┃ ┃   omitted completely by replacing the whole section with a single ~ (tilde).
 ┃ ┃ ┃ ┣ Specializations [3 * 2 characters] pairs of (1 char specialization + 1 char selected traits):
 ┃ ┃ ┃ ┠┬─ _ (underscore): empty trait line
 ┃ ┃ ┃ ┃│ Spec index resolved by /v2/professions/<profession>$specializations after ordering by id ascending:
@@ -125,7 +126,7 @@ repeat 3
 	repeat 3
 		2 : selected trait position. 0 if nothing selected, position otherwise
 
-either [RFC]
+either
 	5 : 0 if code does not contain weapons 
 or
 	5  : set1 main hand weapon. 1 if slot is empty, 2 + weapon type id
@@ -139,6 +140,13 @@ or
 		24 : slot 1 sigil. 0 if no sigil in slot1, 1 + sigil item id otherwise
 		5  : set2 offhand weapon. 1 if slot is empty, 2 + weapon type id. omitted if set2 main hand is two handed
 		24 : slot 2 sigil. 0 if no sigil in slot2, 1 + sigil item id otherwise
+	either
+		5 : 0 if code des not contain third (underwater) weapon set
+	or
+		5  : set3 main hand weapon. 1 if slot is empty, 2 + weapon type id
+		24 : slot 1 sigil. 0 if no sigil in slot1, 1 + sigil item id otherwise
+		5  : set3 offhand weapon. 1 if slot is empty, 2 + weapon type id. omitted if set3 main hand is two handed
+		24 : slot 2 sigil. 0 if no sigil in slot2, 1 + sigil item id otherwise
 
 
 repeat 5
@@ -148,14 +156,14 @@ repeat 5
 
 dynamic repeat
 	16 : stat id
-	4  : repeat count
+	5  : repeat count
 
 either
 	24 : 0 if infusions omitted
 or
 	dynamic repeat
 		24 : 1 if empty slot, 2 + infusion item id otherwise
-		4  : repeat count
+		5  : repeat count
 
 24 : food item. 0 if none, 1 + item_id otherwise
 24 : utility item. 0 if none, 1 + item_id otherwise
@@ -171,5 +179,5 @@ or
 	4 : legend 1. 0 for empty slot, 1 + legend_id otherwise
 	4 : legend 2. 0 for empty slot, 1 + legend_id otherwise
 ```
-(396 <-> 432) bits / 8 * 4/3 = (66 <-> 72) chars.
+(406 <-> 482) bits / 8 * 4/3 = (68 <-> 81) chars.
 Interestingly only about 12 chars (~ 20%) less than the textual representation, the encoding _does_ expand it a lot.
