@@ -1,6 +1,8 @@
 using Hardstuck.GuildWars2.BuildCodes.V2.Util;
 using System.Diagnostics;
 
+using static Hardstuck.GuildWars2.BuildCodes.V2.Static;
+
 namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
 public static class TextLoader {
@@ -28,18 +30,7 @@ public static class TextLoader {
 		text = text[1..];
 		return val;
 	}
-	public static T DecodeEnum<T>(ref ReadOnlySpan<char> text) where T : unmanaged, Enum
-	{
-		Debug.Assert(Enum.GetUnderlyingType(typeof(T)) == typeof(ushort), 
-			$"Enum {typeof(T)} should be of type ushort, but is {Enum.GetUnderlyingType(typeof(T))}");
 
-		var val = (ushort)Decode(text[0]);
-		text = text[1..];
-		T t;
-		unsafe { *(&t) = *((T*)&val); }
-		Debug.Assert(Enum.IsDefined(t), $"Parsed undefined value {val} for {typeof(T)}");
-		return t;
-	}
 	public static int Decode(char c)
 	{
 		var upperIndex = (c - 'A') & 63; // & 63 = bootleg range check
@@ -75,12 +66,12 @@ public static class TextLoader {
 	}
 
 	public static BuildCode LoadBuildCode(ReadOnlySpan<char> text) {
-
 		var code = new BuildCode();
 		code.Version    = DecodeNextChar(ref text) + 1;
-		Debug.Assert(code.Version == Database.CURRENT_VERSION, "Code version mismatch");
-		code.Kind       = DecodeEnum<Kind>(ref text);
-		code.Profession = DecodeEnum<Profession>(ref text) + 1;
+		Debug.Assert(code.Version == CURRENT_VERSION, "Code version mismatch");
+		code.Kind       = (Kind)DecodeNextChar(ref text);
+		Debug.Assert(code.Kind != Kind._UNDEFINED, "Code type not valid");
+		code.Profession = Profession._FIRST + DecodeNextChar(ref text);
 		for(var i = 0; i < 3; i++) {
 			if(!EatToken(ref text, '_'))
 				code.Specializations[i] = new() {
@@ -88,8 +79,7 @@ public static class TextLoader {
 					Choices             = LoadTraitChoices(ref text),
 				};
 		}
-		if(!EatToken(ref text, '~'))
-		{
+		if(!EatToken(ref text, '~')) {
 			code.Weapons.Land1 = LoadWeaponSet(ref text);
 			if(!EatToken(ref text, '~'))
 				code.Weapons.Land2 = LoadWeaponSet(ref text);
@@ -101,7 +91,7 @@ public static class TextLoader {
 		}
 		for(int i = 0; i < 5; i++)
 			if(!EatToken(ref text, '_'))
-				code.SlotSkills[i] = Decode(ref text, 3);
+				code.SlotSkills[i] = (SkillId)Decode(ref text, 3);
 		if(!EatToken(ref text, '_'))
 			code.Rune = Decode(ref text, 3);
 		if(code.Kind != Kind.PvP)
@@ -134,11 +124,12 @@ public static class TextLoader {
 	public static WeaponSet LoadWeaponSet(ref ReadOnlySpan<char> text)
 	{
 		var set = new WeaponSet();
-		set.MainHand = DecodeEnum<WeaponType>(ref text);
+		if(!EatToken(ref text, '_'))
+			set.MainHand = WeaponType._FIRST + DecodeNextChar(ref text);
 		if(!EatToken(ref text, '_'))
 			set.Sigil1 = Decode(ref text, 3);
-		if(!Database.IsTwoHanded(set.MainHand.Value))
-			set.OffHand = DecodeEnum<WeaponType>(ref text);
+		if(set.MainHand.HasValue && !IsTwoHanded(set.MainHand.Value) && !EatToken(ref text, '_'))
+			set.OffHand = WeaponType._FIRST + DecodeNextChar(ref text);
 		if(!EatToken(ref text, '_'))
 			set.Sigil2 = Decode(ref text, 3);
 		return set;
@@ -147,7 +138,7 @@ public static class TextLoader {
 	public static UnderwaterWeapon LoadUnderwaterWeapon(ref ReadOnlySpan<char> text)
 	{
 		var set = new UnderwaterWeapon();
-		set.Weapon = DecodeEnum<WeaponType>(ref text);
+		set.Weapon = WeaponType._FIRST + DecodeNextChar(ref text);
 		if(!EatToken(ref text, '_'))
 			set.Sigil1 = Decode(ref text, 3);
 		if(!EatToken(ref text, '_'))
@@ -216,25 +207,26 @@ public static class TextLoader {
 				var data = new RangerData();
 				if(!EatToken(ref text, '~')) {
 					if(!EatToken(ref text, '_'))
-						data.PetLand1 = Decode(ref text, 2);
+						data.Pet1 = Decode(ref text, 2);
 					if(!EatToken(ref text, '_'))
-						data.PetLand1 = Decode(ref text, 2);
-				}
-				if(!EatToken(ref text, '~')) {
-					if(!EatToken(ref text, '_'))
-						data.PetWater1 = Decode(ref text, 2);
-					if(!EatToken(ref text, '_'))
-						data.PetWater2 = Decode(ref text, 2);
+						data.Pet1 = Decode(ref text, 2);
 				}
 				return data;
 			}
 
 			case Profession.REVENANT: {
 				var data = new RevenantData();
+				if(!EatToken(ref text, '_'))
+					data.Legend1 = (Legend)DecodeNextChar(ref text);
+				if(!EatToken(ref text, '_')) {
+					data.Legend2 = (Legend)DecodeNextChar(ref text);
 					if(!EatToken(ref text, '_'))
-						data.Legend1 = DecodeNextChar(ref text);
+						data.AltUtilitySkill1 = (SkillId)Decode(ref text, 3);
 					if(!EatToken(ref text, '_'))
-						data.Legend2 = DecodeNextChar(ref text);
+						data.AltUtilitySkill2 = (SkillId)Decode(ref text, 3);
+					if(!EatToken(ref text, '_'))
+						data.AltUtilitySkill3 = (SkillId)Decode(ref text, 3);
+				}
 				return data;
 			}
 

@@ -2,7 +2,7 @@ using System.Diagnostics;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
-public static class Database
+public static class Static
 {
 	public static readonly int CURRENT_VERSION = 2;
 	public static bool IsTwoHanded(WeaponType weaponType)
@@ -36,5 +36,11 @@ public static class Database
 				Debug.Assert(false, $"invalid weapon {weaponType}");
 				return false;
 		}
+	}
+
+	internal static SkillId TranslatePalleteSkill(ushort palletId)
+	{
+		return (SkillId)palletId;
+
 	}
 }

@@ -56,13 +56,13 @@ public struct AllWeapons {
 }
 
 public struct AllSkills {
-	public int? Heal;
-	public int? Utility1;
-	public int? Utility2;
-	public int? Utility3;
-	public int? Elite;
+	public SkillId? Heal;
+	public SkillId? Utility1;
+	public SkillId? Utility2;
+	public SkillId? Utility3;
+	public SkillId? Elite;
 
-	public int? this[int index] {
+	public SkillId? this[int index] {
 		get => (index) switch {
 			0 => this.Heal,
 			1 => this.Utility1,

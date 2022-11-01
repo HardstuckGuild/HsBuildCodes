@@ -18,14 +18,15 @@ public class BuildCode {
 }
 
 public enum Kind : ushort {
-	UNDEFINED = default,
+	_UNDEFINED = default,
 	PvP       = 26 + 'p' - 'a',
 	WvW       = 26 + 'w' - 'a',
 	PvE       = 26 + 'o' - 'a',
 }
 
-public enum Profession : ushort {
-	UNDEFINED = default,
+public enum Profession {
+	_UNDEFINED = default,
+	_FIRST = GUARDIAN,
 	GUARDIAN = 1, WARRIOR, ENGINEER, RANGER, THIEF, ELEMENTALIST, MESMER, NECROMANCER, REVENANT
 }
 
@@ -59,7 +60,8 @@ public struct UnderwaterWeapon {
 }
 
 public enum WeaponType {
-	UNDEFINED = default,
+	_UNDEFINED = default,
+	_FIRST = AXE,
 	AXE = 1, DAGGER, MACE, PISTOL, SWORD, SCEPTER, FOCUS, SHIELD, TORCH, WARHORN, SHORTBOW, 
 	GREATSWORD, HAMMER, LONGBOW, RIFLE, STAFF, HARPOON_GUN, SPEAR, TRIDENT,
 }
@@ -76,15 +78,23 @@ public interface IProfessionArbitrary {
 }
 
 public class RangerData : IProfessionArbitrary {
-	public int? PetLand1;
-	public int? PetLand2;
-	public int? PetWater1;
-	public int? PetWater2;
+	public int? Pet1;
+	public int? Pet2;
 }
 
 public class RevenantData : IProfessionArbitrary {
-	public int? Legend1;
-	public int? Legend2;
+	public Legend? Legend1;
+	public Legend? Legend2;
+
+	public SkillId? AltUtilitySkill1;
+	public SkillId? AltUtilitySkill2;
+	public SkillId? AltUtilitySkill3;
+}
+
+public enum Legend {
+	_UNDEFINED = 0,
+	_FIRST = SHIRO,
+	SHIRO = 1, GLINT, MALLY, JALIS, VENTARI, KALLA, VINDICATOR,
 }
 
 public interface IArbitrary {

@@ -69,7 +69,7 @@ omitted completely by replacing the whole section with a single `~` (tilde).
 
 `[S..S..S..S..S..]` Slot skills [5 * 1-3 characters] each:
   - `_` (underscore): empty skill slot
-  - `1-3 characters` skill id resolved by `/v2/skills`, `encode(id, 3)`
+  - `1-3 characters`: skill id resolved by `/v2/skills`, `encode(id, 3)`
 
 `[R..]` Rune [1-3 characters]. Always the same for all slots.
  - `_` (underscore): if empty
@@ -97,24 +97,30 @@ omitted completely by replacing the whole section with a single `~` (tilde).
   - `1-3 characters`: item id resolved by `/v2/items`, `encode(id, 3)`
 
 `[A,,,,,]` Arbitrary data [0-n characters], currently used for:
-  - Ranger pets: [3-8 characters]
-    - assume the following pet order: land1, land2, water1, water2
-    - `~` (tilde): omit the whole block (land / water)
+  - Ranger pets: [1-2 characters]
+    - assume the following pet order: pet1, pet2
+    - `~` (tilde): omit pets
     - `_` (underscore): empty pet slot
     - `2 characters`: `encode(pet_id, 2)` from `/v2/pets`
-  - Revenant Legends: [2 characters]
-    - `_` (underscore): empty legend slot
-    - `A-F` : legend index from `/v2/legends` to index `character_set`
+  - Revenant Legends + utility: [3-11 characters]
+    1. 2 times 
+       - `_` (underscore): empty legend slot
+       - `A-F` : legend index from `/v2/legends` to index `character_set`
+    2. 3 times 
+       - `_` (underscore): empty alternate legend utility skill slot
+       - `1-3 characters`: alternate legend utility skill id resolved by `/v2/skills`, `encode(id, 3)`
+       - omit whole block if second legend is empty
+    
 
 ## Binary (compressed) spec
 
 This can be base64 encoded. Doing so will expand the code by about 1/3 of its length.
 
-Field widths are measured in bits. See textual specification for details on how to obtain numeric values and when to omit fields
+Field widths are measured in bits. See textual specification for details on how to obtain numeric values and when to omit fields. Fields use big endianess.
 
 ```
-4 : Version
-2 : Type
+8 : Version char
+2 : Type: p: 0, w: 1, o: 2
 4 : Profession index 
 
 repeat 3
@@ -142,7 +148,7 @@ or
 	either
 		5 : 0 if code des not contain third (underwater) weapon set
 	or
-		5  : underwater first weapon. 1 if slot is empty, 2 + weapon type id otherwise
+		5  : underwater first weapon. 2 + weapon type id
 		24 : slot 1 sigil 1. 0 if no sigil in slot1, 1 + sigil item id otherwise
 		24 : slot 1 sigil 2. 0 if no sigil in slot1, 1 + sigil item id otherwise
 		5  : underwater second weapon. 1 if slot is empty, 2 + weapon type id otherwise 
@@ -155,9 +161,12 @@ repeat 5
 
 24 : 1 + Rune id, 0 if empty
 
-dynamic repeat
-	16 : stat id
-	5  : repeat count
+either
+	16 : stat id (when type = pvp)
+or
+	dynamic repeat
+		16 : stat id
+		5  : repeat count
 
 either
 	24 : 0 if infusions omitted
@@ -172,13 +181,14 @@ or
 either
 	no additional data
 or
-	7 : land pet 1. 0 to omit block, 1 for empty slot, 2 + pet_id otherwise
-	7 : land pet 2. 1 for empty slot, 2 + pet_id otherwise, omit if land pet 1 is 0
-	7 : water pet 1. 0 to omit block, 1 for empty slot, 2 + pet_id otherwise
-	7 : water pet 2. 1 for empty slot, 2 + pet_id otherwise, omit if water pet 1 is 0
+	7 : pet 1. 0 to omit block, 1 for empty slot, 2 + pet_id otherwise
+	7 : pet 2. 1 for empty slot, 2 + pet_id otherwise, omit if pet 1 is 0
 or
-	4 : legend 1. 0 for empty slot, 1 + legend_id otherwise
+	4 : legend 1. 1 + legend_id otherwise
 	4 : legend 2. 0 for empty slot, 1 + legend_id otherwise
+
+	repeat 3. alternate legend skills. omit if legend 2 is empty
+		24 : 1 + Skill ids, 0 if empty
 ```
 (406 <-> 482) bits / 8 * 4/3 = (68 <-> 81) chars.
 Interestingly only about 12 chars (~ 20%) less than the textual representation, the encoding _does_ expand it a lot.

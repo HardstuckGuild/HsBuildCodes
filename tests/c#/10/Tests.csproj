@@ -28,6 +28,6 @@
 
 
 	<ItemGroup>
-		<Compile Include="../../../include/c#/10/*.cs" />
+		<Compile Include="../../../include/c#/10/**/*.cs" Exclude="../../../include/c#/10/obj/**/*.cs" />
 	</ItemGroup>
 </Project>

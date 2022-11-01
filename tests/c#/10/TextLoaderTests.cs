@@ -1,9 +1,47 @@
 using Hardstuck.GuildWars2.BuildCodes.V2.Util;
 using Xunit;
 
-namespace Hardstuck.GuildWars2.BuildCodes.V2.Tests;
+namespace Hardstuck.GuildWars2.BuildCodes.V2.Tests.Text;
 
-public class LoaderBasicTests {
+public class FunctionTests {
+	[Fact]
+	public void DecodeValueFixed()
+	{
+		Assert.Equal( 0, TextLoader.Decode('A'));
+		Assert.Equal(26, TextLoader.Decode('a'));
+		Assert.Equal(63, TextLoader.Decode('-'));
+	}
+
+	[Fact]
+	public void SuccessiveDecodeAndEatValueFixed()
+	{
+		var text = "Aa-".AsSpan();
+		Assert.Equal( 0, TextLoader.DecodeNextChar(ref text));
+		Assert.Equal(26, TextLoader.DecodeNextChar(ref text));
+		Assert.Equal(63, TextLoader.DecodeNextChar(ref text));
+		Assert.Equal(0, text.Length);
+	}
+
+	[Fact]
+	public void SuccessiveDecodeAndEatValueValirable()
+	{
+		var text = "Aa-".AsSpan();
+		Assert.Equal( 0, TextLoader.Decode(ref text, 1));
+		Assert.Equal(26, TextLoader.Decode(ref text, 1));
+		Assert.Equal(63, TextLoader.Decode(ref text, 1));
+		Assert.Equal(0, text.Length);
+	}
+
+	[Fact]
+	public void DecodeAndEatValueEarlyTerm()
+	{
+		var text = "A~".AsSpan();
+		Assert.Equal(0, TextLoader.Decode(ref text, 3));
+		Assert.Equal(0, text.Length);
+	}
+}
+
+public class BasicCodesTests {
 	[Fact]
 	public void ShouldThrowVersion()
 	{
@@ -85,13 +123,11 @@ public class LoaderBasicTests {
 	[Fact]
 	public void MinimalRanger()
 	{
-		var code = TextLoader.LoadBuildCode("BoD___~______A~N~__~~");
+		var code = TextLoader.LoadBuildCode("BoD___~______A~N~__~");
 		Assert.IsType<RangerData>(code.ArbitraryData.ProfessionSpecific);
 		var data = (RangerData)code.ArbitraryData.ProfessionSpecific;
-		Assert.Null(data.PetLand1);
-		Assert.Null(data.PetLand2);
-		Assert.Null(data.PetWater2);
-		Assert.Null(data.PetWater2);
+		Assert.Null(data.Pet1);
+		Assert.Null(data.Pet2);
 	}
 
 	[Fact]
@@ -102,5 +138,8 @@ public class LoaderBasicTests {
 		var data = (RevenantData)code.ArbitraryData.ProfessionSpecific;
 		Assert.Null(data.Legend1);
 		Assert.Null(data.Legend2);
+		Assert.Null(data.AltUtilitySkill1);
+		Assert.Null(data.AltUtilitySkill2);
+		Assert.Null(data.AltUtilitySkill3);
 	}
 }

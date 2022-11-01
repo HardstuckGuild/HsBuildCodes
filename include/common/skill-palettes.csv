@@ -1,0 +1,616 @@
+5502;114;Glyph of Lesser Elementals
+5503;116;Signet of Restoration
+5506;115;Glyph of Elemental Power
+5507;117;Ether Renewal
+5516;151;Conjure Fiery Greatsword
+5534;150;Tornado
+5535;142;Cleansing Fire
+5536;144;Lightning Flash
+5539;336;Arcane Blast
+5540;202;Conjure Flame Axe
+5542;203;Signet of Fire
+5546;230;Conjure Earth Shield
+5554;235;Mist Form
+5567;261;Conjure Frost Bow
+5569;279;Glyph of Elemental Harmony
+5570;143;Signet of Water
+5571;145;Signet of Earth
+5572;284;Signet of Air
+5573;285;Glyph of Renewal
+5602;150;Whirlpool
+5624;322;Conjure Lightning Hammer
+5635;333;Arcane Power
+5638;334;Arcane Wave
+5639;335;Armor of Earth
+5641;246;Arcane Shield
+5666;38;Glyph of Elementals
+5706;114;Glyph of Summoning
+5734;446;Glyph of Storms
+5735;446;Ice Storm
+5736;446;Firestorm
+5737;446;Lightning Storm
+5738;446;Sandstorm
+5760;285;Renewal of Air
+5761;285;Renewal of Earth
+5762;285;Renewal of Fire
+5763;285;Renewal of Water
+5802;132;Med Kit
+5805;134;Grenade Kit
+5810;478;Grenade Barrage
+5811;136;Personal Battering Ram
+5812;263;Bomb Kit
+5818;163;Rifle Turret
+5821;257;Elixir B
+5825;275;Slick Shoes
+5832;274;Elixir X
+5834;276;Elixir H
+5836;290;Flame Turret
+5837;291;Net Turret
+5838;292;Thumper Turret
+5857;296;Healing Turret
+5860;396;Elixir C
+5861;350;Elixir S
+5862;351;Elixir U
+5865;352;Utility Goggles
+5867;471;Toss Elixir R
+5868;393;Supply Crate
+5874;163;Automatic Fire
+5889;292;Thump
+5893;291;Electrified Net
+5900;290;Smoke Screen
+5904;394;Tool Kit
+5910;397;Rocket Boots
+5912;398;Rocket Turret
+5913;398;Explosive Rockets
+5927;403;Flamethrower
+5933;405;Elixir Gun
+5957;163;Detonate Rifle Turret
+5960;292;Detonate Thumper Turret
+5961;296;Detonate Healing Turret
+5967;469;Toss Elixir B
+5968;353;Elixir R
+5969;470;Toss Elixir C
+5970;473;Toss Elixir U
+5972;472;Toss Elixir S
+5978;474;Toss Elixir H
+5980;296;Cleansing Burst
+5984;291;Detonate Net Turret
+5985;290;Detonate Flame Turret
+5987;290;Flame Turret
+5988;291;Net Turret
+5989;163;Rifle Turret
+5990;292;Thumper Turret
+5991;398;Rocket Turret
+6020;134;Grenade Kit
+6077;470;Toss Elixir C
+6078;470;Detonate Elixir C
+6082;469;Detonate Elixir B
+6084;472;Detonate Elixir S
+6086;471;Detonate Elixir R
+6088;473;Detonate Elixir U
+6089;473;Toss Elixir U
+6090;472;Toss Elixir S
+6091;471;Toss Elixir R
+6092;469;Toss Elixir B
+6093;163;Harpoon Turret
+6097;163;Detonate Harpoon Turret
+6098;163;Automatic Fire
+6109;132;Stow Med Kit
+6110;134;Stow Grenade Kit
+6111;263;Stow Bomb Kit
+6113;394;Stow Tool Kit
+6114;403;Stow Flamethrower
+6115;405;Stow Elixir Gun
+6118;474;Toss Elixir H
+6119;474;Detonate Elixir H
+6134;398;Detonate Rocket Turret
+6140;296;Healing Turret
+6161;294;Throw Mine
+6162;294;Detonate
+6163;294;Deploy Mine
+6164;475;Mine Field
+6166;475;Detonate Mine Field
+6172;478;Grenade Barrage
+6183;393;Supply Crate
+9083;127;"""""""Receive the Light!"""""""
+9084;301;"""""""Retreat!"""""""
+9085;138;"""""""Save Yourselves!"""""""
+9093;254;Bane Signet
+9102;259;Shelter
+9125;256;Hammer of Wisdom
+9128;278;Sanctuary
+9150;326;Signet of Judgment
+9151;305;Signet of Wrath
+9152;309;"""""""Hold the Line!"""""""
+9153;310;"""""""Stand Your Ground!"""""""
+9154;311;Renewed Focus
+9158;312;Signet of Resolve
+9163;306;Signet of Mercy
+9168;328;Sword of Justice
+9175;329;Bow of Truth
+9182;330;Shield of the Avenger
+9187;332;Purging Flames
+9241;254;Bane Signet
+9242;326;Signet of Judgment
+9243;306;Signet of Mercy
+9244;305;Signet of Wrath
+9245;376;Smite Condition
+9246;441;Merciful Intervention
+9247;327;Judge's Intervention
+9248;260;Contemplation of Purity
+9251;255;Wall of Reflection
+9253;331;Hallowed Ground
+10176;366;Ether Feast
+10177;271;Mirror
+10185;280;Arcane Thievery
+10187;282;Veil
+10197;356;Portal Entre
+10199;356;Portal Exeunt
+10200;357;Blink
+10201;358;Decoy
+10202;363;Mirror Images
+10203;362;Null Field
+10204;359;Mantra of Distraction
+10206;359;Power Lock
+10207;360;Mantra of Resolve
+10209;360;Power Cleanse
+10211;361;Mantra of Pain
+10212;361;Power Spike
+10213;365;Mantra of Recovery
+10214;365;Power Return
+10232;385;Signet of Domination
+10234;387;Signet of Midnight
+10236;384;Signet of Inspiration
+10237;389;Mantra of Concentration
+10238;389;Power Break
+10244;388;Illusion of Life
+10245;410;Mass Invisibility
+10247;386;Signet of Illusions
+10267;399;Phantasmal Disenchanter
+10302;383;Feedback
+10311;444;Time Warp
+10341;390;Phantasmal Defender
+10377;444;Time Warp
+10527;18;Well of Blood
+10533;118;Summon Bone Fiend
+10540;228;Putrid Explosion
+10541;228;Summon Bone Minions
+10543;302;Summon Flesh Wurm
+10544;128;Blood Is Power
+10545;371;Well of Corruption
+10546;129;Well of Suffering
+10547;155;Summon Blood Fiend
+10548;162;Consume Conditions
+10549;146;Plaguelands
+10550;378;Lich Form
+10562;245;Plague Signet
+10570;118;Rigor Mortis
+10577;155;Taste of Death
+10583;250;Spectral Armor
+10589;368;Summon Shadow Fiend
+10590;368;Haunt
+10600;302;Necrotic Traversal
+10602;304;Corrupt Boon
+10606;409;Epidemic
+10607;320;Well of Darkness
+10608;364;Spectral Ring
+10609;372;Well of Power
+10611;367;Signet of Undeath
+10612;374;Signet of the Locust
+10620;375;Spectral Grasp
+10622;373;Signet of Spite
+10646;149;Summon Flesh Golem
+10647;149;Charge
+10670;18;Well of Blood
+10671;371;Well of Corruption
+10672;320;Well of Darkness
+10673;372;Well of Power
+10674;129;Well of Suffering
+10685;445;Spectral Walk
+10687;445;Spectral Recall
+10689;139;Corrosive Poison Cloud
+10800;458;Mistfire Wolf
+12318;9;Technobabble
+12319;11;Radiation Field
+12320;12;Pain Inverter
+12323;14;Summon 7-Series Golem
+12324;369;Summon D-Series Golem
+12325;17;Summon Power Suit
+12337;4;Shrapnel Mine
+12338;8;Battle Roar
+12339;33;Hidden Pistol
+12340;34;Warband Support
+12343;1;Artillery Barrage
+12344;456;Charrzooka
+12360;210;Prayer to Dwayna
+12361;324;Prayer to Kormir
+12362;337;Prayer to Lyssa
+12363;338;Hounds of Balthazar
+12367;349;Reaper of Grenth
+12372;7;Remove Avatar of Melandru
+12373;7;Avatar of Melandru
+12385;152;Become the Bear
+12386;152;Release the Bear
+12387;13;Call Owl
+12391;20;Become the Wolf
+12392;20;Release the Wolf
+12401;29;Become the Snow Leopard
+12402;29;Release the Snow Leopard
+12403;31;Become the Raven
+12404;31;Release the Raven
+12417;2;Call Wurm
+12440;21;Healing Seed
+12447;23;Summon Druid Spirit
+12450;25;Summon Sylvan Hound
+12453;28;Grasping Vines
+12456;30;Seed Turret
+12457;37;Take Root
+12476;27;Spike Trap
+12483;120;Troll Unguent
+12489;161;Healing Spring
+12491;428;Signet of the Wild
+12492;181;Frost Trap
+12493;182;Storm Spirit
+12494;184;Lightning Reflexes
+12495;185;Stone Spirit
+12496;186;Viper's Nest
+12497;188;Frost Spirit
+12498;189;Sun Spirit
+12499;190;Flame Trap
+12500;427;Signet of Stone
+12501;193;Muddy Terrain
+12502;194;Signet of Renewal
+12516;237;"""""""Strength of the Pack!"""""""
+12533;186;Viper's Nest
+12535;181;Frost Trap
+12537;191;Sharpening Stone
+12542;154;Signet of the Hunt
+12550;406;Quickening Zephyr
+12569;407;Spirit of Nature
+12570;190;Flame Trap
+12580;192;Entangle
+12592;189;Solar Flare
+12593;188;Cold Snap
+12594;182;Call Lightning
+12595;185;Quicksand
+12596;407;Nature's Renewal
+12631;187;"""""""Protect Me!"""""""
+12632;183;"""""""Guard!"""""""
+12633;421;"""""""Sic 'Em!"""""""
+13002;88;Shadowstep
+13020;137;Scorpion Wire
+13021;266;Withdraw
+13026;267;Prepare Thousand Needles
+13027;268;Hide in Shadows
+13028;269;Caltrops
+13035;281;Roll for Initiative
+13037;303;Spider Venom
+13038;283;Prepare Shadow Portal
+13044;308;Blinding Powder
+13046;307;Assassin's Signet
+13050;133;Signet of Malice
+13055;318;Skale Venom
+13056;339;Prepare Seal Area
+13057;340;Prepare Pitfall
+13060;342;Signet of Shadows
+13062;343;Signet of Agility
+13064;344;Infiltrator's Signet
+13065;345;Smoke Screen
+13066;347;Haste
+13082;40;Thieves Guild
+13085;415;Dagger Storm
+13093;341;Devourer Venom
+13096;346;Ice Drake Venom
+13099;339;Seal Area
+13106;88;Shadow Return
+13117;443;Shadow Refuge
+13132;270;Basilisk Venom
+14354;10;Throw Bolas
+14355;156;Signet of Rage
+14368;105;Frenzy
+14372;106;"""""""Shake It Off!"""""""
+14388;110;Stomp
+14389;112;Healing Signet
+14392;113;Endure Pain
+14401;167;Mending
+14402;166;"""""""To the Limit!"""""""
+14403;168;"""""""For Great Justice!"""""""
+14404;169;Signet of Might
+14405;170;Banner of Strength
+14406;171;Berserker Stance
+14407;172;Banner of Discipline
+14408;176;Banner of Tactics
+14409;174;"""""""Fear Me!"""""""
+14410;175;Signet of Fury
+14412;178;Balanced Stance
+14413;179;Dolyak Signet
+14419;238;Battle Standard
+14479;317;Signet of Stamina
+14483;380;Rampage
+14502;418;Kick
+14516;173;Bull's Charge
+14528;429;Banner of Defense
+14569;238;Battle Standard
+14570;429;Banner of Defense
+14571;172;Banner of Discipline
+14572;170;Banner of Strength
+14573;176;Banner of Tactics
+14575;482;"""""""On My Mark!"""""""
+15795;235;Mist Form
+16435;283;Shadow Portal
+20451;274;Elixir X
+21656;3879;Arcane Brilliance
+21659;3882;A.E.D.
+21661;3883;Static Shock
+21664;3878;Litany of Wrath
+21750;3875;Signet of the Ether
+21762;3880;Signet of Vampirism
+21773;3877;Water Spirit
+21775;3877;Aqua Surge
+21778;3876;Skelk Venom
+21815;3881;Defiant Stance
+22572;334;Arcane Wave
+22574;398;Rocket Turret
+24407;285;Renewal of Fire
+24409;285;Renewal of Air
+24410;285;Renewal of Water
+24411;285;Renewal of Earth
+24414;306;Signet of Mercy
+24415;306;Signet of Mercy
+24544;367;Signet of Undeath
+25476;114;Frozen Ground
+25478;114;Windborne Speed
+25480;38;Shocking Bolt
+25486;114;Glyph of Lesser Elementals
+25487;114;Glyph of Lesser Elementals
+25488;38;Glyph of Elementals
+25489;38;Glyph of Elementals
+25490;38;Glyph of Elementals
+25491;38;Glyph of Elementals
+25492;38;Crashing Waves
+25494;114;Enervating Punch
+25495;114;Glyph of Lesser Elementals
+25497;114;Glyph of Lesser Elementals
+25498;38;Stomp
+25499;38;Flame Barrage
+25500;114;Flame Burst
+25541;388;Illusion of Life
+26557;4564;Vengeful Hammers
+26644;4564;Facet of Strength
+26679;4651;Forced Engagement
+26693;4554;Resist the Darkness
+26821;4614;Protective Solace
+26937;4572;Enchanted Daggers
+26956;4564;Release Hammers
+27014;4651;Facet of Elements
+27025;4651;Natural Harmony
+27080;4614;Gaze of Darkness
+27107;4564;Impossible Odds
+27162;4651;Elemental Blast
+27220;4572;Facet of Light
+27228;4572;Infuse Light
+27322;4614;Pain Absorption
+27356;4554;Energy Expulsion
+27372;4572;Soothing Stone
+27505;4651;Banish Enchantment
+27628;4614;Diminish Solace
+27715;4564;Purifying Essence
+27760;4554;Facet of Chaos
+27917;4564;Call to Anguish
+27975;4554;Rite of the Great Dwarf
+28075;4554;Chaotic Release
+28113;4564;Burst of Strength
+28219;4572;Empowering Misery
+28231;4651;Phase Traversal
+28287;4554;Embrace the Darkness
+28379;4614;Facet of Darkness
+28382;4564;Relinquish Power
+28406;4554;Jade Winds
+28427;4572;Ventari's Will
+28516;4614;Inspiring Reinforcement
+29082;4651;Natural Harmony
+29114;4554;Energy Expulsion
+29148;4572;Project Tranquility
+29197;4564;Purifying Essence
+29209;4614;Riposting Shadows
+29310;4614;Protective Solace
+29414;4849;"""""""You Are All Weaklings!"""""""
+29473;294;Detonate
+29505;4763;Reconstruction Field
+29515;4856;Toss Elixir X
+29516;4846;Impact Strike
+29518;393;Detonate Supply Crate Turrets
+29519;4845;Signet of Humility
+29522;397;Rocket Boots
+29526;4755;Well of Precognition
+29535;4807;"""""""Wash the Pain Away!"""""""
+29558;4776;Glyph of the Tides
+29578;438;Mimic
+29591;352;Utility Goggles
+29613;4769;Sundering Leap
+29639;4846;Finishing Blow
+29666;4843;"""""""Nothing Can Save You!"""""""
+29722;4856;Detonate Elixir X
+29739;4812;Purge Gyro
+29786;4862;Test of Faith
+29856;4743;Well of Recall
+29905;408;Stow Mortar Kit
+29921;4782;Shredder Gyro
+29941;4804;Wild Blow
+29948;4773;"""""""Flash-Freeze!"""""""
+29965;4745;"""""""Feel My Wrath!"""""""
+29968;4761;"""""""Rebound!"""""""
+29991;136;Personal Battering Ram
+30025;4796;Purification
+30047;4726;"""""""Eye of the Storm!"""""""
+30074;4828;Shattering Blow
+30077;4846;Uppercut
+30101;4878;Bulwark Gyro
+30105;4867;"""""""Chilled to the Bone!"""""""
+30189;4850;Blood Reckoning
+30230;393;Overcharge Supply Crate
+30238;4776;Glyph of the Tides
+30258;4823;Outrage
+30264;393;Overcharge Supply Crate
+30273;4789;Dragon's Maw
+30305;4848;Well of Eternity
+30337;294;Throw Mine
+30343;4802;Head Butt
+30357;4825;Medic Gyro
+30359;4787;Gravity Well
+30364;4746;Procession of Blades
+30369;4905;Impairing Daggers
+30400;4756;Channeled Vigor
+30432;4724;"""""""Aftershock!"""""""
+30448;4776;Glyph of the Tides
+30461;4721;Signet of Courage
+30488;4801;"""""""Your Soul Is Mine!"""""""
+30519;4790;Reflexive Strike
+30525;4868;Well of Calamity
+30553;4740;Fragments of Faith
+30568;4727;Distracting Daggers
+30661;4790;Bandit's Defense
+30662;4803;"""""""Feel the Burn!"""""""
+30670;4774;"""""""Suffer!"""""""
+30693;4784;Palm Strike
+30725;4856;Toss Elixir X
+30772;4879;"""""""Rise!"""""""
+30800;408;Elite Mortar Kit
+30814;4815;Well of Action
+30815;4739;Sneak Gyro
+30828;275;Slick Shoes
+30868;4784;Fist Flurry
+30871;4858;Light's Judgment
+30881;3882;A.E.D.
+30893;294;Deploy Mine
+31100;4564;Call to Anguish
+31159;332;Purging Flames
+31248;4903;Blast Gyro
+31294;4554;Jade Winds
+31295;278;Sanctuary
+31322;4821;Glyph of Alignment
+31348;4821;Glyph of Alignment
+31401;4838;Glyph of Equality
+31407;4873;Glyph of Rejuvenation
+31582;4792;Glyph of Unity
+31607;4821;Glyph of Alignment
+31658;4838;Glyph of Equality
+31677;4788;Glyph of the Stars
+31740;4792;Glyph of Unity
+31746;4838;Glyph of Equality
+31819;4873;Glyph of Rejuvenation
+31867;4873;Glyph of Rejuvenation
+31888;4792;Glyph of Unity
+31914;121;"""""""We Heal As One!"""""""
+34309;180;"""""""Search and Rescue!"""""""
+34326;383;Feedback
+34609;279;Glyph of Elemental Harmony
+34637;115;Glyph of Elemental Power
+34651;279;Glyph of Elemental Harmony
+34714;115;Glyph of Elemental Power
+34724;279;Glyph of Elemental Harmony
+34736;115;Glyph of Elemental Power
+34743;279;Glyph of Elemental Harmony
+34772;115;Glyph of Elemental Power
+38748;398;Detonate Rocket Turret
+38750;393;Detonate Supply Crate Turrets
+40114;5656;Portent of Freedom
+40183;5941;Primordial Stance
+40200;5614;False Oasis
+40274;5746;Trail of Anguish
+40485;4651;Icerazor's Ire
+40498;5865;Vulture Stance
+40507;5717;Coolant Blast
+40533;5861;Launch Wall
+40915;5754;Mantra of Potence
+41065;5600;Crystal Sands
+41100;5959;Natural Healing
+41158;5804;Shadow Flare
+41205;5860;Binding Shadow
+41218;5679;Spectrum Shield
+41220;4564;Darkrazor's Daring
+41328;5656;Unhindered Delivery
+41372;5920;Mercy
+41475;5963;Restoring Reprieve
+41571;330;Shield of the Avenger
+41615;5921;Serpent Siphon
+41714;5963;Mantra of Solace
+41919;5738;Imminent Threat
+41988;5754;Overwhelming Celerity
+42009;5616;Prime Light Beam
+42355;5984;Ghastly Breach
+42360;5827;Echo of Truth
+42752;4554;Dismiss Lieutenant Soulcleave
+42842;5719;Laser Disk
+42851;5810;Mirage Advance
+42864;5971;Opening Passage
+42917;5752;Sand Swell
+42924;5909;Flame Surge
+42935;5924;Desiccate
+42949;4614;Razorclaw's Rage
+42960;5963;Rejuvenating Respite
+42983;5754;Potent Haste
+43064;5639;Sand through Glass
+43123;5671;Break Enchantments
+43148;5758;Sand Flare
+43357;5656;Mantra of Liberation
+43565;329;Bow of Truth
+43638;5906;Weave Self
+43739;5861;Photon Wall
+43745;5750;Sight beyond Sight
+44008;5827;Voice of Truth
+44080;5827;Mantra of Truth
+44239;5632;Aquatic Stance
+44248;5971;Clarified Conclusion
+44612;5755;Unravel
+44637;5906;Tailored Victory
+44646;5685;Hard Light Arena
+44677;5958;Mirage Mirror
+44846;328;Sword of Justice
+44918;151;Lesser Fiery Eruption
+44926;5851;Stone Resonance
+44948;5934;Bear Stance
+45046;5770;Illusionary Ambush
+45082;5909;Flame Rush
+45088;5617;Malicious Restoration
+45142;5889;Griffon Stance
+45333;5789;Winds of Disenchantment
+45380;5904;Featherfoot Grace
+45449;5958;Jaunt
+45460;5971;Mantra of Lore
+45508;5693;Shadow Meld
+45666;5810;Mirage Retreat
+45672;5804;Shadow Swap
+45686;4572;Breakrazor's Bastion
+45717;5678;One Wolf Pack
+45746;5621;Twist of Fate
+45773;4554;Soulcleave's Summit
+45789;5882;Dolyak Stance
+45970;5684;Moa Stance
+46148;5909;Mantra of Flame
+46170;256;Hammer of Wisdom
+46335;5663;Shadow Gust
+46600;329;Bow of Truth
+46750;329;Bow of Truth
+49056;143;Signet of Water
+50383;4614;Inspiring Reinforcement
+50414;282;Veil
+50419;5810;Mirage Advance
+50438;397;Rocket Boots
+50440;362;Null Field
+50441;397;Rocket Boots
+50447;144;Lightning Flash
+50472;275;Slick Shoes
+50491;275;Slick Shoes
+51395;27;Spike Trap
+51698;4651;Elemental Blast
+55019;328;Sword of Justice
+55024;4788;Glyph of the Stars
+55027;328;Sword of Justice
+55035;330;Shield of the Avenger
+55037;330;Shield of the Avenger
+55040;256;Hammer of Wisdom
+55046;4788;Glyph of the Stars
+55053;256;Hammer of Wisdom
+56880;340;Pitfall
+56898;26;Thousand Needles
