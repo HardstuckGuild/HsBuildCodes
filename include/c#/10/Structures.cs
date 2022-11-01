@@ -18,14 +18,14 @@ public class BuildCode {
 }
 
 public enum Kind : ushort {
-	UNDEFINED = 0,
+	UNDEFINED = default,
 	PvP       = 26 + 'p' - 'a',
 	WvW       = 26 + 'w' - 'a',
 	PvE       = 26 + 'o' - 'a',
 }
 
 public enum Profession : ushort {
-	UNDEFINED = 0,
+	UNDEFINED = default,
 	GUARDIAN = 1, WARRIOR, ENGINEER, RANGER, THIEF, ELEMENTALIST, MESMER, NECROMANCER, REVENANT
 }
 
@@ -35,7 +35,7 @@ public struct Specialization {
 }
 
 public enum TraitLineChoice {
-	NONE   = 0,
+	NONE   = default,
 	TOP    = 1,
 	MIDDLE = 2,
 	BOTTOM = 3,
@@ -59,7 +59,7 @@ public struct UnderwaterWeapon {
 }
 
 public enum WeaponType {
-	UNDEFINED = 0,
+	UNDEFINED = default,
 	AXE = 1, DAGGER, MACE, PISTOL, SWORD, SCEPTER, FOCUS, SHIELD, TORCH, WARHORN, SHORTBOW, 
 	GREATSWORD, HAMMER, LONGBOW, RIFLE, STAFF, HARPOON_GUN, SPEAR, TRIDENT,
 }

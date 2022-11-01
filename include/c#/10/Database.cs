@@ -4,6 +4,7 @@ namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
 public static class Database
 {
+	public static readonly int CURRENT_VERSION = 2;
 	public static bool IsTwoHanded(WeaponType weaponType)
 	{
 		switch(weaponType)

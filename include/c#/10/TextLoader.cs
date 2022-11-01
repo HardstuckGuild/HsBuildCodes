@@ -1,11 +1,9 @@
-using Gw2Sharp.WebApi.V2.Models;
 using Hardstuck.GuildWars2.BuildCodes.V2.Util;
 using System.Diagnostics;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
 public static class TextLoader {
-
 	public static readonly string CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-";
 	public static int Decode(ref ReadOnlySpan<char> text, int maxWidth)
 	{
@@ -77,12 +75,12 @@ public static class TextLoader {
 	}
 
 	public static BuildCode LoadBuildCode(ReadOnlySpan<char> text) {
-		Debug.Assert('B' <= text[0] && text[0] <= 'Z', "Code version mismatch");
 
 		var code = new BuildCode();
-		code.Version    = DecodeNextChar(ref text);
+		code.Version    = DecodeNextChar(ref text) + 1;
+		Debug.Assert(code.Version == Database.CURRENT_VERSION, "Code version mismatch");
 		code.Kind       = DecodeEnum<Kind>(ref text);
-		code.Profession = DecodeEnum<Profession>(ref text);
+		code.Profession = DecodeEnum<Profession>(ref text) + 1;
 		for(var i = 0; i < 3; i++) {
 			if(!EatToken(ref text, '_'))
 				code.Specializations[i] = new() {
@@ -106,7 +104,11 @@ public static class TextLoader {
 				code.SlotSkills[i] = Decode(ref text, 3);
 		if(!EatToken(ref text, '_'))
 			code.Rune = Decode(ref text, 3);
-		code.EquipmentAttributes = LoadAllEquipmentData(ref text, in code.Weapons, DecodeAttrib);
+		if(code.Kind != Kind.PvP)
+			code.EquipmentAttributes = LoadAllEquipmentData(ref text, in code.Weapons, DecodeAttrib);
+		else
+			code.EquipmentAttributes = LoadAllEquipmentDataPvP(ref text, in code.Weapons);
+
 		if(code.Kind != Kind.PvP) {
 			if(!EatToken(ref text, '~'))
 				code.Infusions = LoadAllEquipmentData(ref text, in code.Weapons, DecodeInfusion);
@@ -176,7 +178,6 @@ public static class TextLoader {
 				case 15: if(!loadedWeapons.HasUnderwater)           { i++;    continue; } else break;
 				case 16: if(!loadedWeapons.Underwater2.HasValue)    {         continue; } else break;
 			}
-			
 
 			allData[i] = data;
 			repeatCount--;
@@ -185,6 +186,27 @@ public static class TextLoader {
 	}
 	static int DecodeAttrib(ref ReadOnlySpan<char> text) => Decode(ref text, 2);
 	static int? DecodeInfusion(ref ReadOnlySpan<char> text) => EatToken(ref text, '_') ? null : Decode(ref text, 3);
+
+	public static AllEquipmentData<int> LoadAllEquipmentDataPvP(ref ReadOnlySpan<char> text, in AllWeapons loadedWeapons)
+	{
+		var allData = new AllEquipmentData<int>();
+
+		int data = Decode(ref text, 3);
+		for(int i = 0; i < AllEquipmentData.ALL_EQUIPMENT_COUNT; i++) {
+
+			switch(i) {
+				case 11: if(!loadedWeapons.Land1.MainHand.HasValue) { i += 5; continue; } else break;
+				case 12: if(!loadedWeapons.Land1.OffHand.HasValue)  {         continue; } else break;
+				case 13: if(!loadedWeapons.Land2.IsSet)             { i++;    continue; } else break;
+				case 14: if(!loadedWeapons.Land2.OffHand.HasValue)  {         continue; } else break;
+				case 15: if(!loadedWeapons.HasUnderwater)           { i++;    continue; } else break;
+				case 16: if(!loadedWeapons.Underwater2.HasValue)    {         continue; } else break;
+			}
+
+			allData[i] = data;
+		}
+		return allData;
+	}
 
 	public static IProfessionArbitrary LoadProfessionArbitrary(ref ReadOnlySpan<char> text, Profession profession)
 	{
