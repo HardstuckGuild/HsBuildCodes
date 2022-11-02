@@ -1,4 +1,5 @@
 using Hardstuck.GuildWars2.BuildCodes.V2.Util;
+using System.Runtime.InteropServices;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
@@ -26,17 +27,17 @@ public enum Kind : ushort {
 
 public enum Profession {
 	_UNDEFINED = default,
-	_FIRST = GUARDIAN,
-	GUARDIAN = 1, WARRIOR, ENGINEER, RANGER, THIEF, ELEMENTALIST, MESMER, NECROMANCER, REVENANT
+	Guardian = 1, Warrior, Engineer, Ranger, Thief, Elementalist, Mesmer, Necromancer, Revenant,
+	_FIRST = Guardian,
 }
 
 public struct Specialization {
-	public int              SpecializationIndex;
+	public SpecializationId SpecializationId;
 	public TraitLineChoices Choices;
 }
 
 public enum TraitLineChoice {
-	NONE   = default,
+	NONE   = 0,
 	TOP    = 1,
 	MIDDLE = 2,
 	BOTTOM = 3,
@@ -61,9 +62,9 @@ public struct UnderwaterWeapon {
 
 public enum WeaponType {
 	_UNDEFINED = default,
-	_FIRST = AXE,
 	AXE = 1, DAGGER, MACE, PISTOL, SWORD, SCEPTER, FOCUS, SHIELD, TORCH, WARHORN, SHORTBOW, 
 	GREATSWORD, HAMMER, LONGBOW, RIFLE, STAFF, HARPOON_GUN, SPEAR, TRIDENT,
+	_FIRST = AXE,
 }
 
 public struct ArbitraryData {
@@ -93,12 +94,50 @@ public class RevenantData : IProfessionArbitrary {
 
 public enum Legend {
 	_UNDEFINED = 0,
-	_FIRST = SHIRO,
 	SHIRO = 1, GLINT, MALLY, JALIS, VENTARI, KALLA, VINDICATOR,
+	_FIRST = SHIRO,
 }
 
 public interface IArbitrary {
 	public class NONE : IArbitrary {
 		public static readonly NONE Instance = new();
+	}
+}
+
+
+/// <summary> Unused. be weary of endianess </summary>
+[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 44)]
+unsafe struct OfficialBuildCode {
+	public       byte   Type;
+	public       byte   Profession;
+	public fixed ushort Specializations[3];
+	public fixed ushort SkillPalletteIds[10];
+	public ProfessionSpecificSegment ProfessionSpecific;
+
+	[StructLayout(LayoutKind.Explicit, Pack = 1)]
+	public struct ProfessionSpecificSegment {
+		[FieldOffset(0)]
+		public RangerSegment   Ranger;
+		[FieldOffset(0)]
+		public RevenantSegment Revenant;
+
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct RangerSegment {
+			public byte LandPet1;
+			public byte LandPet2;
+			public byte WaterPet1;
+			public byte WaterPet2;
+		}
+
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct RevenantSegment {
+			public byte LandLegend1;
+			public byte LandLegend2;
+			public byte WaterLegend1;
+			public byte WaterLegend2;
+
+			public fixed ushort LandInactiveUtilitySkills[3];
+			public fixed ushort WaterInactiveUtilitySkills[3];
+		}
 	}
 }

@@ -26,8 +26,7 @@
 		</PackageReference>
 	</ItemGroup>
 
-
 	<ItemGroup>
-		<Compile Include="../../../include/c#/10/**/*.cs" Exclude="../../../include/c#/10/obj/**/*.cs" />
+	  <ProjectReference Include="..\..\..\include\c#\10\HsBuildCodes.csproj" />
 	</ItemGroup>
 </Project>

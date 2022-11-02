@@ -54,17 +54,15 @@ V T P STSTST WS..wS..WS..wS..WS..S..wS..S.. S..S..S..S..S.. R.. A..n,,,, I..n,,,
 
         This effectively constructs `0b00aabbcc` with `aa` = pos of first choice, `bb` = pos of second choice, `cc` = pos of third choice. With a max value of 63 this can be used to index `character_set` and obtain the final encoding. Omit if trait line is empty.
 
-`[WS..wS..WS..wS..WS..S..wS..S..]` Weapons [3 * 3-8 characters] pairs of (1 char weapon type id, 1-3 char sigil id, 0-1 char weapon type id, 1-3 char sigil id):
-  - if the first weapon is two handed, the second weapon id in the set is omitted (doesn't apply to underwater set)
+`[WS..wS..WS..wS..]` Weapons [2 * 3-8 characters] pairs of (1 char weapon type id, 1-3 char sigil id, 0-1 char weapon type id, 1-3 char sigil id):
+  - if the first weapon is two handed, the second weapon id in the set is omitted 
   1. - `_` (underscore): empty weapon slot
      - `A-T`: weapon type id (resolved by `hardstuck.gg/api/weapon_types`)
   2. - `_` (underscore): empty sigil slot
      - `1-3 characters`: sigil id resolved by `/v2/items`, `encode(id, 3)`
 
-  - Third set represents the two underwater weapon slots. Those are always two handed and therefore need two sigils each. Omit the sigils of the second weapon if the second weapon is empty (`_` (underscore)).
-
-  - The second and underwater weapon set may be omitted from the code by replacing 
-the whole second or third set (`[WS..wS..]`) with a `~` (tilde). This section can be
+  - The second weapon set may be omitted from the code by replacing 
+the whole second set (`[WS..wS..]`) with a `~` (tilde). This section can be
 omitted completely by replacing the whole section with a single `~` (tilde).
 
 `[S..S..S..S..S..]` Slot skills [5 * 1-3 characters] each:
@@ -78,10 +76,10 @@ omitted completely by replacing the whole section with a single `~` (tilde).
 `[A..n,,,,]` Attribute ids [1-n characters] itemstat id resolved by `/v2/itemstats`
   - For pvp codes encode the stat id of the amulet with `encode(id, 2)`
   - For other gamemodes:
-    1. Order the equipment in the following way: armor (helmet to boots), backpiece, accessory1, accessory2, ring1, ring2, weapons (main hand then offhand for all sets), aquabreather, amulet.
+    1. Order the equipment in the following way: armor (helmet to boots), backpiece, accessory1, accessory2, ring1, ring2, weapons (main hand then offhand for all sets), amulet.
        - Only include weapons in this list that actually exist in the code.
     2. Going trough that list `encode(itemstat_id, 2)` of the current item,
-    3. then append `A-S` (one char) for the amount of times this stat type repeats in the list. 
+    3. then append `A-O` (one char) for the amount of times this stat type repeats in the list. 
        - Omit the repetition count if there is only one item left as it would always be 1. 
     4. Repeat step 2. and 3. until the whole list has been processed.
 
@@ -105,12 +103,20 @@ omitted completely by replacing the whole section with a single `~` (tilde).
   - Revenant Legends + utility: [3-11 characters]
     1. 2 times 
        - `_` (underscore): empty legend slot
-       - `A-F` : legend index from `/v2/legends` to index `character_set`
+       - `A-F` : legend index from `/v2/legends` to index `character_set`. Shiro, Glint, Mallyx, Jalis, Ventari, Kalla, Vindicator
     2. 3 times 
        - `_` (underscore): empty alternate legend utility skill slot
        - `1-3 characters`: alternate legend utility skill id resolved by `/v2/skills`, `encode(id, 3)`
        - omit whole block if second legend is empty
     
+### A note on underwater Codes:
+There are no special fields defined for handling underwater data. To define underwater data just make the following adjustments:
+  - Weapon 1 of set1 becomes the first UW weapon, weapon 1 of set2 becomes the second UW weapon.
+	- The helmet is replaced by the aquabreather.
+  - Ranger Pets now define the underwater pets.
+	- Revenant legends and alternate skills now define the UW legends / skills.
+
+There is no signal build into a code to determine if a code is an underwater code, as there aren't really any functional differences. The end user may however inspect the weapons, if present, to reach a conclusion.
 
 ## Binary (compressed) spec
 
@@ -145,15 +151,6 @@ or
 		24 : slot 1 sigil. 0 if no sigil in slot1, 1 + sigil item id otherwise
 		5  : set2 offhand weapon. 1 if slot is empty, 2 + weapon type id otherwise. omitted if set2 main hand is two handed
 		24 : slot 2 sigil. 0 if no sigil in slot2, 1 + sigil item id otherwise
-	either
-		5 : 0 if code des not contain third (underwater) weapon set
-	or
-		5  : underwater first weapon. 2 + weapon type id
-		24 : slot 1 sigil 1. 0 if no sigil in slot1, 1 + sigil item id otherwise
-		24 : slot 1 sigil 2. 0 if no sigil in slot1, 1 + sigil item id otherwise
-		5  : underwater second weapon. 1 if slot is empty, 2 + weapon type id otherwise 
-		24 : slot 2 sigil 1. 0 if no sigil in slot2, 1 + sigil item id otherwise. omit if second UW weapon slot is empty
-		24 : slot 2 sigil 2. 0 if no sigil in slot1, 1 + sigil item id otherwise. omit if second UW weapon slot is empty
 
 
 repeat 5
@@ -166,14 +163,14 @@ either
 or
 	dynamic repeat
 		16 : stat id
-		5  : repeat count
+		4  : repeat count
 
 either
 	24 : 0 if infusions omitted
 or
 	dynamic repeat
 		24 : 1 if empty slot, 2 + infusion item id otherwise
-		5  : repeat count
+		4  : repeat count
 
 24 : food item. 0 if none, 1 + item_id otherwise, omit for pvp codes
 24 : utility item. 0 if none, 1 + item_id otherwise, omit for pvp codes

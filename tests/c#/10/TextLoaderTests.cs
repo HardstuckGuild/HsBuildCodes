@@ -72,12 +72,11 @@ public class BasicCodesTests {
 		var code = TextLoader.LoadBuildCode("BpA___~______B~");
 		Assert.Equal(2                  , code.Version);
 		Assert.Equal(Kind.PvP           , code.Kind);
-		Assert.Equal(Profession.GUARDIAN, code.Profession);
+		Assert.Equal(Profession.Guardian, code.Profession);
 		for(int i = 0; i < 3; i++)
 			Assert.Null(code.Specializations[i]);
-		Assert.False(code.Weapons.Land1.IsSet);
-		Assert.False(code.Weapons.Land2.IsSet);
-		Assert.False(code.Weapons.HasUnderwater);
+		Assert.False(code.Weapons.Set1.IsSet);
+		Assert.False(code.Weapons.Set2.IsSet);
 		for(int i = 0; i < 5; i++)
 			Assert.Null(code.SlotSkills[i]);
 		Assert.Null(code.Rune);
@@ -99,12 +98,11 @@ public class BasicCodesTests {
 		var code = TextLoader.LoadBuildCode("BoA___~______B~N~__");
 		Assert.Equal(2                  , code.Version);
 		Assert.Equal(Kind.PvE           , code.Kind);
-		Assert.Equal(Profession.GUARDIAN, code.Profession);
+		Assert.Equal(Profession.Guardian, code.Profession);
 		for(int i = 0; i < 3; i++)
 			Assert.Null(code.Specializations[i]);
-		Assert.False(code.Weapons.Land1.IsSet);
-		Assert.False(code.Weapons.Land2.IsSet);
-		Assert.False(code.Weapons.HasUnderwater);
+		Assert.False(code.Weapons.Set1.IsSet);
+		Assert.False(code.Weapons.Set2.IsSet);
 		for(int i = 0; i < 5; i++)
 			Assert.Null(code.SlotSkills[i]);
 		Assert.Null(code.Rune);
@@ -141,5 +139,90 @@ public class BasicCodesTests {
 		Assert.Null(data.AltUtilitySkill1);
 		Assert.Null(data.AltUtilitySkill2);
 		Assert.Null(data.AltUtilitySkill3);
+	}
+}
+
+public class OfficialChatLinks {
+	[Fact]
+	public void LoadOfficialLink()
+	{
+		ProfessionSkillPallettes.Reload(Profession.Necromancer, true);
+
+		var code = TextLoader.LoadOfficialBuildCode("[&DQg1KTIlIjbBEgAAgQB1AUABgQB1AUABlQCVAAAAAAAAAAAAAAAAAAAAAAA=]");
+		Assert.Equal(Profession.Necromancer, code.Profession);
+
+		Assert.Equal(SpecializationId.Spite, code.Specializations[0]!.Value.SpecializationId);
+		Assert.Equal(new TraitLineChoices() {
+			Adept = TraitLineChoice.TOP,
+			Master = TraitLineChoice.MIDDLE,
+			Grandmaster = TraitLineChoice.MIDDLE,
+		}, code.Specializations[0]!.Value.Choices);
+
+		Assert.Equal(SpecializationId.Soul_Reaping, code.Specializations[1]!.Value.SpecializationId);
+		Assert.Equal(new TraitLineChoices() {
+			Adept = TraitLineChoice.TOP,
+			Master = TraitLineChoice.TOP,
+			Grandmaster = TraitLineChoice.MIDDLE,
+		}, code.Specializations[1]!.Value.Choices);
+
+		Assert.Equal(SpecializationId.Reaper, code.Specializations[2]!.Value.SpecializationId);
+		Assert.Equal(new TraitLineChoices() {
+			Adept = TraitLineChoice.MIDDLE,
+			Master = TraitLineChoice.TOP,
+			Grandmaster = TraitLineChoice.BOTTOM,
+		}, code.Specializations[2]!.Value.Choices);
+
+		Assert.Equal(SkillId.Your_Soul_Is_Mine, code.SlotSkills[0]);
+		Assert.Equal(SkillId.Well_of_Suffering1, code.SlotSkills[1]);
+		Assert.Equal(SkillId.Well_of_Darkness1, code.SlotSkills[2]);
+		Assert.Equal(SkillId.Signet_of_Spite, code.SlotSkills[3]);
+		Assert.Equal(SkillId.Summon_Flesh_Golem, code.SlotSkills[4]);
+	}
+
+	[Fact]
+	public void WriteOfficialLink()
+	{
+		var code = new BuildCode {
+			Profession = Profession.Necromancer,
+			Specializations = {
+				Choice1 = new Specialization() {
+					SpecializationId = SpecializationId.Spite,
+					Choices          = {
+						Adept        = TraitLineChoice.TOP,
+						Master       = TraitLineChoice.MIDDLE,
+						Grandmaster  = TraitLineChoice.MIDDLE,
+					},
+				},
+				Choice2 = new Specialization() {
+					SpecializationId = SpecializationId.Soul_Reaping,
+					Choices          = {
+						Adept        = TraitLineChoice.TOP,
+						Master       = TraitLineChoice.TOP,
+						Grandmaster  = TraitLineChoice.MIDDLE,
+					},
+				},
+				Choice3 = new Specialization() {
+					SpecializationId = SpecializationId.Reaper,
+					Choices          = {
+						Adept        = TraitLineChoice.MIDDLE,
+						Master       = TraitLineChoice.TOP,
+						Grandmaster  = TraitLineChoice.BOTTOM,
+					},
+				},
+			},
+			SlotSkills = {
+				Heal = SkillId.Your_Soul_Is_Mine,
+				Utility1 = SkillId.Well_of_Suffering1,
+				Utility2 = SkillId.Well_of_Darkness1,
+				Utility3 = SkillId.Signet_of_Spite,
+				Elite   = SkillId.Summon_Flesh_Golem,
+			}
+		};
+
+		ProfessionSkillPallettes.Reload(Profession.Necromancer, true);
+
+		var reference = "[&DQg1KTIlIjbBEgAAgQAAAEABAAB1AQAAlQAAAAAAAAAAAAAAAAAAAAAAAAA=]";
+		var result = TextLoader.WriteOfficialBuildCode(code);
+		Assert.Equal(reference, result);
 	}
 }

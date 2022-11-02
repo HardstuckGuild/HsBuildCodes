@@ -1,6 +1,8 @@
 namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
+/// <summary> incomplete, mostly for fixing 'curiositys' in the api </summary>
 public enum SkillId {
+	UNDEFINED = default,
 	Glyph_of_Lesser_Elementals5 = 5502,
 	Signet_of_Restoration = 5503,
 	Glyph_of_Elemental_Power5 = 5506,

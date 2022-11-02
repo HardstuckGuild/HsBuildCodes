@@ -1,8 +1,10 @@
 using Hardstuck.GuildWars2.BuildCodes.V2.Util;
 using System.Buffers.Binary;
 using System.Diagnostics;
-
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using static Hardstuck.GuildWars2.BuildCodes.V2.Static;
+using static Hardstuck.GuildWars2.BuildCodes.V2.Util.Static;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
@@ -81,7 +83,7 @@ public static class BinaryLoader {
 		}
 	}
 
-	#region HSBuildCodes
+	#region hardstuck codes
 
 	public static BuildCode LoadBuildCode(ReadOnlySpan<byte> raw)
 	{
@@ -99,22 +101,17 @@ public static class BinaryLoader {
 		Debug.Assert(code.Kind != Kind._UNDEFINED, "Code type not valid");
 		code.Profession = Profession._FIRST + rawSpan.DecodeNext(4);
 		for(var i = 0; i < 3; i++) {
-			var traitLine = rawSpan.DecodeNext(4);
-			if(traitLine != 0)
+			var traitLine = (SpecializationId)rawSpan.DecodeNext(4);
+			if(traitLine != SpecializationId._NONE)
 				code.Specializations[i] = new() {
-					SpecializationIndex = traitLine,
+					SpecializationId = traitLine,
 					Choices             = LoadTraitChoices(ref rawSpan),
 				};
 		}
 		if(!rawSpan.EatIfExpected(0, 5)) {
-			code.Weapons.Land1 = LoadWeaponSet(ref rawSpan);
+			code.Weapons.Set1 = LoadWeaponSet(ref rawSpan);
 			if(!rawSpan.EatIfExpected(0, 5))
-				code.Weapons.Land2 = LoadWeaponSet(ref rawSpan);
-			if(!rawSpan.EatIfExpected(0, 5)) {
-				code.Weapons.Underwater1 = LoadUnderwaterWeapon(ref rawSpan);
-				if(!rawSpan.EatIfExpected(1, 5))
-					code.Weapons.Underwater2 = LoadUnderwaterWeapon(ref rawSpan);
-			}
+				code.Weapons.Set2 = LoadWeaponSet(ref rawSpan);
 		}
 		for(int i = 0; i < 5; i++)
 			code.SlotSkills[i] = rawSpan.DecodeNext_WriteMinusMinIfAtLeast<SkillId>(1, 24);
@@ -178,16 +175,14 @@ public static class BinaryLoader {
 				data = loader.Invoke(ref rawSpan);
 
 				if(i == AllEquipmentData.ALL_EQUIPMENT_COUNT - 1) repeatCount = 1;
-				else repeatCount = rawSpan.DecodeNext(5);
+				else repeatCount = rawSpan.DecodeNext(4);
 			}
 
 			switch(i) {
-				case 11: if(!loadedWeapons.Land1.MainHand.HasValue) { i += 5; continue; } else break;
-				case 12: if(!loadedWeapons.Land1.OffHand.HasValue)  {         continue; } else break;
-				case 13: if(!loadedWeapons.Land2.IsSet)             { i++;    continue; } else break;
-				case 14: if(!loadedWeapons.Land2.OffHand.HasValue)  {         continue; } else break;
-				case 15: if(!loadedWeapons.HasUnderwater)           { i++;    continue; } else break;
-				case 16: if(!loadedWeapons.Underwater2.HasValue)    {         continue; } else break;
+				case 11: if(!loadedWeapons.Set1.MainHand.HasValue) { i += 5; continue; } else break;
+				case 12: if(!loadedWeapons.Set1.OffHand.HasValue)  {         continue; } else break;
+				case 13: if(!loadedWeapons.Set2.IsSet)             { i++;    continue; } else break;
+				case 14: if(!loadedWeapons.Set2.OffHand.HasValue)  {         continue; } else break;
 			}
 
 			allData[i] = data;
@@ -206,12 +201,10 @@ public static class BinaryLoader {
 		for(int i = 0; i < AllEquipmentData.ALL_EQUIPMENT_COUNT; i++) {
 
 			switch(i) {
-				case 11: if(!loadedWeapons.Land1.MainHand.HasValue) { i += 5; continue; } else break;
-				case 12: if(!loadedWeapons.Land1.OffHand.HasValue)  {         continue; } else break;
-				case 13: if(!loadedWeapons.Land2.IsSet)             { i++;    continue; } else break;
-				case 14: if(!loadedWeapons.Land2.OffHand.HasValue)  {         continue; } else break;
-				case 15: if(!loadedWeapons.HasUnderwater)           { i++;    continue; } else break;
-				case 16: if(!loadedWeapons.Underwater2.HasValue)    {         continue; } else break;
+				case 11: if(!loadedWeapons.Set1.MainHand.HasValue) { i += 5; continue; } else break;
+				case 12: if(!loadedWeapons.Set1.OffHand.HasValue)  {         continue; } else break;
+				case 13: if(!loadedWeapons.Set2.IsSet)             { i++;    continue; } else break;
+				case 14: if(!loadedWeapons.Set2.OffHand.HasValue)  {         continue; } else break;
 			}
 
 			allData[i] = data;
@@ -223,7 +216,7 @@ public static class BinaryLoader {
 	{
 		switch(profession)
 		{
-			case Profession.RANGER: {
+			case Profession.Ranger: {
 				var data = new RangerData();
 				if(!rawSpan.EatIfExpected(0, 7)) {
 					rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref data.Pet1, 2, 7);
@@ -232,7 +225,7 @@ public static class BinaryLoader {
 				return data;
 			}
 
-			case Profession.REVENANT: {
+			case Profession.Revenant: {
 				var data = new RevenantData();
 				rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref data.Legend1, 1, 4);
 				rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref data.Legend2, 1, 4);
@@ -258,67 +251,68 @@ public static class BinaryLoader {
 
 	#region official codes
 
-	public static BuildCode LoadBuildCodeFromOfficialBuildCode(ReadOnlySpan<byte> raw)
+	/// <summary> Requires pallette ids to be loaded </summary>
+	public static BuildCode LoadOfficialBuildCode(ReadOnlySpan<byte> raw, bool aquatic = false)
 	{
-		static byte SliceAndShift(ref ReadOnlySpan<byte> raw)
-		{
-			byte b = raw[0];
-			raw = raw[1..];
-			return b;
-		}
-
-		var codeType = SliceAndShift(ref raw);
+		var codeType = SliceAndAdvance(ref raw);
 		Debug.Assert(codeType == 0x0D);
 
 		var code = new BuildCode();
 		code.Version    = CURRENT_VERSION;
-		code.Profession = (Profession)SliceAndShift(ref raw);
-		for(int i = 0; i < 3; i++) {
-			int spec = SliceAndShift(ref raw);
+		code.Profession = (Profession)SliceAndAdvance(ref raw);
+		for(int i = 0; i < 3; i++, raw = raw[2..]) {
+			var spec = (SpecializationId)raw[0];
+			if(spec == SpecializationId._NONE) continue;
+
 			var choices = new TraitLineChoices();
-			var mix = SliceAndShift(ref raw);
+			var mix = raw[1];
 			for(int j = 0; j < 3; j++) {
 				choices[j] = (TraitLineChoice)((mix >> (j * 2)) & 0b00000011);
 			}
 			code.Specializations[i] = new() {
-				SpecializationIndex = spec,
-				Choices             = choices,
+				SpecializationId = spec,
+				Choices = choices,
 			};
 		}
 
-		for(int i = 0; i < 10; i++)
-		{
-			var terrestrial = BinaryPrimitives.ReadUInt16LittleEndian(raw.Slice(i * 2    , 2));
-			var aquatic     = BinaryPrimitives.ReadUInt16LittleEndian(raw.Slice(i * 2 + 1, 2));
+		var skillPallette = ProfessionSkillPallettes.ByProfession(code.Profession);
 
-			if(terrestrial != 0)  code.SlotSkills[i / 2] = TranslatePalleteSkill(terrestrial);
-			else if(aquatic != 0) code.SlotSkills[i / 2] = TranslatePalleteSkill(aquatic);
+		var offset = aquatic ? 2 : 0;
+		for(int i = 0; i < 5; i++)
+		{
+			var palletteId = BinaryPrimitives.ReadUInt16LittleEndian(raw.Slice(i * 4  + offset, 2));
+			if(palletteId != 0) code.SlotSkills[i] = skillPallette.PalletteToSkill[palletteId];
 		}
 
-		raw = raw[20..];
+		raw = raw[(5 * 4)..];
 
 		switch(code.Profession)
 		{
-			case Profession.RANGER:
+			case Profession.Ranger:
+				raw = raw[offset..];
+
 				var rangerData = new RangerData();
 				if(raw[0] != 0) rangerData.Pet1 = raw[0];
 				if(raw[1] != 0) rangerData.Pet2 = raw[1];
 				code.ArbitraryData.ProfessionSpecific = rangerData;
 				break;
 
-			case Profession.REVENANT:
+			case Profession.Revenant:
+				raw = raw[offset..];
+
 				var revenantData = new RevenantData();
-				if(raw[0] != 0) revenantData.Legend1 = (Legend)raw[0];
+				if(raw[0] != 0) revenantData.Legend1 = raw[0] - Legend._FIRST;
 				if(raw[1] != 0) {
-					revenantData.Legend2 = (Legend)raw[1];
-					raw = raw[1..];
+					revenantData.Legend2 = raw[1] - Legend._FIRST;
+					var revSkillOffset = aquatic ? 6: 2;
+					raw = raw[revSkillOffset..];
 
 					var skill1 = BinaryPrimitives.ReadUInt16LittleEndian(raw[..2]);
-					if(skill1 != 0) revenantData.AltUtilitySkill1 = TranslatePalleteSkill(skill1);
+					if(skill1 != 0) revenantData.AltUtilitySkill1 = skillPallette.PalletteToSkill[skill1];
 					var skill2 = BinaryPrimitives.ReadUInt16LittleEndian(raw[2..4]);
-					if(skill2 != 0) revenantData.AltUtilitySkill2 = TranslatePalleteSkill(skill2);
+					if(skill2 != 0) revenantData.AltUtilitySkill2 = skillPallette.PalletteToSkill[skill2];
 					var skill3 = BinaryPrimitives.ReadUInt16LittleEndian(raw[4..6]);
-					if(skill3 != 0) revenantData.AltUtilitySkill3 = TranslatePalleteSkill(skill3);
+					if(skill3 != 0) revenantData.AltUtilitySkill3 = skillPallette.PalletteToSkill[skill3];
 				}
 				code.ArbitraryData.ProfessionSpecific = revenantData;
 				break;
@@ -327,6 +321,66 @@ public static class BinaryLoader {
 		code.ArbitraryData.Arbitrary = IArbitrary.NONE.Instance;
 
 		return code;
+	}
+
+	public static void WriteOfficialBuildCode(BuildCode code, Span<byte> destination, bool aquatic = false)
+	{
+		Debug.Assert(destination.Length >= OFFICIAL_CHAT_CODE_BYTE_LENGTH, "destination is not large enough to write code");
+
+		destination[0] = 0x0d; //code type
+		destination[1] = (byte)code.Profession;
+		for(int i = 0; i < 3; i++) {
+			if(!code.Specializations[i].HasValue) continue;
+
+			var spec = code.Specializations[i]!.Value;
+			destination[2 + i * 2] = (byte)spec.SpecializationId;
+			destination[3 + i * 2] = (byte)((int)spec.Choices[0] | ((int)spec.Choices[1] << 2) | ((int)spec.Choices[2] << 4));
+		}
+
+		var pallette = ProfessionSkillPallettes.ByProfession(code.Profession);
+
+		var skillsDestination = destination[(aquatic ? 10 : 8)..];
+		for(int i = 0; i < 5; i++) {
+			ushort palletteIndex = 0;
+			if(code.SlotSkills[i].HasValue) palletteIndex = pallette.SkillToPallette[code.SlotSkills[i]!.Value];
+			BinaryPrimitives.WriteUInt16LittleEndian(skillsDestination[(i * 4)..], palletteIndex);
+		}
+
+		var profSpecificDest = destination[28..];
+		switch(code.Profession)
+		{
+			case Profession.Ranger:
+				var rangerData = (RangerData)code.ArbitraryData.ProfessionSpecific;
+				var offset = aquatic ? 2 : 0;
+				profSpecificDest[offset + 0] = (byte)(rangerData.Pet1 ?? 0);
+				profSpecificDest[offset + 1] = (byte)(rangerData.Pet2 ?? 0);
+				break;
+
+			case Profession.Revenant:
+				var revenantData = (RevenantData)code.ArbitraryData.ProfessionSpecific;
+				int legendOffset, skillOffset;
+				if(aquatic) {
+					legendOffset = 2;
+					skillOffset  = 9;
+				}
+				else {
+					legendOffset = 0;
+					skillOffset  = 4;
+				}
+
+				profSpecificDest[legendOffset] = (byte)(revenantData.Legend1 ?? 0);
+				profSpecificDest[legendOffset + 1] = (byte)(revenantData.Legend2 ?? 0);
+
+				ushort altSkill1PalletteId = revenantData.AltUtilitySkill1.HasValue ? pallette.SkillToPallette[revenantData.AltUtilitySkill1.Value] : (ushort)0;
+				BinaryPrimitives.WriteUInt16LittleEndian(profSpecificDest[skillOffset..], altSkill1PalletteId);
+
+				ushort altSkill2PalletteId = revenantData.AltUtilitySkill2.HasValue ? pallette.SkillToPallette[revenantData.AltUtilitySkill2.Value] : (ushort)0;
+				BinaryPrimitives.WriteUInt16LittleEndian(profSpecificDest[(skillOffset + 2)..], altSkill2PalletteId);
+
+				ushort altSkill3PalletteId = revenantData.AltUtilitySkill3.HasValue ? pallette.SkillToPallette[revenantData.AltUtilitySkill3.Value] : (ushort)0;
+				BinaryPrimitives.WriteUInt16LittleEndian(profSpecificDest[(skillOffset + 4)..], altSkill3PalletteId);
+				break;
+		}
 	}
 
 	#endregion

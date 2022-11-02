@@ -1,5 +1,6 @@
 using Hardstuck.GuildWars2.BuildCodes.V2.Util;
 using System.Diagnostics;
+using System.Linq;
 using Xunit;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2.Tests.Binary;
@@ -170,12 +171,11 @@ public class BasicCodeTests {
 		var code = BinaryLoader.LoadBuildCode(rawCode);
 		Assert.Equal(2                  , code.Version);
 		Assert.Equal(Kind.PvP           , code.Kind);
-		Assert.Equal(Profession.GUARDIAN, code.Profession);
+		Assert.Equal(Profession.Guardian, code.Profession);
 		for(int i = 0; i < 3; i++)
 			Assert.Null(code.Specializations[i]);
-		Assert.False(code.Weapons.Land1.IsSet);
-		Assert.False(code.Weapons.Land2.IsSet);
-		Assert.False(code.Weapons.HasUnderwater);
+		Assert.False(code.Weapons.Set1.IsSet);
+		Assert.False(code.Weapons.Set2.IsSet);
 		for(int i = 0; i < 5; i++)
 			Assert.Equal((SkillId)i, code.SlotSkills[i]);
 		Assert.Null(code.Rune);
@@ -207,7 +207,7 @@ public class BasicCodeTests {
 			"000000000000000000000000" +
 			"000000000000000000000000" + //rune
 			"0000000000000001" + //stats (pve)
-			"01101" +
+			"1100" +
 			"000000000000000000000000" + // infusions
 			"000000000000000000000000" + // food
 			"000000000000000000000000" // utility
@@ -215,12 +215,11 @@ public class BasicCodeTests {
 		var code = BinaryLoader.LoadBuildCode(rawCode);
 		Assert.Equal(2                  , code.Version);
 		Assert.Equal(Kind.PvE           , code.Kind);
-		Assert.Equal(Profession.GUARDIAN, code.Profession);
+		Assert.Equal(Profession.Guardian, code.Profession);
 		for(int i = 0; i < 3; i++)
 			Assert.Null(code.Specializations[i]);
-		Assert.False(code.Weapons.Land1.IsSet);
-		Assert.False(code.Weapons.Land2.IsSet);
-		Assert.False(code.Weapons.HasUnderwater);
+		Assert.False(code.Weapons.Set1.IsSet);
+		Assert.False(code.Weapons.Set2.IsSet);
 		for(int i = 0; i < 5; i++)
 			Assert.Null(code.SlotSkills[i]);
 		Assert.Null(code.Rune);
@@ -252,15 +251,14 @@ public class BasicCodeTests {
 			"000000000000000000000000" +
 			"000000000000000000000000" + //rune
 			"0000000000000001" + //stats (pve)
-			"01101" +
+			"1100" +
 			"000000000000000000000000" + // infusions
 			"111100000000000000000110" + // food
 			"111100000000000000000110" + // utility
-			"0000000" + // land pets
-			"0000000" // water pets
+			"0000000" // pets
 		 );
 		var code = BinaryLoader.LoadBuildCode(rawCode);
-		Assert.Equal(Profession.RANGER, code.Profession);
+		Assert.Equal(Profession.Ranger, code.Profession);
 		Assert.IsType<RangerData>(code.ArbitraryData.ProfessionSpecific);
 		var data = (RangerData)code.ArbitraryData.ProfessionSpecific;
 		Assert.Null(data.Pet1);
@@ -283,14 +281,14 @@ public class BasicCodeTests {
 			"000000000000000000000000" +
 			"000000000000000000000000" + //rune
 			"0000000000000001" + //stats (pve)
-			"01101" +
+			"1100" +
 			"000000000000000000000000" + // infusions
 			"000000000000000000000000" + // food
 			"000000000000000000000000" + // utility
 			"0000_0000" // legends
 		 );
 		var code = BinaryLoader.LoadBuildCode(rawCode);
-		Assert.Equal(Profession.REVENANT, code.Profession);
+		Assert.Equal(Profession.Revenant, code.Profession);
 		Assert.IsType<RevenantData>(code.ArbitraryData.ProfessionSpecific);
 		var data = (RevenantData)code.ArbitraryData.ProfessionSpecific;
 		Assert.Null(data.Legend1);
@@ -306,11 +304,104 @@ public class OfficialChatLinks
 	[Fact]
 	public void LoadOfficialLink()
 	{
+		ProfessionSkillPallettes.Reload(Profession.Necromancer, true);
+
+		var fullLink = "[&DQg1KTIlIjbBEgAAgQB1AUABgQB1AUABlQCVAAAAAAAAAAAAAAAAAAAAAAA=]";
+		var base64   = fullLink[2..^1];
+		var raw = Convert.FromBase64String(base64);
+		var code = BinaryLoader.LoadOfficialBuildCode(raw);
+		Assert.Equal(Profession.Necromancer, code.Profession);
+
+		Assert.Equal(SpecializationId.Spite, code.Specializations[0]!.Value.SpecializationId);
+		Assert.Equal(new TraitLineChoices() {
+			Adept       = TraitLineChoice.TOP,
+			Master      = TraitLineChoice.MIDDLE,
+			Grandmaster = TraitLineChoice.MIDDLE,
+		}, code.Specializations[0]!.Value.Choices);
+
+		Assert.Equal(SpecializationId.Soul_Reaping, code.Specializations[1]!.Value.SpecializationId);
+		Assert.Equal(new TraitLineChoices() {
+			Adept       = TraitLineChoice.TOP,
+			Master      = TraitLineChoice.TOP,
+			Grandmaster = TraitLineChoice.MIDDLE,
+		}, code.Specializations[1]!.Value.Choices);
+
+		Assert.Equal(SpecializationId.Reaper, code.Specializations[2]!.Value.SpecializationId);
+		Assert.Equal(new TraitLineChoices() {
+			Adept       = TraitLineChoice.MIDDLE,
+			Master      = TraitLineChoice.TOP,
+			Grandmaster = TraitLineChoice.BOTTOM,
+		}, code.Specializations[2]!.Value.Choices);
+
+		Assert.Equal(SkillId.Your_Soul_Is_Mine, code.SlotSkills[0]);
+		Assert.Equal(SkillId.Well_of_Suffering1, code.SlotSkills[1]);
+		Assert.Equal(SkillId.Well_of_Darkness1, code.SlotSkills[2]);
+		Assert.Equal(SkillId.Signet_of_Spite, code.SlotSkills[3]);
+		Assert.Equal(SkillId.Summon_Flesh_Golem, code.SlotSkills[4]);
+	}
+
+	[Fact]
+	public void WriteOfficialLink()
+	{
+		var code = new BuildCode {
+			Profession = Profession.Necromancer,
+			Specializations = {
+				Choice1 = new Specialization() {
+					SpecializationId = SpecializationId.Spite,
+					Choices          = {
+						Adept        = TraitLineChoice.TOP,
+						Master       = TraitLineChoice.MIDDLE,
+						Grandmaster  = TraitLineChoice.MIDDLE,
+					},
+				},
+				Choice2 = new Specialization() {
+					SpecializationId = SpecializationId.Soul_Reaping,
+					Choices          = {
+						Adept        = TraitLineChoice.TOP,
+						Master       = TraitLineChoice.TOP,
+						Grandmaster  = TraitLineChoice.MIDDLE,
+					},
+				},
+				Choice3 = new Specialization() {
+					SpecializationId = SpecializationId.Reaper,
+					Choices          = {
+						Adept        = TraitLineChoice.MIDDLE,
+						Master       = TraitLineChoice.TOP,
+						Grandmaster  = TraitLineChoice.BOTTOM,
+					},
+				},
+			},
+			SlotSkills = {
+				Heal = SkillId.Your_Soul_Is_Mine,
+				Utility1 = SkillId.Well_of_Suffering1,
+				Utility2 = SkillId.Well_of_Darkness1,
+				Utility3 = SkillId.Signet_of_Spite,
+				Elite   = SkillId.Summon_Flesh_Golem,
+			}
+		};
+
+		ProfessionSkillPallettes.Reload(Profession.Necromancer, true);
+
+		var buffer = new byte[44];
+		BinaryLoader.WriteOfficialBuildCode(code, buffer);
+
+		var reference = "[&DQg1KTIlIjbBEgAAgQAAAEABAAB1AQAAlQAAAAAAAAAAAAAAAAAAAAAAAAA=]";
+		var referenceBase64 = reference[2..^1];
+		var referenceBytes = Convert.FromBase64String(referenceBase64);
+
+		Assert.Equal(referenceBytes, buffer);
+	}
+
+	[Fact]
+	public void LoadOfficiaRevlLink() // our very special boy spec
+	{
+		ProfessionSkillPallettes.Reload(Profession.Revenant, true);
+
 		var fullLink = "[&DQkAAAAARQDcEdwRAAAAACsSAADUEQAAAAAAAAQCAwDUESsSAAAAAAAAAAA=]";
 		var base64   = fullLink[2..^1];
 		var raw = Convert.FromBase64String(base64);
-		var code = BinaryLoader.LoadBuildCodeFromOfficialBuildCode(raw);
-		Assert.Equal(Profession.REVENANT, code.Profession);
+		var code = BinaryLoader.LoadOfficialBuildCode(raw);
+		Assert.Equal(Profession.Revenant, code.Profession);
 		Assert.Equal(SkillId.Empowering_Misery, code.SlotSkills[0]);
 		Assert.Null(code.SlotSkills[1]);
 		Assert.Equal(SkillId.Banish_Enchantment, code.SlotSkills[2]);

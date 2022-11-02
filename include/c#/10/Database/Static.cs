@@ -5,6 +5,8 @@ namespace Hardstuck.GuildWars2.BuildCodes.V2;
 public static class Static
 {
 	public static readonly int CURRENT_VERSION = 2;
+	public static readonly int OFFICIAL_CHAT_CODE_BYTE_LENGTH = 44;
+
 	public static bool IsTwoHanded(WeaponType weaponType)
 	{
 		switch(weaponType)
@@ -36,11 +38,5 @@ public static class Static
 				Debug.Assert(false, $"invalid weapon {weaponType}");
 				return false;
 		}
-	}
-
-	internal static SkillId TranslatePalleteSkill(ushort palletId)
-	{
-		return (SkillId)palletId;
-
 	}
 }

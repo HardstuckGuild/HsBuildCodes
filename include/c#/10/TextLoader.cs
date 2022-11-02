@@ -65,6 +65,8 @@ public static class TextLoader {
 		return false;
 	}
 
+	#region hardstuck codes
+
 	public static BuildCode LoadBuildCode(ReadOnlySpan<char> text) {
 		var code = new BuildCode();
 		code.Version    = DecodeNextChar(ref text) + 1;
@@ -75,19 +77,14 @@ public static class TextLoader {
 		for(var i = 0; i < 3; i++) {
 			if(!EatToken(ref text, '_'))
 				code.Specializations[i] = new() {
-					SpecializationIndex = DecodeNextChar(ref text),
+					SpecializationId = (SpecializationId)DecodeNextChar(ref text),
 					Choices             = LoadTraitChoices(ref text),
 				};
 		}
 		if(!EatToken(ref text, '~')) {
-			code.Weapons.Land1 = LoadWeaponSet(ref text);
+			code.Weapons.Set1 = LoadWeaponSet(ref text);
 			if(!EatToken(ref text, '~'))
-				code.Weapons.Land2 = LoadWeaponSet(ref text);
-			if(!EatToken(ref text, '~')) {
-				code.Weapons.Underwater1 = LoadUnderwaterWeapon(ref text);
-				if(!EatToken(ref text, '_'))
-					code.Weapons.Underwater2 = LoadUnderwaterWeapon(ref text);
-			}
+				code.Weapons.Set2 = LoadWeaponSet(ref text);
 		}
 		for(int i = 0; i < 5; i++)
 			if(!EatToken(ref text, '_'))
@@ -162,12 +159,10 @@ public static class TextLoader {
 			}
 
 			switch(i) {
-				case 11: if(!loadedWeapons.Land1.MainHand.HasValue) { i += 5; continue; } else break;
-				case 12: if(!loadedWeapons.Land1.OffHand.HasValue)  {         continue; } else break;
-				case 13: if(!loadedWeapons.Land2.IsSet)             { i++;    continue; } else break;
-				case 14: if(!loadedWeapons.Land2.OffHand.HasValue)  {         continue; } else break;
-				case 15: if(!loadedWeapons.HasUnderwater)           { i++;    continue; } else break;
-				case 16: if(!loadedWeapons.Underwater2.HasValue)    {         continue; } else break;
+				case 11: if(!loadedWeapons.Set1.MainHand.HasValue) { i += 5; continue; } else break;
+				case 12: if(!loadedWeapons.Set1.OffHand.HasValue)  {         continue; } else break;
+				case 13: if(!loadedWeapons.Set2.IsSet)             { i++;    continue; } else break;
+				case 14: if(!loadedWeapons.Set2.OffHand.HasValue)  {         continue; } else break;
 			}
 
 			allData[i] = data;
@@ -186,12 +181,10 @@ public static class TextLoader {
 		for(int i = 0; i < AllEquipmentData.ALL_EQUIPMENT_COUNT; i++) {
 
 			switch(i) {
-				case 11: if(!loadedWeapons.Land1.MainHand.HasValue) { i += 5; continue; } else break;
-				case 12: if(!loadedWeapons.Land1.OffHand.HasValue)  {         continue; } else break;
-				case 13: if(!loadedWeapons.Land2.IsSet)             { i++;    continue; } else break;
-				case 14: if(!loadedWeapons.Land2.OffHand.HasValue)  {         continue; } else break;
-				case 15: if(!loadedWeapons.HasUnderwater)           { i++;    continue; } else break;
-				case 16: if(!loadedWeapons.Underwater2.HasValue)    {         continue; } else break;
+				case 11: if(!loadedWeapons.Set1.MainHand.HasValue) { i += 5; continue; } else break;
+				case 12: if(!loadedWeapons.Set1.OffHand.HasValue)  {         continue; } else break;
+				case 13: if(!loadedWeapons.Set2.IsSet)             { i++;    continue; } else break;
+				case 14: if(!loadedWeapons.Set2.OffHand.HasValue)  {         continue; } else break;
 			}
 
 			allData[i] = data;
@@ -203,7 +196,7 @@ public static class TextLoader {
 	{
 		switch(profession)
 		{
-			case Profession.RANGER: {
+			case Profession.Ranger: {
 				var data = new RangerData();
 				if(!EatToken(ref text, '~')) {
 					if(!EatToken(ref text, '_'))
@@ -214,7 +207,7 @@ public static class TextLoader {
 				return data;
 			}
 
-			case Profession.REVENANT: {
+			case Profession.Revenant: {
 				var data = new RevenantData();
 				if(!EatToken(ref text, '_'))
 					data.Legend1 = (Legend)DecodeNextChar(ref text);
@@ -239,4 +232,36 @@ public static class TextLoader {
 		//implement extensions here in the future
 		return IArbitrary.NONE.Instance;
 	}
+
+	#endregion
+
+	#region official codes
+
+	public static BuildCode LoadOfficialBuildCode(string chatLink, bool aquatic = false)
+	{
+		var base64 = chatLink[0] == '[' ? chatLink.AsSpan(2, chatLink.Length - 3) : chatLink.AsSpan();
+		Span<byte> buffer = stackalloc byte[OFFICIAL_CHAT_CODE_BYTE_LENGTH];
+		Convert.TryFromBase64Chars(base64, buffer, out _);
+		return BinaryLoader.LoadOfficialBuildCode(buffer, aquatic);
+	}
+
+	public static string WriteOfficialBuildCode(BuildCode code, bool aquatic = false)
+	{
+		Span<byte> buffer = stackalloc byte[OFFICIAL_CHAT_CODE_BYTE_LENGTH];
+		BinaryLoader.WriteOfficialBuildCode(code, buffer, aquatic);
+
+		return "[&" + Convert.ToBase64String(buffer) + ']';
+	}
+	public static void WriteOfficialBuildCode(BuildCode code, Span<char> destination, bool aquatic = false)
+	{
+		Span<byte> buffer = stackalloc byte[OFFICIAL_CHAT_CODE_BYTE_LENGTH];
+		BinaryLoader.WriteOfficialBuildCode(code, buffer, aquatic);
+
+		destination[0] = '[';
+		destination[1] = '&';
+		Convert.TryToBase64Chars(buffer, destination[1..], out var writtenBytes);
+		destination[writtenBytes + 2] = ']';
+	}
+
+	#endregion
 }

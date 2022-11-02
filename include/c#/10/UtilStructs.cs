@@ -47,12 +47,8 @@ public struct TraitLineChoices {
 }
 
 public struct AllWeapons {
-	public WeaponSet        Land1;
-	public WeaponSet        Land2;
-	public UnderwaterWeapon? Underwater1;
-	public UnderwaterWeapon? Underwater2;
-
-	public bool HasUnderwater => Underwater1.HasValue || Underwater2.HasValue;
+	public WeaponSet Set1;
+	public WeaponSet Set2;
 }
 
 public struct AllSkills {
@@ -85,7 +81,7 @@ public struct AllSkills {
 }
 
 public static class AllEquipmentData {
-	public static readonly int ALL_EQUIPMENT_COUNT = 19;
+	public static readonly int ALL_EQUIPMENT_COUNT = 16;
 }
 public struct AllEquipmentData<T> {
 	public T  Helmet;
@@ -103,9 +99,6 @@ public struct AllEquipmentData<T> {
 	public T? WeaponLandSet1OffHand;
 	public T? WeaponLandSet2MainHand;
 	public T? WeaponLandSet2OffHand;
-	public T? WeaponWater1;
-	public T? WeaponWater2;
-	public T  Aquabreather;
 	public T  Amulet;
 
 	public T this[int index] {
@@ -125,10 +118,7 @@ public struct AllEquipmentData<T> {
 			12 => this.WeaponLandSet1OffHand !,
 			13 => this.WeaponLandSet2MainHand!,
 			14 => this.WeaponLandSet2OffHand !,
-			15 => this.WeaponWater1          !,
-			16 => this.WeaponWater2          !,
-			17 => this.Aquabreather,
-			18 => this.Amulet,
+			15 => this.Amulet,
 			_ => throw new ArgumentOutOfRangeException(nameof(index)),
 		};
 		set {
@@ -148,10 +138,7 @@ public struct AllEquipmentData<T> {
 				case 12: this.WeaponLandSet1OffHand  = value; break;
 				case 13: this.WeaponLandSet2MainHand = value; break;
 				case 14: this.WeaponLandSet2OffHand  = value; break;
-				case 15: this.WeaponWater1           = value; break;
-				case 16: this.WeaponWater2           = value; break;
-				case 17: this.Aquabreather           = value; break;
-				case 18: this.Amulet                 = value; break;
+				case 15: this.Amulet                 = value; break;
 				default: throw new ArgumentOutOfRangeException(nameof(index));
 			};
 		}
