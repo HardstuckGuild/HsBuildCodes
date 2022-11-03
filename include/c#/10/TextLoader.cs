@@ -109,7 +109,7 @@ public static class TextLoader {
 		return code;
 	}
 
-	public static TraitLineChoices LoadTraitChoices(ref ReadOnlySpan<char> text)
+	private static TraitLineChoices LoadTraitChoices(ref ReadOnlySpan<char> text)
 	{
 		var mixed = DecodeNextChar(ref text);
 		var choices = new TraitLineChoices();
@@ -118,7 +118,7 @@ public static class TextLoader {
 		return choices;
 	}
 
-	public static WeaponSet LoadWeaponSet(ref ReadOnlySpan<char> text)
+	private static WeaponSet LoadWeaponSet(ref ReadOnlySpan<char> text)
 	{
 		var set = new WeaponSet();
 		if(!EatToken(ref text, '_'))
@@ -132,18 +132,7 @@ public static class TextLoader {
 		return set;
 	}
 
-	public static UnderwaterWeapon LoadUnderwaterWeapon(ref ReadOnlySpan<char> text)
-	{
-		var set = new UnderwaterWeapon();
-		set.Weapon = WeaponType._FIRST + DecodeNextChar(ref text);
-		if(!EatToken(ref text, '_'))
-			set.Sigil1 = Decode(ref text, 3);
-		if(!EatToken(ref text, '_'))
-			set.Sigil2 = Decode(ref text, 3);
-		return set;
-	}
-
-	public static AllEquipmentStats LoadAllEquipmentStats(ref ReadOnlySpan<char> text, in AllWeapons loadedWeapons)
+	private static AllEquipmentStats LoadAllEquipmentStats(ref ReadOnlySpan<char> text, in AllWeapons loadedWeapons)
 	{
 		var allData = new AllEquipmentStats();
 
@@ -170,7 +159,7 @@ public static class TextLoader {
 		return allData;
 	}
 
-	public static AllEquipmentStats LoadAllEquipmentStatsPvP(ref ReadOnlySpan<char> text, in AllWeapons loadedWeapons)
+	private static AllEquipmentStats LoadAllEquipmentStatsPvP(ref ReadOnlySpan<char> text, in AllWeapons loadedWeapons)
 	{
 		var allData = new AllEquipmentStats();
 
@@ -189,7 +178,7 @@ public static class TextLoader {
 		return allData;
 	}
 
-	public static AllEquipmentInfusions LoadAllEquipmentInfusions(ref ReadOnlySpan<char> text, in AllWeapons loadedWeapons)
+	private static AllEquipmentInfusions LoadAllEquipmentInfusions(ref ReadOnlySpan<char> text, in AllWeapons loadedWeapons)
 	{
 		var allData = new AllEquipmentInfusions();
 
@@ -219,7 +208,7 @@ public static class TextLoader {
 		return allData;
 	}
 
-	public static IProfessionArbitrary LoadProfessionArbitrary(ref ReadOnlySpan<char> text, Profession profession)
+	private static IProfessionArbitrary LoadProfessionArbitrary(ref ReadOnlySpan<char> text, Profession profession)
 	{
 		switch(profession)
 		{
@@ -254,7 +243,7 @@ public static class TextLoader {
 		}
 	}
 
-	public static IArbitrary LoadArbitrary(ref ReadOnlySpan<char> text)
+	private static IArbitrary LoadArbitrary(ref ReadOnlySpan<char> text)
 	{
 		//implement extensions here in the future
 		return IArbitrary.NONE.Instance;

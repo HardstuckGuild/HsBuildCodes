@@ -154,15 +154,6 @@ public static class BinaryLoader {
 		return set;
 	}
 
-	private static UnderwaterWeapon? LoadUnderwaterWeapon(ref BitSpan rawSpan)
-	{
-		var set = new UnderwaterWeapon();
-		set.Weapon = WeaponType._FIRST + rawSpan.DecodeNext_WriteMinusMinIfAtLeast<int>(2, 5)!.Value;
-		rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref set.Sigil1, 1, 24);
-		rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref set.Sigil2, 1, 24);
-		return set;
-	}
-
 	private static AllEquipmentStats LoadAllEquipmentStats(ref BitSpan rawSpan, in AllWeapons loadedWeapons)
 	{
 		var allData = new AllEquipmentStats();
