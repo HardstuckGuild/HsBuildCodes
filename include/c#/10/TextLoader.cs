@@ -148,10 +148,10 @@ public static class TextLoader {
 		var allData = new AllEquipmentStats();
 
 		var repeatCount = 0;
-		int data = default!;
+		var data = StatId._UNDEFINED;
 		for(int i = 0; i < ALL_EQUIPMENT_COUNT; i++) {
 			if(repeatCount == 0) {
-				data = Decode(ref text, 2);
+				data = (StatId)Decode(ref text, 2);
 
 				if(i == ALL_EQUIPMENT_COUNT - 1) repeatCount = 1;
 				else repeatCount = DecodeNextChar(ref text);
@@ -174,7 +174,7 @@ public static class TextLoader {
 	{
 		var allData = new AllEquipmentStats();
 
-		int data = Decode(ref text, 3);
+		var data = (StatId)Decode(ref text, 3);
 		for(int i = 0; i < ALL_EQUIPMENT_COUNT; i++) {
 
 			switch(i) {

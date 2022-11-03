@@ -81,24 +81,24 @@ public struct AllSkills {
 }
 
 public struct AllEquipmentStats {
-	public int  Helmet;
-	public int  Shoulders;
-	public int  Chest;
-	public int  Gloves;
-	public int  Leggings;
-	public int  Boots;
-	public int  BackItem;
-	public int  Accessory1;
-	public int  Accessory2;
-	public int  Ring1;
-	public int  Ring2;
-	public int? WeaponSet1MainHand;
-	public int? WeaponSet1OffHand;
-	public int? WeaponSet2MainHand;
-	public int? WeaponSet2OffHand;
-	public int  Amulet;
+	public StatId  Helmet;
+	public StatId  Shoulders;
+	public StatId  Chest;
+	public StatId  Gloves;
+	public StatId  Leggings;
+	public StatId  Boots;
+	public StatId  BackItem;
+	public StatId  Accessory1;
+	public StatId  Accessory2;
+	public StatId  Ring1;
+	public StatId  Ring2;
+	public StatId? WeaponSet1MainHand;
+	public StatId? WeaponSet1OffHand;
+	public StatId? WeaponSet2MainHand;
+	public StatId? WeaponSet2OffHand;
+	public StatId  Amulet;
 
-	public int? this[int index] {
+	public StatId? this[int index] {
 		get => (index) switch {
 			 0 => this.Helmet,
 			 1 => this.Shoulders,

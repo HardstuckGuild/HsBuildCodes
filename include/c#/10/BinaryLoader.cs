@@ -168,10 +168,10 @@ public static class BinaryLoader {
 		var allData = new AllEquipmentStats();
 
 		var repeatCount = 0;
-		int data = default!;
+		var data = StatId._UNDEFINED;
 		for(int i = 0; i < ALL_EQUIPMENT_COUNT; i++) {
 			if(repeatCount == 0) {
-				data = rawSpan.DecodeNext(16);
+				data = (StatId)rawSpan.DecodeNext(16);
 
 				if(i == ALL_EQUIPMENT_COUNT - 1) repeatCount = 1;
 				else repeatCount = rawSpan.DecodeNext(4);
@@ -194,7 +194,7 @@ public static class BinaryLoader {
 	{
 		var allData = new AllEquipmentStats();
 
-		int data = rawSpan.DecodeNext(16);
+		var data = (StatId)rawSpan.DecodeNext(16);
 		for(int i = 0; i < ALL_EQUIPMENT_COUNT; i++) {
 
 			switch(i) {

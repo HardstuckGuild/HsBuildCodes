@@ -2,7 +2,7 @@ namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
 /// <summary> incomplete, mostly for fixing 'curiositys' in the api </summary>
 public enum SkillId {
-	UNDEFINED = default,
+	_UNDEFINED = default,
 	Glyph_of_Lesser_Elementals5 = 5502,
 	Signet_of_Restoration = 5503,
 	Glyph_of_Elemental_Power5 = 5506,
@@ -619,4 +619,9 @@ public enum SkillId {
 	Hammer_of_Wisdom3 = 55053,
 	Pitfall = 56880,
 	Thousand_Needles = 56898,
+	Well_of_Gloom = 63292,
+	Well_of_Silence = 63230,
+	Shadowfall = 63275,
+	Well_of_Sorrow = 63276,
+	Well_of_Bounty = 63323,
 }

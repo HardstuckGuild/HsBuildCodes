@@ -181,7 +181,7 @@ public class BasicCodeTests {
 		Assert.Null(code.Rune);
 		for(int i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++) {
 			if(11 <= i && i <= 14) Assert.Equal(default, code.EquipmentAttributes[i]);
-			else Assert.Equal(1, code.EquipmentAttributes[i]);
+			else Assert.Equal((StatId)1, code.EquipmentAttributes[i]);
 		}
 		for(int i = 0; i < Static.ALL_INFUSION_COUNT; i++)
 			Assert.Null(code.Infusions[i]);
@@ -225,7 +225,7 @@ public class BasicCodeTests {
 		Assert.Null(code.Rune);
 		for(int i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++) {
 			if(11 <= i && i <= 14) Assert.Equal(default, code.EquipmentAttributes[i]);
-			else Assert.Equal(1, code.EquipmentAttributes[i]);
+			else Assert.Equal((StatId)1, code.EquipmentAttributes[i]);
 		}
 		for(int i = 0; i < Static.ALL_INFUSION_COUNT; i++)
 			Assert.Null(code.Infusions[i]);

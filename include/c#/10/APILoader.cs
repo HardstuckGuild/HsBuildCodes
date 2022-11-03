@@ -1,5 +1,4 @@
 using Gw2Sharp.WebApi.V2.Models;
-using System.Linq;
 
 using static Hardstuck.GuildWars2.BuildCodes.V2.Static;
 
@@ -42,9 +41,9 @@ public static class APILoader {
 			code.Specializations[i] = new() {
 				SpecializationId = (SpecializationId)spec.Id!, //todo test
 				Choices          = {
-					Adept       = (TraitLineChoice)spec.Traits[0]!, //todo translate
-					Master      = (TraitLineChoice)spec.Traits[1]!, //todo translate
-					Grandmaster = (TraitLineChoice)spec.Traits[2]!, //todo translate
+					Adept       = APICache.ResolvePosition(spec.Traits[0]), //todo translate
+					Master      = APICache.ResolvePosition(spec.Traits[1]), //todo translate
+					Grandmaster = APICache.ResolvePosition(spec.Traits[2]), //todo translate
 				},
 			};
 		}
@@ -126,7 +125,7 @@ public static class APILoader {
 							if(item.Infusions.Count > 1)
 								code.Infusions.WeaponSet1_2 = item.Infusions[1];
 						}
-						code.Weapons.Set1.MainHand = ItemCache.ResolveWeaponType(item.Id);
+						code.Weapons.Set1.MainHand = APICache.ResolveWeaponType(item.Id);
 						if(item.Upgrades != null) {
 							code.Weapons.Set1.Sigil1 = item.Upgrades[0];
 							if(item.Upgrades.Count > 1)
@@ -142,7 +141,7 @@ public static class APILoader {
 							if(item.Infusions.Count > 1)
 								code.Infusions.WeaponSet1_2 = item.Infusions[1];
 						}
-						code.Weapons.Set1.MainHand = ItemCache.ResolveWeaponType(item.Id);
+						code.Weapons.Set1.MainHand = APICache.ResolveWeaponType(item.Id);
 						if(item.Upgrades != null) {
 							code.Weapons.Set1.Sigil1 = item.Upgrades[0];
 							if(item.Upgrades.Count > 1)
@@ -154,7 +153,7 @@ public static class APILoader {
 						if(aquatic) break;
 						code.EquipmentAttributes.WeaponSet1OffHand = ResolveStatId(item);
 						code.Infusions.WeaponSet1_2 = item.Infusions?[0]; //NOTE(Rennorb): this assues that buidls with twohanded main weapons dont contain an 'empty' weapon with no upgrades
-						code.Weapons.Set1.OffHand = ItemCache.ResolveWeaponType(item.Id);
+						code.Weapons.Set1.OffHand = APICache.ResolveWeaponType(item.Id);
 						code.Weapons.Set1.Sigil2 = item.Upgrades?[0]; //NOTE(Rennorb): this assues that buidls with twohanded main weapons dont contain an 'empty' weapon with no upgrades
 						break;
 
@@ -166,7 +165,7 @@ public static class APILoader {
 							if(item.Infusions.Count > 1)
 								code.Infusions.WeaponSet2_2 = item.Infusions[1];
 						}
-						code.Weapons.Set2.MainHand = ItemCache.ResolveWeaponType(item.Id);
+						code.Weapons.Set2.MainHand = APICache.ResolveWeaponType(item.Id);
 						if(item.Upgrades != null) {
 							code.Weapons.Set2.Sigil1 = item.Upgrades[0];
 							if(IsTwoHanded(code.Weapons.Set2.MainHand.Value) && item.Upgrades.Count > 1)
@@ -182,7 +181,7 @@ public static class APILoader {
 							if(item.Infusions.Count > 1)
 								code.Infusions.WeaponSet2_2 = item.Infusions[1];
 						}
-						code.Weapons.Set2.MainHand = ItemCache.ResolveWeaponType(item.Id);
+						code.Weapons.Set2.MainHand = APICache.ResolveWeaponType(item.Id);
 						if(item.Upgrades != null) {
 							code.Weapons.Set2.Sigil1 = item.Upgrades[0];
 							if(item.Upgrades.Count > 1)
@@ -194,7 +193,7 @@ public static class APILoader {
 						if(aquatic) break;
 						code.EquipmentAttributes.WeaponSet2OffHand = ResolveStatId(item);
 						code.Infusions.WeaponSet2_2 = item.Infusions?[0];
-						code.Weapons.Set2.OffHand = ItemCache.ResolveWeaponType(item.Id);
+						code.Weapons.Set2.OffHand = APICache.ResolveWeaponType(item.Id);
 						code.Weapons.Set2.Sigil2 = item.Upgrades?[0];
 						break;
 
@@ -212,7 +211,7 @@ public static class APILoader {
 		{
 			var pvpEquip = activeEquipment.EquipmentPvp!;
 
-			code.EquipmentAttributes.Helmet = pvpEquip.Amulet ?? 0;
+			code.EquipmentAttributes.Helmet = (StatId)(pvpEquip.Amulet ?? 0);
 			code.Rune = pvpEquip.Rune;
 			code.Weapons.Set1.Sigil1 = pvpEquip.Sigils[0];
 			code.Weapons.Set1.Sigil2 = pvpEquip.Sigils[1];
@@ -247,6 +246,6 @@ public static class APILoader {
 		return code;
 	}
 
-	internal static int ResolveStatId(CharacterEquipmentItem item)
-		=> item.Stats != null ? item.Stats.Id : ItemCache.ResolveStatId(item.Id);
+	internal static StatId ResolveStatId(CharacterEquipmentItem item)
+		=> item.Stats != null ? (StatId)item.Stats.Id : APICache.ResolveStatId(item.Id);
 }
