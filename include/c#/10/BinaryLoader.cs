@@ -119,13 +119,13 @@ public static class BinaryLoader {
 		rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref code.Rune, 1, 24);
 		
 		if(code.Kind != Kind.PvP)
-			code.EquipmentAttributes = LoadAllEquipmentData(ref rawSpan, in code.Weapons, DecodeAttrib);
+			code.EquipmentAttributes = LoadAllEquipmentStats(ref rawSpan, in code.Weapons);
 		else
-			code.EquipmentAttributes = LoadAllEquipmentDataPvP(ref rawSpan, in code.Weapons);
+			code.EquipmentAttributes = LoadAllEquipmentStatsPvP(ref rawSpan, in code.Weapons);
 
 		if(code.Kind != Kind.PvP) {
 			if(!rawSpan.EatIfExpected(0, 24))
-				code.Infusions = LoadAllEquipmentData(ref rawSpan, in code.Weapons, DecodeInfusion);
+				code.Infusions = LoadAllEquipmentInfusions(ref rawSpan, in code.Weapons);
 			rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref code.Food   , 1, 24);
 			rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref code.Utility, 1, 24);
 		}
@@ -163,23 +163,22 @@ public static class BinaryLoader {
 		return set;
 	}
 
-	public delegate T DataLoader<T>(ref BitSpan rawSpan);
-	private static AllEquipmentData<T> LoadAllEquipmentData<T>(ref BitSpan rawSpan, in AllWeapons loadedWeapons, DataLoader<T> loader)
+	private static AllEquipmentStats LoadAllEquipmentStats(ref BitSpan rawSpan, in AllWeapons loadedWeapons)
 	{
-		var allData = new AllEquipmentData<T>();
+		var allData = new AllEquipmentStats();
 
 		var repeatCount = 0;
-		T data = default!;
-		for(int i = 0; i < AllEquipmentData.ALL_EQUIPMENT_COUNT; i++) {
+		int data = default!;
+		for(int i = 0; i < ALL_EQUIPMENT_COUNT; i++) {
 			if(repeatCount == 0) {
-				data = loader.Invoke(ref rawSpan);
+				data = rawSpan.DecodeNext(16);
 
-				if(i == AllEquipmentData.ALL_EQUIPMENT_COUNT - 1) repeatCount = 1;
+				if(i == ALL_EQUIPMENT_COUNT - 1) repeatCount = 1;
 				else repeatCount = rawSpan.DecodeNext(4);
 			}
 
 			switch(i) {
-				case 11: if(!loadedWeapons.Set1.MainHand.HasValue) { i += 5; continue; } else break;
+				case 11: if(!loadedWeapons.Set1.MainHand.HasValue) { i += 3; continue; } else break;
 				case 12: if(!loadedWeapons.Set1.OffHand.HasValue)  {         continue; } else break;
 				case 13: if(!loadedWeapons.Set2.IsSet)             { i++;    continue; } else break;
 				case 14: if(!loadedWeapons.Set2.OffHand.HasValue)  {         continue; } else break;
@@ -190,24 +189,49 @@ public static class BinaryLoader {
 		}
 		return allData;
 	}
-	static int DecodeAttrib(ref BitSpan rawSpan) => rawSpan.DecodeNext(16);
-	static int? DecodeInfusion(ref BitSpan rawSpan) => rawSpan.DecodeNext_WriteMinusMinIfAtLeast<int>(2, 24);
 
-	private static AllEquipmentData<int> LoadAllEquipmentDataPvP(ref BitSpan rawSpan, in AllWeapons loadedWeapons)
+	private static AllEquipmentStats LoadAllEquipmentStatsPvP(ref BitSpan rawSpan, in AllWeapons loadedWeapons)
 	{
-		var allData = new AllEquipmentData<int>();
+		var allData = new AllEquipmentStats();
 
 		int data = rawSpan.DecodeNext(16);
-		for(int i = 0; i < AllEquipmentData.ALL_EQUIPMENT_COUNT; i++) {
+		for(int i = 0; i < ALL_EQUIPMENT_COUNT; i++) {
 
 			switch(i) {
-				case 11: if(!loadedWeapons.Set1.MainHand.HasValue) { i += 5; continue; } else break;
+				case 11: if(!loadedWeapons.Set1.MainHand.HasValue) { i += 3; continue; } else break;
 				case 12: if(!loadedWeapons.Set1.OffHand.HasValue)  {         continue; } else break;
 				case 13: if(!loadedWeapons.Set2.IsSet)             { i++;    continue; } else break;
 				case 14: if(!loadedWeapons.Set2.OffHand.HasValue)  {         continue; } else break;
 			}
 
 			allData[i] = data;
+		}
+		return allData;
+	}
+
+	private static AllEquipmentInfusions LoadAllEquipmentInfusions(ref BitSpan rawSpan, in AllWeapons loadedWeapons)
+	{
+		var allData = new AllEquipmentInfusions();
+
+		var repeatCount = 0;
+		int? data = default!;
+		for(int i = 0; i < ALL_EQUIPMENT_COUNT; i++) {
+			if(repeatCount == 0) {
+				data = rawSpan.DecodeNext_WriteMinusMinIfAtLeast<int>(2, 24);
+
+				if(i == ALL_EQUIPMENT_COUNT - 1) repeatCount = 1;
+				else repeatCount = rawSpan.DecodeNext(5);
+			}
+
+			switch(i) {
+				case 16: if(!loadedWeapons.Set1.MainHand.HasValue) { i += 3; continue; } else break;
+				case 17: if(!loadedWeapons.Set1.OffHand.HasValue)  {         continue; } else break;
+				case 18: if(!loadedWeapons.Set2.IsSet)             { i++;    continue; } else break;
+				case 19: if(!loadedWeapons.Set2.OffHand.HasValue)  {         continue; } else break;
+			}
+
+			allData[i] = data;
+			repeatCount--;
 		}
 		return allData;
 	}

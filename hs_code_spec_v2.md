@@ -170,7 +170,7 @@ either
 or
 	dynamic repeat
 		24 : 1 if empty slot, 2 + infusion item id otherwise
-		4  : repeat count
+		5  : repeat count
 
 24 : food item. 0 if none, 1 + item_id otherwise, omit for pvp codes
 24 : utility item. 0 if none, 1 + item_id otherwise, omit for pvp codes

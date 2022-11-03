@@ -80,11 +80,11 @@ public class BasicCodesTests {
 		for(int i = 0; i < 5; i++)
 			Assert.Null(code.SlotSkills[i]);
 		Assert.Null(code.Rune);
-		for(int i = 0; i < AllEquipmentData.ALL_EQUIPMENT_COUNT; i++) {
-			if(11 <= i && i <= 16) Assert.Equal(default, code.EquipmentAttributes[i]);
+		for(int i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++) {
+			if(11 <= i && i <= 14) Assert.Equal(default, code.EquipmentAttributes[i]);
 			else Assert.Equal(1, code.EquipmentAttributes[i]);
 		}
-		for(int i = 0; i < AllEquipmentData.ALL_EQUIPMENT_COUNT; i++)
+		for(int i = 0; i < Static.ALL_INFUSION_COUNT; i++)
 			Assert.Null(code.Infusions[i]);
 		Assert.Null(code.Food);
 		Assert.Null(code.Utility);
@@ -106,11 +106,11 @@ public class BasicCodesTests {
 		for(int i = 0; i < 5; i++)
 			Assert.Null(code.SlotSkills[i]);
 		Assert.Null(code.Rune);
-		for(int i = 0; i < AllEquipmentData.ALL_EQUIPMENT_COUNT; i++) {
-			if(11 <= i && i <= 16) Assert.Equal(default, code.EquipmentAttributes[i]);
+		for(int i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++) {
+			if(11 <= i && i <= 14) Assert.Equal(default, code.EquipmentAttributes[i]);
 			else Assert.Equal(1, code.EquipmentAttributes[i]);
 		}
-		for(int i = 0; i < AllEquipmentData.ALL_EQUIPMENT_COUNT; i++)
+		for(int i = 0; i < Static.ALL_INFUSION_COUNT; i++)
 			Assert.Null(code.Infusions[i]);
 		Assert.Null(code.Food);
 		Assert.Null(code.Utility);

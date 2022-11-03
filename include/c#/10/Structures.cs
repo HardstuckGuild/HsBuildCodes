@@ -11,8 +11,9 @@ public class BuildCode {
 	public AllWeapons             Weapons;
 	public AllSkills              SlotSkills;
 	public int?                   Rune;
-	public AllEquipmentData<int>  EquipmentAttributes;
-	public AllEquipmentData<int?> Infusions;
+	/// <summary> Note: for simplicity, pvp codes only have their amulet id set on the hemlet </summary>
+	public AllEquipmentStats      EquipmentAttributes;
+	public AllEquipmentInfusions  Infusions;
 	public int?                   Food;
 	public int?                   Utility;
 	public ArbitraryData          ArbitraryData;
@@ -25,6 +26,7 @@ public enum Kind : ushort {
 	PvE       = 26 + 'o' - 'a',
 }
 
+//NOTE(Rennorb): names match official API
 public enum Profession {
 	_UNDEFINED = default,
 	Guardian = 1, Warrior, Engineer, Ranger, Thief, Elementalist, Mesmer, Necromancer, Revenant,
@@ -60,11 +62,12 @@ public struct UnderwaterWeapon {
 	public int? Sigil2;
 }
 
+//NOTE(Rennorb): names match official API
 public enum WeaponType {
 	_UNDEFINED = default,
-	AXE = 1, DAGGER, MACE, PISTOL, SWORD, SCEPTER, FOCUS, SHIELD, TORCH, WARHORN, SHORTBOW, 
-	GREATSWORD, HAMMER, LONGBOW, RIFLE, STAFF, HARPOON_GUN, SPEAR, TRIDENT,
-	_FIRST = AXE,
+	Axe = 1, Dagger, Mace, Pistol, Sword, Scepter, Focus, Shield, Torch, Warhorn, ShortBow, 
+	Greatsword, Hammer, Longbow, Rifle, Staff, HarpoonGun, Spear, Trident,
+	_FIRST = Axe,
 }
 
 public struct ArbitraryData {
@@ -94,7 +97,7 @@ public class RevenantData : IProfessionArbitrary {
 
 public enum Legend {
 	_UNDEFINED = 0,
-	SHIRO = 1, GLINT, MALLY, JALIS, VENTARI, KALLA, VINDICATOR,
+	SHIRO = 1, GLINT, MALLYX, JALIS, VENTARI, KALLA, VINDICATOR,
 	_FIRST = SHIRO,
 }
 

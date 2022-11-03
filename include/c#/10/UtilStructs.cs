@@ -80,28 +80,25 @@ public struct AllSkills {
 	}
 }
 
-public static class AllEquipmentData {
-	public static readonly int ALL_EQUIPMENT_COUNT = 16;
-}
-public struct AllEquipmentData<T> {
-	public T  Helmet;
-	public T  Shoulders;
-	public T  Chest;
-	public T  Gloves;
-	public T  Leggings;
-	public T  Boots;
-	public T  BackItem;
-	public T  Accessory1;
-	public T  Accessory2;
-	public T  Ring1;
-	public T  Ring2;
-	public T? WeaponLandSet1MainHand;
-	public T? WeaponLandSet1OffHand;
-	public T? WeaponLandSet2MainHand;
-	public T? WeaponLandSet2OffHand;
-	public T  Amulet;
+public struct AllEquipmentStats {
+	public int  Helmet;
+	public int  Shoulders;
+	public int  Chest;
+	public int  Gloves;
+	public int  Leggings;
+	public int  Boots;
+	public int  BackItem;
+	public int  Accessory1;
+	public int  Accessory2;
+	public int  Ring1;
+	public int  Ring2;
+	public int? WeaponSet1MainHand;
+	public int? WeaponSet1OffHand;
+	public int? WeaponSet2MainHand;
+	public int? WeaponSet2OffHand;
+	public int  Amulet;
 
-	public T this[int index] {
+	public int? this[int index] {
 		get => (index) switch {
 			 0 => this.Helmet,
 			 1 => this.Shoulders,
@@ -114,31 +111,111 @@ public struct AllEquipmentData<T> {
 			 8 => this.Accessory2,
 			 9 => this.Ring1,
 			10 => this.Ring2,
-			11 => this.WeaponLandSet1MainHand!,
-			12 => this.WeaponLandSet1OffHand !,
-			13 => this.WeaponLandSet2MainHand!,
-			14 => this.WeaponLandSet2OffHand !,
+			11 => this.WeaponSet1MainHand,
+			12 => this.WeaponSet1OffHand ,
+			13 => this.WeaponSet2MainHand,
+			14 => this.WeaponSet2OffHand ,
 			15 => this.Amulet,
 			_ => throw new ArgumentOutOfRangeException(nameof(index)),
 		};
 		set {
 			switch(index) {
-				case  0: this.Helmet                 = value; break;
-				case  1: this.Shoulders              = value; break;
-				case  2: this.Chest                  = value; break;
-				case  3: this.Gloves                 = value; break;
-				case  4: this.Leggings               = value; break;
-				case  5: this.Boots                  = value; break;
-				case  6: this.BackItem               = value; break;
-				case  7: this.Accessory1             = value; break;
-				case  8: this.Accessory2             = value; break;
-				case  9: this.Ring1                  = value; break;
-				case 10: this.Ring2                  = value; break;
-				case 11: this.WeaponLandSet1MainHand = value; break;
-				case 12: this.WeaponLandSet1OffHand  = value; break;
-				case 13: this.WeaponLandSet2MainHand = value; break;
-				case 14: this.WeaponLandSet2OffHand  = value; break;
-				case 15: this.Amulet                 = value; break;
+				case  0: this.Helmet             = value ?? 0; break;
+				case  1: this.Shoulders          = value ?? 0; break;
+				case  2: this.Chest              = value ?? 0; break;
+				case  3: this.Gloves             = value ?? 0; break;
+				case  4: this.Leggings           = value ?? 0; break;
+				case  5: this.Boots              = value ?? 0; break;
+				case  6: this.BackItem           = value ?? 0; break;
+				case  7: this.Accessory1         = value ?? 0; break;
+				case  8: this.Accessory2         = value ?? 0; break;
+				case  9: this.Ring1              = value ?? 0; break;
+				case 10: this.Ring2              = value ?? 0; break;
+				case 11: this.WeaponSet1MainHand = value; break;
+				case 12: this.WeaponSet1OffHand  = value; break;
+				case 13: this.WeaponSet2MainHand = value; break;
+				case 14: this.WeaponSet2OffHand  = value; break;
+				case 15: this.Amulet             = value ?? 0; break;
+				default: throw new ArgumentOutOfRangeException(nameof(index));
+			};
+		}
+	}
+}
+
+public struct AllEquipmentInfusions {
+	public int? Helmet;
+	public int? Shoulders;
+	public int? Chest;
+	public int? Gloves;
+	public int? Leggings;
+	public int? Boots;
+	public int? BackItem_1;
+	public int? BackItem_2;
+	public int? Accessory1;
+	public int? Accessory2;
+	public int? Ring1_1;
+	public int? Ring1_2;
+	public int? Ring1_3;
+	public int? Ring2_1;
+	public int? Ring2_2;
+	public int? Ring2_3;
+	public int? WeaponSet1_1;
+	public int? WeaponSet1_2;
+	public int? WeaponSet2_1;
+	public int? WeaponSet2_2;
+	public int? Amulet;
+
+	public int? this[int index]
+	{
+		get => (index) switch {
+			 0 => this.Helmet,
+			 1 => this.Shoulders,
+			 2 => this.Chest,
+			 3 => this.Gloves,
+			 4 => this.Leggings,
+			 5 => this.Boots,
+			 6 => this.BackItem_1,
+			 7 => this.BackItem_2,
+			 8 => this.Accessory1,
+			 9 => this.Accessory2,
+			10 => this.Ring1_1,
+			11 => this.Ring1_2,
+			12 => this.Ring1_3,
+			13 => this.Ring2_1,
+			14 => this.Ring2_2,
+			15 => this.Ring2_3,
+			16 => this.WeaponSet1_1,
+			17 => this.WeaponSet1_2,
+			18 => this.WeaponSet2_1,
+			19 => this.WeaponSet2_2,
+			20 => this.Amulet,
+			_ => throw new ArgumentOutOfRangeException(nameof(index)),
+		};
+
+		set {
+			switch(index)
+			{
+				case  0: this.Helmet       = value; break;
+				case  1: this.Shoulders    = value; break;
+				case  2: this.Chest        = value; break;
+				case  3: this.Gloves       = value; break;
+				case  4: this.Leggings     = value; break;
+				case  5: this.Boots        = value; break;
+				case  6: this.BackItem_1   = value; break;
+				case  7: this.BackItem_2   = value; break;
+				case  8: this.Accessory1   = value; break;
+				case  9: this.Accessory2   = value; break;
+				case 10: this.Ring1_1      = value; break;
+				case 11: this.Ring1_2      = value; break;
+				case 12: this.Ring1_3      = value; break;
+				case 13: this.Ring2_1      = value; break;
+				case 14: this.Ring2_2      = value; break;
+				case 15: this.Ring2_3      = value; break;
+				case 16: this.WeaponSet1_1 = value; break;
+				case 17: this.WeaponSet1_2 = value; break;
+				case 18: this.WeaponSet2_1 = value; break;
+				case 19: this.WeaponSet2_2 = value; break;
+				case 20: this.Amulet       = value; break;
 				default: throw new ArgumentOutOfRangeException(nameof(index));
 			};
 		}

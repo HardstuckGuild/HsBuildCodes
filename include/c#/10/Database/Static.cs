@@ -7,31 +7,35 @@ public static class Static
 	public static readonly int CURRENT_VERSION = 2;
 	public static readonly int OFFICIAL_CHAT_CODE_BYTE_LENGTH = 44;
 
+
+	public static readonly int ALL_EQUIPMENT_COUNT = 16;
+	public static readonly int ALL_INFUSION_COUNT = 21;
+
 	public static bool IsTwoHanded(WeaponType weaponType)
 	{
 		switch(weaponType)
 		{
-			case WeaponType.AXE:
-			case WeaponType.DAGGER:
-			case WeaponType.MACE:
-			case WeaponType.PISTOL:
-			case WeaponType.SWORD:
-			case WeaponType.SCEPTER:
-			case WeaponType.FOCUS:
-			case WeaponType.SHIELD:
-			case WeaponType.TORCH:
-			case WeaponType.WARHORN:
-			case WeaponType.SHORTBOW:
+			case WeaponType.Axe:
+			case WeaponType.Dagger:
+			case WeaponType.Mace:
+			case WeaponType.Pistol:
+			case WeaponType.Sword:
+			case WeaponType.Scepter:
+			case WeaponType.Focus:
+			case WeaponType.Shield:
+			case WeaponType.Torch:
+			case WeaponType.Warhorn:
+			case WeaponType.ShortBow:
 				return false;
 
-			case WeaponType.GREATSWORD:
-			case WeaponType.HAMMER:
-			case WeaponType.LONGBOW:
-			case WeaponType.RIFLE:
-			case WeaponType.STAFF:
-			case WeaponType.HARPOON_GUN:
-			case WeaponType.SPEAR:
-			case WeaponType.TRIDENT:
+			case WeaponType.Greatsword:
+			case WeaponType.Hammer:
+			case WeaponType.Longbow:
+			case WeaponType.Rifle:
+			case WeaponType.Staff:
+			case WeaponType.HarpoonGun:
+			case WeaponType.Spear:
+			case WeaponType.Trident:
 				return true;
 
 			default: 
@@ -39,4 +43,15 @@ public static class Static
 				return false;
 		}
 	}
+
+	public static Legend? ResolveLegend(in Specialization? eliteSpec, string? str) => (str) switch {
+		"Legend1" => Legend.GLINT,
+		"Legend2" => Legend.SHIRO,
+		"Legend3" => Legend.JALIS,
+		"Legend4" => Legend.MALLYX,
+		"Legend5" => Legend.KALLA,
+		"Legend6" => Legend.VENTARI,
+		null when eliteSpec?.SpecializationId == SpecializationId.Vindicator => Legend.VINDICATOR,
+		_ => null,
+	};
 }
