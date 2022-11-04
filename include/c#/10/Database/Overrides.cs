@@ -115,4 +115,14 @@ public static class Overrides {
 			default: return pallette.SkillToPallette[skillId];
 		}
 	}
+
+	public static void PostfixApiBuild(BuildCode code)
+	{
+		//NOTE(Rennorb): Apparrently, mortar kit is utterly broken with the api.
+		// Just guess that if the elite is empty that its actually mortar kit.
+		if(code.Profession == Profession.Engineer && !code.SlotSkills.Elite.HasValue)
+		{
+			code.SlotSkills.Elite = SkillId.Elite_Mortar_Kit;
+		}
+	}
 }

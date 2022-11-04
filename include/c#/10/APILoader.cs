@@ -207,7 +207,7 @@ public static class APILoader {
 
 			if(runeId != 0) code.Rune = runeId;
 		}
-		else
+		else // WvW, PvE
 		{
 			var pvpEquip = activeEquipment.EquipmentPvp!;
 
@@ -270,6 +270,9 @@ public static class APILoader {
 				code.ProfessionSpecific = revenantData;
 				break;
 		}
+
+		Overrides.PostfixApiBuild(code);
+
 		return code;
 	}
 
