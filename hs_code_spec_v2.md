@@ -181,8 +181,8 @@ or
 	7 : pet 1. 0 to omit block, 1 for empty slot, 2 + pet_id otherwise
 	7 : pet 2. 1 for empty slot, 2 + pet_id otherwise, omit if pet 1 is 0
 or
-	4 : legend 1. 1 + legend_id otherwise
-	4 : legend 2. 0 for empty slot, 1 + legend_id otherwise
+	4 : legend 1. 1 + legend index
+	4 : legend 2. 0 for empty slot, 1 + legend index otherwise
 
 	repeat 3. alternate legend skills. omit if legend 2 is empty
 		24 : 1 + Skill ids, 0 if empty

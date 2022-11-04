@@ -7,12 +7,11 @@ using static Hardstuck.GuildWars2.BuildCodes.V2.Util.Static;
 namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
 public static class BinaryLoader {
-	public ref struct BitSpan {
+	public ref struct BitReader {
 		public ReadOnlySpan<byte> Data;
 		public int BitPos;
 
-		public BitSpan(ReadOnlySpan<byte> data)
-		{
+		public BitReader(ReadOnlySpan<byte> data) {
 			this.Data = data;
 			this.BitPos = 0;
 		}
@@ -81,11 +80,50 @@ public static class BinaryLoader {
 		}
 	}
 
+	public ref struct BitWriter {
+		public Span<byte> Data;
+		public int BitPos;
+
+		public BitWriter(Span<byte> data) {
+			this.Data = data;
+			this.BitPos = 0;
+		}
+
+		public void Write(int value, int bitWidth)
+		{
+			var posInByte = this.BitPos & 7;
+			var bytesTouched = (posInByte + bitWidth + 7) >> 3;
+
+			Span<byte> buffer = stackalloc byte[4];
+			BinaryPrimitives.WriteInt32BigEndian(buffer, value << (32 - bitWidth - posInByte));
+
+			var dest = this.Data.Slice(this.BitPos >> 3, bytesTouched);
+			for(int i = 0; i < bytesTouched; i++)
+				dest[i] |= buffer[i];
+
+			this.BitPos += bitWidth;
+		}
+		
+		public string DebugPrint()
+		{
+			var s = "";
+			for(int i = 0; i < this.Data.Length; i++)
+			{
+				if(i > 0 && i % 8 == 0) s += "| ";
+
+				if(i == this.BitPos / 8)
+					s += "_["+Convert.ToString(this.Data[i], toBase: 2).PadLeft(8, '0')+']';
+				else s += '_'+Convert.ToString(this.Data[i], toBase: 2).PadLeft(8, '0');
+			}
+			return s;
+		}
+	}
+
 	#region hardstuck codes
 
 	public static BuildCode LoadBuildCode(ReadOnlySpan<byte> raw)
 	{
-		var rawSpan = new BitSpan(raw);
+		var rawSpan = new BitReader(raw);
 
 		var code = new BuildCode();
 		code.Version = rawSpan.DecodeNext(8) - 'a';
@@ -133,7 +171,7 @@ public static class BinaryLoader {
 		return code;
 	}
 
-	private static TraitLineChoices LoadTraitChoices(ref BitSpan rawSpan)
+	private static TraitLineChoices LoadTraitChoices(ref BitReader rawSpan)
 	{
 		var choices = new TraitLineChoices();
 		for(var i = 0; i < 3; i++)
@@ -141,7 +179,7 @@ public static class BinaryLoader {
 		return choices;
 	}
 
-	private static WeaponSet LoadWeaponSet(ref BitSpan rawSpan)
+	private static WeaponSet LoadWeaponSet(ref BitReader rawSpan)
 	{
 		var set = new WeaponSet();
 		set.MainHand = WeaponType._FIRST + rawSpan.DecodeNext_WriteMinusMinIfAtLeast<int>(2, 5);
@@ -152,7 +190,7 @@ public static class BinaryLoader {
 		return set;
 	}
 
-	private static AllEquipmentStats LoadAllEquipmentStats(ref BitSpan rawSpan, BuildCode weaponRef)
+	private static AllEquipmentStats LoadAllEquipmentStats(ref BitReader rawSpan, BuildCode weaponRef)
 	{
 		var allData = new AllEquipmentStats();
 
@@ -189,7 +227,7 @@ public static class BinaryLoader {
 		return allData;
 	}
 
-	private static AllEquipmentInfusions LoadAllEquipmentInfusions(ref BitSpan rawSpan, BuildCode weaponRef)
+	private static AllEquipmentInfusions LoadAllEquipmentInfusions(ref BitReader rawSpan, BuildCode weaponRef)
 	{
 		var allData = new AllEquipmentInfusions();
 
@@ -226,7 +264,7 @@ public static class BinaryLoader {
 		return allData;
 	}
 
-	private static IProfessionSpecific LoadProfessionArbitrary(ref BitSpan rawSpan, Profession profession)
+	private static IProfessionSpecific LoadProfessionArbitrary(ref BitReader rawSpan, Profession profession)
 	{
 		switch(profession)
 		{
@@ -255,10 +293,188 @@ public static class BinaryLoader {
 		}
 	}
 
-	private static IArbitrary LoadArbitrary(ref BitSpan rawSpan)
+	private static IArbitrary LoadArbitrary(ref BitReader rawSpan)
 	{
 		//implement extensions here in the future
 		return IArbitrary.NONE.Instance;
+	}
+
+	/// <summary> Returns the amount of bytes written. </summary>
+	public static int WriteCode(BuildCode code, Span<byte> destination)
+	{
+		var rawBits = new BitWriter(destination);
+		rawBits.Data[0] = (byte)('a' + code.Version);
+		rawBits.BitPos += 8;
+		
+		rawBits.Write((code.Kind) switch {
+			Kind.PvP => 0,
+			Kind.WvW => 1,
+			Kind.PvE => 2,
+			_=> throw new ArgumentOutOfRangeException(nameof(code.Kind)),
+		}, 2);
+		
+		rawBits.Write(code.Profession - Profession._FIRST, 4);
+
+		for(int i = 0; i < 3; i++)
+		{
+			if(!code.Specializations[i].HasValue) rawBits.Write(0, 4);
+			else
+			{
+				rawBits.Write(1 + (int)code.Specializations[i]!.Value.SpecializationId, 4);
+				for(int j = 0; j < 3; j++)
+					rawBits.Write((int)code.Specializations[i]!.Value.Choices[j], 2);
+			}
+		}
+
+		if(!code.WeaponSet1.HasAny && !code.WeaponSet2.HasAny) rawBits.Write(0, 5);
+		else
+		{
+			rawBits.Write((int?)code.WeaponSet1.MainHand + 2 ?? 1, 5);
+			rawBits.Write(code.WeaponSet1.Sigil1 + 1 ?? 0, 24);
+			rawBits.Write((int?)code.WeaponSet1.OffHand + 2 ?? 1, 5);
+			rawBits.Write(code.WeaponSet1.Sigil2 + 1 ?? 0, 24);
+
+			if(!code.WeaponSet2.HasAny) rawBits.Write(0, 5);
+			else
+			{
+				rawBits.Write((int?)code.WeaponSet2.MainHand + 2 ?? 1, 5);
+				rawBits.Write(code.WeaponSet2.Sigil1 + 1 ?? 0, 24);
+				rawBits.Write((int?)code.WeaponSet2.OffHand + 2 ?? 1, 5);
+				rawBits.Write(code.WeaponSet2.Sigil2 + 1 ?? 0, 24);
+			}
+		}
+
+		for(int i = 0; i < 5; i++)
+			rawBits.Write((int?)code.SlotSkills[i] + 1 ?? 0, 24);
+
+		rawBits.Write(code.Rune + 1 ?? 0, 24);
+
+		if(code.Kind == Kind.PvP) rawBits.Write((int)code.EquipmentAttributes.Amulet, 16);
+		else
+		{
+			{
+				StatId? lastStat = default;
+				var repeatCount = 0;
+				for(int i = 0; i < ALL_EQUIPMENT_COUNT; i++)
+				{
+					switch(i)
+					{
+						case 11:
+							if(!code.WeaponSet1.HasAny) { i += 3; continue; }
+							else if(!code.WeaponSet1.MainHand.HasValue) { continue; }
+							else break;
+						case 12:
+							if(!code.WeaponSet1.OffHand.HasValue) continue;
+							else break;
+						case 13:
+							if(!code.WeaponSet2.HasAny) { i++; continue; }
+							else if(!code.WeaponSet2.MainHand.HasValue) continue;
+							else break;
+						case 14:
+							if(!code.WeaponSet2.OffHand.HasValue) continue;
+							else break;
+					}
+
+					if(code.EquipmentAttributes[i] != lastStat)
+					{
+						if(lastStat.HasValue)
+						{
+							rawBits.Write((int)lastStat.Value, 16);
+							rawBits.Write(repeatCount, 4);
+						}
+
+						lastStat = code.EquipmentAttributes[i];
+						repeatCount = 1;
+					}
+					else
+					{
+						repeatCount++;
+					}
+				}
+
+				rawBits.Write((int)lastStat!.Value, 16);
+				if(repeatCount > 1)
+					rawBits.Write(repeatCount, 4);
+			}
+
+			if(!code.Infusions.HasAny()) rawBits.Write(0, 24);
+			else
+			{
+				int? lastInfusion = default;
+				var repeatCount = 0;
+				for(int i = 0; i < ALL_INFUSION_COUNT; i++)
+				{
+					switch(i)
+					{
+						case 16:
+							if(!code.WeaponSet1.HasAny) { i += 3; continue; }
+							else if(!code.WeaponSet1.MainHand.HasValue) { continue; }
+							else break;
+						case 17:
+							if(!code.WeaponSet1.OffHand.HasValue) continue;
+							else break;
+						case 18:
+							if(!code.WeaponSet2.HasAny) { i++; continue; }
+							else if(!code.WeaponSet2.MainHand.HasValue) continue;
+							else break;
+						case 19:
+							if(!code.WeaponSet2.OffHand.HasValue) continue;
+							else break;
+					}
+
+					if(code.Infusions[i] != lastInfusion)
+					{
+						if(lastInfusion.HasValue)
+						{
+							rawBits.Write(lastInfusion.Value, 24);
+							rawBits.Write(repeatCount, 5);
+						}
+
+						lastInfusion = code.Infusions[i];
+						repeatCount = 1;
+					}
+					else
+					{
+						repeatCount++;
+					}
+				}
+
+				rawBits.Write(lastInfusion!.Value, 24);
+				if(repeatCount > 1)
+					rawBits.Write(repeatCount, 5);
+			}
+
+			rawBits.Write(code.Food + 1 ?? 0, 24);
+			rawBits.Write(code.Utility + 1 ?? 0, 24);
+		}
+
+		switch(code.Profession)
+		{
+			case Profession.Ranger:
+				var rangerData = (RangerData)code.ProfessionSpecific;
+				if(!rangerData.Pet1.HasValue && !rangerData.Pet2.HasValue) rawBits.Write(0, 7);
+				else
+				{
+					rawBits.Write(rangerData.Pet1 + 1 ?? 0, 7);
+					rawBits.Write(rangerData.Pet2 + 1 ?? 0, 7);
+				}
+				break;
+
+			case Profession.Revenant:
+				var revenantData = (RevenantData)code.ProfessionSpecific;
+				rawBits.Write((int)revenantData.Legend1, 4);
+				if(!revenantData.Legend2.HasValue) rawBits.Write(0, 4);
+				else
+				{
+					rawBits.Write((int)revenantData.Legend2.Value, 4);
+					rawBits.Write((int?)revenantData.AltUtilitySkill1 + 1 ?? 0, 24);
+					rawBits.Write((int?)revenantData.AltUtilitySkill2 + 1 ?? 0, 24);
+					rawBits.Write((int?)revenantData.AltUtilitySkill3 + 1 ?? 0, 24);
+				}
+				break;
+		}
+
+		return (rawBits.BitPos + 7) / 8;
 	}
 
 	#endregion

@@ -10,7 +10,7 @@ public class FunctionTests {
 	public void DecodeByteValue()
 	{
 		var data = new byte[] { 0b00110011 };
-		var bitspan = new BinaryLoader.BitSpan(data);
+		var bitspan = new BinaryLoader.BitReader(data);
 		Assert.Equal(3, bitspan.DecodeNext(4));
 	}
 
@@ -18,7 +18,7 @@ public class FunctionTests {
 	public void SuccessiveDecodeByteValue()
 	{
 		var data = new byte[] { 0b0011_1100 };
-		var bitspan = new BinaryLoader.BitSpan(data);
+		var bitspan = new BinaryLoader.BitReader(data);
 		Assert.Equal( 3, bitspan.DecodeNext(4));
 		Assert.Equal(12, bitspan.DecodeNext(4));
 	}
@@ -27,11 +27,11 @@ public class FunctionTests {
 	public void DecodeMultibyteValue()
 	{
 		var data = new byte[] { 0b0000_0000, 0b0001_0000 };
-		var bitspan = new BinaryLoader.BitSpan(data);
+		var bitspan = new BinaryLoader.BitReader(data);
 		Assert.Equal(1, bitspan.DecodeNext(12));
 
 		var data2 = new byte[] { 0b1000_0000, 0b0000_0000 };
-		var bitspan2 = new BinaryLoader.BitSpan(data2);
+		var bitspan2 = new BinaryLoader.BitReader(data2);
 		Assert.Equal(Math.Pow(2, 11), bitspan2.DecodeNext(12));
 	}
 
@@ -39,7 +39,7 @@ public class FunctionTests {
 	public void DecodeMultibyteValue2()
 	{
 		var data = new byte[] { 0b0000_0000, 0b0000_0000, 0b0000_0000, 0b0000_0010 };
-		var bitspan = new BinaryLoader.BitSpan(data);
+		var bitspan = new BinaryLoader.BitReader(data);
 		bitspan.BitPos = 7;
 		Assert.Equal(1, bitspan.DecodeNext(24));
 	}
@@ -48,7 +48,7 @@ public class FunctionTests {
 	public void SuccessiveDecodeMultibyteValue()
 	{
 		var data = new byte[] { 0b00110011, 0b00110001 };
-		var bitspan = new BinaryLoader.BitSpan(data);
+		var bitspan = new BinaryLoader.BitReader(data);
 		Assert.Equal(0b001100110011, bitspan.DecodeNext(12));
 		Assert.Equal(1, bitspan.DecodeNext(4));
 	}
@@ -57,7 +57,7 @@ public class FunctionTests {
 	public void SuccessiveDecodeValueCrossByteBoundary()
 	{
 		var data = new byte[] { 0b01010101, 0b10101010, 0b11110000 };
-		var bitspan = new BinaryLoader.BitSpan(data);
+		var bitspan = new BinaryLoader.BitReader(data);
 		Assert.Equal(0b010101011010, bitspan.DecodeNext(12));
 		Assert.Equal(0b101011, bitspan.DecodeNext(6));
 	}
@@ -66,11 +66,65 @@ public class FunctionTests {
 	public void EatIfExpected()
 	{
 		var data = new byte[] { 0b00000011, 0b00110001 };
-		var bitspan = new BinaryLoader.BitSpan(data);
+		var bitspan = new BinaryLoader.BitReader(data);
 		Assert.False(bitspan.EatIfExpected(8, 5));
 		Assert.Equal(0, bitspan.BitPos);
 		Assert.True(bitspan.EatIfExpected(0, 5));
 		Assert.Equal(5, bitspan.BitPos);
+	}
+
+
+	[Fact]
+	public void WriteBits()
+	{
+		Span<byte> destination = stackalloc byte[1];
+		var bitStream = new BinaryLoader.BitWriter(destination);
+		bitStream.Write(3, 2);
+		Assert.Equal(0b11000000, destination[0]);
+	}
+
+	[Fact]
+	public void WriteManyBits()
+	{
+		var destination = new byte[4];
+		var bitStream = new BinaryLoader.BitWriter(destination);
+		bitStream.Write(3, 24);
+		Assert.Equal(new byte[] {
+			0, 0, 0b00000011, 0 
+		}, destination);
+	}
+
+	[Fact]
+	public void SuccessiveWriteBits()
+	{
+		Span<byte> destination = stackalloc byte[1];
+		var bitStream = new BinaryLoader.BitWriter(destination);
+		bitStream.Write(3, 2);
+		bitStream.Write(3, 2);
+		Assert.Equal(0b11110000, destination[0]);
+	}
+
+	[Fact]
+	public void SuccessiveWriteBitsAcrossByteBoundry()
+	{
+		Span<byte> destination = stackalloc byte[2];
+		var bitStream = new BinaryLoader.BitWriter(destination);
+		bitStream.Write(3, 6);
+		bitStream.Write(3, 4);
+		Assert.Equal(0b00001100, destination[0]);
+		Assert.Equal(0b11000000, destination[1]);
+	}
+
+	[Fact]
+	public void SuccessiveWriteManyBits()
+	{
+		var destination = new byte[6];
+		var bitStream = new BinaryLoader.BitWriter(destination);
+		bitStream.Write(3, 20);
+		bitStream.Write(3, 24);
+		Assert.Equal(new byte[] {
+			0, 0, 0b00110000, 0, 0, 0b00110000
+		}, destination);
 	}
 }
 
@@ -297,6 +351,37 @@ public class BasicCodeTests {
 		Assert.Null(data.AltUtilitySkill1);
 		Assert.Null(data.AltUtilitySkill2);
 		Assert.Null(data.AltUtilitySkill3);
+	}
+
+	[Fact]
+	public void LoopWriteMinimalRevenant()
+	{
+		var rawCode = BitStringToBytes(
+			"c" + //version
+			"10" + //type
+			"1000" + //profession
+			"0000_0000_0000" + //traits
+			"00000" + //weapons
+			"000000000000000000000000" + //skills
+			"000000000000000000000000" +
+			"000000000000000000000000" +
+			"000000000000000000000000" +
+			"000000000000000000000000" +
+			"000000000000000000000000" + //rune
+			"0000000000000001" + //stats (pve)
+			"1100" +
+			"000000000000000000000000" + // infusions
+			"000000000000000000000000" + // food
+			"000000000000000000000000" + // utility
+			"0001_0000" // legends
+		 );
+		var code = BinaryLoader.LoadBuildCode(rawCode);
+
+		var result = new byte[rawCode.Length];
+		BinaryLoader.WriteCode(code, result);
+
+		for(int i = 0; i < rawCode.Length; i++)
+			Assert.Equal(rawCode[i], result[i]);
 	}
 }
 
