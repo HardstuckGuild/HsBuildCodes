@@ -219,6 +219,12 @@ public static class APILoader {
 			code.WeaponSet2.Sigil2 = pvpEquip.Sigils[3];
 		}
 
+		// swap weapon set so the first set always has the waepons if there are any.
+		if(!code.WeaponSet1.HasAny && code.WeaponSet2.HasAny)
+		{
+			code.WeaponSet1 = code.WeaponSet2;
+		}
+
 		var apiSkills = aquatic ? activeBuild.AquaticSkills : activeBuild.Skills;
 		code.SlotSkills.Heal     = (SkillId?)apiSkills.Heal;
 		code.SlotSkills.Utility1 = (SkillId?)apiSkills.Utilities[0];

@@ -90,7 +90,6 @@ public static class Overrides {
 					case SkillId.Razorclaws_Rage:
 						return 4614;
 
-
 					case SkillId.Phase_Traversal:
 					case SkillId.Natural_Harmony1:
 					case SkillId.Natural_Harmony2:
