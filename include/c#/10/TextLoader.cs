@@ -2,12 +2,22 @@ using Hardstuck.GuildWars2.BuildCodes.V2.Util;
 using System.Diagnostics;
 
 using static Hardstuck.GuildWars2.BuildCodes.V2.Static;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
 public static class TextLoader {
 	public static readonly string CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-";
+	public static readonly int[] INVERSE_CHARSET = new[] {
+		/*0x*/ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+		/*1x*/ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+		/*2x*/ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, 63, -1, -1,
+		/*3x*/ 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1,
+		/*4x*/ -1,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14,
+		/*5x*/ 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1,
+		/*6x*/ -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+		/*7x*/ 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1,
+	};
+
 	public static int DecodeAndAdvance(ref ReadOnlySpan<char> text, int maxWidth)
 	{
 		int value = 0;
@@ -17,7 +27,7 @@ public static class TextLoader {
 			var mulShift = 6 * width; // shift by 6, 12, 18 = multiply by 64 64^2 64^3
 			width++;
 			if(c == '~') break;
-			value += Decode(c) << mulShift;
+			value += INVERSE_CHARSET[c] << mulShift;
 		} while(width < maxWidth);
 
 		text = text[width..];
@@ -25,36 +35,8 @@ public static class TextLoader {
 		return value;
 	}
 
-	public static int DecodeAndAdvance(ref ReadOnlySpan<char> text)
-	{
-		var val = Decode(text[0]);
-		text = text[1..];
-		return val;
-	}
-
-	public static int Decode(char c)
-	{
-		var upperIndex = (c - 'A') & 63; // & 63 = bootleg range check
-		if(CHARSET[upperIndex] == c) return upperIndex;
-		else
-		{
-			var lowerIndex = (26 + c - 'a') & 63;
-			if(CHARSET[lowerIndex] == c) return lowerIndex;
-			else
-			{
-				var numericIndex = (26 * 2 + c - '0') & 63;
-				if(CHARSET[numericIndex] == c) return numericIndex;
-				else
-				{
-					if(c == '+') return 62;
-					else if(c == '-') return 63;
-					
-					Debug.Assert(false, "Tried to decode invalid character");
-					return -1;
-				}
-			}
-		}
-	}
+	public static int DecodeAndAdvance(ref ReadOnlySpan<char> text) 
+		=> INVERSE_CHARSET[Util.Static.SliceAndAdvance(ref text)];
 
 	/// <summary> eats the <paramref name="token"/> from <paramref name="text"/> if it is the right one. otherwise does nothing</summary>
 	public static bool EatToken(ref ReadOnlySpan<char> text, char token)

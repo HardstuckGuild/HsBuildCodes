@@ -7,9 +7,8 @@ public class FunctionTests {
 	[Fact]
 	public void DecodeValueFixed()
 	{
-		Assert.Equal( 0, TextLoader.Decode('A'));
-		Assert.Equal(26, TextLoader.Decode('a'));
-		Assert.Equal(63, TextLoader.Decode('-'));
+		for(int i = 0; i < 64; i++)
+			Assert.Equal(i, TextLoader.INVERSE_CHARSET[TextLoader.CHARSET[i]]);
 	}
 
 	[Fact]
