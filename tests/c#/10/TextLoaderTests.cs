@@ -16,9 +16,9 @@ public class FunctionTests {
 	public void SuccessiveDecodeAndEatValueFixed()
 	{
 		var text = "Aa-".AsSpan();
-		Assert.Equal( 0, TextLoader.DecodeNextChar(ref text));
-		Assert.Equal(26, TextLoader.DecodeNextChar(ref text));
-		Assert.Equal(63, TextLoader.DecodeNextChar(ref text));
+		Assert.Equal( 0, TextLoader.DecodeAndAdvance(ref text));
+		Assert.Equal(26, TextLoader.DecodeAndAdvance(ref text));
+		Assert.Equal(63, TextLoader.DecodeAndAdvance(ref text));
 		Assert.Equal(0, text.Length);
 	}
 
@@ -26,9 +26,9 @@ public class FunctionTests {
 	public void SuccessiveDecodeAndEatValueValirable()
 	{
 		var text = "Aa-".AsSpan();
-		Assert.Equal( 0, TextLoader.Decode(ref text, 1));
-		Assert.Equal(26, TextLoader.Decode(ref text, 1));
-		Assert.Equal(63, TextLoader.Decode(ref text, 1));
+		Assert.Equal( 0, TextLoader.DecodeAndAdvance(ref text, 1));
+		Assert.Equal(26, TextLoader.DecodeAndAdvance(ref text, 1));
+		Assert.Equal(63, TextLoader.DecodeAndAdvance(ref text, 1));
 		Assert.Equal(0, text.Length);
 	}
 
@@ -36,7 +36,7 @@ public class FunctionTests {
 	public void DecodeAndEatValueEarlyTerm()
 	{
 		var text = "A~".AsSpan();
-		Assert.Equal(0, TextLoader.Decode(ref text, 3));
+		Assert.Equal(0, TextLoader.DecodeAndAdvance(ref text, 3));
 		Assert.Equal(0, text.Length);
 	}
 }
@@ -54,7 +54,7 @@ public class BasicCodesTests {
 	public void ShouldThrowTooShort()
 	{
 		Assert.ThrowsAny<Exception>(() => {
-			var code = TextLoader.LoadBuildCode("Btoo-short");
+			var code = TextLoader.LoadBuildCode("Ctoo-short");
 		});
 	}
 
@@ -62,47 +62,48 @@ public class BasicCodesTests {
 	public void ShouldThrowInvalidCharacters()
 	{
 		Assert.ThrowsAny<Exception>(() => {
-			var code = TextLoader.LoadBuildCode("B���������������������������������������������������������������������");
+			var code = TextLoader.LoadBuildCode("C���������������������������������������������������������������������");
 		});
 	}
 
 	[Fact]
 	public void MinimalPvP()
 	{
-		var code = TextLoader.LoadBuildCode("BpA___~______B~");
+		var code = TextLoader.LoadBuildCode("CpA___~______B~");
 		Assert.Equal(2                  , code.Version);
 		Assert.Equal(Kind.PvP           , code.Kind);
 		Assert.Equal(Profession.Guardian, code.Profession);
 		for(int i = 0; i < 3; i++)
 			Assert.Null(code.Specializations[i]);
-		Assert.False(code.Weapons.Set1.IsSet);
-		Assert.False(code.Weapons.Set2.IsSet);
+		Assert.False(code.WeaponSet1.HasAny);
+		Assert.False(code.WeaponSet2.HasAny);
 		for(int i = 0; i < 5; i++)
 			Assert.Null(code.SlotSkills[i]);
 		Assert.Null(code.Rune);
 		for(int i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++) {
-			if(11 <= i && i <= 14) Assert.Equal(default, code.EquipmentAttributes[i]);
-			else Assert.Equal((StatId)1, code.EquipmentAttributes[i]);
+			if(i >= 11 && i <= 14) Assert.Null(code.EquipmentAttributes[i]);
+			else if(i == Static.ALL_EQUIPMENT_COUNT - 1) Assert.Equal((StatId)1, code.EquipmentAttributes[i]); 
+			else Assert.Equal(StatId._UNDEFINED, code.EquipmentAttributes[i]);
 		}
 		for(int i = 0; i < Static.ALL_INFUSION_COUNT; i++)
 			Assert.Null(code.Infusions[i]);
 		Assert.Null(code.Food);
 		Assert.Null(code.Utility);
-		Assert.Equal(IProfessionArbitrary.NONE.Instance, code.ArbitraryData.ProfessionSpecific);
-		Assert.Equal(IArbitrary          .NONE.Instance, code.ArbitraryData.Arbitrary);
+		Assert.Equal(IProfessionSpecific.NONE.Instance, code.ProfessionSpecific);
+		Assert.Equal(IArbitrary         .NONE.Instance, code.Arbitrary);
 	}
 
 	[Fact]
 	public void MinimalPvE()
 	{
-		var code = TextLoader.LoadBuildCode("BoA___~______B~N~__");
+		var code = TextLoader.LoadBuildCode("CoA___~______B~M~__");
 		Assert.Equal(2                  , code.Version);
 		Assert.Equal(Kind.PvE           , code.Kind);
 		Assert.Equal(Profession.Guardian, code.Profession);
 		for(int i = 0; i < 3; i++)
 			Assert.Null(code.Specializations[i]);
-		Assert.False(code.Weapons.Set1.IsSet);
-		Assert.False(code.Weapons.Set2.IsSet);
+		Assert.False(code.WeaponSet1.HasAny);
+		Assert.False(code.WeaponSet2.HasAny);
 		for(int i = 0; i < 5; i++)
 			Assert.Null(code.SlotSkills[i]);
 		Assert.Null(code.Rune);
@@ -114,16 +115,16 @@ public class BasicCodesTests {
 			Assert.Null(code.Infusions[i]);
 		Assert.Null(code.Food);
 		Assert.Null(code.Utility);
-		Assert.Equal(IProfessionArbitrary.NONE.Instance, code.ArbitraryData.ProfessionSpecific);
-		Assert.Equal(IArbitrary          .NONE.Instance, code.ArbitraryData.Arbitrary);
+		Assert.Equal(IProfessionSpecific.NONE.Instance, code.ProfessionSpecific);
+		Assert.Equal(IArbitrary         .NONE.Instance, code.Arbitrary);
 	}
 
 	[Fact]
 	public void MinimalRanger()
 	{
-		var code = TextLoader.LoadBuildCode("BoD___~______A~N~__~");
-		Assert.IsType<RangerData>(code.ArbitraryData.ProfessionSpecific);
-		var data = (RangerData)code.ArbitraryData.ProfessionSpecific;
+		var code = TextLoader.LoadBuildCode("CoD___~______A~M~__~");
+		Assert.IsType<RangerData>(code.ProfessionSpecific);
+		var data = (RangerData)code.ProfessionSpecific;
 		Assert.Null(data.Pet1);
 		Assert.Null(data.Pet2);
 	}
@@ -131,14 +132,23 @@ public class BasicCodesTests {
 	[Fact]
 	public void MinimalRevenant()
 	{
-		var code = TextLoader.LoadBuildCode("BoI___~______A~N~____");
-		Assert.IsType<RevenantData>(code.ArbitraryData.ProfessionSpecific);
-		var data = (RevenantData)code.ArbitraryData.ProfessionSpecific;
-		Assert.Null(data.Legend1);
+		var code = TextLoader.LoadBuildCode("CoI___~______A~M~__A_");
+		Assert.IsType<RevenantData>(code.ProfessionSpecific);
+		var data = (RevenantData)code.ProfessionSpecific;
+		Assert.Equal(Legend.SHIRO, data.Legend1);
 		Assert.Null(data.Legend2);
 		Assert.Null(data.AltUtilitySkill1);
 		Assert.Null(data.AltUtilitySkill2);
 		Assert.Null(data.AltUtilitySkill3);
+	}
+
+	[Fact]
+	public void CycleBasicCode()
+	{
+		var text1 = "CoI___~______A~M~__A_";
+		var code = TextLoader.LoadBuildCode(text1);
+		var text2 = TextLoader.WriteBuildCode(code);
+		Assert.Equal(text1, text2);
 	}
 }
 

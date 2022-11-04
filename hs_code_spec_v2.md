@@ -36,8 +36,8 @@ a c e ccabbc bgcbbcSUT       R              ge-cfc-cfm_GTxg _if t_ik     m      
 V T P STSTST WS..wS..WS..wS..WS..S..wS..S.. S..S..S..S..S.. R.. A..n,,,, I..n,,,, F..U.. A,,,,,
 ```
 
-`[V]` Version [1 character. currently `B`] used for backwards compatibility.
-  - Not contained in codes below version `B`.
+`[V]` Version [1 character. currently `C`] used for backwards compatibility.
+  - Not contained in codes below version `C`.
   - Lower case letters indicate binary format base64 encoded.
 
 `[T]` Type [1 character] `p`: pvp, `w`: wvw, `o`: other(pve)
@@ -79,8 +79,8 @@ omitted completely by replacing the whole section with a single `~` (tilde).
     1. Order the equipment in the following way: armor (helmet to boots), backpiece, accessory1, accessory2, ring1, ring2, weapons (main hand then offhand for all sets), amulet.
        - Only include weapons in this list that actually exist in the code.
     2. Going trough that list `encode(itemstat_id, 2)` of the current item,
-    3. then append `A-O` (one char) for the amount of times this stat type repeats in the list. 
-       - Omit the repetition count if there is only one item left as it would always be 1. 
+    3. then append `B-O` (one char) for the amount of times this stat type repeats in the list. 
+       - Omit the repetition count if there is only one item left as it would always be 1 as we know how many pieces of equipment are in the code.
     4. Repeat step 2. and 3. until the whole list has been processed.
 
 `[I..n,,,,]` Infusions [1-n characters]
@@ -102,8 +102,8 @@ omitted completely by replacing the whole section with a single `~` (tilde).
     - `2 characters`: `encode(pet_id, 2)` from `/v2/pets`
   - Revenant Legends + utility: [3-11 characters]
     1. 2 times 
-       - `_` (underscore): empty legend slot
-       - `A-F` : legend index from `/v2/legends` to index `character_set`. Shiro, Glint, Mallyx, Jalis, Ventari, Kalla, Vindicator
+       - `_` (underscore): empty legend slot, only the second legend can be empty.
+       - `A-F` : legend index from `/v2/legends` to index `character_set`. Be careful: the online list is defective as of writing this. Use the list in here: Shiro, Glint, Mallyx, Jalis, Ventari, Kalla, Vindicator
     2. 3 times 
        - `_` (underscore): empty alternate legend utility skill slot
        - `1-3 characters`: alternate legend utility skill id resolved by `/v2/skills`, `encode(id, 3)`

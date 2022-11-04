@@ -30,7 +30,7 @@ public static class APILoader {
 		code.Kind    = targetGameMode;
 
 		var playerData = authorizedClient.WebApi.V2.Characters.GetAsync(characterName).Result;
-
+		
 		code.Profession = Enum.Parse<Profession>(playerData.Profession);
 
 		var activeBuild = playerData.BuildTabs![playerData.ActiveBuildTab!.Value - 1].Build;
@@ -125,11 +125,11 @@ public static class APILoader {
 							if(item.Infusions.Count > 1)
 								code.Infusions.WeaponSet1_2 = item.Infusions[1];
 						}
-						code.Weapons.Set1.MainHand = APICache.ResolveWeaponType(item.Id);
+						code.WeaponSet1.MainHand = APICache.ResolveWeaponType(item.Id);
 						if(item.Upgrades != null) {
-							code.Weapons.Set1.Sigil1 = item.Upgrades[0];
+							code.WeaponSet1.Sigil1 = item.Upgrades[0];
 							if(item.Upgrades.Count > 1)
-								code.Weapons.Set1.Sigil2 = item.Upgrades[1];
+								code.WeaponSet1.Sigil2 = item.Upgrades[1];
 						}
 						break;
 
@@ -141,11 +141,11 @@ public static class APILoader {
 							if(item.Infusions.Count > 1)
 								code.Infusions.WeaponSet1_2 = item.Infusions[1];
 						}
-						code.Weapons.Set1.MainHand = APICache.ResolveWeaponType(item.Id);
+						code.WeaponSet1.MainHand = APICache.ResolveWeaponType(item.Id);
 						if(item.Upgrades != null) {
-							code.Weapons.Set1.Sigil1 = item.Upgrades[0];
+							code.WeaponSet1.Sigil1 = item.Upgrades[0];
 							if(item.Upgrades.Count > 1)
-								code.Weapons.Set1.Sigil2 = item.Upgrades[1];
+								code.WeaponSet1.Sigil2 = item.Upgrades[1];
 						}
 						break;
 
@@ -153,8 +153,8 @@ public static class APILoader {
 						if(aquatic) break;
 						code.EquipmentAttributes.WeaponSet1OffHand = ResolveStatId(item);
 						code.Infusions.WeaponSet1_2 = item.Infusions?[0]; //NOTE(Rennorb): this assues that buidls with twohanded main weapons dont contain an 'empty' weapon with no upgrades
-						code.Weapons.Set1.OffHand = APICache.ResolveWeaponType(item.Id);
-						code.Weapons.Set1.Sigil2 = item.Upgrades?[0]; //NOTE(Rennorb): this assues that buidls with twohanded main weapons dont contain an 'empty' weapon with no upgrades
+						code.WeaponSet1.OffHand = APICache.ResolveWeaponType(item.Id);
+						code.WeaponSet1.Sigil2 = item.Upgrades?[0]; //NOTE(Rennorb): this assues that buidls with twohanded main weapons dont contain an 'empty' weapon with no upgrades
 						break;
 
 					case ItemEquipmentSlotType.WeaponB1:
@@ -165,11 +165,11 @@ public static class APILoader {
 							if(item.Infusions.Count > 1)
 								code.Infusions.WeaponSet2_2 = item.Infusions[1];
 						}
-						code.Weapons.Set2.MainHand = APICache.ResolveWeaponType(item.Id);
+						code.WeaponSet2.MainHand = APICache.ResolveWeaponType(item.Id);
 						if(item.Upgrades != null) {
-							code.Weapons.Set2.Sigil1 = item.Upgrades[0];
-							if(IsTwoHanded(code.Weapons.Set2.MainHand.Value) && item.Upgrades.Count > 1)
-								code.Weapons.Set2.Sigil2 = item.Upgrades[1];
+							code.WeaponSet2.Sigil1 = item.Upgrades[0];
+							if(IsTwoHanded(code.WeaponSet2.MainHand.Value) && item.Upgrades.Count > 1)
+								code.WeaponSet2.Sigil2 = item.Upgrades[1];
 						}
 						break;
 
@@ -181,11 +181,11 @@ public static class APILoader {
 							if(item.Infusions.Count > 1)
 								code.Infusions.WeaponSet2_2 = item.Infusions[1];
 						}
-						code.Weapons.Set2.MainHand = APICache.ResolveWeaponType(item.Id);
+						code.WeaponSet2.MainHand = APICache.ResolveWeaponType(item.Id);
 						if(item.Upgrades != null) {
-							code.Weapons.Set2.Sigil1 = item.Upgrades[0];
+							code.WeaponSet2.Sigil1 = item.Upgrades[0];
 							if(item.Upgrades.Count > 1)
-								code.Weapons.Set2.Sigil2 = item.Upgrades[1];
+								code.WeaponSet2.Sigil2 = item.Upgrades[1];
 						}
 						break;
 
@@ -193,8 +193,8 @@ public static class APILoader {
 						if(aquatic) break;
 						code.EquipmentAttributes.WeaponSet2OffHand = ResolveStatId(item);
 						code.Infusions.WeaponSet2_2 = item.Infusions?[0];
-						code.Weapons.Set2.OffHand = APICache.ResolveWeaponType(item.Id);
-						code.Weapons.Set2.Sigil2 = item.Upgrades?[0];
+						code.WeaponSet2.OffHand = APICache.ResolveWeaponType(item.Id);
+						code.WeaponSet2.Sigil2 = item.Upgrades?[0];
 						break;
 
 					case ItemEquipmentSlotType.Amulet:
@@ -213,10 +213,10 @@ public static class APILoader {
 
 			code.EquipmentAttributes.Helmet = (StatId)(pvpEquip.Amulet ?? 0);
 			code.Rune = pvpEquip.Rune;
-			code.Weapons.Set1.Sigil1 = pvpEquip.Sigils[0];
-			code.Weapons.Set1.Sigil2 = pvpEquip.Sigils[1];
-			code.Weapons.Set1.Sigil1 = pvpEquip.Sigils[2];
-			code.Weapons.Set1.Sigil2 = pvpEquip.Sigils[3];
+			code.WeaponSet1.Sigil1 = pvpEquip.Sigils[0];
+			code.WeaponSet1.Sigil2 = pvpEquip.Sigils[1];
+			code.WeaponSet2.Sigil1 = pvpEquip.Sigils[2];
+			code.WeaponSet2.Sigil2 = pvpEquip.Sigils[3];
 		}
 
 		var apiSkills = aquatic ? activeBuild.AquaticSkills : activeBuild.Skills;
@@ -230,17 +230,44 @@ public static class APILoader {
 		{
 			case Profession.Ranger:
 				var rangerData = new RangerData();
+
 				var petBlock = aquatic ? activeBuild.Pets!.Aquatic : activeBuild.Pets!.Terrestrial;
 				rangerData.Pet1 = petBlock[0];
 				rangerData.Pet2 = petBlock[1];
-				code.ArbitraryData.ProfessionSpecific = rangerData;
+
+				code.ProfessionSpecific = rangerData;
 				break;
 
 			case Profession.Revenant:
 				var revenantData = new RevenantData();
+
 				var legends = aquatic ? activeBuild.AquaticLegends! : activeBuild.Legends!;
-				revenantData.Legend1 = ResolveLegend(in code.Specializations.Choice3, legends[0]);
-				revenantData.Legend1 = ResolveLegend(in code.Specializations.Choice3, legends[1]);
+				var legend1 = ResolveLegend(in code.Specializations.Choice3, legends[0]);
+				var legend2 = ResolveLegend(in code.Specializations.Choice3, legends[1]);
+				if(legend1.HasValue) // One legend is always set.
+				{
+					revenantData.Legend1 = legend1.Value;
+					revenantData.Legend2 = legend2;
+
+					//NOTE(Rennorb): doesnt seem to be available via the api
+					// activeBuild.Skills = 
+				}
+				else // Flip so the legend 1 has the data.
+				{
+					revenantData.Legend1 = legend2!.Value;
+					revenantData.Legend2 = legend1;
+
+					revenantData.AltUtilitySkill1 = code.SlotSkills.Utility1;
+					revenantData.AltUtilitySkill2 = code.SlotSkills.Utility2;
+					revenantData.AltUtilitySkill3 = code.SlotSkills.Utility3;
+
+					// inactive skills dont seem to be available
+					code.SlotSkills.Utility1 = null;
+					code.SlotSkills.Utility2 = null;
+					code.SlotSkills.Utility3 = null;
+				}
+
+				code.ProfessionSpecific = revenantData;
 				break;
 		}
 		return code;

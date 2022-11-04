@@ -46,11 +46,6 @@ public struct TraitLineChoices {
 	}
 }
 
-public struct AllWeapons {
-	public WeaponSet Set1;
-	public WeaponSet Set2;
-}
-
 public struct AllSkills {
 	public SkillId? Heal;
 	public SkillId? Utility1;
@@ -219,5 +214,13 @@ public struct AllEquipmentInfusions {
 				default: throw new ArgumentOutOfRangeException(nameof(index));
 			};
 		}
+	}
+
+	public bool HasAny()
+	{
+		for(int i = 0; i < V2.Static.ALL_INFUSION_COUNT; i++)
+			if(this[i].HasValue)
+				return true;
+		return false;
 	}
 }

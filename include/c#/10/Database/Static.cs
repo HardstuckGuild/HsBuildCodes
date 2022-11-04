@@ -4,12 +4,11 @@ namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
 public static class Static
 {
-	public static readonly int CURRENT_VERSION = 2;
-	public static readonly int OFFICIAL_CHAT_CODE_BYTE_LENGTH = 44;
+	public const int CURRENT_VERSION = 2;
+	public const int OFFICIAL_CHAT_CODE_BYTE_LENGTH = 44;
 
-
-	public static readonly int ALL_EQUIPMENT_COUNT = 16;
-	public static readonly int ALL_INFUSION_COUNT = 21;
+	public const int ALL_EQUIPMENT_COUNT = 16;
+	public const int ALL_INFUSION_COUNT = 21;
 
 	public static bool IsTwoHanded(WeaponType weaponType)
 	{

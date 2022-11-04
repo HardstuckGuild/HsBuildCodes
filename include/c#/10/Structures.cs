@@ -8,15 +8,17 @@ public class BuildCode {
 	public Kind                   Kind;
 	public Profession             Profession;
 	public SpecializationChoices  Specializations;
-	public AllWeapons             Weapons;
+	public WeaponSet              WeaponSet1;
+	public WeaponSet              WeaponSet2;
 	public AllSkills              SlotSkills;
 	public int?                   Rune;
-	/// <summary> Note: for simplicity, pvp codes only have their amulet id set on the hemlet </summary>
+	/// <summary> Note: for simplicity, pvp codes only have their amulet id set on the amulet </summary> //TODO @nocommit
 	public AllEquipmentStats      EquipmentAttributes;
 	public AllEquipmentInfusions  Infusions;
 	public int?                   Food;
 	public int?                   Utility;
-	public ArbitraryData          ArbitraryData;
+	public IProfessionSpecific    ProfessionSpecific = IProfessionSpecific.NONE.Instance;
+	public IArbitrary             Arbitrary          = IArbitrary         .NONE.Instance;
 }
 
 public enum Kind : ushort {
@@ -52,7 +54,7 @@ public struct WeaponSet {
 	public int? Sigil1;
 	public int? Sigil2;
 
-	public bool IsSet => MainHand.HasValue || OffHand.HasValue;
+	public bool HasAny => MainHand.HasValue || OffHand.HasValue;
 }
 
 public struct UnderwaterWeapon {
@@ -70,24 +72,19 @@ public enum WeaponType {
 	_FIRST = Axe,
 }
 
-public struct ArbitraryData {
-	public IProfessionArbitrary ProfessionSpecific;
-	public IArbitrary           Arbitrary;
-}
-
-public interface IProfessionArbitrary {
-	public class NONE : IProfessionArbitrary {
+public interface IProfessionSpecific {
+	public class NONE : IProfessionSpecific {
 		public static readonly NONE Instance = new();
 	}
 }
 
-public class RangerData : IProfessionArbitrary {
+public class RangerData : IProfessionSpecific {
 	public int? Pet1;
 	public int? Pet2;
 }
 
-public class RevenantData : IProfessionArbitrary {
-	public Legend? Legend1;
+public class RevenantData : IProfessionSpecific {
+	public Legend Legend1;
 	public Legend? Legend2;
 
 	public SkillId? AltUtilitySkill1;
@@ -97,7 +94,20 @@ public class RevenantData : IProfessionArbitrary {
 
 public enum Legend {
 	_UNDEFINED = 0,
-	SHIRO = 1, GLINT, MALLYX, JALIS, VENTARI, KALLA, VINDICATOR,
+	/// <summary> Assasin </summary>
+	SHIRO = 1,
+	/// <summary> Dragon </summary>
+	GLINT,
+	/// <summary> Deamon </summary>
+	MALLYX,
+	/// <summary> Dwarf </summary>
+	JALIS,
+	/// <summary> Centaur </summary>
+	VENTARI,
+	/// <summary> Renegate </summary>
+	KALLA,
+	/// <summary> Alliance </summary>
+	VINDICATOR,
 	_FIRST = SHIRO,
 }
 

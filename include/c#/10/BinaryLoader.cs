@@ -1,8 +1,6 @@
 using Hardstuck.GuildWars2.BuildCodes.V2.Util;
 using System.Buffers.Binary;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using static Hardstuck.GuildWars2.BuildCodes.V2.Static;
 using static Hardstuck.GuildWars2.BuildCodes.V2.Util.Static;
 
@@ -90,7 +88,7 @@ public static class BinaryLoader {
 		var rawSpan = new BitSpan(raw);
 
 		var code = new BuildCode();
-		code.Version = rawSpan.DecodeNext(8) - 'a' + 1;
+		code.Version = rawSpan.DecodeNext(8) - 'a';
 		Debug.Assert(code.Version == CURRENT_VERSION, "Code version mismatch");
 		code.Kind    = (rawSpan.DecodeNext(2)) switch {
 			0 => Kind.PvP,
@@ -109,9 +107,9 @@ public static class BinaryLoader {
 				};
 		}
 		if(!rawSpan.EatIfExpected(0, 5)) {
-			code.Weapons.Set1 = LoadWeaponSet(ref rawSpan);
+			code.WeaponSet1 = LoadWeaponSet(ref rawSpan);
 			if(!rawSpan.EatIfExpected(0, 5))
-				code.Weapons.Set2 = LoadWeaponSet(ref rawSpan);
+				code.WeaponSet2 = LoadWeaponSet(ref rawSpan);
 		}
 		for(int i = 0; i < 5; i++)
 			code.SlotSkills[i] = rawSpan.DecodeNext_WriteMinusMinIfAtLeast<SkillId>(1, 24);
@@ -119,18 +117,18 @@ public static class BinaryLoader {
 		rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref code.Rune, 1, 24);
 		
 		if(code.Kind != Kind.PvP)
-			code.EquipmentAttributes = LoadAllEquipmentStats(ref rawSpan, in code.Weapons);
+			code.EquipmentAttributes = LoadAllEquipmentStats(ref rawSpan, code);
 		else
-			code.EquipmentAttributes = LoadAllEquipmentStatsPvP(ref rawSpan, in code.Weapons);
+			code.EquipmentAttributes.Amulet = (StatId)rawSpan.DecodeNext(16);
 
 		if(code.Kind != Kind.PvP) {
 			if(!rawSpan.EatIfExpected(0, 24))
-				code.Infusions = LoadAllEquipmentInfusions(ref rawSpan, in code.Weapons);
+				code.Infusions = LoadAllEquipmentInfusions(ref rawSpan, code);
 			rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref code.Food   , 1, 24);
 			rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref code.Utility, 1, 24);
 		}
-		code.ArbitraryData.ProfessionSpecific = LoadProfessionArbitrary(ref rawSpan, code.Profession);
-		code.ArbitraryData.Arbitrary          = LoadArbitrary(ref rawSpan);
+		code.ProfessionSpecific = LoadProfessionArbitrary(ref rawSpan, code.Profession);
+		code.Arbitrary          = LoadArbitrary(ref rawSpan);
 
 		return code;
 	}
@@ -154,7 +152,7 @@ public static class BinaryLoader {
 		return set;
 	}
 
-	private static AllEquipmentStats LoadAllEquipmentStats(ref BitSpan rawSpan, in AllWeapons loadedWeapons)
+	private static AllEquipmentStats LoadAllEquipmentStats(ref BitSpan rawSpan, BuildCode weaponRef)
 	{
 		var allData = new AllEquipmentStats();
 
@@ -169,10 +167,20 @@ public static class BinaryLoader {
 			}
 
 			switch(i) {
-				case 11: if(!loadedWeapons.Set1.MainHand.HasValue) { i += 3; continue; } else break;
-				case 12: if(!loadedWeapons.Set1.OffHand.HasValue)  {         continue; } else break;
-				case 13: if(!loadedWeapons.Set2.IsSet)             { i++;    continue; } else break;
-				case 14: if(!loadedWeapons.Set2.OffHand.HasValue)  {         continue; } else break;
+				case 11:
+					if(!weaponRef.WeaponSet1.HasAny) { i += 3; continue; }
+					else if(!weaponRef.WeaponSet1.MainHand.HasValue) { continue; }
+					else break;
+				case 12:
+					if(!weaponRef.WeaponSet1.OffHand.HasValue) continue;
+					else break;
+				case 13:
+					if(!weaponRef.WeaponSet2.HasAny) { i++; continue; }
+					else if(!weaponRef.WeaponSet2.MainHand.HasValue) continue;
+					else break;
+				case 14:
+					if(!weaponRef.WeaponSet2.OffHand.HasValue) continue;
+					else break;
 			}
 
 			allData[i] = data;
@@ -181,26 +189,7 @@ public static class BinaryLoader {
 		return allData;
 	}
 
-	private static AllEquipmentStats LoadAllEquipmentStatsPvP(ref BitSpan rawSpan, in AllWeapons loadedWeapons)
-	{
-		var allData = new AllEquipmentStats();
-
-		var data = (StatId)rawSpan.DecodeNext(16);
-		for(int i = 0; i < ALL_EQUIPMENT_COUNT; i++) {
-
-			switch(i) {
-				case 11: if(!loadedWeapons.Set1.MainHand.HasValue) { i += 3; continue; } else break;
-				case 12: if(!loadedWeapons.Set1.OffHand.HasValue)  {         continue; } else break;
-				case 13: if(!loadedWeapons.Set2.IsSet)             { i++;    continue; } else break;
-				case 14: if(!loadedWeapons.Set2.OffHand.HasValue)  {         continue; } else break;
-			}
-
-			allData[i] = data;
-		}
-		return allData;
-	}
-
-	private static AllEquipmentInfusions LoadAllEquipmentInfusions(ref BitSpan rawSpan, in AllWeapons loadedWeapons)
+	private static AllEquipmentInfusions LoadAllEquipmentInfusions(ref BitSpan rawSpan, BuildCode weaponRef)
 	{
 		var allData = new AllEquipmentInfusions();
 
@@ -215,10 +204,20 @@ public static class BinaryLoader {
 			}
 
 			switch(i) {
-				case 16: if(!loadedWeapons.Set1.MainHand.HasValue) { i += 3; continue; } else break;
-				case 17: if(!loadedWeapons.Set1.OffHand.HasValue)  {         continue; } else break;
-				case 18: if(!loadedWeapons.Set2.IsSet)             { i++;    continue; } else break;
-				case 19: if(!loadedWeapons.Set2.OffHand.HasValue)  {         continue; } else break;
+				case 16:
+					if(!weaponRef.WeaponSet1.HasAny) { i += 3; continue; }
+					else if(!weaponRef.WeaponSet1.MainHand.HasValue) { continue; }
+					else break;
+				case 17:
+					if(!weaponRef.WeaponSet1.OffHand.HasValue) continue;
+					else break;
+				case 18:
+					if(!weaponRef.WeaponSet2.HasAny) { i++; continue; }
+					else if(!weaponRef.WeaponSet2.MainHand.HasValue) continue;
+					else break;
+				case 19:
+					if(!weaponRef.WeaponSet2.OffHand.HasValue) continue;
+					else break;
 			}
 
 			allData[i] = data;
@@ -227,7 +226,7 @@ public static class BinaryLoader {
 		return allData;
 	}
 
-	private static IProfessionArbitrary LoadProfessionArbitrary(ref BitSpan rawSpan, Profession profession)
+	private static IProfessionSpecific LoadProfessionArbitrary(ref BitSpan rawSpan, Profession profession)
 	{
 		switch(profession)
 		{
@@ -242,9 +241,9 @@ public static class BinaryLoader {
 
 			case Profession.Revenant: {
 				var data = new RevenantData();
-				rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref data.Legend1, 1, 4);
-				rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref data.Legend2, 1, 4);
-				if(data.Legend2.HasValue) {
+				data.Legend1 = (Legend)rawSpan.DecodeNext(4);
+				if(!rawSpan.EatIfExpected(0, 4)){
+					data.Legend2 = (Legend)rawSpan.DecodeNext(4);
 					rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref data.AltUtilitySkill1, 1, 24);
 					rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref data.AltUtilitySkill2, 1, 24);
 					rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref data.AltUtilitySkill3, 1, 24);
@@ -252,7 +251,7 @@ public static class BinaryLoader {
 				return data;
 			}
 
-			default: return IProfessionArbitrary.NONE.Instance;
+			default: return IProfessionSpecific.NONE.Instance;
 		}
 	}
 
@@ -290,52 +289,93 @@ public static class BinaryLoader {
 			};
 		}
 
-		var skillPallette = ProfessionSkillPallettes.ByProfession(code.Profession);
-
 		var offset = aquatic ? 2 : 0;
-		for(int i = 0; i < 5; i++)
-		{
-			var palletteId = BinaryPrimitives.ReadUInt16LittleEndian(raw.Slice(i * 4  + offset, 2));
-			if(palletteId != 0) code.SlotSkills[i] = skillPallette.PalletteToSkill[palletteId];
-		}
+		var specRaw = raw[(5 * 4)..];
 
-		raw = raw[(5 * 4)..];
+		var skillPallette = ProfessionSkillPallettes.ByProfession(code.Profession);
 
 		switch(code.Profession)
 		{
 			case Profession.Ranger:
-				raw = raw[offset..];
+				specRaw = specRaw[offset..];
 
 				var rangerData = new RangerData();
-				if(raw[0] != 0) rangerData.Pet1 = raw[0];
-				if(raw[1] != 0) rangerData.Pet2 = raw[1];
-				code.ArbitraryData.ProfessionSpecific = rangerData;
-				break;
+				if(specRaw[0] != 0) rangerData.Pet1 = specRaw[0];
+				if(specRaw[1] != 0) rangerData.Pet2 = specRaw[1];
+
+				code.ProfessionSpecific = rangerData;
+				goto default;
 
 			case Profession.Revenant:
-				raw = raw[offset..];
+				specRaw = specRaw[offset..];
 
 				var revenantData = new RevenantData();
-				if(raw[0] != 0) revenantData.Legend1 = raw[0] - Legend._FIRST;
-				if(raw[1] != 0) {
-					revenantData.Legend2 = raw[1] - Legend._FIRST;
-					var revSkillOffset = aquatic ? 6: 2;
-					raw = raw[revSkillOffset..];
 
-					var skill1 = BinaryPrimitives.ReadUInt16LittleEndian(raw[..2]);
-					if(skill1 != 0) revenantData.AltUtilitySkill1 = skillPallette.PalletteToSkill[skill1];
-					var skill2 = BinaryPrimitives.ReadUInt16LittleEndian(raw[2..4]);
-					if(skill2 != 0) revenantData.AltUtilitySkill2 = skillPallette.PalletteToSkill[skill2];
-					var skill3 = BinaryPrimitives.ReadUInt16LittleEndian(raw[4..6]);
-					if(skill3 != 0) revenantData.AltUtilitySkill3 = skillPallette.PalletteToSkill[skill3];
+				if(specRaw[0] != 0)
+				{
+					revenantData.Legend1 = specRaw[0] - Legend._FIRST;
+
+					for(int i = 0; i < 5; i++) {
+						var palletteId = BinaryPrimitives.ReadUInt16LittleEndian(raw.Slice(i * 4  + offset, 2));
+						if(palletteId != 0) code.SlotSkills[i] = Overrides.RevPalletteToSkill(revenantData.Legend1, palletteId);
+					}
 				}
-				code.ArbitraryData.ProfessionSpecific = revenantData;
+				else
+				{
+					//NOTE(Rennorb): no legend available, here we can only guess the right skils.
+					ReadSlotSkillsNormally(code, skillPallette, raw[offset..]);
+				}
+
+				if(specRaw[1] != 0)
+				{
+					revenantData.Legend2 = specRaw[1] - Legend._FIRST;
+					var revSkillOffset = aquatic ? 6: 2;
+					specRaw = specRaw[revSkillOffset..];
+
+					Span<SkillId> altSkills = stackalloc SkillId[3] {
+						Overrides.RevPalletteToSkill(revenantData.Legend2.Value, BinaryPrimitives.ReadUInt16LittleEndian(specRaw[..2])),
+						Overrides.RevPalletteToSkill(revenantData.Legend2.Value, BinaryPrimitives.ReadUInt16LittleEndian(specRaw[2..4])),
+						Overrides.RevPalletteToSkill(revenantData.Legend2.Value, BinaryPrimitives.ReadUInt16LittleEndian(specRaw[4..6])),
+					};
+
+					if(specRaw[0] != 0)
+					{
+						if(altSkills[0] != 0) revenantData.AltUtilitySkill1 = altSkills[0];
+						if(altSkills[1] != 0) revenantData.AltUtilitySkill2 = altSkills[1];
+						if(altSkills[2] != 0) revenantData.AltUtilitySkill3 = altSkills[2];
+					}
+					else //flip skills so the first legend is always set
+					{
+						revenantData.Legend1 = revenantData.Legend2.Value;
+						revenantData.Legend2 = null;
+
+						revenantData.AltUtilitySkill1 = code.SlotSkills.Utility1;
+						revenantData.AltUtilitySkill2 = code.SlotSkills.Utility2;
+						revenantData.AltUtilitySkill3 = code.SlotSkills.Utility3;
+
+						for(int i = 0; i < 3; i++)
+							if(altSkills[i] != 0)
+								code.SlotSkills[1 + i] = altSkills[i];
+					}
+				}
+
+				code.ProfessionSpecific = revenantData;
+				break;
+
+			default:
+				ReadSlotSkillsNormally(code, skillPallette, raw[offset..]);
 				break;
 		}
 
-		code.ArbitraryData.Arbitrary = IArbitrary.NONE.Instance;
-
 		return code;
+	}
+
+	private static void ReadSlotSkillsNormally(BuildCode code, SkillPallette pallette, ReadOnlySpan<byte> raw)
+	{
+		for(int i = 0; i < 5; i++) {
+			var palletteId = BinaryPrimitives.ReadUInt16LittleEndian(raw.Slice(i * 4, 2));
+			if(palletteId != 0) code.SlotSkills[i] = pallette.PalletteToSkill[palletteId];
+		}
 	}
 
 	public static void WriteOfficialBuildCode(BuildCode code, Span<byte> destination, bool aquatic = false)
@@ -365,14 +405,14 @@ public static class BinaryLoader {
 		switch(code.Profession)
 		{
 			case Profession.Ranger:
-				var rangerData = (RangerData)code.ArbitraryData.ProfessionSpecific;
+				var rangerData = (RangerData)code.ProfessionSpecific;
 				var offset = aquatic ? 2 : 0;
 				profSpecificDest[offset + 0] = (byte)(rangerData.Pet1 ?? 0);
 				profSpecificDest[offset + 1] = (byte)(rangerData.Pet2 ?? 0);
 				break;
 
 			case Profession.Revenant:
-				var revenantData = (RevenantData)code.ArbitraryData.ProfessionSpecific;
+				var revenantData = (RevenantData)code.ProfessionSpecific;
 				int legendOffset, skillOffset;
 				if(aquatic) {
 					legendOffset = 2;
@@ -383,7 +423,7 @@ public static class BinaryLoader {
 					skillOffset  = 4;
 				}
 
-				profSpecificDest[legendOffset] = (byte)(revenantData.Legend1 ?? 0);
+				profSpecificDest[legendOffset] = (byte)revenantData.Legend1;
 				profSpecificDest[legendOffset + 1] = (byte)(revenantData.Legend2 ?? 0);
 
 				ushort altSkill1PalletteId = revenantData.AltUtilitySkill1.HasValue ? pallette.SkillToPallette[revenantData.AltUtilitySkill1.Value] : (ushort)0;

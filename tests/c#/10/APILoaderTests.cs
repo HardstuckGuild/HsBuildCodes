@@ -74,15 +74,15 @@ public class BasicCodesTests {
 			}
 		}, code.Specializations[2]);
 
-		Assert.Equal(WeaponType.Scepter, code.Weapons.Set1.MainHand);
-		Assert.Equal(WeaponType.Dagger , code.Weapons.Set1.OffHand);
-		Assert.Null(code.Weapons.Set2.MainHand);
-		Assert.Equal(WeaponType.Pistol , code.Weapons.Set2.OffHand);
+		Assert.Equal(WeaponType.Scepter, code.WeaponSet1.MainHand);
+		Assert.Equal(WeaponType.Dagger , code.WeaponSet1.OffHand);
+		Assert.Null(code.WeaponSet2.MainHand);
+		Assert.Equal(WeaponType.Pistol , code.WeaponSet2.OffHand);
 
-		Assert.Equal(91388 /*deamons*/      , code.Weapons.Set1.Sigil1);
-		Assert.Equal(91473 /*concentration*/, code.Weapons.Set1.Sigil2);
-		Assert.Null(code.Weapons.Set2.Sigil1);
-		Assert.Equal(91398 /*paralysation*/ , code.Weapons.Set2.Sigil2);
+		Assert.Equal(91388 /*deamons*/      , code.WeaponSet1.Sigil1);
+		Assert.Equal(91473 /*concentration*/, code.WeaponSet1.Sigil2);
+		Assert.Null(code.WeaponSet2.Sigil1);
+		Assert.Equal(91398 /*paralysation*/ , code.WeaponSet2.Sigil2);
 
 		var celestialStatsKEKW = new StatId[]{ StatId.Celestial1, StatId.Celestial2, StatId.Celestial3, StatId.Celestial4 };
 		for(var i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++)

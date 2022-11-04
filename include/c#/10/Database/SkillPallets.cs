@@ -80,7 +80,7 @@ public static class ProfessionSkillPallettes {
 	internal static void ReloadFromOfflineFile(SkillPallette pallette, Profession profession)
 	{
 		//TODO(Rennorb): @performance
-		foreach(var line in File.ReadLines($"offline/pallette-{profession}.csv"))
+		foreach(var line in File.ReadLines($"offline/pallette-{profession}.csv").Skip(1))
 		{
 			var remaining = line.AsSpan();
 			var palletteId = ushort.Parse(Util.Static.SliceAndAdvancePlus1(remaining.IndexOf(';'), ref remaining));
@@ -91,8 +91,8 @@ public static class ProfessionSkillPallettes {
 }
 
 public class SkillPallette {
-	public Dictionary<ushort, SkillId> PalletteToSkill = new();
-	public Dictionary<SkillId, ushort> SkillToPallette = new();
+	internal Dictionary<ushort, SkillId> PalletteToSkill = new();
+	internal Dictionary<SkillId, ushort> SkillToPallette = new();
 
 	public bool TryInsert(ushort palletteId, SkillId skillId)
 	{

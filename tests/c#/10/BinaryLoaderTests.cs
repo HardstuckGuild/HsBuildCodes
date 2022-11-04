@@ -145,7 +145,7 @@ public class BasicCodeTests {
 	{
 		var rawCode = new byte[2];
 		Array.Fill(rawCode, (byte)0x2);
-		rawCode[0] = (byte)'b';
+		rawCode[0] = (byte)'c';
 		Assert.ThrowsAny<Exception>(() => {
 			var code = BinaryLoader.LoadBuildCode(rawCode);
 		});
@@ -155,7 +155,7 @@ public class BasicCodeTests {
 	public void MinimalPvPWithSkills()
 	{
 		var rawCode = BitStringToBytes(
-			"b" + //version
+			"c" + //version
 			"00" + //type
 			"0000" + //profession
 			"0000_0000_0000" + //traits
@@ -174,28 +174,29 @@ public class BasicCodeTests {
 		Assert.Equal(Profession.Guardian, code.Profession);
 		for(int i = 0; i < 3; i++)
 			Assert.Null(code.Specializations[i]);
-		Assert.False(code.Weapons.Set1.IsSet);
-		Assert.False(code.Weapons.Set2.IsSet);
+		Assert.False(code.WeaponSet1.HasAny);
+		Assert.False(code.WeaponSet2.HasAny);
 		for(int i = 0; i < 5; i++)
 			Assert.Equal((SkillId)i, code.SlotSkills[i]);
 		Assert.Null(code.Rune);
 		for(int i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++) {
-			if(11 <= i && i <= 14) Assert.Equal(default, code.EquipmentAttributes[i]);
-			else Assert.Equal((StatId)1, code.EquipmentAttributes[i]);
+			if(i >= 11 && i <= 14) Assert.Null(code.EquipmentAttributes[i]);
+			else if(i == Static.ALL_EQUIPMENT_COUNT - 1)  Assert.Equal((StatId)1, code.EquipmentAttributes[i]);
+			else Assert.Equal(StatId._UNDEFINED, code.EquipmentAttributes[i]);
 		}
 		for(int i = 0; i < Static.ALL_INFUSION_COUNT; i++)
 			Assert.Null(code.Infusions[i]);
 		Assert.Null(code.Food);
 		Assert.Null(code.Utility);
-		Assert.Equal(IProfessionArbitrary.NONE.Instance, code.ArbitraryData.ProfessionSpecific);
-		Assert.Equal(IArbitrary          .NONE.Instance, code.ArbitraryData.Arbitrary);
+		Assert.Equal(IProfessionSpecific.NONE.Instance, code.ProfessionSpecific);
+		Assert.Equal(IArbitrary         .NONE.Instance, code.Arbitrary);
 	}
 
 	[Fact]
 	public void MinimalPvE()
 	{
 		var rawCode = BitStringToBytes(
-			"b" + //version
+			"c" + //version
 			"10" + //type
 			"0000" + //profession
 			"0000_0000_0000" + //traits
@@ -218,8 +219,8 @@ public class BasicCodeTests {
 		Assert.Equal(Profession.Guardian, code.Profession);
 		for(int i = 0; i < 3; i++)
 			Assert.Null(code.Specializations[i]);
-		Assert.False(code.Weapons.Set1.IsSet);
-		Assert.False(code.Weapons.Set2.IsSet);
+		Assert.False(code.WeaponSet1.HasAny);
+		Assert.False(code.WeaponSet2.HasAny);
 		for(int i = 0; i < 5; i++)
 			Assert.Null(code.SlotSkills[i]);
 		Assert.Null(code.Rune);
@@ -231,15 +232,15 @@ public class BasicCodeTests {
 			Assert.Null(code.Infusions[i]);
 		Assert.Null(code.Food);
 		Assert.Null(code.Utility);
-		Assert.Equal(IProfessionArbitrary.NONE.Instance, code.ArbitraryData.ProfessionSpecific);
-		Assert.Equal(IArbitrary          .NONE.Instance, code.ArbitraryData.Arbitrary);
+		Assert.Equal(IProfessionSpecific.NONE.Instance, code.ProfessionSpecific);
+		Assert.Equal(IArbitrary         .NONE.Instance, code.Arbitrary);
 	}
 
 	[Fact]
 	public void MinimalRanger()
 	{
 		var rawCode = BitStringToBytes(
-			"b" + //version
+			"c" + //version
 			"10" + //type
 			"0011" + //profession
 			"0000_0000_0000" + //traits
@@ -259,8 +260,8 @@ public class BasicCodeTests {
 		 );
 		var code = BinaryLoader.LoadBuildCode(rawCode);
 		Assert.Equal(Profession.Ranger, code.Profession);
-		Assert.IsType<RangerData>(code.ArbitraryData.ProfessionSpecific);
-		var data = (RangerData)code.ArbitraryData.ProfessionSpecific;
+		Assert.IsType<RangerData>(code.ProfessionSpecific);
+		var data = (RangerData)code.ProfessionSpecific;
 		Assert.Null(data.Pet1);
 		Assert.Null(data.Pet2);
 	}
@@ -269,7 +270,7 @@ public class BasicCodeTests {
 	public void MinimalRevenant()
 	{
 		var rawCode = BitStringToBytes(
-			"b" + //version
+			"c" + //version
 			"10" + //type
 			"1000" + //profession
 			"0000_0000_0000" + //traits
@@ -285,13 +286,13 @@ public class BasicCodeTests {
 			"000000000000000000000000" + // infusions
 			"000000000000000000000000" + // food
 			"000000000000000000000000" + // utility
-			"0000_0000" // legends
+			"0001_0000" // legends
 		 );
 		var code = BinaryLoader.LoadBuildCode(rawCode);
 		Assert.Equal(Profession.Revenant, code.Profession);
-		Assert.IsType<RevenantData>(code.ArbitraryData.ProfessionSpecific);
-		var data = (RevenantData)code.ArbitraryData.ProfessionSpecific;
-		Assert.Null(data.Legend1);
+		Assert.IsType<RevenantData>(code.ProfessionSpecific);
+		var data = (RevenantData)code.ProfessionSpecific;
+		Assert.Equal(Legend.SHIRO, data.Legend1);
 		Assert.Null(data.Legend2);
 		Assert.Null(data.AltUtilitySkill1);
 		Assert.Null(data.AltUtilitySkill2);
