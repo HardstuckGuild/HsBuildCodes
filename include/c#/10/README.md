@@ -27,7 +27,7 @@ var code4 = BinaryLoader.LoadOfficialBuildCode(rawInGameBytes);
 // From an existing player via the official api
 var apiKey = "AD041D99-AEEF...";
 var characterName = "Don Joe Was Taken";
-var code5 = APILoader.LoadBuildCode(apiKey, characterName, Kind.PvE);
+var code5 = await APILoader.LoadBuildCode(apiKey, characterName, Kind.PvE);
 ```
 
 ### From this Object different kinds of codes can be generated:

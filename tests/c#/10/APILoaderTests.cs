@@ -1,33 +1,33 @@
+using Gw2Sharp.WebApi.Exceptions;
 using Gw2Sharp.WebApi.V2.Models;
-using Hardstuck.GuildWars2.BuildCodes.V2.Util;
 using Xunit;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2.Tests.API;
 
 public class FunctionTests {
 	[Fact]
-	public void ShouldThrowNotAToken()
+	public async Task ShouldThrowNotAToken()
 	{
-		Assert.Throws<AggregateException>(() => {
-			var code = APILoader.LoadBuildCode("xxx", "sss", default);
+		await Assert.ThrowsAsync<InvalidAccessTokenException>(async () => {
+			var code = await APILoader.LoadBuildCode("xxx", "sss", default);
 		});
 	}
 	
 	[Fact]
-	public void ShouldThrowInvalidScopes()
+	public async Task ShouldThrowInvalidScopes()
 	{
-		Assert.Throws<AggregateException>(() => {
-			var code = APILoader.LoadBuildCode("AD041D99-AEEF-2E45-8732-0057285EFE370740BF1D-6427-4191-8C4F-84DD1C97F05F", "sss", default);
+		await Assert.ThrowsAsync<MissingScopesException>(async () => {
+			var code = await APILoader.LoadBuildCode("AD041D99-AEEF-2E45-8732-0057285EFE370740BF1D-6427-4191-8C4F-84DD1C97F05F", "sss", default);
 		});
 	}
 
 	[Fact]
-	public void ShouldFindMissinScopes()
+	public async Task ShouldFindMissinScopes()
 	{
 		var connection = new Gw2Sharp.Connection("AD041D99-AEEF-2E45-8732-0057285EFE370740BF1D-6427-4191-8C4F-84DD1C97F05F");
 		using var client = new Gw2Sharp.Gw2Client(connection);
 
-		var missingScopes = APILoader.ValidateScopes(client).Result;
+		var missingScopes = await APILoader.ValidateScopes(client);
 
 		Assert.Equal(new[] {
 			TokenPermission.Characters, TokenPermission.Builds,
@@ -35,19 +35,19 @@ public class FunctionTests {
 	}
 
 	[Fact]
-	public void ShouldThrowNoSuchCharacter()
+	public async Task ShouldThrowNoSuchCharacter()
 	{
-		Assert.Throws<AggregateException>(() => {
-			var code = APILoader.LoadBuildCode("92CE5A6C-E594-9D4D-B92B-5621ACFE047D436C02BD-0810-47D9-B9D4-2620EB7DD598", "does not exist", default);
+		await Assert.ThrowsAsync<NotFoundException>(async () => {
+			var code = await APILoader.LoadBuildCode("92CE5A6C-E594-9D4D-B92B-5621ACFE047D436C02BD-0810-47D9-B9D4-2620EB7DD598", "does not exist", default);
 		});
 	}
 }
 
 public class BasicCodesTests {
 	[Fact]
-	public void LoadBuild()
+	public async Task LoadBuild()
 	{
-		var code = APILoader.LoadBuildCode("92CE5A6C-E594-9D4D-B92B-5621ACFE047D436C02BD-0810-47D9-B9D4-2620EB7DD598", "Hardstuck Thief", default);
+		var code = await APILoader.LoadBuildCode("92CE5A6C-E594-9D4D-B92B-5621ACFE047D436C02BD-0810-47D9-B9D4-2620EB7DD598", "Hardstuck Thief", default);
 		Assert.Equal(Profession.Thief, code.Profession);
 		Assert.Equal(new Specialization() {
 			SpecializationId = SpecializationId.Deadly_Arts,

@@ -388,9 +388,9 @@ public class BasicCodeTests {
 public class OfficialChatLinks
 {
 	[Fact]
-	public void LoadOfficialLink()
+	public async Task LoadOfficialLink()
 	{
-		ProfessionSkillPallettes.Reload(Profession.Necromancer, true);
+		await ProfessionSkillPallettes.Reload(Profession.Necromancer, true);
 
 		var fullLink = "[&DQg1KTIlIjbBEgAAgQB1AUABgQB1AUABlQCVAAAAAAAAAAAAAAAAAAAAAAA=]";
 		var base64   = fullLink[2..^1];
@@ -427,7 +427,7 @@ public class OfficialChatLinks
 	}
 
 	[Fact]
-	public void WriteOfficialLink()
+	public async Task WriteOfficialLink()
 	{
 		var code = new BuildCode {
 			Profession = Profession.Necromancer,
@@ -466,7 +466,7 @@ public class OfficialChatLinks
 			}
 		};
 
-		ProfessionSkillPallettes.Reload(Profession.Necromancer, true);
+		await ProfessionSkillPallettes.Reload(Profession.Necromancer, true);
 
 		var buffer = new byte[44];
 		BinaryLoader.WriteOfficialBuildCode(code, buffer);
@@ -479,9 +479,9 @@ public class OfficialChatLinks
 	}
 
 	[Fact]
-	public void LoadOfficiaRevlLink() // our very special boy spec
+	public async Task LoadOfficiaRevlLink() // our very special boy spec
 	{
-		ProfessionSkillPallettes.Reload(Profession.Revenant, true);
+		await ProfessionSkillPallettes.Reload(Profession.Revenant, true);
 
 		var fullLink = "[&DQkAAAAARQDcEdwRAAAAACsSAADUEQAAAAAAAAQCAwDUESsSAAAAAAAAAAA=]";
 		var base64   = fullLink[2..^1];

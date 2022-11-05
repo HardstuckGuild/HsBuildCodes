@@ -58,11 +58,16 @@ public static class TextLoader {
 		Debug.Assert(code.Kind != Kind._UNDEFINED, "Code type not valid");
 		code.Profession = Profession._FIRST + DecodeAndAdvance(ref text);
 		for(var i = 0; i < 3; i++) {
-			if(!EatToken(ref text, '_'))
+			if(!EatToken(ref text, '_')) {
+				var mixed = DecodeAndAdvance(ref text);
+				var choices = new TraitLineChoices();
+				for(int j = 0; j < 3; j++)
+					choices[j] = (TraitLineChoice)((mixed >> (6 - j * 2)) & 0b00000011);
 				code.Specializations[i] = new() {
 					SpecializationId = (SpecializationId)DecodeAndAdvance(ref text),
-					Choices             = LoadTraitChoices(ref text),
+					Choices          = choices,
 				};
+			}
 		}
 		if(!EatToken(ref text, '~')) {
 			code.WeaponSet1 = LoadWeaponSet(ref text);
@@ -91,31 +96,18 @@ public static class TextLoader {
 				code.Utility = DecodeAndAdvance(ref text, 3);
 		}
 
-		code.ProfessionSpecific = LoadProfessionArbitrary(ref text, code.Profession);
+		code.ProfessionSpecific = LoadProfessionSpecific(ref text, code.Profession);
 		code.Arbitrary          = LoadArbitrary(ref text);
 		return code;
-	}
-
-	private static TraitLineChoices LoadTraitChoices(ref ReadOnlySpan<char> text)
-	{
-		var mixed = DecodeAndAdvance(ref text);
-		var choices = new TraitLineChoices();
-		for(int i = 0; i < 3; i++)
-			choices[i] = (TraitLineChoice)((mixed >> (6 - i * 2)) & 0b00000011);
-		return choices;
 	}
 
 	private static WeaponSet LoadWeaponSet(ref ReadOnlySpan<char> text)
 	{
 		var set = new WeaponSet();
-		if(!EatToken(ref text, '_'))
-			set.MainHand = WeaponType._FIRST + DecodeAndAdvance(ref text);
-		if(!EatToken(ref text, '_'))
-			set.Sigil1 = DecodeAndAdvance(ref text, 3);
-		if(set.MainHand.HasValue && !IsTwoHanded(set.MainHand.Value) && !EatToken(ref text, '_'))
-			set.OffHand = WeaponType._FIRST + DecodeAndAdvance(ref text);
-		if(!EatToken(ref text, '_'))
-			set.Sigil2 = DecodeAndAdvance(ref text, 3);
+		if(!EatToken(ref text, '_')) set.MainHand = WeaponType._FIRST + DecodeAndAdvance(ref text);
+		if(!EatToken(ref text, '_')) set.Sigil1 = DecodeAndAdvance(ref text, 3);
+		if(!EatToken(ref text, '_')) set.OffHand = WeaponType._FIRST + DecodeAndAdvance(ref text);
+		if(!EatToken(ref text, '_')) set.Sigil2 = DecodeAndAdvance(ref text, 3);
 		return set;
 	}
 
@@ -195,7 +187,7 @@ public static class TextLoader {
 		return allData;
 	}
 
-	private static IProfessionSpecific LoadProfessionArbitrary(ref ReadOnlySpan<char> text, Profession profession)
+	private static IProfessionSpecific LoadProfessionSpecific(ref ReadOnlySpan<char> text, Profession profession)
 	{
 		switch(profession)
 		{
@@ -268,7 +260,7 @@ public static class TextLoader {
 		return buffer[..length].ToString();
 	}
 
-	/// <summary> returns number of characters written </summary>
+	/// <returns>Number of characters written</returns>
 	public static int WriteBuildCode(BuildCode code, Span<char> destination)
 	{
 		var oldLen = destination.Length;
@@ -454,6 +446,7 @@ public static class TextLoader {
 
 	#region official codes
 
+	/// <inheritdoc cref="BinaryLoader.LoadOfficialBuildCode(ReadOnlySpan{byte}, bool)"/>
 	public static BuildCode LoadOfficialBuildCode(string chatLink, bool aquatic = false)
 	{
 		var base64 = chatLink[0] == '[' ? chatLink.AsSpan(2, chatLink.Length - 3) : chatLink.AsSpan();
@@ -462,6 +455,7 @@ public static class TextLoader {
 		return BinaryLoader.LoadOfficialBuildCode(buffer, aquatic);
 	}
 
+	/// <inheritdoc cref="BinaryLoader.WriteOfficialBuildCode(BuildCode, Span{byte}, bool)"/>
 	public static string WriteOfficialBuildCode(BuildCode code, bool aquatic = false)
 	{
 		Span<byte> buffer = stackalloc byte[OFFICIAL_CHAT_CODE_BYTE_LENGTH];
@@ -469,6 +463,7 @@ public static class TextLoader {
 
 		return "[&" + Convert.ToBase64String(buffer) + ']';
 	}
+	/// <inheritdoc cref="BinaryLoader.WriteOfficialBuildCode(BuildCode, Span{byte}, bool)"/>
 	public static void WriteOfficialBuildCode(BuildCode code, Span<char> destination, bool aquatic = false)
 	{
 		Span<byte> buffer = stackalloc byte[OFFICIAL_CHAT_CODE_BYTE_LENGTH];

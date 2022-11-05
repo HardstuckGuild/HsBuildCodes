@@ -16,7 +16,7 @@ public static class APILoader {
 	}
 
 	/// <summary> This method assumes the scopes account, character and build are available. </summary>
-	public static BuildCode LoadBuildCode(string authToken, string characterName, Kind targetGameMode, bool aquatic = false)
+	public static Task<BuildCode> LoadBuildCode(string authToken, string characterName, Kind targetGameMode, bool aquatic = false)
 	{
 		var connection = new Gw2Sharp.Connection(authToken);
 		using var client = new Gw2Sharp.Gw2Client(connection);
@@ -24,12 +24,12 @@ public static class APILoader {
 	}
 
 	/// <summary> This method assumes the scopes account, character and build are available, but does not explicitely test for them. </summary>
-	public static BuildCode LoadBuildCode(Gw2Sharp.Gw2Client authorizedClient, string characterName, Kind targetGameMode, bool aquatic = false) {
+	public static async Task<BuildCode> LoadBuildCode(Gw2Sharp.Gw2Client authorizedClient, string characterName, Kind targetGameMode, bool aquatic = false) {
 		var code = new BuildCode();
 		code.Version = CURRENT_VERSION;
 		code.Kind    = targetGameMode;
 
-		var playerData = authorizedClient.WebApi.V2.Characters.GetAsync(characterName).Result;
+		var playerData = await authorizedClient.WebApi.V2.Characters.GetAsync(characterName);
 		
 		code.Profession = Enum.Parse<Profession>(playerData.Profession);
 
@@ -41,9 +41,9 @@ public static class APILoader {
 			code.Specializations[i] = new() {
 				SpecializationId = (SpecializationId)spec.Id!, //todo test
 				Choices          = {
-					Adept       = APICache.ResolvePosition(spec.Traits[0]), //todo translate
-					Master      = APICache.ResolvePosition(spec.Traits[1]), //todo translate
-					Grandmaster = APICache.ResolvePosition(spec.Traits[2]), //todo translate
+					Adept       = await APICache.ResolvePosition(spec.Traits[0]),
+					Master      = await APICache.ResolvePosition(spec.Traits[1]),
+					Grandmaster = await APICache.ResolvePosition(spec.Traits[2]),
 				},
 			};
 		}
@@ -53,9 +53,9 @@ public static class APILoader {
 		{
 			int? runeId = null;
 
-			void SetArmorData(int equipSlot, CharacterEquipmentItem item)
+			async void SetArmorData(int equipSlot, CharacterEquipmentItem item)
 			{
-				code.EquipmentAttributes[equipSlot] = ResolveStatId(item);
+				code.EquipmentAttributes[equipSlot] = await ResolveStatId(item);
 				code.Infusions          [equipSlot] = item.Infusions?[0];
 				if(item.Upgrades != null) {
 					if(runeId == null) runeId = item.Upgrades[0];
@@ -75,7 +75,7 @@ public static class APILoader {
 					case ItemEquipmentSlotType.Boots      :                     SetArmorData(5, item); break;
 						
 					case ItemEquipmentSlotType.Backpack:
-						code.EquipmentAttributes.BackItem = ResolveStatId(item);
+						code.EquipmentAttributes.BackItem = await ResolveStatId(item);
 						if(item.Infusions != null) {
 							code.Infusions.BackItem_1 = item.Infusions[0];
 							if(item.Infusions.Count > 1)
@@ -84,17 +84,17 @@ public static class APILoader {
 						break;
 
 					case ItemEquipmentSlotType.Accessory1:
-						code.EquipmentAttributes.Accessory1 = ResolveStatId(item);
+						code.EquipmentAttributes.Accessory1 = await ResolveStatId(item);
 						code.Infusions          .Accessory1 = item.Infusions?[0];
 						break;
 
 					case ItemEquipmentSlotType.Accessory2:
-						code.EquipmentAttributes.Accessory2 = ResolveStatId(item);
+						code.EquipmentAttributes.Accessory2 = await ResolveStatId(item);
 						code.Infusions          .Accessory2 = item.Infusions?[0];
 						break;
 
 					case ItemEquipmentSlotType.Ring1:
-						code.EquipmentAttributes.Ring1 = ResolveStatId(item);
+						code.EquipmentAttributes.Ring1 = await ResolveStatId(item);
 						if(item.Infusions != null) {
 							code.Infusions.Ring1_1 = item.Infusions[0];
 							if(item.Infusions.Count > 1) {
@@ -106,7 +106,7 @@ public static class APILoader {
 						break;
 						
 					case ItemEquipmentSlotType.Ring2:
-						code.EquipmentAttributes.Ring2 = ResolveStatId(item);
+						code.EquipmentAttributes.Ring2 = await ResolveStatId(item);
 						if(item.Infusions != null) {
 							code.Infusions.Ring2_1 = item.Infusions[0];
 							if(item.Infusions.Count > 1) {
@@ -119,13 +119,13 @@ public static class APILoader {
 						
 					case ItemEquipmentSlotType.WeaponA1:
 						if(aquatic) break;
-						code.EquipmentAttributes.WeaponSet1MainHand = ResolveStatId(item);
+						code.EquipmentAttributes.WeaponSet1MainHand = await ResolveStatId(item);
 						if(item.Infusions != null) {
 							code.Infusions.WeaponSet1_1 = item.Infusions[0];
 							if(item.Infusions.Count > 1)
 								code.Infusions.WeaponSet1_2 = item.Infusions[1];
 						}
-						code.WeaponSet1.MainHand = APICache.ResolveWeaponType(item.Id);
+						code.WeaponSet1.MainHand = await APICache.ResolveWeaponType(item.Id);
 						if(item.Upgrades != null) {
 							code.WeaponSet1.Sigil1 = item.Upgrades[0];
 							if(item.Upgrades.Count > 1)
@@ -135,13 +135,13 @@ public static class APILoader {
 
 					case ItemEquipmentSlotType.WeaponAquaticA:
 						if(!aquatic) break;
-						code.EquipmentAttributes.WeaponSet1MainHand = ResolveStatId(item);
+						code.EquipmentAttributes.WeaponSet1MainHand = await ResolveStatId(item);
 						if(item.Infusions != null) {
 							code.Infusions.WeaponSet1_1 = item.Infusions[0];
 							if(item.Infusions.Count > 1)
 								code.Infusions.WeaponSet1_2 = item.Infusions[1];
 						}
-						code.WeaponSet1.MainHand = APICache.ResolveWeaponType(item.Id);
+						code.WeaponSet1.MainHand = await APICache.ResolveWeaponType(item.Id);
 						if(item.Upgrades != null) {
 							code.WeaponSet1.Sigil1 = item.Upgrades[0];
 							if(item.Upgrades.Count > 1)
@@ -151,21 +151,21 @@ public static class APILoader {
 
 					case ItemEquipmentSlotType.WeaponA2:
 						if(aquatic) break;
-						code.EquipmentAttributes.WeaponSet1OffHand = ResolveStatId(item);
+						code.EquipmentAttributes.WeaponSet1OffHand = await ResolveStatId(item);
 						code.Infusions.WeaponSet1_2 = item.Infusions?[0]; //NOTE(Rennorb): this assues that buidls with twohanded main weapons dont contain an 'empty' weapon with no upgrades
-						code.WeaponSet1.OffHand = APICache.ResolveWeaponType(item.Id);
+						code.WeaponSet1.OffHand = await APICache.ResolveWeaponType(item.Id);
 						code.WeaponSet1.Sigil2 = item.Upgrades?[0]; //NOTE(Rennorb): this assues that buidls with twohanded main weapons dont contain an 'empty' weapon with no upgrades
 						break;
 
 					case ItemEquipmentSlotType.WeaponB1:
 						if(aquatic) break;
-						code.EquipmentAttributes.WeaponSet2MainHand = ResolveStatId(item);
+						code.EquipmentAttributes.WeaponSet2MainHand = await ResolveStatId(item);
 						if(item.Infusions != null) {
 							code.Infusions.WeaponSet2_1 = item.Infusions[0];
 							if(item.Infusions.Count > 1)
 								code.Infusions.WeaponSet2_2 = item.Infusions[1];
 						}
-						code.WeaponSet2.MainHand = APICache.ResolveWeaponType(item.Id);
+						code.WeaponSet2.MainHand = await APICache.ResolveWeaponType(item.Id);
 						if(item.Upgrades != null) {
 							code.WeaponSet2.Sigil1 = item.Upgrades[0];
 							if(IsTwoHanded(code.WeaponSet2.MainHand.Value) && item.Upgrades.Count > 1)
@@ -175,13 +175,13 @@ public static class APILoader {
 
 					case ItemEquipmentSlotType.WeaponAquaticB:
 						if(!aquatic) break;
-						code.EquipmentAttributes.WeaponSet2MainHand = ResolveStatId(item);
+						code.EquipmentAttributes.WeaponSet2MainHand = await ResolveStatId(item);
 						if(item.Infusions != null) {
 							code.Infusions.WeaponSet2_1 = item.Infusions[0];
 							if(item.Infusions.Count > 1)
 								code.Infusions.WeaponSet2_2 = item.Infusions[1];
 						}
-						code.WeaponSet2.MainHand = APICache.ResolveWeaponType(item.Id);
+						code.WeaponSet2.MainHand = await APICache.ResolveWeaponType(item.Id);
 						if(item.Upgrades != null) {
 							code.WeaponSet2.Sigil1 = item.Upgrades[0];
 							if(item.Upgrades.Count > 1)
@@ -191,15 +191,15 @@ public static class APILoader {
 
 					case ItemEquipmentSlotType.WeaponB2:
 						if(aquatic) break;
-						code.EquipmentAttributes.WeaponSet2OffHand = ResolveStatId(item);
+						code.EquipmentAttributes.WeaponSet2OffHand = await ResolveStatId(item);
 						code.Infusions.WeaponSet2_2 = item.Infusions?[0];
-						code.WeaponSet2.OffHand = APICache.ResolveWeaponType(item.Id);
+						code.WeaponSet2.OffHand = await APICache.ResolveWeaponType(item.Id);
 						code.WeaponSet2.Sigil2 = item.Upgrades?[0];
 						break;
 
 					case ItemEquipmentSlotType.Amulet:
 						if(aquatic) break;
-						code.EquipmentAttributes.Amulet = ResolveStatId(item);
+						code.EquipmentAttributes.Amulet = await ResolveStatId(item);
 						code.Infusions          .Amulet = item.Infusions?[0];
 						break;
 				}
@@ -282,6 +282,6 @@ public static class APILoader {
 		return code;
 	}
 
-	internal static StatId ResolveStatId(CharacterEquipmentItem item)
-		=> item.Stats != null ? (StatId)item.Stats.Id : APICache.ResolveStatId(item.Id);
+	internal static async ValueTask<StatId> ResolveStatId(CharacterEquipmentItem item)
+		=> item.Stats != null ? (StatId)item.Stats.Id : await APICache.ResolveStatId(item.Id);
 }

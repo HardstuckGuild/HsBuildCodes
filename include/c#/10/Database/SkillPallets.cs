@@ -30,23 +30,24 @@ public static class ProfessionSkillPallettes {
 	/// <summary> This will only ever add new entries to all pallettes, never remove them. </summary>
 	public static void ReloadAll(bool skipOnline = false)
 	{
-		//NOTE(Rennorb): this check is here so we dont reload guard twice. this would happen because the _FIRST member has the same value as Guardian, and therefore the value would get enumerated twice.
+		//NOTE(Rennorb): This check is here so we dont reload Guardian twice. This would happen because the _FIRST member has the same value as Guardian, and therefore the value would get enumerated twice.
 		// See remarks section of https://learn.microsoft.com/en-us/dotnet/api/system.enum.getvalues
 		bool alreadyRanFIRSTReload = false;
-		foreach(var profession in Enum.GetValues<Profession>())
-		{
-			if(profession == Profession._UNDEFINED) continue;
-			if(profession == Profession._FIRST) {
-				if(alreadyRanFIRSTReload) continue; 
-				else alreadyRanFIRSTReload = true;
-			} 
-
-			Reload(profession, skipOnline);
-		}
+		Task.WaitAll(Enum.GetValues<Profession>()
+			.Where(profession => {
+				if(profession == Profession._UNDEFINED) return false;
+				if(profession == Profession._FIRST) {
+					if(alreadyRanFIRSTReload) return false; 
+					else alreadyRanFIRSTReload = true;
+				} 
+				return true;
+			})
+			.Select(profession => Reload(profession, skipOnline))
+			.ToArray());
 	}
 
 	/// <summary> This will only ever add new entries, never remove them. </summary>
-	public static void Reload(Profession profession, bool skipOnline = false)
+	public static async Task Reload(Profession profession, bool skipOnline = false)
 	{
 		var targetPallette = ByProfession(profession);
 		if(targetPallette.PalletteToSkill.Count == 0) {
@@ -60,7 +61,7 @@ public static class ProfessionSkillPallettes {
 			{
 				//TODO(Rennorb): @performance
 				var client = new Gw2Sharp.Gw2Client();
-				var professionData = client.WebApi.V2.Professions.GetAsync(Enum.GetName(profession)!).Result;
+				var professionData = await client.WebApi.V2.Professions.GetAsync(Enum.GetName(profession)!);
 				foreach(var (pallete, skill) in professionData.SkillsByPalette) {
 					targetPallette.TryInsert((ushort)pallete, (SkillId)skill);
 				}

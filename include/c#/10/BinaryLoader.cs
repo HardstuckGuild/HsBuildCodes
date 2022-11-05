@@ -138,11 +138,15 @@ public static class BinaryLoader {
 		code.Profession = Profession._FIRST + rawSpan.DecodeNext(4);
 		for(var i = 0; i < 3; i++) {
 			var traitLine = (SpecializationId)rawSpan.DecodeNext(4);
-			if(traitLine != SpecializationId._NONE)
+			if(traitLine != SpecializationId._NONE) {
+				var choices = new TraitLineChoices();
+				for(var j = 0; j < 3; j++)
+					choices[j] = (TraitLineChoice)rawSpan.DecodeNext(2);
 				code.Specializations[i] = new() {
 					SpecializationId = traitLine,
-					Choices             = LoadTraitChoices(ref rawSpan),
+					Choices          = choices,
 				};
+			}
 		}
 		if(!rawSpan.EatIfExpected(0, 5)) {
 			code.WeaponSet1 = LoadWeaponSet(ref rawSpan);
@@ -165,18 +169,10 @@ public static class BinaryLoader {
 			rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref code.Food   , 1, 24);
 			rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref code.Utility, 1, 24);
 		}
-		code.ProfessionSpecific = LoadProfessionArbitrary(ref rawSpan, code.Profession);
+		code.ProfessionSpecific = LoadProfessionSpecific(ref rawSpan, code.Profession);
 		code.Arbitrary          = LoadArbitrary(ref rawSpan);
 
 		return code;
-	}
-
-	private static TraitLineChoices LoadTraitChoices(ref BitReader rawSpan)
-	{
-		var choices = new TraitLineChoices();
-		for(var i = 0; i < 3; i++)
-			choices[i] = (TraitLineChoice)rawSpan.DecodeNext(2);
-		return choices;
 	}
 
 	private static WeaponSet LoadWeaponSet(ref BitReader rawSpan)
@@ -264,7 +260,7 @@ public static class BinaryLoader {
 		return allData;
 	}
 
-	private static IProfessionSpecific LoadProfessionArbitrary(ref BitReader rawSpan, Profession profession)
+	private static IProfessionSpecific LoadProfessionSpecific(ref BitReader rawSpan, Profession profession)
 	{
 		switch(profession)
 		{
@@ -299,7 +295,7 @@ public static class BinaryLoader {
 		return IArbitrary.NONE.Instance;
 	}
 
-	/// <summary> Returns the amount of bytes written. </summary>
+	/// <returns> The amount of bytes written. </returns>
 	public static int WriteCode(BuildCode code, Span<byte> destination)
 	{
 		var rawBits = new BitWriter(destination);
@@ -481,7 +477,7 @@ public static class BinaryLoader {
 
 	#region official codes
 
-	/// <summary> Requires pallette ids to be loaded </summary>
+	/// <remarks> Requires pallette ids to be loaded. Make sure to call <see cref="ProfessionSkillPallettes.Reload(Profession, bool)"/> or <see cref="ProfessionSkillPallettes.ReloadAll(bool)"/> first. </remarks>
 	public static BuildCode LoadOfficialBuildCode(ReadOnlySpan<byte> raw, bool aquatic = false)
 	{
 		var codeType = SliceAndAdvance(ref raw);
@@ -594,6 +590,7 @@ public static class BinaryLoader {
 		}
 	}
 
+	/// <remarks> Requires pallette ids to be loaded. Make sure to call <see cref="ProfessionSkillPallettes.Reload(Profession, bool)"/> or <see cref="ProfessionSkillPallettes.ReloadAll(bool)"/> first. </remarks>
 	public static void WriteOfficialBuildCode(BuildCode code, Span<byte> destination, bool aquatic = false)
 	{
 		Debug.Assert(destination.Length >= OFFICIAL_CHAT_CODE_BYTE_LENGTH, "destination is not large enough to write code");
