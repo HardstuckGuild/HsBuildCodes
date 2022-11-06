@@ -77,17 +77,17 @@ public class BasicCodesTests {
 		Assert.False(code.WeaponSet1.HasAny);
 		Assert.False(code.WeaponSet2.HasAny);
 		for(int i = 0; i < 5; i++)
-			Assert.Null(code.SlotSkills[i]);
-		Assert.Null(code.Rune);
+			Assert.Equal(SkillId._UNDEFINED, code.SlotSkills[i]);
+		Assert.Equal(ItemId._UNDEFINED, code.Rune);
 		for(int i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++) {
-			if(i >= 11 && i <= 14) Assert.Null(code.EquipmentAttributes[i]);
+			if(i >= 11 && i <= 14) Assert.Equal(StatId._UNDEFINED, code.EquipmentAttributes[i]);
 			else if(i == Static.ALL_EQUIPMENT_COUNT - 1) Assert.Equal((StatId)1, code.EquipmentAttributes[i]); 
 			else Assert.Equal(StatId._UNDEFINED, code.EquipmentAttributes[i]);
 		}
 		for(int i = 0; i < Static.ALL_INFUSION_COUNT; i++)
-			Assert.Null(code.Infusions[i]);
-		Assert.Null(code.Food);
-		Assert.Null(code.Utility);
+			Assert.Equal(ItemId._UNDEFINED, code.Infusions[i]);
+		Assert.Equal(ItemId._UNDEFINED, code.Food);
+		Assert.Equal(ItemId._UNDEFINED, code.Utility);
 		Assert.Equal(IProfessionSpecific.NONE.Instance, code.ProfessionSpecific);
 		Assert.Equal(IArbitrary         .NONE.Instance, code.Arbitrary);
 	}
@@ -104,16 +104,16 @@ public class BasicCodesTests {
 		Assert.False(code.WeaponSet1.HasAny);
 		Assert.False(code.WeaponSet2.HasAny);
 		for(int i = 0; i < 5; i++)
-			Assert.Null(code.SlotSkills[i]);
-		Assert.Null(code.Rune);
+			Assert.Equal(SkillId._UNDEFINED, code.SlotSkills[i]);
+		Assert.Equal(ItemId._UNDEFINED, code.Rune);
 		for(int i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++) {
 			if(11 <= i && i <= 14) Assert.Equal(default, code.EquipmentAttributes[i]);
 			else Assert.Equal((StatId)1, code.EquipmentAttributes[i]);
 		}
 		for(int i = 0; i < Static.ALL_INFUSION_COUNT; i++)
-			Assert.Null(code.Infusions[i]);
-		Assert.Null(code.Food);
-		Assert.Null(code.Utility);
+			Assert.Equal(ItemId._UNDEFINED, code.Infusions[i]);
+		Assert.Equal(ItemId._UNDEFINED, code.Food);
+		Assert.Equal(ItemId._UNDEFINED, code.Utility);
 		Assert.Equal(IProfessionSpecific.NONE.Instance, code.ProfessionSpecific);
 		Assert.Equal(IArbitrary         .NONE.Instance, code.Arbitrary);
 	}
@@ -124,8 +124,8 @@ public class BasicCodesTests {
 		var code = TextLoader.LoadBuildCode("CoD___~______A~M~__~");
 		Assert.IsType<RangerData>(code.ProfessionSpecific);
 		var data = (RangerData)code.ProfessionSpecific;
-		Assert.Null(data.Pet1);
-		Assert.Null(data.Pet2);
+		Assert.Equal(PetId._UNDEFINED, data.Pet1);
+		Assert.Equal(PetId._UNDEFINED, data.Pet2);
 	}
 
 	[Fact]
@@ -135,10 +135,10 @@ public class BasicCodesTests {
 		Assert.IsType<RevenantData>(code.ProfessionSpecific);
 		var data = (RevenantData)code.ProfessionSpecific;
 		Assert.Equal(Legend.SHIRO, data.Legend1);
-		Assert.Null(data.Legend2);
-		Assert.Null(data.AltUtilitySkill1);
-		Assert.Null(data.AltUtilitySkill2);
-		Assert.Null(data.AltUtilitySkill3);
+		Assert.Equal(Legend._UNDEFINED, data.Legend2);
+		Assert.Equal(SkillId._UNDEFINED, data.AltUtilitySkill1);
+		Assert.Equal(SkillId._UNDEFINED, data.AltUtilitySkill2);
+		Assert.Equal(SkillId._UNDEFINED, data.AltUtilitySkill3);
 	}
 
 	[Fact]
@@ -153,9 +153,9 @@ public class BasicCodesTests {
 
 public class OfficialChatLinks {
 	[Fact]
-	public void LoadOfficialLink()
+	public async Task LoadOfficialLink()
 	{
-		ProfessionSkillPallettes.Reload(Profession.Necromancer, true);
+		await PerProfessionData.Reload(Profession.Necromancer, true);
 
 		var code = TextLoader.LoadOfficialBuildCode("[&DQg1KTIlIjbBEgAAgQB1AUABgQB1AUABlQCVAAAAAAAAAAAAAAAAAAAAAAA=]");
 		Assert.Equal(Profession.Necromancer, code.Profession);
@@ -189,7 +189,7 @@ public class OfficialChatLinks {
 	}
 
 	[Fact]
-	public void WriteOfficialLink()
+	public async Task WriteOfficialLink()
 	{
 		var code = new BuildCode {
 			Profession = Profession.Necromancer,
@@ -228,7 +228,7 @@ public class OfficialChatLinks {
 			}
 		};
 
-		ProfessionSkillPallettes.Reload(Profession.Necromancer, true);
+		await PerProfessionData.Reload(Profession.Necromancer, true);
 
 		var reference = "[&DQg1KTIlIjbBEgAAgQAAAEABAAB1AQAAlQAAAAAAAAAAAAAAAAAAAAAAAAA=]";
 		var result = TextLoader.WriteOfficialBuildCode(code);

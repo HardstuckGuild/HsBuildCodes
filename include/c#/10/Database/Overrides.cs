@@ -2,10 +2,9 @@
 
 namespace Hardstuck.GuildWars2.BuildCodes; 
 public static class Overrides {
+	/// <remarks> Requires PerProfessionData for Revs to be loaded first. </remarks>
 	public static SkillId RevPalletteToSkill(Legend legend, ushort palletteId)
 	{
-		var pallette = ProfessionSkillPallettes.Revenant;
-
 		switch(palletteId) {
 			case 4572: switch(legend) {
 					case Legend.SHIRO  : return SkillId.Enchanted_Daggers;
@@ -52,11 +51,12 @@ public static class Overrides {
 					case Legend.KALLA  : return SkillId.Soulcleaves_Summit;
 				} goto default;
 
-			default: return pallette.PalletteToSkill[palletteId];
+			default: return PerProfessionData.Revenant.PalletteToSkill[palletteId];
 		}
 	}
 
-	public static ushort RevSkillToPallette(BuildCode code, SkillPallette pallette, SkillId skillId)
+	/// <remarks> Requires PerProfessionData for Revs to be loaded first. </remarks>
+	public static ushort RevSkillToPallette(BuildCode code, SkillId skillId)
 	{
 		switch(code.Profession) {
 			case Profession.Revenant:
@@ -111,7 +111,7 @@ public static class Overrides {
 				}
 				goto default;
 
-			default: return pallette.SkillToPallette[skillId];
+			default: return PerProfessionData.Revenant.SkillToPallette[skillId];
 		}
 	}
 
@@ -119,7 +119,7 @@ public static class Overrides {
 	{
 		//NOTE(Rennorb): Apparrently, mortar kit is utterly broken with the api.
 		// Just guess that if the elite is empty that its actually mortar kit.
-		if(code.Profession == Profession.Engineer && !code.SlotSkills.Elite.HasValue)
+		if(code.Profession == Profession.Engineer && code.SlotSkills.Elite == SkillId._UNDEFINED)
 		{
 			code.SlotSkills.Elite = SkillId.Elite_Mortar_Kit;
 		}

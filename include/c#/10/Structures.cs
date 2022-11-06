@@ -11,12 +11,12 @@ public class BuildCode {
 	public WeaponSet              WeaponSet1;
 	public WeaponSet              WeaponSet2;
 	public AllSkills              SlotSkills;
-	public int?                   Rune;
+	public ItemId                 Rune;
 	/// <summary> Note: for simplicity, pvp codes only have their amulet id set on the amulet </summary> //TODO @nocommit
 	public AllEquipmentStats      EquipmentAttributes;
 	public AllEquipmentInfusions  Infusions;
-	public int?                   Food;
-	public int?                   Utility;
+	public ItemId                 Food;
+	public ItemId                 Utility;
 	public IProfessionSpecific    ProfessionSpecific = IProfessionSpecific.NONE.Instance;
 	public IArbitrary             Arbitrary          = IArbitrary         .NONE.Instance;
 }
@@ -32,7 +32,6 @@ public enum Kind : ushort {
 public enum Profession {
 	_UNDEFINED = default,
 	Guardian = 1, Warrior, Engineer, Ranger, Thief, Elementalist, Mesmer, Necromancer, Revenant,
-	_FIRST = Guardian,
 }
 
 public struct Specialization {
@@ -47,21 +46,22 @@ public enum TraitLineChoice {
 	BOTTOM = 3,
 }
 
-public struct WeaponSet {
-	public WeaponType? MainHand;
-	public WeaponType? OffHand;
-
-	public int? Sigil1;
-	public int? Sigil2;
-
-	public bool HasAny => MainHand.HasValue || OffHand.HasValue;
+public enum WeaponSetNumber {
+	_UNDEFINED = default,
+	Set1 = 1,
+	Set2 = 2,
 }
 
-public struct UnderwaterWeapon {
-	public WeaponType Weapon;
+/// <remarks> All fields might be <see cref="WeaponType._UNDEFINED"/> or <see cref="ItemId._UNDEFINED"/> respectively.
+/// Twohanded weapons only set the main hand, offhand must be <see cref="WeaponType._UNDEFINED"/> in that case. </remarks>
+public struct WeaponSet {
+	public WeaponType MainHand;
+	public WeaponType OffHand;
 
-	public int? Sigil1;
-	public int? Sigil2;
+	public ItemId Sigil1;
+	public ItemId Sigil2;
+
+	public bool HasAny => (MainHand & OffHand) != WeaponType._UNDEFINED;
 }
 
 //NOTE(Rennorb): names match official API
@@ -78,18 +78,29 @@ public interface IProfessionSpecific {
 	}
 }
 
+
 public class RangerData : IProfessionSpecific {
-	public int? Pet1;
-	public int? Pet2;
+	/// <remarks> Is <see cref="PetId._UNDEFINED"/> if the pet is not set. </remarks>
+	public PetId Pet1;
+	/// <remarks> Is <see cref="PetId._UNDEFINED"/> if the pet is not set. </remarks>
+	public PetId Pet2;
+}
+
+public enum PetId {
+	_UNDEFINED = default,
 }
 
 public class RevenantData : IProfessionSpecific {
 	public Legend Legend1;
-	public Legend? Legend2;
+	/// <remarks> Is <see cref="Legend._UNDEFINED"/> if the legend is not set. </remarks>
+	public Legend Legend2;
 
-	public SkillId? AltUtilitySkill1;
-	public SkillId? AltUtilitySkill2;
-	public SkillId? AltUtilitySkill3;
+	/// <remarks> Is <see cref="Legend._UNDEFINED"/> if the second legend is not set. </remarks>
+	public SkillId AltUtilitySkill1;
+	/// <remarks> Is <see cref="Legend._UNDEFINED"/> if the second legend is not set. </remarks>
+	public SkillId AltUtilitySkill2;
+	/// <remarks> Is <see cref="Legend._UNDEFINED"/> if the second legend is not set. </remarks>
+	public SkillId AltUtilitySkill3;
 }
 
 public enum Legend {
@@ -118,7 +129,7 @@ public interface IArbitrary {
 }
 
 
-/// <summary> Unused. be weary of endianess </summary>
+/// <summary> Unused. be weary of endianess, skill ids are little endian </summary>
 [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 44)]
 unsafe struct OfficialBuildCode {
 	public       byte   Type;

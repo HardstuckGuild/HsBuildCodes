@@ -50,21 +50,26 @@ public static class TextLoader {
 
 	#region hardstuck codes
 
+	/// <remarks> Requires PerProfessionData to be loaded. </remarks>
 	public static BuildCode LoadBuildCode(ReadOnlySpan<char> text) {
 		var code = new BuildCode();
 		code.Version    = DecodeAndAdvance(ref text);
 		Debug.Assert(code.Version == CURRENT_VERSION, "Code version mismatch");
 		code.Kind       = (Kind)DecodeAndAdvance(ref text);
 		Debug.Assert(code.Kind != Kind._UNDEFINED, "Code type not valid");
-		code.Profession = Profession._FIRST + DecodeAndAdvance(ref text);
+		code.Profession = (Profession)1 + DecodeAndAdvance(ref text);
+
+		var professionData = PerProfessionData.ByProfession(code.Profession);
+
 		for(var i = 0; i < 3; i++) {
 			if(!EatToken(ref text, '_')) {
+				var id = professionData.IndexToId[DecodeAndAdvance(ref text) + 1];
 				var mixed = DecodeAndAdvance(ref text);
 				var choices = new TraitLineChoices();
 				for(int j = 0; j < 3; j++)
 					choices[j] = (TraitLineChoice)((mixed >> (6 - j * 2)) & 0b00000011);
 				code.Specializations[i] = new() {
-					SpecializationId = (SpecializationId)DecodeAndAdvance(ref text),
+					SpecializationId = id,
 					Choices          = choices,
 				};
 			}
@@ -80,7 +85,7 @@ public static class TextLoader {
 				code.SlotSkills[i] = (SkillId)DecodeAndAdvance(ref text, 3);
 		
 		if(!EatToken(ref text, '_'))
-			code.Rune = DecodeAndAdvance(ref text, 3);
+			code.Rune = (ItemId)DecodeAndAdvance(ref text, 3);
 		
 		if(code.Kind != Kind.PvP)
 			code.EquipmentAttributes = LoadAllEquipmentStats(ref text, code);
@@ -91,9 +96,9 @@ public static class TextLoader {
 			if(!EatToken(ref text, '~'))
 				code.Infusions = LoadAllEquipmentInfusions(ref text, code);
 			if(!EatToken(ref text, '_'))
-				code.Food = DecodeAndAdvance(ref text, 3);
+				code.Food = (ItemId)DecodeAndAdvance(ref text, 3);
 			if(!EatToken(ref text, '_'))
-				code.Utility = DecodeAndAdvance(ref text, 3);
+				code.Utility = (ItemId)DecodeAndAdvance(ref text, 3);
 		}
 
 		code.ProfessionSpecific = LoadProfessionSpecific(ref text, code.Profession);
@@ -105,9 +110,9 @@ public static class TextLoader {
 	{
 		var set = new WeaponSet();
 		if(!EatToken(ref text, '_')) set.MainHand = WeaponType._FIRST + DecodeAndAdvance(ref text);
-		if(!EatToken(ref text, '_')) set.Sigil1 = DecodeAndAdvance(ref text, 3);
+		if(!EatToken(ref text, '_')) set.Sigil1 = (ItemId)DecodeAndAdvance(ref text, 3);
 		if(!EatToken(ref text, '_')) set.OffHand = WeaponType._FIRST + DecodeAndAdvance(ref text);
-		if(!EatToken(ref text, '_')) set.Sigil2 = DecodeAndAdvance(ref text, 3);
+		if(!EatToken(ref text, '_')) set.Sigil2 = (ItemId)DecodeAndAdvance(ref text, 3);
 		return set;
 	}
 
@@ -128,17 +133,17 @@ public static class TextLoader {
 			switch(i) {
 				case 11:
 					if(!weaponRef.WeaponSet1.HasAny) { i += 3; continue; }
-					else if(!weaponRef.WeaponSet1.MainHand.HasValue) { continue; }
+					else if(weaponRef.WeaponSet1.MainHand == WeaponType._UNDEFINED) { continue; }
 					else break;
 				case 12:
-					if(!weaponRef.WeaponSet1.OffHand.HasValue) continue;
+					if(weaponRef.WeaponSet1.OffHand == WeaponType._UNDEFINED) continue;
 					else break;
 				case 13:
 					if(!weaponRef.WeaponSet2.HasAny) { i++; continue; }
-					else if(!weaponRef.WeaponSet2.MainHand.HasValue) continue;
+					else if(weaponRef.WeaponSet2.MainHand == WeaponType._UNDEFINED) continue;
 					else break;
 				case 14:
-					if(!weaponRef.WeaponSet2.OffHand.HasValue) continue;
+					if(weaponRef.WeaponSet2.OffHand == WeaponType._UNDEFINED) continue;
 					else break;
 			}
 
@@ -153,12 +158,12 @@ public static class TextLoader {
 		var allData = new AllEquipmentInfusions();
 
 		var repeatCount = 0;
-		int? data = default!;
+		var data = ItemId._UNDEFINED;
 		for(int i = 0; i < ALL_INFUSION_COUNT; i++)
 		{
 			if(repeatCount == 0)
 			{
-				data = EatToken(ref text, '_') ? null : DecodeAndAdvance(ref text, 3);
+				data = EatToken(ref text, '_') ? ItemId._UNDEFINED : (ItemId)DecodeAndAdvance(ref text, 3);
 
 				if(i == ALL_INFUSION_COUNT - 1) repeatCount = 1;
 				else repeatCount = DecodeAndAdvance(ref text);
@@ -167,17 +172,17 @@ public static class TextLoader {
 			switch(i) {
 				case 16:
 					if(!weaponRef.WeaponSet1.HasAny) { i += 3; continue; }
-					else if(!weaponRef.WeaponSet1.MainHand.HasValue) { continue; }
+					else if(weaponRef.WeaponSet1.MainHand == WeaponType._UNDEFINED) { continue; }
 					else break;
 				case 17:
-					if(!weaponRef.WeaponSet1.OffHand.HasValue) continue;
+					if(weaponRef.WeaponSet1.OffHand == WeaponType._UNDEFINED) continue;
 					else break;
 				case 18:
 					if(!weaponRef.WeaponSet2.HasAny) { i++; continue; }
-					else if(!weaponRef.WeaponSet2.MainHand.HasValue) continue;
+					else if(weaponRef.WeaponSet2.MainHand == WeaponType._UNDEFINED) continue;
 					else break;
 				case 19:
-					if(!weaponRef.WeaponSet2.OffHand.HasValue) continue;
+					if(weaponRef.WeaponSet2.OffHand == WeaponType._UNDEFINED) continue;
 					else break;
 			}
 
@@ -195,9 +200,9 @@ public static class TextLoader {
 				var data = new RangerData();
 				if(!EatToken(ref text, '~')) {
 					if(!EatToken(ref text, '_'))
-						data.Pet1 = DecodeAndAdvance(ref text, 2);
+						data.Pet1 = (PetId)DecodeAndAdvance(ref text, 2);
 					if(!EatToken(ref text, '_'))
-						data.Pet1 = DecodeAndAdvance(ref text, 2);
+						data.Pet1 = (PetId)DecodeAndAdvance(ref text, 2);
 				}
 				return data;
 			}
@@ -247,10 +252,10 @@ public static class TextLoader {
 		destination = destination[(pos + 1)..];
 	}
 
-	public static void EncodeOrUnderscoreAndAdvance(ref Span<char> destination, int? value, int encodeWidth)
+	public static void EncodeOrUnderscoreOnZeroAndAdvance(ref Span<char> destination, int value, int encodeWidth)
 	{
-		if(value.HasValue) EncodeAndAdvance(ref destination, value.Value, encodeWidth);
-		else WriteAndAdvance(ref destination, '_');
+		if(value == 0) WriteAndAdvance(ref destination, '_');
+		else EncodeAndAdvance(ref destination, value, encodeWidth); 
 	}
 
 	public static string WriteBuildCode(BuildCode code)
@@ -260,18 +265,21 @@ public static class TextLoader {
 		return buffer[..length].ToString();
 	}
 
-	/// <returns>Number of characters written</returns>
+	/// <remarks> Requires PerProfessionData to be loaded. </remarks>
+	/// <returns> Number of characters written. </returns>
 	public static int WriteBuildCode(BuildCode code, Span<char> destination)
 	{
+		var professionData = PerProfessionData.ByProfession(code.Profession);
+
 		var oldLen = destination.Length;
 		WriteAndAdvance(ref destination, CHARSET[code.Version]);
 		WriteAndAdvance(ref destination, CHARSET[(int)code.Kind]);
-		WriteAndAdvance(ref destination, CHARSET[code.Profession - Profession._FIRST]);
+		WriteAndAdvance(ref destination, CHARSET[(int)code.Profession - 1]);
 		for(int i = 0; i < 3; i++) {
 			var spec = code.Specializations[i];
 			if(!spec.HasValue) WriteAndAdvance(ref destination, '_');
 			else {
-				WriteAndAdvance(ref destination, CHARSET[(int)spec.Value.SpecializationId]);
+				WriteAndAdvance(ref destination, CHARSET[professionData.IdToIndex[spec.Value.SpecializationId] - 1]);
 				WriteAndAdvance(ref destination, CHARSET[
 					((int)spec.Value.Choices[0] << 4) | ((int)spec.Value.Choices[1] << 2) | (int)spec.Value.Choices[2]
 				]);
@@ -281,25 +289,25 @@ public static class TextLoader {
 		if(!code.WeaponSet1.HasAny) WriteAndAdvance(ref destination, '~');
 		else
 		{
-			if(!code.WeaponSet1.MainHand.HasValue) WriteAndAdvance(ref destination, '_');
-			else WriteAndAdvance(ref destination, CHARSET[code.WeaponSet1.MainHand.Value - WeaponType._FIRST]);
-			if(!code.WeaponSet1.Sigil1.HasValue) WriteAndAdvance(ref destination, '_');
-			else EncodeAndAdvance(ref destination, code.WeaponSet1.Sigil1.Value, 3);
+			if(code.WeaponSet1.MainHand == WeaponType._UNDEFINED) WriteAndAdvance(ref destination, '_');
+			else WriteAndAdvance(ref destination, CHARSET[code.WeaponSet1.MainHand - WeaponType._FIRST]);
+			if(code.WeaponSet1.Sigil1 == ItemId._UNDEFINED) WriteAndAdvance(ref destination, '_');
+			else EncodeAndAdvance(ref destination, (int)code.WeaponSet1.Sigil1, 3);
 
 			if(!code.WeaponSet2.HasAny) WriteAndAdvance(ref destination, '~');
 			else
 			{
-				if(!code.WeaponSet2.MainHand.HasValue) WriteAndAdvance(ref destination, '_');
-				else WriteAndAdvance(ref destination, CHARSET[code.WeaponSet2.MainHand.Value - WeaponType._FIRST]);
-				if(!code.WeaponSet2.Sigil1.HasValue) WriteAndAdvance(ref destination, '_');
-				else EncodeAndAdvance(ref destination, code.WeaponSet2.Sigil1.Value, 3);
+				if(code.WeaponSet2.MainHand == WeaponType._UNDEFINED) WriteAndAdvance(ref destination, '_');
+				else WriteAndAdvance(ref destination, CHARSET[code.WeaponSet2.MainHand - WeaponType._FIRST]);
+				if(code.WeaponSet2.Sigil1 == ItemId._UNDEFINED) WriteAndAdvance(ref destination, '_');
+				else EncodeAndAdvance(ref destination, (int)code.WeaponSet2.Sigil1, 3);
 			}
 		}
 
 		for(int i = 0; i < 5; i++)
-			EncodeOrUnderscoreAndAdvance(ref destination, (int?)code.SlotSkills[i], 3);
+			EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)code.SlotSkills[i], 3);
 
-		EncodeOrUnderscoreAndAdvance(ref destination, code.Rune, 3);
+		EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)code.Rune, 3);
 
 		if(code.Kind != Kind.PvP) EncodeStatsAndAdvance(ref destination, code);
 		else EncodeAndAdvance(ref destination, (int)code.EquipmentAttributes.Amulet, 2);
@@ -309,8 +317,8 @@ public static class TextLoader {
 			if(!code.Infusions.HasAny()) WriteAndAdvance(ref destination, '~');
 			else EncodeInfusionsAndAdvance(ref destination, code);
 
-			EncodeOrUnderscoreAndAdvance(ref destination, code.Food, 3);
-			EncodeOrUnderscoreAndAdvance(ref destination, code.Utility, 3);
+			EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)code.Food, 3);
+			EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)code.Utility, 3);
 		}
 
 		EncodeProfessionArbitrary(ref destination, code.ProfessionSpecific);
@@ -328,17 +336,17 @@ public static class TextLoader {
 			switch(i) {
 				case 11:
 					if(!weaponRef.WeaponSet1.HasAny) { i += 3; continue; }
-					else if(!weaponRef.WeaponSet1.MainHand.HasValue) { continue; }
+					else if(weaponRef.WeaponSet1.MainHand == WeaponType._UNDEFINED) { continue; }
 					else break;
 				case 12:
-					if(!weaponRef.WeaponSet1.OffHand.HasValue) continue;
+					if(weaponRef.WeaponSet1.OffHand == WeaponType._UNDEFINED) continue;
 					else break;
 				case 13:
 					if(!weaponRef.WeaponSet2.HasAny) { i++; continue; }
-					else if(!weaponRef.WeaponSet2.MainHand.HasValue) continue;
+					else if(weaponRef.WeaponSet2.MainHand == WeaponType._UNDEFINED) continue;
 					else break;
 				case 14:
-					if(!weaponRef.WeaponSet2.OffHand.HasValue) continue;
+					if(weaponRef.WeaponSet2.OffHand == WeaponType._UNDEFINED) continue;
 					else break;
 			}
 
@@ -366,32 +374,32 @@ public static class TextLoader {
 
 	private static void EncodeInfusionsAndAdvance(ref Span<char> destination, BuildCode weaponRef)
 	{
-		int? lastInfusion = default;
+		var lastInfusion = ItemId._UNDEFINED;
 		var repeatCount = 0;
 		for(int i = 0; i < ALL_INFUSION_COUNT; i++)
 		{
 			switch(i) {
 				case 16:
 					if(!weaponRef.WeaponSet1.HasAny) { i += 3; continue; }
-					else if(!weaponRef.WeaponSet1.MainHand.HasValue) { continue; }
+					else if(weaponRef.WeaponSet1.MainHand == WeaponType._UNDEFINED) { continue; }
 					else break;
 				case 17:
-					if(!weaponRef.WeaponSet1.OffHand.HasValue) continue;
+					if(weaponRef.WeaponSet1.OffHand == WeaponType._UNDEFINED) continue;
 					else break;
 				case 18:
 					if(!weaponRef.WeaponSet2.HasAny) { i++; continue; }
-					else if(!weaponRef.WeaponSet2.MainHand.HasValue) continue;
+					else if(weaponRef.WeaponSet2.MainHand == WeaponType._UNDEFINED) continue;
 					else break;
 				case 19:
-					if(!weaponRef.WeaponSet2.OffHand.HasValue) continue;
+					if(weaponRef.WeaponSet2.OffHand == WeaponType._UNDEFINED) continue;
 					else break;
 			}
 
 			if(weaponRef.Infusions[i] != lastInfusion)
 			{
-				if(lastInfusion.HasValue)
+				if(lastInfusion != ItemId._UNDEFINED)
 				{
-					EncodeAndAdvance(ref destination, lastInfusion.Value, 3);
+					EncodeAndAdvance(ref destination, (int)lastInfusion, 3);
 					WriteAndAdvance(ref destination, CHARSET[repeatCount]);
 				}
 
@@ -404,7 +412,7 @@ public static class TextLoader {
 			}
 		}
 
-		EncodeAndAdvance(ref destination, lastInfusion!.Value, 2);
+		EncodeAndAdvance(ref destination, (int)lastInfusion, 2);
 		if(repeatCount > 1)
 			WriteAndAdvance(ref destination, CHARSET[repeatCount]);
 	}
@@ -414,23 +422,23 @@ public static class TextLoader {
 		switch(professionSpecific)
 		{
 			case RangerData rangerData:
-				if(!rangerData.Pet1.HasValue && !rangerData.Pet2.HasValue) WriteAndAdvance(ref destination, '~');
+				if(rangerData.Pet1 == PetId._UNDEFINED && rangerData.Pet2 == PetId._UNDEFINED) WriteAndAdvance(ref destination, '~');
 				else
 				{
-					EncodeOrUnderscoreAndAdvance(ref destination, rangerData.Pet1, 2);
-					EncodeOrUnderscoreAndAdvance(ref destination, rangerData.Pet2, 2);
+					EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)rangerData.Pet1, 2);
+					EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)rangerData.Pet2, 2);
 				}
 				break;
 
 			case RevenantData revenantData:
 				WriteAndAdvance(ref destination, CHARSET[revenantData.Legend1 - Legend._FIRST]);
-				if(!revenantData.Legend2.HasValue) WriteAndAdvance(ref destination, '_');
+				if(revenantData.Legend2 == Legend._UNDEFINED) WriteAndAdvance(ref destination, '_');
 				else
 				{
-					WriteAndAdvance(ref destination, CHARSET[revenantData.Legend2.Value - Legend._FIRST]);
-					EncodeOrUnderscoreAndAdvance(ref destination, (int?)revenantData.AltUtilitySkill1, 3);
-					EncodeOrUnderscoreAndAdvance(ref destination, (int?)revenantData.AltUtilitySkill2, 3);
-					EncodeOrUnderscoreAndAdvance(ref destination, (int?)revenantData.AltUtilitySkill3, 3);
+					WriteAndAdvance(ref destination, CHARSET[revenantData.Legend2 - Legend._FIRST]);
+					EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)revenantData.AltUtilitySkill1, 3);
+					EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)revenantData.AltUtilitySkill2, 3);
+					EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)revenantData.AltUtilitySkill3, 3);
 				}
 				break;
 		}

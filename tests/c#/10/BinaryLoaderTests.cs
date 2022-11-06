@@ -208,6 +208,8 @@ public class BasicCodeTests {
 	[Fact]
 	public void MinimalPvPWithSkills()
 	{
+		PerProfessionData.Reload(Profession.Guardian, true).Wait();
+
 		var rawCode = BitStringToBytes(
 			"c" + //version
 			"00" + //type
@@ -232,16 +234,16 @@ public class BasicCodeTests {
 		Assert.False(code.WeaponSet2.HasAny);
 		for(int i = 0; i < 5; i++)
 			Assert.Equal((SkillId)i, code.SlotSkills[i]);
-		Assert.Null(code.Rune);
+		Assert.Equal(ItemId._UNDEFINED, code.Rune);
 		for(int i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++) {
-			if(i >= 11 && i <= 14) Assert.Null(code.EquipmentAttributes[i]);
+			if(i >= 11 && i <= 14) Assert.Equal(StatId._UNDEFINED, code.EquipmentAttributes[i]);
 			else if(i == Static.ALL_EQUIPMENT_COUNT - 1)  Assert.Equal((StatId)1, code.EquipmentAttributes[i]);
 			else Assert.Equal(StatId._UNDEFINED, code.EquipmentAttributes[i]);
 		}
 		for(int i = 0; i < Static.ALL_INFUSION_COUNT; i++)
-			Assert.Null(code.Infusions[i]);
-		Assert.Null(code.Food);
-		Assert.Null(code.Utility);
+			Assert.Equal(ItemId._UNDEFINED, code.Infusions[i]);
+		Assert.Equal(ItemId._UNDEFINED, code.Food);
+		Assert.Equal(ItemId._UNDEFINED, code.Utility);
 		Assert.Equal(IProfessionSpecific.NONE.Instance, code.ProfessionSpecific);
 		Assert.Equal(IArbitrary         .NONE.Instance, code.Arbitrary);
 	}
@@ -249,6 +251,8 @@ public class BasicCodeTests {
 	[Fact]
 	public void MinimalPvE()
 	{
+		PerProfessionData.Reload(Profession.Guardian, true).Wait();
+
 		var rawCode = BitStringToBytes(
 			"c" + //version
 			"10" + //type
@@ -276,16 +280,16 @@ public class BasicCodeTests {
 		Assert.False(code.WeaponSet1.HasAny);
 		Assert.False(code.WeaponSet2.HasAny);
 		for(int i = 0; i < 5; i++)
-			Assert.Null(code.SlotSkills[i]);
-		Assert.Null(code.Rune);
+			Assert.Equal(SkillId._UNDEFINED, code.SlotSkills[i]);
+		Assert.Equal(ItemId._UNDEFINED, code.Rune);
 		for(int i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++) {
 			if(11 <= i && i <= 14) Assert.Equal(default, code.EquipmentAttributes[i]);
 			else Assert.Equal((StatId)1, code.EquipmentAttributes[i]);
 		}
 		for(int i = 0; i < Static.ALL_INFUSION_COUNT; i++)
-			Assert.Null(code.Infusions[i]);
-		Assert.Null(code.Food);
-		Assert.Null(code.Utility);
+			Assert.Equal(ItemId._UNDEFINED, code.Infusions[i]);
+		Assert.Equal(ItemId._UNDEFINED, code.Food);
+		Assert.Equal(ItemId._UNDEFINED, code.Utility);
 		Assert.Equal(IProfessionSpecific.NONE.Instance, code.ProfessionSpecific);
 		Assert.Equal(IArbitrary         .NONE.Instance, code.Arbitrary);
 	}
@@ -293,6 +297,8 @@ public class BasicCodeTests {
 	[Fact]
 	public void MinimalRanger()
 	{
+		PerProfessionData.Reload(Profession.Ranger, true).Wait();
+
 		var rawCode = BitStringToBytes(
 			"c" + //version
 			"10" + //type
@@ -316,13 +322,15 @@ public class BasicCodeTests {
 		Assert.Equal(Profession.Ranger, code.Profession);
 		Assert.IsType<RangerData>(code.ProfessionSpecific);
 		var data = (RangerData)code.ProfessionSpecific;
-		Assert.Null(data.Pet1);
-		Assert.Null(data.Pet2);
+		Assert.Equal(PetId._UNDEFINED, data.Pet1);
+		Assert.Equal(PetId._UNDEFINED, data.Pet2);
 	}
 
 	[Fact]
 	public void MinimalRevenant()
 	{
+		PerProfessionData.Reload(Profession.Revenant, true).Wait();
+
 		var rawCode = BitStringToBytes(
 			"c" + //version
 			"10" + //type
@@ -347,15 +355,17 @@ public class BasicCodeTests {
 		Assert.IsType<RevenantData>(code.ProfessionSpecific);
 		var data = (RevenantData)code.ProfessionSpecific;
 		Assert.Equal(Legend.SHIRO, data.Legend1);
-		Assert.Null(data.Legend2);
-		Assert.Null(data.AltUtilitySkill1);
-		Assert.Null(data.AltUtilitySkill2);
-		Assert.Null(data.AltUtilitySkill3);
+		Assert.Equal(Legend._UNDEFINED, data.Legend2);
+		Assert.Equal(SkillId._UNDEFINED, data.AltUtilitySkill1);
+		Assert.Equal(SkillId._UNDEFINED, data.AltUtilitySkill2);
+		Assert.Equal(SkillId._UNDEFINED, data.AltUtilitySkill3);
 	}
 
 	[Fact]
 	public void LoopWriteMinimalRevenant()
 	{
+		PerProfessionData.Reload(Profession.Revenant, true).Wait();
+
 		var rawCode = BitStringToBytes(
 			"c" + //version
 			"10" + //type
@@ -390,7 +400,7 @@ public class OfficialChatLinks
 	[Fact]
 	public async Task LoadOfficialLink()
 	{
-		await ProfessionSkillPallettes.Reload(Profession.Necromancer, true);
+		await PerProfessionData.Reload(Profession.Necromancer, true);
 
 		var fullLink = "[&DQg1KTIlIjbBEgAAgQB1AUABgQB1AUABlQCVAAAAAAAAAAAAAAAAAAAAAAA=]";
 		var base64   = fullLink[2..^1];
@@ -466,7 +476,7 @@ public class OfficialChatLinks
 			}
 		};
 
-		await ProfessionSkillPallettes.Reload(Profession.Necromancer, true);
+		await PerProfessionData.Reload(Profession.Necromancer, true);
 
 		var buffer = new byte[44];
 		BinaryLoader.WriteOfficialBuildCode(code, buffer);
@@ -481,7 +491,7 @@ public class OfficialChatLinks
 	[Fact]
 	public async Task LoadOfficiaRevlLink() // our very special boy spec
 	{
-		await ProfessionSkillPallettes.Reload(Profession.Revenant, true);
+		await PerProfessionData.Reload(Profession.Revenant, true);
 
 		var fullLink = "[&DQkAAAAARQDcEdwRAAAAACsSAADUEQAAAAAAAAQCAwDUESsSAAAAAAAAAAA=]";
 		var base64   = fullLink[2..^1];
@@ -489,10 +499,10 @@ public class OfficialChatLinks
 		var code = BinaryLoader.LoadOfficialBuildCode(raw);
 		Assert.Equal(Profession.Revenant, code.Profession);
 		Assert.Equal(SkillId.Empowering_Misery, code.SlotSkills[0]);
-		Assert.Null(code.SlotSkills[1]);
+		Assert.Equal(SkillId._UNDEFINED, code.SlotSkills[1]);
 		Assert.Equal(SkillId.Banish_Enchantment, code.SlotSkills[2]);
 		Assert.Equal(SkillId.Call_to_Anguish1, code.SlotSkills[3]);
-		Assert.Null(code.SlotSkills[4]);
+		Assert.Equal(SkillId._UNDEFINED, code.SlotSkills[4]);
 	}
 }
 

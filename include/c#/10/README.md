@@ -7,6 +7,8 @@ using Hardstuck.GuildWars2.BuildCodes.V2;
 
 ### There are multiple ways to obtain a Hardstuck BuildCode Object:
 ```csharp
+PerProfessionData.ReloadAll();
+
 // From existing build textual codes:
 var code1 = TextLoader.LoadBuildCode("CoI___~______A~M~__A_");
 
@@ -15,12 +17,10 @@ ReadonlySpan<byte> bytes = SomeArbitrarySource();
 var code2 = BinaryLoader.LoadBuildCode(bytes);
 
 // From existing textual in-game chatlinks:
-ProfessionSkillPallettes.ReloadAll();
 var inGameLink = "[&DQkAAAAARQDcEdwRAAAAACsSAADUEQAAAAAAAAQCAwDUESsSAAAAAAAAAAA=]";
 var code3 = TextLoader.LoadOfficialBuildCode(inGameLink);
 
 // From existing binary in-game chatlink data:
-ProfessionSkillPallettes.ReloadAll();
 var rawInGameBytes = Convert.FromBase64String(inGameLink[2..^1]);
 var code4 = BinaryLoader.LoadOfficialBuildCode(rawInGameBytes);
 

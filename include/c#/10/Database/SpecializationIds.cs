@@ -1,7 +1,7 @@
 namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
 public enum SpecializationId {
-	_NONE = default,
+	_UNDEFINED = default,
 	Dueling = 1,
 	Death_Magic = 2,
 	Invocation = 3,

@@ -54,10 +54,10 @@ V T P STSTST WS..wS..WS..wS..WS..S..wS..S.. S..S..S..S..S.. R.. A..n,,,, I..n,,,
 
         This effectively constructs `0b00aabbcc` with `aa` = pos of first choice, `bb` = pos of second choice, `cc` = pos of third choice. With a max value of 63 this can be used to index `character_set` and obtain the final encoding. Omit if trait line is empty.
 
-`[WS..wS..WS..wS..]` Weapons [2 * 3-8 characters] pairs of (1 char weapon type id, 1-3 char sigil id, 0-1 char weapon type id, 1-3 char sigil id):
+`[WS..wS..WS..wS..]` Weapons [2 * 3-8 characters] pairs of (1 char weapon type index, 1-3 char sigil id, 0-1 char weapon type index, 1-3 char sigil id):
   - if the first weapon is two handed, the second weapon id in the set is omitted 
   1. - `_` (underscore): empty weapon slot
-     - `A-T`: weapon type id (resolved by `hardstuck.gg/api/weapon_types`)
+     - `A-T`: weapon type index. Axe, Dagger, Mace, Pistol, Sword, Scepter, Focus, Shield, Torch, Warhorn, ShortBow, Greatsword, Hammer, Longbow, Rifle, Staff, HarpoonGun, Spear, Trident
   2. - `_` (underscore): empty sigil slot
      - `1-3 characters`: sigil id resolved by `/v2/items`, `encode(id, 3)`
 
@@ -130,7 +130,7 @@ Field widths are measured in bits. See textual specification for details on how 
 4 : Profession index 
 
 repeat 3
-	4 : specializations: 0 if trait line is empty, 1 + index otherwise
+	4 : specializations: 0 if trait line is empty, 1 + spec index otherwise
 	either
 		omitted
 	or
@@ -140,23 +140,23 @@ repeat 3
 either
 	5 : 0 if code does not contain weapons 
 or
-	5  : set1 main hand weapon. 1 if slot is empty, 2 + weapon type id otherwise
-	24 : slot 1 sigil. 0 if no sigil in slot1, 1 + sigil item id otherwise
-	5  : set1 offhand weapon. 1 if slot is empty, 2 + weapon type id otherwise. omit this if set1 main hand is two handed
-	24 : slot 2 sigil. 0 if no sigil in slot2, 1 + sigil item id otherwise
+	5  : set1 main hand weapon. 1 if slot is empty, 2 + weapon type index otherwise
+	24 : slot 1 sigil. 0 if no sigil in slot1, sigil item id otherwise
+	5  : set1 offhand weapon. 1 if slot is empty, 2 + weapon type index otherwise. omit this if set1 main hand is two handed
+	24 : slot 2 sigil. 0 if no sigil in slot2, sigil item id otherwise
 	either
 		5 : 0 if code des not contain second weapon set
 	or
-		5  : set2 main hand weapon. 1 if slot is empty, 2 + weapon type id otherwise
-		24 : slot 1 sigil. 0 if no sigil in slot1, 1 + sigil item id otherwise
-		5  : set2 offhand weapon. 1 if slot is empty, 2 + weapon type id otherwise. omitted if set2 main hand is two handed
-		24 : slot 2 sigil. 0 if no sigil in slot2, 1 + sigil item id otherwise
+		5  : set2 main hand weapon. 1 if slot is empty, 2 + weapon type index otherwise
+		24 : slot 1 sigil. 0 if no sigil in slot1, sigil item id otherwise
+		5  : set2 offhand weapon. 1 if slot is empty, 2 + weapon type index otherwise. omitted if set2 main hand is two handed
+		24 : slot 2 sigil. 0 if no sigil in slot2, sigil item id otherwise
 
 
-repeat 5
-	24 : 1 + Skill ids, 0 if empty
+repeat 5: skill ids
+	24 : 0 if empty, Skill id otherwise
 
-24 : 1 + Rune id, 0 if empty
+24 : 0 if empty, Rune item id otherwise
 
 either
 	16 : stat id (when type = pvp)
@@ -172,20 +172,20 @@ or
 		24 : 1 if empty slot, 2 + infusion item id otherwise
 		5  : repeat count
 
-24 : food item. 0 if none, 1 + item_id otherwise, omit for pvp codes
-24 : utility item. 0 if none, 1 + item_id otherwise, omit for pvp codes
+24 : food item. 0 if none, item_id otherwise, omit for pvp codes
+24 : utility item. 0 if none, item_id otherwise, omit for pvp codes
 
 either
 	no additional data
 or
-	7 : pet 1. 0 to omit block, 1 for empty slot, 2 + pet_id otherwise
-	7 : pet 2. 1 for empty slot, 2 + pet_id otherwise, omit if pet 1 is 0
+	7 : pet 1. 0 to omit block, 1 for empty slot, 1 + pet_id otherwise
+	7 : pet 2. 1 for empty slot, 1 + pet_id otherwise, omit if pet 1 is 0
 or
 	4 : legend 1. 1 + legend index
 	4 : legend 2. 0 for empty slot, 1 + legend index otherwise
 
 	repeat 3. alternate legend skills. omit if legend 2 is empty
-		24 : 1 + Skill ids, 0 if empty
+		24 : 0 if empty, Skill id otherwise
 ```
 (406 <-> 482) bits / 8 * 4/3 = (68 <-> 81) chars.
 Interestingly only about 12 chars (~ 20%) less than the textual representation, the encoding _does_ expand it a lot.

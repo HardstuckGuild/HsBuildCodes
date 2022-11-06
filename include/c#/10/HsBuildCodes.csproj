@@ -15,7 +15,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="../../common/offline/**" CopyToOutputDirectory="PreserveNewest" Link="offline/%(Filename)%(Extension)" />
+		<Content Include="../../common/offline/**" CopyToOutputDirectory="PreserveNewest" Link="offline/%(RecursiveDir)/%(Filename)%(Extension)" />
 	</ItemGroup>
 
 </Project>

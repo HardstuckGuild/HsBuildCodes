@@ -5,14 +5,14 @@ namespace Hardstuck.GuildWars2.BuildCodes.V2.Tests.Database;
 public class InteractionTests
 {
 	[Fact]
-	public void CanDownloadSkillPallettes() 
+	public async Task CanDownloadSkillPallettes() 
 	{
-		ProfessionSkillPallettes.Reload(Profession.Revenant);
+		await PerProfessionData.Reload(Profession.Revenant);
 	}
 
 	[Fact]
-	public void CanFindOfflinePallette()
+	public async Task CanFindOfflinePallette()
 	{
-		ProfessionSkillPallettes.Reload(Profession.Revenant, false);
+		await PerProfessionData.Reload(Profession.Revenant, false);
 	}
 }

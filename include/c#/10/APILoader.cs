@@ -36,10 +36,10 @@ public static class APILoader {
 		var activeBuild = playerData.BuildTabs![playerData.ActiveBuildTab!.Value - 1].Build;
 		for(var i = 0; i < 3; i++) {
 			var spec = activeBuild.Specializations[i];
-			if(spec == null) continue;
+			if(!spec.Id.HasValue) continue;
 
 			code.Specializations[i] = new() {
-				SpecializationId = (SpecializationId)spec.Id!, //todo test
+				SpecializationId = (SpecializationId)spec.Id.Value,
 				Choices          = {
 					Adept       = await APICache.ResolvePosition(spec.Traits[0]),
 					Master      = await APICache.ResolvePosition(spec.Traits[1]),
@@ -51,15 +51,15 @@ public static class APILoader {
 		var activeEquipment = playerData.EquipmentTabs![playerData.ActiveEquipmentTab!.Value - 1];
 		if(targetGameMode != Kind.PvP)
 		{
-			int? runeId = null;
+			ItemId? runeId = null;
 
 			async void SetArmorData(int equipSlot, CharacterEquipmentItem item)
 			{
 				code.EquipmentAttributes[equipSlot] = await ResolveStatId(item);
-				code.Infusions          [equipSlot] = item.Infusions?[0];
+				code.Infusions          [equipSlot] = (ItemId?)item.Infusions?[0] ?? ItemId._UNDEFINED;
 				if(item.Upgrades != null) {
-					if(runeId == null) runeId = item.Upgrades[0];
-					else if(runeId != item.Upgrades[0]) runeId = 0;
+					if(runeId == null) runeId = (ItemId)item.Upgrades[0];
+					else if(runeId != (ItemId)item.Upgrades[0]) runeId = ItemId._UNDEFINED;
 				}
 			}
 
@@ -77,30 +77,30 @@ public static class APILoader {
 					case ItemEquipmentSlotType.Backpack:
 						code.EquipmentAttributes.BackItem = await ResolveStatId(item);
 						if(item.Infusions != null) {
-							code.Infusions.BackItem_1 = item.Infusions[0];
+							code.Infusions.BackItem_1 = (ItemId)item.Infusions[0];
 							if(item.Infusions.Count > 1)
-								code.Infusions.BackItem_1 = item.Infusions[1];
+								code.Infusions.BackItem_1 = (ItemId)item.Infusions[1];
 						}
 						break;
 
 					case ItemEquipmentSlotType.Accessory1:
 						code.EquipmentAttributes.Accessory1 = await ResolveStatId(item);
-						code.Infusions          .Accessory1 = item.Infusions?[0];
+						code.Infusions          .Accessory1 = (ItemId?)item.Infusions?[0] ?? ItemId._UNDEFINED;
 						break;
 
 					case ItemEquipmentSlotType.Accessory2:
 						code.EquipmentAttributes.Accessory2 = await ResolveStatId(item);
-						code.Infusions          .Accessory2 = item.Infusions?[0];
+						code.Infusions          .Accessory2 = (ItemId?)item.Infusions?[0] ?? ItemId._UNDEFINED;
 						break;
 
 					case ItemEquipmentSlotType.Ring1:
 						code.EquipmentAttributes.Ring1 = await ResolveStatId(item);
 						if(item.Infusions != null) {
-							code.Infusions.Ring1_1 = item.Infusions[0];
+							code.Infusions.Ring1_1 = (ItemId)item.Infusions[0];
 							if(item.Infusions.Count > 1) {
-								code.Infusions.Ring1_2 = item.Infusions[1];
+								code.Infusions.Ring1_2 = (ItemId)item.Infusions[1];
 								if(item.Infusions.Count > 2)
-									code.Infusions.Ring1_3 = item.Infusions[2];
+									code.Infusions.Ring1_3 = (ItemId)item.Infusions[2];
 							}
 						}
 						break;
@@ -108,11 +108,11 @@ public static class APILoader {
 					case ItemEquipmentSlotType.Ring2:
 						code.EquipmentAttributes.Ring2 = await ResolveStatId(item);
 						if(item.Infusions != null) {
-							code.Infusions.Ring2_1 = item.Infusions[0];
+							code.Infusions.Ring2_1 = (ItemId)item.Infusions[0];
 							if(item.Infusions.Count > 1) {
-								code.Infusions.Ring2_2 = item.Infusions[1];
+								code.Infusions.Ring2_2 = (ItemId)item.Infusions[1];
 								if(item.Infusions.Count > 2)
-									code.Infusions.Ring2_3 = item.Infusions[2];
+									code.Infusions.Ring2_3 = (ItemId)item.Infusions[2];
 							}
 						}
 						break;
@@ -121,15 +121,15 @@ public static class APILoader {
 						if(aquatic) break;
 						code.EquipmentAttributes.WeaponSet1MainHand = await ResolveStatId(item);
 						if(item.Infusions != null) {
-							code.Infusions.WeaponSet1_1 = item.Infusions[0];
+							code.Infusions.WeaponSet1_1 = (ItemId)item.Infusions[0];
 							if(item.Infusions.Count > 1)
-								code.Infusions.WeaponSet1_2 = item.Infusions[1];
+								code.Infusions.WeaponSet1_2 = (ItemId)item.Infusions[1];
 						}
 						code.WeaponSet1.MainHand = await APICache.ResolveWeaponType(item.Id);
 						if(item.Upgrades != null) {
-							code.WeaponSet1.Sigil1 = item.Upgrades[0];
+							code.WeaponSet1.Sigil1 = (ItemId)item.Upgrades[0];
 							if(item.Upgrades.Count > 1)
-								code.WeaponSet1.Sigil2 = item.Upgrades[1];
+								code.WeaponSet1.Sigil2 = (ItemId)item.Upgrades[1];
 						}
 						break;
 
@@ -137,39 +137,39 @@ public static class APILoader {
 						if(!aquatic) break;
 						code.EquipmentAttributes.WeaponSet1MainHand = await ResolveStatId(item);
 						if(item.Infusions != null) {
-							code.Infusions.WeaponSet1_1 = item.Infusions[0];
+							code.Infusions.WeaponSet1_1 = (ItemId)item.Infusions[0];
 							if(item.Infusions.Count > 1)
-								code.Infusions.WeaponSet1_2 = item.Infusions[1];
+								code.Infusions.WeaponSet1_2 = (ItemId)item.Infusions[1];
 						}
 						code.WeaponSet1.MainHand = await APICache.ResolveWeaponType(item.Id);
 						if(item.Upgrades != null) {
-							code.WeaponSet1.Sigil1 = item.Upgrades[0];
+							code.WeaponSet1.Sigil1 = (ItemId)item.Upgrades[0];
 							if(item.Upgrades.Count > 1)
-								code.WeaponSet1.Sigil2 = item.Upgrades[1];
+								code.WeaponSet1.Sigil2 = (ItemId)item.Upgrades[1];
 						}
 						break;
 
 					case ItemEquipmentSlotType.WeaponA2:
 						if(aquatic) break;
 						code.EquipmentAttributes.WeaponSet1OffHand = await ResolveStatId(item);
-						code.Infusions.WeaponSet1_2 = item.Infusions?[0]; //NOTE(Rennorb): this assues that buidls with twohanded main weapons dont contain an 'empty' weapon with no upgrades
+						code.Infusions.WeaponSet1_2 = (ItemId?)item.Infusions?[0] ?? ItemId._UNDEFINED; //NOTE(Rennorb): this assues that buidls with twohanded main weapons dont contain an 'empty' weapon with no upgrades
 						code.WeaponSet1.OffHand = await APICache.ResolveWeaponType(item.Id);
-						code.WeaponSet1.Sigil2 = item.Upgrades?[0]; //NOTE(Rennorb): this assues that buidls with twohanded main weapons dont contain an 'empty' weapon with no upgrades
+						code.WeaponSet1.Sigil2 = (ItemId?)item.Upgrades?[0] ?? ItemId._UNDEFINED; //NOTE(Rennorb): this assues that buidls with twohanded main weapons dont contain an 'empty' weapon with no upgrades
 						break;
 
 					case ItemEquipmentSlotType.WeaponB1:
 						if(aquatic) break;
 						code.EquipmentAttributes.WeaponSet2MainHand = await ResolveStatId(item);
 						if(item.Infusions != null) {
-							code.Infusions.WeaponSet2_1 = item.Infusions[0];
+							code.Infusions.WeaponSet2_1 = (ItemId)item.Infusions[0];
 							if(item.Infusions.Count > 1)
-								code.Infusions.WeaponSet2_2 = item.Infusions[1];
+								code.Infusions.WeaponSet2_2 = (ItemId)item.Infusions[1];
 						}
 						code.WeaponSet2.MainHand = await APICache.ResolveWeaponType(item.Id);
 						if(item.Upgrades != null) {
-							code.WeaponSet2.Sigil1 = item.Upgrades[0];
-							if(IsTwoHanded(code.WeaponSet2.MainHand.Value) && item.Upgrades.Count > 1)
-								code.WeaponSet2.Sigil2 = item.Upgrades[1];
+							code.WeaponSet2.Sigil1 = (ItemId)item.Upgrades[0];
+							if(IsTwoHanded(code.WeaponSet2.MainHand) && item.Upgrades.Count > 1)
+								code.WeaponSet2.Sigil2 = (ItemId)item.Upgrades[1];
 						}
 						break;
 
@@ -177,46 +177,46 @@ public static class APILoader {
 						if(!aquatic) break;
 						code.EquipmentAttributes.WeaponSet2MainHand = await ResolveStatId(item);
 						if(item.Infusions != null) {
-							code.Infusions.WeaponSet2_1 = item.Infusions[0];
+							code.Infusions.WeaponSet2_1 = (ItemId)item.Infusions[0];
 							if(item.Infusions.Count > 1)
-								code.Infusions.WeaponSet2_2 = item.Infusions[1];
+								code.Infusions.WeaponSet2_2 = (ItemId)item.Infusions[1];
 						}
 						code.WeaponSet2.MainHand = await APICache.ResolveWeaponType(item.Id);
 						if(item.Upgrades != null) {
-							code.WeaponSet2.Sigil1 = item.Upgrades[0];
+							code.WeaponSet2.Sigil1 = (ItemId)item.Upgrades[0];
 							if(item.Upgrades.Count > 1)
-								code.WeaponSet2.Sigil2 = item.Upgrades[1];
+								code.WeaponSet2.Sigil2 = (ItemId)item.Upgrades[1];
 						}
 						break;
 
 					case ItemEquipmentSlotType.WeaponB2:
 						if(aquatic) break;
 						code.EquipmentAttributes.WeaponSet2OffHand = await ResolveStatId(item);
-						code.Infusions.WeaponSet2_2 = item.Infusions?[0];
+						code.Infusions.WeaponSet2_2 = (ItemId?)item.Infusions?[0] ?? ItemId._UNDEFINED;
 						code.WeaponSet2.OffHand = await APICache.ResolveWeaponType(item.Id);
-						code.WeaponSet2.Sigil2 = item.Upgrades?[0];
+						code.WeaponSet2.Sigil2 = (ItemId?)item.Upgrades?[0] ?? ItemId._UNDEFINED;
 						break;
 
 					case ItemEquipmentSlotType.Amulet:
 						if(aquatic) break;
 						code.EquipmentAttributes.Amulet = await ResolveStatId(item);
-						code.Infusions          .Amulet = item.Infusions?[0];
+						code.Infusions          .Amulet = (ItemId?)item.Infusions?[0] ?? ItemId._UNDEFINED;
 						break;
 				}
 			}
 
-			if(runeId != 0) code.Rune = runeId;
+			if(runeId != 0) code.Rune = runeId ?? ItemId._UNDEFINED;
 		}
 		else // WvW, PvE
 		{
 			var pvpEquip = activeEquipment.EquipmentPvp!;
 
 			code.EquipmentAttributes.Helmet = (StatId)(pvpEquip.Amulet ?? 0);
-			code.Rune = pvpEquip.Rune;
-			code.WeaponSet1.Sigil1 = pvpEquip.Sigils[0];
-			code.WeaponSet1.Sigil2 = pvpEquip.Sigils[1];
-			code.WeaponSet2.Sigil1 = pvpEquip.Sigils[2];
-			code.WeaponSet2.Sigil2 = pvpEquip.Sigils[3];
+			code.Rune = (ItemId?)pvpEquip.Rune ?? ItemId._UNDEFINED;
+			code.WeaponSet1.Sigil1 = (ItemId?)pvpEquip.Sigils[0] ?? ItemId._UNDEFINED;
+			code.WeaponSet1.Sigil2 = (ItemId?)pvpEquip.Sigils[1] ?? ItemId._UNDEFINED;
+			code.WeaponSet2.Sigil1 = (ItemId?)pvpEquip.Sigils[2] ?? ItemId._UNDEFINED;
+			code.WeaponSet2.Sigil2 = (ItemId?)pvpEquip.Sigils[3] ?? ItemId._UNDEFINED;
 		}
 
 		// swap weapon set so the first set always has the waepons if there are any.
@@ -226,11 +226,11 @@ public static class APILoader {
 		}
 
 		var apiSkills = aquatic ? activeBuild.AquaticSkills : activeBuild.Skills;
-		code.SlotSkills.Heal     = (SkillId?)apiSkills.Heal;
-		code.SlotSkills.Utility1 = (SkillId?)apiSkills.Utilities[0];
-		code.SlotSkills.Utility2 = (SkillId?)apiSkills.Utilities[1];
-		code.SlotSkills.Utility3 = (SkillId?)apiSkills.Utilities[2];
-		code.SlotSkills.Elite    = (SkillId?)apiSkills.Elite;
+		code.SlotSkills.Heal     = (SkillId?)apiSkills.Heal ?? SkillId._UNDEFINED;
+		code.SlotSkills.Utility1 = (SkillId?)apiSkills.Utilities[0] ?? SkillId._UNDEFINED;
+		code.SlotSkills.Utility2 = (SkillId?)apiSkills.Utilities[1] ?? SkillId._UNDEFINED;
+		code.SlotSkills.Utility3 = (SkillId?)apiSkills.Utilities[2] ?? SkillId._UNDEFINED;
+		code.SlotSkills.Elite    = (SkillId?)apiSkills.Elite ?? SkillId._UNDEFINED;
 
 		switch(code.Profession)
 		{
@@ -238,8 +238,8 @@ public static class APILoader {
 				var rangerData = new RangerData();
 
 				var petBlock = aquatic ? activeBuild.Pets!.Aquatic : activeBuild.Pets!.Terrestrial;
-				rangerData.Pet1 = petBlock[0];
-				rangerData.Pet2 = petBlock[1];
+				rangerData.Pet1 = (PetId?)petBlock[0] ?? PetId._UNDEFINED;
+				rangerData.Pet2 = (PetId?)petBlock[1] ?? PetId._UNDEFINED;
 
 				code.ProfessionSpecific = rangerData;
 				break;
@@ -253,7 +253,7 @@ public static class APILoader {
 				if(legend1.HasValue) // One legend is always set.
 				{
 					revenantData.Legend1 = legend1.Value;
-					revenantData.Legend2 = legend2;
+					revenantData.Legend2 = legend2 ?? Legend._UNDEFINED;
 
 					//NOTE(Rennorb): doesnt seem to be available via the api
 					// activeBuild.Skills = 
@@ -261,16 +261,16 @@ public static class APILoader {
 				else // Flip so the legend 1 has the data.
 				{
 					revenantData.Legend1 = legend2!.Value;
-					revenantData.Legend2 = legend1;
+					revenantData.Legend2 = legend1 ?? Legend._UNDEFINED;
 
 					revenantData.AltUtilitySkill1 = code.SlotSkills.Utility1;
 					revenantData.AltUtilitySkill2 = code.SlotSkills.Utility2;
 					revenantData.AltUtilitySkill3 = code.SlotSkills.Utility3;
 
 					// inactive skills dont seem to be available
-					code.SlotSkills.Utility1 = null;
-					code.SlotSkills.Utility2 = null;
-					code.SlotSkills.Utility3 = null;
+					code.SlotSkills.Utility1 = SkillId._UNDEFINED;
+					code.SlotSkills.Utility2 = SkillId._UNDEFINED;
+					code.SlotSkills.Utility3 = SkillId._UNDEFINED;
 				}
 
 				code.ProfessionSpecific = revenantData;

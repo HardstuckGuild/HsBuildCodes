@@ -76,18 +76,18 @@ public class BasicCodesTests {
 
 		Assert.Equal(WeaponType.Scepter, code.WeaponSet1.MainHand);
 		Assert.Equal(WeaponType.Dagger , code.WeaponSet1.OffHand);
-		Assert.Null(code.WeaponSet2.MainHand);
+		Assert.Equal(WeaponType._UNDEFINED, code.WeaponSet2.MainHand);
 		Assert.Equal(WeaponType.Pistol , code.WeaponSet2.OffHand);
 
-		Assert.Equal(91388 /*deamons*/      , code.WeaponSet1.Sigil1);
-		Assert.Equal(91473 /*concentration*/, code.WeaponSet1.Sigil2);
-		Assert.Null(code.WeaponSet2.Sigil1);
-		Assert.Equal(91398 /*paralysation*/ , code.WeaponSet2.Sigil2);
+		Assert.Equal(ItemId.Superior_Sigil_of_Deamons2, code.WeaponSet1.Sigil1);
+		Assert.Equal(ItemId.Superior_Sigil_of_Concentration2, code.WeaponSet1.Sigil2);
+		Assert.Equal(ItemId._UNDEFINED, code.WeaponSet2.Sigil1);
+		Assert.Equal(ItemId.Superior_Sigil_of_Paralysation2, code.WeaponSet2.Sigil2);
 
 		var celestialStatsKEKW = new StatId[]{ StatId.Celestial1, StatId.Celestial2, StatId.Celestial3, StatId.Celestial4 };
 		for(var i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++)
 			if(i != 13) // empty second main hand
-				Assert.Contains(code.EquipmentAttributes[i]!.Value, celestialStatsKEKW);
+				Assert.Contains(code.EquipmentAttributes[i], celestialStatsKEKW);
 
 		Assert.Equal(SkillId.Well_of_Gloom  , code.SlotSkills.Heal);
 		Assert.Equal(SkillId.Well_of_Silence, code.SlotSkills.Utility1);
@@ -95,6 +95,6 @@ public class BasicCodesTests {
 		Assert.Equal(SkillId.Well_of_Sorrow , code.SlotSkills.Utility3);
 		Assert.Equal(SkillId.Shadowfall     , code.SlotSkills.Elite);
 
-		Assert.Equal(91485 /*traveler*/, code.Rune);
+		Assert.Equal(ItemId.Superior_Rune_of_the_Traveler2, code.Rune);
 	}
 }
