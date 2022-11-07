@@ -121,7 +121,7 @@ public static class BinaryLoader {
 
 	#region hardstuck codes
 
-	/// <remarks> Requires PerProfessionData to be loaded. </remarks>
+	/// <remarks> Requires PerProfessionData to be loaded or <see cref="PerProfessionData.LazyLoadMode"/> to be set to something other than <see cref="LazyLoadMode.NONE"/>. </remarks>
 	public static BuildCode LoadBuildCode(ReadOnlySpan<byte> raw)
 	{
 		var rawSpan = new BitReader(raw);
@@ -138,6 +138,7 @@ public static class BinaryLoader {
 		Debug.Assert(code.Kind != Kind._UNDEFINED, "Code type not valid");
 		code.Profession = (Profession)1 + rawSpan.DecodeNext(4);
 
+		if(PerProfessionData.LazyLoadMode >= LazyLoadMode.OFFLINE_ONLY) PerProfessionData.Reload(code.Profession, PerProfessionData.LazyLoadMode < LazyLoadMode.FULL).Wait();
 		var professionData = PerProfessionData.ByProfession(code.Profession);
 
 		for(var i = 0; i < 3; i++) {
@@ -299,7 +300,7 @@ public static class BinaryLoader {
 		return IArbitrary.NONE.Instance;
 	}
 
-	/// <remarks> Requires PerProfessionData to be loaded. </remarks>
+	/// <remarks> Requires PerProfessionData to be loaded or <see cref="PerProfessionData.LazyLoadMode"/> to be set to something other than <see cref="LazyLoadMode.NONE"/>. </remarks>
 	/// <returns> The amount of bytes written. </returns>
 	public static int WriteCode(BuildCode code, Span<byte> destination)
 	{
@@ -316,6 +317,7 @@ public static class BinaryLoader {
 		
 		rawBits.Write((int)code.Profession - 1, 4);
 
+		if(PerProfessionData.LazyLoadMode >= LazyLoadMode.OFFLINE_ONLY) PerProfessionData.Reload(code.Profession, PerProfessionData.LazyLoadMode < LazyLoadMode.FULL).Wait();
 		var professionData = PerProfessionData.ByProfession(code.Profession);
 
 		for(int i = 0; i < 3; i++)
@@ -484,7 +486,7 @@ public static class BinaryLoader {
 
 	#region official codes
 
-	/// <remarks> Requires PerProfessionData to be loaded. </remarks>
+	/// <remarks> Requires PerProfessionData to be loaded or <see cref="PerProfessionData.LazyLoadMode"/> to be set to something other than <see cref="LazyLoadMode.NONE"/>. </remarks>
 	public static BuildCode LoadOfficialBuildCode(ReadOnlySpan<byte> raw, bool aquatic = false)
 	{
 		var codeType = SliceAndAdvance(ref raw);
@@ -494,6 +496,7 @@ public static class BinaryLoader {
 		code.Version    = CURRENT_VERSION;
 		code.Profession = (Profession)SliceAndAdvance(ref raw);
 
+		if(PerProfessionData.LazyLoadMode >= LazyLoadMode.OFFLINE_ONLY) PerProfessionData.Reload(code.Profession, PerProfessionData.LazyLoadMode < LazyLoadMode.FULL).Wait();
 		var professionData = PerProfessionData.ByProfession(code.Profession);
 
 		for(int i = 0; i < 3; i++, raw = raw[2..]) {
@@ -598,10 +601,11 @@ public static class BinaryLoader {
 		}
 	}
 
-	/// <remarks> Requires PerProfessionData to be loaded. </remarks>
+	/// <remarks> Requires PerProfessionData to be loaded or <see cref="PerProfessionData.LazyLoadMode"/> to be set to something other than <see cref="LazyLoadMode.NONE"/>. </remarks>
 	public static void WriteOfficialBuildCode(BuildCode code, Span<byte> destination, bool aquatic = false)
 	{
 		Debug.Assert(destination.Length >= OFFICIAL_CHAT_CODE_BYTE_LENGTH, "destination is not large enough to write code");
+		if(PerProfessionData.LazyLoadMode >= LazyLoadMode.OFFLINE_ONLY) PerProfessionData.Reload(code.Profession, PerProfessionData.LazyLoadMode < LazyLoadMode.FULL).Wait();
 		var professionData = PerProfessionData.ByProfession(code.Profession);
 
 		destination[0] = 0x0d; //code type

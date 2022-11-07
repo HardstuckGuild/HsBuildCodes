@@ -50,7 +50,7 @@ public static class TextLoader {
 
 	#region hardstuck codes
 
-	/// <remarks> Requires PerProfessionData to be loaded. </remarks>
+	/// <remarks> Requires PerProfessionData to be loaded or <see cref="PerProfessionData.LazyLoadMode"/> to be set to something other than <see cref="LazyLoadMode.NONE"/>. </remarks>
 	public static BuildCode LoadBuildCode(ReadOnlySpan<char> text) {
 		var code = new BuildCode();
 		code.Version    = DecodeAndAdvance(ref text);
@@ -59,6 +59,7 @@ public static class TextLoader {
 		Debug.Assert(code.Kind != Kind._UNDEFINED, "Code type not valid");
 		code.Profession = (Profession)1 + DecodeAndAdvance(ref text);
 
+		if(PerProfessionData.LazyLoadMode >= LazyLoadMode.OFFLINE_ONLY) PerProfessionData.Reload(code.Profession, PerProfessionData.LazyLoadMode < LazyLoadMode.FULL).Wait();
 		var professionData = PerProfessionData.ByProfession(code.Profession);
 
 		for(var i = 0; i < 3; i++) {
@@ -258,6 +259,7 @@ public static class TextLoader {
 		else EncodeAndAdvance(ref destination, value, encodeWidth); 
 	}
 
+	/// <remarks> Requires PerProfessionData to be loaded or <see cref="PerProfessionData.LazyLoadMode"/> to be set to something other than <see cref="LazyLoadMode.NONE"/>. </remarks>
 	public static string WriteBuildCode(BuildCode code)
 	{
 		Span<char> buffer = stackalloc char[256];
@@ -265,10 +267,11 @@ public static class TextLoader {
 		return buffer[..length].ToString();
 	}
 
-	/// <remarks> Requires PerProfessionData to be loaded. </remarks>
+	/// <remarks> Requires PerProfessionData to be loaded or <see cref="PerProfessionData.LazyLoadMode"/> to be set to something other than <see cref="LazyLoadMode.NONE"/>. </remarks>
 	/// <returns> Number of characters written. </returns>
 	public static int WriteBuildCode(BuildCode code, Span<char> destination)
 	{
+		if(PerProfessionData.LazyLoadMode >= LazyLoadMode.OFFLINE_ONLY) PerProfessionData.Reload(code.Profession, PerProfessionData.LazyLoadMode < LazyLoadMode.FULL).Wait();
 		var professionData = PerProfessionData.ByProfession(code.Profession);
 
 		var oldLen = destination.Length;

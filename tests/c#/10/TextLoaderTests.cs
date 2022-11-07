@@ -152,10 +152,11 @@ public class BasicCodesTests {
 }
 
 public class OfficialChatLinks {
-	[Fact]
-	public async Task LoadOfficialLink()
+	[Theory] [InlineData(true)] [InlineData(false)]
+	public async Task LoadOfficialLink(bool lazyload)
 	{
-		await PerProfessionData.Reload(Profession.Necromancer, true);
+		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
+		else await PerProfessionData.Reload(Profession.Necromancer, true);
 
 		var code = TextLoader.LoadOfficialBuildCode("[&DQg1KTIlIjbBEgAAgQB1AUABgQB1AUABlQCVAAAAAAAAAAAAAAAAAAAAAAA=]");
 		Assert.Equal(Profession.Necromancer, code.Profession);
@@ -188,8 +189,8 @@ public class OfficialChatLinks {
 		Assert.Equal(SkillId.Summon_Flesh_Golem, code.SlotSkills[4]);
 	}
 
-	[Fact]
-	public async Task WriteOfficialLink()
+	[Theory] [InlineData(true)] [InlineData(false)]
+	public async Task WriteOfficialLink(bool lazyload)
 	{
 		var code = new BuildCode {
 			Profession = Profession.Necromancer,
@@ -228,7 +229,8 @@ public class OfficialChatLinks {
 			}
 		};
 
-		await PerProfessionData.Reload(Profession.Necromancer, true);
+		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
+		else await PerProfessionData.Reload(Profession.Necromancer, true);
 
 		var reference = "[&DQg1KTIlIjbBEgAAgQAAAEABAAB1AQAAlQAAAAAAAAAAAAAAAAAAAAAAAAA=]";
 		var result = TextLoader.WriteOfficialBuildCode(code);

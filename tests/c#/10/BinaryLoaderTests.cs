@@ -205,10 +205,11 @@ public class BasicCodeTests {
 		});
 	}
 
-	[Fact]
-	public void MinimalPvPWithSkills()
+	[Theory] [InlineData(true)] [InlineData(false)]
+	public void MinimalPvPWithSkills(bool lazyload)
 	{
-		PerProfessionData.Reload(Profession.Guardian, true).Wait();
+		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
+		else PerProfessionData.Reload(Profession.Guardian, true).Wait();
 
 		var rawCode = BitStringToBytes(
 			"c" + //version
@@ -248,10 +249,11 @@ public class BasicCodeTests {
 		Assert.Equal(IArbitrary         .NONE.Instance, code.Arbitrary);
 	}
 
-	[Fact]
-	public void MinimalPvE()
+	[Theory] [InlineData(true)] [InlineData(false)]
+	public void MinimalPvE(bool lazyload)
 	{
-		PerProfessionData.Reload(Profession.Guardian, true).Wait();
+		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
+		else PerProfessionData.Reload(Profession.Guardian, true).Wait();
 
 		var rawCode = BitStringToBytes(
 			"c" + //version
@@ -294,10 +296,11 @@ public class BasicCodeTests {
 		Assert.Equal(IArbitrary         .NONE.Instance, code.Arbitrary);
 	}
 
-	[Fact]
-	public void MinimalRanger()
+	[Theory] [InlineData(true)] [InlineData(false)]
+	public void MinimalRanger(bool lazyload)
 	{
-		PerProfessionData.Reload(Profession.Ranger, true).Wait();
+		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
+		else PerProfessionData.Reload(Profession.Ranger, true).Wait();
 
 		var rawCode = BitStringToBytes(
 			"c" + //version
@@ -326,10 +329,11 @@ public class BasicCodeTests {
 		Assert.Equal(PetId._UNDEFINED, data.Pet2);
 	}
 
-	[Fact]
-	public void MinimalRevenant()
+	[Theory] [InlineData(true)] [InlineData(false)]
+	public void MinimalRevenant(bool lazyload)
 	{
-		PerProfessionData.Reload(Profession.Revenant, true).Wait();
+		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
+		else PerProfessionData.Reload(Profession.Revenant, true).Wait();
 
 		var rawCode = BitStringToBytes(
 			"c" + //version
@@ -361,10 +365,11 @@ public class BasicCodeTests {
 		Assert.Equal(SkillId._UNDEFINED, data.AltUtilitySkill3);
 	}
 
-	[Fact]
-	public void LoopWriteMinimalRevenant()
+	[Theory] [InlineData(true)] [InlineData(false)]
+	public void LoopWriteMinimalRevenant(bool lazyload)
 	{
-		PerProfessionData.Reload(Profession.Revenant, true).Wait();
+		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
+		else PerProfessionData.Reload(Profession.Revenant, true).Wait();
 
 		var rawCode = BitStringToBytes(
 			"c" + //version
@@ -397,10 +402,11 @@ public class BasicCodeTests {
 
 public class OfficialChatLinks
 {
-	[Fact]
-	public async Task LoadOfficialLink()
+	[Theory] [InlineData(true)] [InlineData(false)]
+	public async Task LoadOfficialLink(bool lazyload)
 	{
-		await PerProfessionData.Reload(Profession.Necromancer, true);
+		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
+		else await PerProfessionData.Reload(Profession.Necromancer, true);
 
 		var fullLink = "[&DQg1KTIlIjbBEgAAgQB1AUABgQB1AUABlQCVAAAAAAAAAAAAAAAAAAAAAAA=]";
 		var base64   = fullLink[2..^1];
@@ -436,8 +442,8 @@ public class OfficialChatLinks
 		Assert.Equal(SkillId.Summon_Flesh_Golem, code.SlotSkills[4]);
 	}
 
-	[Fact]
-	public async Task WriteOfficialLink()
+	[Theory] [InlineData(true)] [InlineData(false)]
+	public async Task WriteOfficialLink(bool lazyload)
 	{
 		var code = new BuildCode {
 			Profession = Profession.Necromancer,
@@ -476,7 +482,8 @@ public class OfficialChatLinks
 			}
 		};
 
-		await PerProfessionData.Reload(Profession.Necromancer, true);
+		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
+		else await PerProfessionData.Reload(Profession.Necromancer, true);
 
 		var buffer = new byte[44];
 		BinaryLoader.WriteOfficialBuildCode(code, buffer);
@@ -488,10 +495,11 @@ public class OfficialChatLinks
 		Assert.Equal(referenceBytes, buffer);
 	}
 
-	[Fact]
-	public async Task LoadOfficiaRevlLink() // our very special boy spec
+	[Theory] [InlineData(true)] [InlineData(false)]
+	public async Task LoadOfficiaRevlLink(bool lazyload) // our very special boy spec
 	{
-		await PerProfessionData.Reload(Profession.Revenant, true);
+		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
+		else await PerProfessionData.Reload(Profession.Revenant, true);
 
 		var fullLink = "[&DQkAAAAARQDcEdwRAAAAACsSAADUEQAAAAAAAAQCAwDUESsSAAAAAAAAAAA=]";
 		var base64   = fullLink[2..^1];

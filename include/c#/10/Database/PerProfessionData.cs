@@ -1,10 +1,11 @@
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
 public class PerProfessionData {
+	public static LazyLoadMode LazyLoadMode = LazyLoadMode.NONE;
+
 	public static readonly PerProfessionData Guardian     = new();
 	public static readonly PerProfessionData Warrior      = new();
 	public static readonly PerProfessionData Engineer     = new();
@@ -27,6 +28,8 @@ public class PerProfessionData {
 		Profession.Revenant     => Revenant    ,
 		_ => throw new ArgumentOutOfRangeException(nameof(profession)),
 	};
+
+	DateTime _lastUpdate;
 
 	/// <remarks> Once loaded also converts 0 &lt;-&gt; 0 for _UNDEFINED passthrough. </remarks>
 	internal Dictionary<ushort, SkillId> PalletteToSkill = new();
@@ -59,6 +62,18 @@ public class PerProfessionData {
 			else this.IndexToId.Remove(professionSpecIndex);
 		}
 		return good1;
+	}
+
+	public void Assign(ushort palletteId, SkillId skillId)
+	{
+		this.PalletteToSkill[palletteId] = skillId;
+		this.SkillToPallette[skillId] = palletteId;
+	}
+
+	public void Assign(int professionSpecIndex, SpecializationId specId)
+	{
+		this.IndexToId[professionSpecIndex] = specId;
+		this.IdToIndex[specId] = professionSpecIndex;
 	}
 
 	public void TrimExcess()
@@ -107,6 +122,8 @@ public class PerProfessionData {
 	{
 		var targetData = ByProfession(profession);
 
+		if(DateTime.Now - targetData._lastUpdate < TimeSpan.FromMinutes(5)) return;
+
 		if(targetData.PalletteToSkill.Count == 0)
 		{
 			targetData.PalletteToSkill.EnsureCapacity(10000);
@@ -128,12 +145,12 @@ public class PerProfessionData {
 				var professionData = await client.WebApi.V2.Professions.GetAsync(Enum.GetName(profession)!);
 				foreach(var (pallete, skill) in professionData.SkillsByPalette)
 				{
-					targetData.TryInsert((ushort)pallete, (SkillId)skill);
+					targetData.Assign((ushort)pallete, (SkillId)skill);
 				}
 				int i = 1;
 				foreach(var specId in professionData.Specializations)
 				{
-					targetData.TryInsert(i++, (SpecializationId)specId);
+					targetData.Assign(i++, (SpecializationId)specId);
 				}
 				loaded = true;
 			}
@@ -148,5 +165,13 @@ public class PerProfessionData {
 		}
 
 		targetData.TrimExcess();
+
+		targetData._lastUpdate = DateTime.Now;
 	}
+}
+
+public enum LazyLoadMode {
+	NONE = default,
+	OFFLINE_ONLY,
+	FULL,
 }
