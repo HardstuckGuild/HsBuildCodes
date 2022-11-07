@@ -1,3 +1,4 @@
+using Gw2Sharp.Models;
 using Gw2Sharp.WebApi.V2.Models;
 
 using static Hardstuck.GuildWars2.BuildCodes.V2.Static;
@@ -15,7 +16,49 @@ public static class APILoader {
 		return required.Except(tokenInfo.Permissions.List.Select(e => e.Value));
 	}
 
-	/// <summary> This method assumes the scopes account, character and build are available. </summary>
+	/// <inheritdoc cref="LoadBuildCodeFromCurrentCharacter(Gw2Sharp.Gw2Client, bool)"/>
+	public static ValueTask<BuildCode?> LoadBuildCodeFromCurrentCharacter(string authToken, bool aquatic = false)
+	{
+		var connection = new Gw2Sharp.Connection(authToken);
+		using var client = new Gw2Sharp.Gw2Client(connection);
+		return LoadBuildCodeFromCurrentCharacter(client, aquatic);
+	}
+
+	/// <summary> This method assumes the scopes account, character and build are available, but does not explicitely test for them. </summary>
+	/// <exception cref="Gw2Sharp.WebApi.Exceptions.NotFoundException">If the character can't be found. Usually happens if the api key doenst actaully correspond to the logged in account.</exception>
+	/// <exception cref="Gw2Sharp.WebApi.Exceptions.MissingScopesException"></exception>
+	/// <exception cref="Gw2Sharp.WebApi.Exceptions.InvalidAccessTokenException">If the token is not valid.</exception>
+	/// <returns> Null if the characer can't be determined. </returns>
+	public static async ValueTask<BuildCode?> LoadBuildCodeFromCurrentCharacter(Gw2Sharp.Gw2Client authorizedClient, bool aquatic = false)
+	{
+		authorizedClient.Mumble.Update();
+
+		if(string.IsNullOrEmpty(authorizedClient.Mumble.CharacterName)) return null;
+
+		var gamemode = Kind.PvE;
+		switch(authorizedClient.Mumble.MapType)
+		{
+			case MapType.Pvp:
+			case MapType.Gvg:
+			case MapType.Tournament:
+			case MapType.UserTournament:
+				gamemode = Kind.PvP;
+				break;
+
+			case MapType.Center:
+			case MapType.BlueHome:
+			case MapType.GreenHome:
+			case MapType.RedHome:
+			case MapType.JumpPuzzle:
+			case MapType.EdgeOfTheMists:
+			case MapType.WvwLounge:
+				gamemode = Kind.WvW;
+				break;
+		}
+		return await LoadBuildCode(authorizedClient, authorizedClient.Mumble.CharacterName, gamemode, aquatic);
+	}
+
+	/// <inheritdoc cref="LoadBuildCode(Gw2Sharp.Gw2Client, string, Kind, bool)"/>
 	public static Task<BuildCode> LoadBuildCode(string authToken, string characterName, Kind targetGameMode, bool aquatic = false)
 	{
 		var connection = new Gw2Sharp.Connection(authToken);
@@ -24,6 +67,9 @@ public static class APILoader {
 	}
 
 	/// <summary> This method assumes the scopes account, character and build are available, but does not explicitely test for them. </summary>
+	/// <exception cref="Gw2Sharp.WebApi.Exceptions.NotFoundException">If the character can't be found.</exception>
+	/// <exception cref="Gw2Sharp.WebApi.Exceptions.MissingScopesException"></exception>
+	/// <exception cref="Gw2Sharp.WebApi.Exceptions.InvalidAccessTokenException">If the token is not valid.</exception>
 	public static async Task<BuildCode> LoadBuildCode(Gw2Sharp.Gw2Client authorizedClient, string characterName, Kind targetGameMode, bool aquatic = false) {
 		var code = new BuildCode();
 		code.Version = CURRENT_VERSION;

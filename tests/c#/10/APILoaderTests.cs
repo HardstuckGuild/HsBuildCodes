@@ -5,6 +5,9 @@ using Xunit;
 namespace Hardstuck.GuildWars2.BuildCodes.V2.Tests.API;
 
 public class FunctionTests {
+	public const string VALID_KEY = "92CE5A6C-E594-9D4D-B92B-5621ACFE047D436C02BD-0810-47D9-B9D4-2620EB7DD598";
+	public const string MISSING_PERMS_KEY = "AD041D99-AEEF-2E45-8732-0057285EFE370740BF1D-6427-4191-8C4F-84DD1C97F05F";
+
 	[Fact]
 	public async Task ShouldThrowNotAToken()
 	{
@@ -17,14 +20,14 @@ public class FunctionTests {
 	public async Task ShouldThrowInvalidScopes()
 	{
 		await Assert.ThrowsAsync<MissingScopesException>(async () => {
-			var code = await APILoader.LoadBuildCode("AD041D99-AEEF-2E45-8732-0057285EFE370740BF1D-6427-4191-8C4F-84DD1C97F05F", "sss", default);
+			var code = await APILoader.LoadBuildCode(MISSING_PERMS_KEY, "sss", default);
 		});
 	}
 
 	[Fact]
 	public async Task ShouldFindMissinScopes()
 	{
-		var connection = new Gw2Sharp.Connection("AD041D99-AEEF-2E45-8732-0057285EFE370740BF1D-6427-4191-8C4F-84DD1C97F05F");
+		var connection = new Gw2Sharp.Connection(MISSING_PERMS_KEY);
 		using var client = new Gw2Sharp.Gw2Client(connection);
 
 		var missingScopes = await APILoader.ValidateScopes(client);
@@ -38,7 +41,7 @@ public class FunctionTests {
 	public async Task ShouldThrowNoSuchCharacter()
 	{
 		await Assert.ThrowsAsync<NotFoundException>(async () => {
-			var code = await APILoader.LoadBuildCode("92CE5A6C-E594-9D4D-B92B-5621ACFE047D436C02BD-0810-47D9-B9D4-2620EB7DD598", "does not exist", default);
+			var code = await APILoader.LoadBuildCode(VALID_KEY, "does not exist", default);
 		});
 	}
 }
@@ -47,7 +50,7 @@ public class BasicCodesTests {
 	[Fact]
 	public async Task LoadBuild()
 	{
-		var code = await APILoader.LoadBuildCode("92CE5A6C-E594-9D4D-B92B-5621ACFE047D436C02BD-0810-47D9-B9D4-2620EB7DD598", "Hardstuck Thief", default);
+		var code = await APILoader.LoadBuildCode(FunctionTests.VALID_KEY, "Hardstuck Thief", default);
 		Assert.Equal(Profession.Thief, code.Profession);
 		Assert.Equal(new Specialization() {
 			SpecializationId = SpecializationId.Deadly_Arts,
@@ -96,5 +99,12 @@ public class BasicCodesTests {
 		Assert.Equal(SkillId.Shadowfall     , code.SlotSkills.Elite);
 
 		Assert.Equal(ItemId.Superior_Rune_of_the_Traveler2, code.Rune);
+	}
+
+	[Fact]
+	public async Task FromCurrentCharacterNullIfUnavailable()
+	{
+		var code = await APILoader.LoadBuildCodeFromCurrentCharacter(FunctionTests.VALID_KEY);
+		Assert.Null(code);
 	}
 }

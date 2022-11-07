@@ -24,10 +24,13 @@ var code3 = TextLoader.LoadOfficialBuildCode(inGameLink);
 var rawInGameBytes = Convert.FromBase64String(inGameLink[2..^1]);
 var code4 = BinaryLoader.LoadOfficialBuildCode(rawInGameBytes);
 
-// From an existing player via the official api
+// From an existing player via the official api:
 var apiKey = "AD041D99-AEEF...";
 var characterName = "Don Joe Was Taken";
 var code5 = await APILoader.LoadBuildCode(apiKey, characterName, Kind.PvE);
+
+// From the character currently ingame on the same machine:
+var code6 = await APILoader.LoadBuildCodeFromCurrentCharacter(apiKey);
 ```
 
 ### From this Object different kinds of codes can be generated:
