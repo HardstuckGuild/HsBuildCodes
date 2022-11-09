@@ -1,0 +1,30 @@
+{
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "PHPUnit",
+			"type": "shell",
+			"command": [
+				"G:/privat/programms/php/php-8.1.12-Win32-vs16-x64/php.exe",
+				"./tests/php/8.1/phpunit-9.5.26.phar",
+				//"--stop-on-failure",
+				"--colors=auto",
+				"--test-suffix", "Tests.php",
+				"--bootstrap", "./include/php/8.1/autoload.php",
+				"./tests/php/8.1/"
+			],
+			"problemMatcher": []
+		},
+		{
+			"label": "Xunit",
+			"type": "shell",
+			"command": [
+				"dotnet", "test",
+				"./tests/c#/10/Tests.sln"
+			],
+			"problemMatcher": []
+		}
+	]
+}

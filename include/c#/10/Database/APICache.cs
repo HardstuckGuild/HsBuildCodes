@@ -4,7 +4,7 @@ using Gw2Sharp.WebApi.V2.Models;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
-public static partial class APICache {
+public static class APICache {
 	static readonly Gw2Sharp.Connection _connection = new(null, default, cacheMethod: new MemoryCacheMethod(30 * 60 * 1000));
 	static readonly Gw2Sharp.Gw2Client  _client = new(_connection);
 

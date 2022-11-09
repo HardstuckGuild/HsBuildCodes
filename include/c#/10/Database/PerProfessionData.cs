@@ -32,13 +32,13 @@ public class PerProfessionData {
 	DateTime _lastUpdate;
 
 	/// <remarks> Once loaded also converts 0 &lt;-&gt; 0 for _UNDEFINED passthrough. </remarks>
-	internal Dictionary<ushort, SkillId> PalletteToSkill = new();
+	public Dictionary<ushort, SkillId> PalletteToSkill = new();
 	/// <remarks> Once loaded also converts 0 &lt;-&gt; 0 for _UNDEFINED passthrough. </remarks>
-	internal Dictionary<SkillId, ushort> SkillToPallette = new();
+	public Dictionary<SkillId, ushort> SkillToPallette = new();
 	/// <remarks> Once loaded also converts 0 &lt;-&gt; 0 for _UNDEFINED passthrough. Indices are offset by 1. </remarks>
-	internal Dictionary<int, SpecializationId> IndexToId = new();
+	public Dictionary<int, SpecializationId> IndexToId = new();
 	/// <remarks> Once loaded also converts 0 &lt;-&gt; 0 for _UNDEFINED passthrough. Indices are offset by 1. </remarks>
-	internal Dictionary<SpecializationId, int> IdToIndex = new();
+	public Dictionary<SpecializationId, int> IdToIndex = new();
 
 	public bool TryInsert(ushort palletteId, SkillId skillId)
 	{
