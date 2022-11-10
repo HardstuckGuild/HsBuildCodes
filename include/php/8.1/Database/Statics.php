@@ -2,11 +2,32 @@
 
 class Statics
 {
+	public const FIRST_VERSIONED_VERSION = 2;
 	public const CURRENT_VERSION = 2;
 	public const OFFICIAL_CHAT_CODE_BYTE_LENGTH = 44;
 
 	public const ALL_EQUIPMENT_COUNT = 16;
 	public const ALL_INFUSION_COUNT = 21;
+
+	public static function DetermineCodeVersion(string $code) : int
+	{
+		$vcValue = ord($code[0]);
+		if($vcValue > count(TextLoader::INVERSE_CHARSET)) return -1;
+
+		if(str_starts_with($code, 'v0_')) return 1;
+
+		$potentialVersion = TextLoader::INVERSE_CHARSET[$vcValue];
+		// version may be lower or uppercase
+		if($potentialVersion > 26) $potentialVersion -= 26;
+
+		// NOTE(Rennorb): v1 codes start with the type indicator, which is never greater than 2. 
+		// since this is also the first versioned version we can conclude tha values above the current version are invalid
+		if($potentialVersion > Statics::CURRENT_VERSION) return -1;
+
+		if($potentialVersion < Statics::FIRST_VERSIONED_VERSION) return 1;
+
+		return $potentialVersion;
+	}
 
 	public static function IsTwoHanded(WeaponType $weaponType) : bool
 	{

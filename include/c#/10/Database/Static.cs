@@ -4,11 +4,31 @@ namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
 public static class Static
 {
+	public const int FIRST_VERSIONED_VERSION = 2;
 	public const int CURRENT_VERSION = 2;
 	public const int OFFICIAL_CHAT_CODE_BYTE_LENGTH = 44;
 
 	public const int ALL_EQUIPMENT_COUNT = 16;
 	public const int ALL_INFUSION_COUNT = 21;
+
+	public static int DetermineCodeVersion(ReadOnlySpan<char> code)
+	{
+		if(code[0] > TextLoader.INVERSE_CHARSET.Length) return -1;
+
+		if(code.StartsWith("v0_")) return 1;
+
+		var potentialVersion = TextLoader.INVERSE_CHARSET[code[0]];
+		// version may be lower or uppercase
+		if(potentialVersion > 26) potentialVersion -= 26;
+
+		// NOTE(Rennorb): v1 codes start with the type indicator, which is never greater than 2. 
+		// since this is also the first versioned version we can conclude tha values above the current version are invalid
+		if(potentialVersion > CURRENT_VERSION) return -1;
+
+		if(potentialVersion < FIRST_VERSIONED_VERSION) return 1;
+
+		return potentialVersion;
+	}
 
 	public static bool IsTwoHanded(WeaponType weaponType)
 	{

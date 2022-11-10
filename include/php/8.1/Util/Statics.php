@@ -1,5 +1,8 @@
 <?php namespace Hardstuck\GuildWars2\BuildCodes\V2\Util;
 
+use Hardstuck\GuildWars2\BuildCodes\V2\Statics;
+use Hardstuck\GuildWars2\BuildCodes\V2\TextLoader;
+
 trait FromName {
 	public static function fromName(string $name) : static
 	{
