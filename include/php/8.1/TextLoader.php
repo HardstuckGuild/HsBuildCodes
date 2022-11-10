@@ -48,7 +48,6 @@ class TextLoader {
 
 	#region hardstuck codes
 
-	/** @remarks Requires PerProfessionData to be loaded or PerProfessionData::$LazyLoadMode to be set to something other than LazyLoadMode::NONE. */
 	public static function LoadBuildCode(string $text) : BuildCode {
 		assert(strlen($text) > 10, "Code too short");
 		$view = new StringView($text);
@@ -59,12 +58,9 @@ class TextLoader {
 		assert($code->Kind !== Kind::_UNDEFINED, "Code type not valid");
 		$code->Profession = Profession::from(1 + TextLoader::DecodeAndAdvance($view));
 
-		if(PerProfessionData::$LazyLoadMode >= LazyLoadMode::OFFLINE_ONLY) PerProfessionData::Reload($code->Profession, PerProfessionData::$LazyLoadMode < LazyLoadMode::FULL);
-		$professionData = PerProfessionData::ByProfession($code->Profession);
-
 		for($i = 0; $i < 3; $i++) {
 			if(!TextLoader::EatToken($view, '_')) {
-				$id = $professionData->IndexToId[TextLoader::DecodeAndAdvance($view) + 1];
+				$id = TextLoader::DecodeAndAdvance($view);
 				$mixed = TextLoader::DecodeAndAdvance($view);
 				$choices = new TraitLineChoices();
 				for($j = 0; $j < 3; $j++)
@@ -249,12 +245,8 @@ class TextLoader {
 		else TextLoader::EncodeAndAdvance($destination, $value, $encodeWidth); 
 	}
 
-	/// <remarks> Requires PerProfessionData to be loaded or <see cref="PerProfessionData::LazyLoadMode"/> to be set to something other than <see cref="LazyLoadMode.NONE"/>. </remarks>
 	public static function WriteBuildCode(BuildCode $code) : string
 	{
-		if(PerProfessionData::$LazyLoadMode >= LazyLoadMode::OFFLINE_ONLY) PerProfessionData::Reload($code->Profession, PerProfessionData::$LazyLoadMode < LazyLoadMode::FULL);
-		$professionData = PerProfessionData::ByProfession($code->Profession);
-
 		$destination = '';
 
 		$destination .= TextLoader::CHARSET[$code->Version];
@@ -262,9 +254,9 @@ class TextLoader {
 		$destination .= TextLoader::CHARSET[$code->Profession->value - 1];
 		for($i = 0; $i < 3; $i++) {
 			$spec = $code->Specializations[$i];
-			if($spec === null) $destination .= '_';
+			if($spec->SpecializationId === SpecializationId::_UNDEFINED) $destination .= '_';
 			else {
-				$destination .= TextLoader::CHARSET[$professionData->IdToIndex[$spec->SpecializationId] - 1];
+				$destination .= TextLoader::EncodeAndAdvance($destination, $spec->SpecializationId, 2);
 				$destination .= TextLoader::CHARSET[
 					($spec->Choices[0]->value << 4) | ($spec->Choices[1]->value << 2) | $spec->Choices[2]->value
 				];

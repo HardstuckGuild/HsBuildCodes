@@ -215,7 +215,7 @@ public class BasicCodeTests {
 			"c" + //version
 			"00" + //type
 			"0000" + //profession
-			"0000_0000_0000" + //traits
+			"0000000_0000000_0000000" + //traits
 			"00000" + //weapons
 			"000000000000000000000001" + //skills
 			"000000000000000000000010" +
@@ -230,7 +230,7 @@ public class BasicCodeTests {
 		Assert.Equal(Kind.PvP           , code.Kind);
 		Assert.Equal(Profession.Guardian, code.Profession);
 		for(int i = 0; i < 3; i++)
-			Assert.Null(code.Specializations[i]);
+			Assert.Equal(SpecializationId._UNDEFINED, code.Specializations[i].SpecializationId);
 		Assert.False(code.WeaponSet1.HasAny);
 		Assert.False(code.WeaponSet2.HasAny);
 		for(int i = 0; i < 5; i++)
@@ -259,7 +259,7 @@ public class BasicCodeTests {
 			"c" + //version
 			"10" + //type
 			"0000" + //profession
-			"0000_0000_0000" + //traits
+			"0000000_0000000_0000000" + //traits
 			"00000" + //weapons
 			"000000000000000000000000" + //skills
 			"000000000000000000000000" +
@@ -278,7 +278,7 @@ public class BasicCodeTests {
 		Assert.Equal(Kind.PvE           , code.Kind);
 		Assert.Equal(Profession.Guardian, code.Profession);
 		for(int i = 0; i < 3; i++)
-			Assert.Null(code.Specializations[i]);
+			Assert.Equal(SpecializationId._UNDEFINED, code.Specializations[i].SpecializationId);
 		Assert.False(code.WeaponSet1.HasAny);
 		Assert.False(code.WeaponSet2.HasAny);
 		for(int i = 0; i < 5; i++)
@@ -306,7 +306,7 @@ public class BasicCodeTests {
 			"c" + //version
 			"10" + //type
 			"0011" + //profession
-			"0000_0000_0000" + //traits
+			"0000000_0000000_0000000" + //traits
 			"00000" + //weapons
 			"000000000000000000000000" + //skills
 			"000000000000000000000000" +
@@ -339,7 +339,7 @@ public class BasicCodeTests {
 			"c" + //version
 			"10" + //type
 			"1000" + //profession
-			"0000_0000_0000" + //traits
+			"0000000_0000000_0000000" + //traits
 			"00000" + //weapons
 			"000000000000000000000000" + //skills
 			"000000000000000000000000" +
@@ -375,7 +375,7 @@ public class BasicCodeTests {
 			"c" + //version
 			"10" + //type
 			"1000" + //profession
-			"0000_0000_0000" + //traits
+			"0000000_0000000_0000000" + //traits
 			"00000" + //weapons
 			"000000000000000000000000" + //skills
 			"000000000000000000000000" +
@@ -414,26 +414,26 @@ public class OfficialChatLinks
 		var code = BinaryLoader.LoadOfficialBuildCode(raw);
 		Assert.Equal(Profession.Necromancer, code.Profession);
 
-		Assert.Equal(SpecializationId.Spite, code.Specializations[0]!.Value.SpecializationId);
+		Assert.Equal(SpecializationId.Spite, code.Specializations[0].SpecializationId);
 		Assert.Equal(new TraitLineChoices() {
 			Adept       = TraitLineChoice.TOP,
 			Master      = TraitLineChoice.MIDDLE,
 			Grandmaster = TraitLineChoice.MIDDLE,
-		}, code.Specializations[0]!.Value.Choices);
+		}, code.Specializations[0].Choices);
 
-		Assert.Equal(SpecializationId.Soul_Reaping, code.Specializations[1]!.Value.SpecializationId);
+		Assert.Equal(SpecializationId.Soul_Reaping, code.Specializations[1].SpecializationId);
 		Assert.Equal(new TraitLineChoices() {
 			Adept       = TraitLineChoice.TOP,
 			Master      = TraitLineChoice.TOP,
 			Grandmaster = TraitLineChoice.MIDDLE,
-		}, code.Specializations[1]!.Value.Choices);
+		}, code.Specializations[1].Choices);
 
-		Assert.Equal(SpecializationId.Reaper, code.Specializations[2]!.Value.SpecializationId);
+		Assert.Equal(SpecializationId.Reaper, code.Specializations[2].SpecializationId);
 		Assert.Equal(new TraitLineChoices() {
 			Adept       = TraitLineChoice.MIDDLE,
 			Master      = TraitLineChoice.TOP,
 			Grandmaster = TraitLineChoice.BOTTOM,
-		}, code.Specializations[2]!.Value.Choices);
+		}, code.Specializations[2].Choices);
 
 		Assert.Equal(SkillId.Your_Soul_Is_Mine, code.SlotSkills[0]);
 		Assert.Equal(SkillId.Well_of_Suffering1, code.SlotSkills[1]);

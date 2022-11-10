@@ -11,6 +11,10 @@ class VersionTests extends TestCase {
 		
 		$v1Codes = [
 			'v0_-------------------------',
+			"adbacadacahaaaa-aIvt-aHalaa-jNq_GQtg_GSl_GSG_GSl_GSG-ao-aj",
+			"abaccadaaagacckpsr-acbac-cfc-cfb-cfm_GTxg_ift_ifw_ifw_ift",
+			"acacacbccbhbbbdoNKId-jNn_GTug_GQx_GTJ",
+			"cgcacceaccfccaKLvMJighj_Abt_gQM_Dck_gQM_Dck",
 		];
 		
 		$v2Codes = [

@@ -1,11 +1,11 @@
 namespace Hardstuck.GuildWars2.BuildCodes.V2.Util;
 
 public struct SpecializationChoices {
-	public Specialization? Choice1;
-	public Specialization? Choice2;
-	public Specialization? Choice3;
+	public Specialization Choice1;
+	public Specialization Choice2;
+	public Specialization Choice3;
 
-	public Specialization? this[int index] {
+	public Specialization this[int index] {
 		get => (index) switch {
 			0 => this.Choice1,
 			1 => this.Choice2,

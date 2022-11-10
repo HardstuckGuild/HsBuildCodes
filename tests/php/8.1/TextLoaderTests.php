@@ -95,7 +95,7 @@ class BasicCodesTests extends TestCase {
 		$this->assertEquals(Kind::PvP           , $code->Kind);
 		$this->assertEquals(Profession::Guardian, $code->Profession);
 		for($i = 0; $i < 3; $i++)
-			$this->assertNull($code->Specializations[$i]);
+			$this->assertEquals(SpecializationId::_UNDEFINED, $code->Specializations[$i]->SpecializationId);
 		$this->assertFalse($code->WeaponSet1->HasAny());
 		$this->assertFalse($code->WeaponSet2->HasAny());
 		for($i = 0; $i < 5; $i++)
@@ -122,7 +122,7 @@ class BasicCodesTests extends TestCase {
 		$this->assertEquals(Kind::PvE           , $code->Kind);
 		$this->assertEquals(Profession::Guardian, $code->Profession);
 		for($i = 0; $i < 3; $i++)
-			$this->assertNull($code->Specializations[$i]);
+			$this->assertEquals(SpecializationId::_UNDEFINED, $code->Specializations[$i]->SpecializationId);
 		$this->assertFalse($code->WeaponSet1->HasAny());
 		$this->assertFalse($code->WeaponSet2->HasAny());
 		for($i = 0; $i < 5; $i++)

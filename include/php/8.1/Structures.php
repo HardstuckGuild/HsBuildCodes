@@ -64,13 +64,10 @@ enum Profession : int {
 }
 
 class Specialization {
-	public int              $SpecializationId;
-	public TraitLineChoices $Choices;
-
-	public function __construct(int $specializationId, TraitLineChoices $choices) {
-		$this->SpecializationId = $specializationId;
-		$this->Choices          = $choices;
-	}
+	public function __construct(
+		public int              $SpecializationId = SpecializationId::_UNDEFINED,
+		public TraitLineChoices $Choices          = new TraitLineChoices(),
+	) {}
 }
 
 enum TraitLineChoice : int {

@@ -8,12 +8,14 @@ use Hardstuck\GuildWars2\BuildCodes\V2\StatId;
 use Hardstuck\GuildWars2\BuildCodes\V2\TraitLineChoice;
 
 class SpecializationChoices implements \ArrayAccess {
-	public ?Specialization $Choice1 = null;
-	public ?Specialization $Choice2 = null;
-	public ?Specialization $Choice3 = null;
+	public function __construct(
+		public Specialization $Choice1 = new Specialization(),
+		public Specialization $Choice2 = new Specialization(),
+		public Specialization $Choice3 = new Specialization(),
+	) { }
 
 	/** @param int $offset */
-	public function offsetGet(mixed $offset) : ?Specialization
+	public function offsetGet(mixed $offset) : Specialization
 	{
 		return match ($offset) {
 			0 => $this->Choice1,
@@ -24,8 +26,8 @@ class SpecializationChoices implements \ArrayAccess {
 	}
 
 	/**
-	 * @param int             $offset
-	 * @param ?Specialization $value
+	 * @param int            $offset
+	 * @param Specialization $value
 	 */
 	public function offsetSet(mixed $offset, mixed $value) : void 
 	{

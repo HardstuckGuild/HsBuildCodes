@@ -19,7 +19,7 @@ public static class Static
 
 		var potentialVersion = TextLoader.INVERSE_CHARSET[code[0]];
 		// version may be lower or uppercase
-		if(potentialVersion > 26) potentialVersion -= 26;
+		if(potentialVersion >= 26) potentialVersion -= 26;
 
 		// NOTE(Rennorb): v1 codes start with the type indicator, which is never greater than 2. 
 		// since this is also the first versioned version we can conclude tha values above the current version are invalid
@@ -96,14 +96,14 @@ public static class Static
 		}
 	}
 
-	public static Legend? ResolveLegend(in Specialization? eliteSpec, string? str) => (str) switch {
+	public static Legend? ResolveLegend(in Specialization eliteSpec, string? str) => (str) switch {
 		"Legend1" => Legend.GLINT,
 		"Legend2" => Legend.SHIRO,
 		"Legend3" => Legend.JALIS,
 		"Legend4" => Legend.MALLYX,
 		"Legend5" => Legend.KALLA,
 		"Legend6" => Legend.VENTARI,
-		null when eliteSpec?.SpecializationId == SpecializationId.Vindicator => Legend.VINDICATOR,
+		null when eliteSpec.SpecializationId == SpecializationId.Vindicator => Legend.VINDICATOR,
 		_ => null,
 	};
 

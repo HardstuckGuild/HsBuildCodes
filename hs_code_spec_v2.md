@@ -32,8 +32,8 @@ All references to an API without hostname (e.g: `/v2/pets`) reference the offici
 
 The first line contains a v1 buildcode with only two weapons and uniform stats for width comparison. It is aligned to cover the width of fields that would be present, not rearranged to match the fields that exist in v1.
 ```
-a c e ccabbc bgcbbcSUT       R              ge-cfc-cfm_GTxg _if t_ik     m        +  +
-V T P STSTST WS..wS..WS..wS..WS..S..wS..S.. S..S..S..S..S.. R.. A..n,,,, I..n,,,, F..U.. A,,,,,
+a c e ccabbcbgc bbcSUTRge        -cfc-cfm_GTxg_i ft_ ikm+     +        +  +
+V T P S.TS.TS.T WS..wS..WS..wS.. S..S..S..S..S.. R.. A..n,,,, I..n,,,, F..U.. A,,,,,
 ```
 
 `[V]` Version [1 character. currently `C`] used for backwards compatibility.
@@ -45,10 +45,10 @@ V T P STSTST WS..wS..WS..wS..WS..S..wS..S.. S..S..S..S..S.. R.. A..n,,,, I..n,,,
 `[P]` Profession [1 character] resolved by `/v2/professions`
   - `A-I`: Guardian, Warrior, Engineer, Ranger, Thief, Elementalist, Mesmer, Necromancer, Revenant
 
-`[STSTST]` Specializations [3 * 2 characters] pairs of (1 char specialization + 1 char selected traits):
+`[S.TS.TS.T]` Specializations [3 * 3 characters] pairs of (2 char specialization + 1 char selected traits):
   - `_` (underscore): empty trait line
-  - `A-H`: specialization index depending on the profession. Spec index is resolved by `/v2/professions/<profession>$specializations` after ordering by id ascending
-  - Trait choices [6 characters] encoded as follows:
+  - `2 characters`: specialization id, resolved by `/v2/specializations`, `encode(id, 2)`
+  - Trait choices [1 character] encoded as follows:
     1. Let `pos(c) : {1, 2, 3} => {0, 1, 2, 3}` be the position of the selected trait in the current trait line in column `c` as it appears in game: `pos(c) := { 0 if empty, 1 if top, 2 if mid, 3 if bottom }`.
     2. Calculate an index by `index = 0; for(c: 1..3) index |= pos(c) << (6 - c * 2)`.
 
@@ -130,7 +130,7 @@ Field widths are measured in bits. See textual specification for details on how 
 4 : Profession index 
 
 repeat 3
-	4 : specializations: 0 if trait line is empty, 1 + spec index otherwise
+	7 : specializations: 0 if trait line is empty, 1 + spec index otherwise
 	either
 		omitted
 	or

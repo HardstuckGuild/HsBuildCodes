@@ -224,7 +224,7 @@ class BasicCodeTests extends TestCase {
 			"c" . //version
 			"00" . //type
 			"0000" . //profession
-			"0000_0000_0000" . //traits
+			"0000000_0000000_0000000" . //traits
 			"00000" . //weapons
 			"000000000000000000000001" . //skills
 			"000000000000000000000010" .
@@ -239,7 +239,7 @@ class BasicCodeTests extends TestCase {
 		$this->assertEquals(Kind::PvP           , $code->Kind);
 		$this->assertEquals(Profession::Guardian, $code->Profession);
 		for($i = 0; $i < 3; $i++)
-			$this->assertNull($code->Specializations[$i]);
+			$this->assertEquals(SpecializationId::_UNDEFINED, $code->Specializations[$i]->SpecializationId);
 		$this->assertFalse($code->WeaponSet1->HasAny());
 		$this->assertFalse($code->WeaponSet2->HasAny());
 		for($i = 0; $i < 5; $i++)
@@ -268,7 +268,7 @@ class BasicCodeTests extends TestCase {
 			"c" . //version
 			"10" . //type
 			"0000" . //profession
-			"0000_0000_0000" . //traits
+			"0000000_0000000_0000000" . //traits
 			"00000" . //weapons
 			"000000000000000000000000" . //skills
 			"000000000000000000000000" .
@@ -287,7 +287,7 @@ class BasicCodeTests extends TestCase {
 		$this->assertEquals(Kind::PvE           , $code->Kind);
 		$this->assertEquals(Profession::Guardian, $code->Profession);
 		for($i = 0; $i < 3; $i++)
-			$this->assertNull($code->Specializations[$i]);
+			$this->assertEquals(SpecializationId::_UNDEFINED, $code->Specializations[$i]->SpecializationId);
 		$this->assertFalse($code->WeaponSet1->HasAny());
 		$this->assertFalse($code->WeaponSet2->HasAny());
 		for($i = 0; $i < 5; $i++)
@@ -315,7 +315,7 @@ class BasicCodeTests extends TestCase {
 			"c" . //version
 			"10" . //type
 			"0011" . //profession
-			"0000_0000_0000" . //traits
+			"0000000_0000000_0000000" . //traits
 			"00000" . //weapons
 			"000000000000000000000000" . //skills
 			"000000000000000000000000" .
@@ -348,7 +348,7 @@ class BasicCodeTests extends TestCase {
 			"c" . //version
 			"10" . //type
 			"1000" . //profession
-			"0000_0000_0000" . //traits
+			"0000000_0000000_0000000" . //traits
 			"00000" . //weapons
 			"000000000000000000000000" . //skills
 			"000000000000000000000000" .
@@ -384,7 +384,7 @@ class BasicCodeTests extends TestCase {
 			"c" . //version
 			"10" . //type
 			"1000" . //profession
-			"0000_0000_0000" . //traits
+			"0000000_0000000_0000000" . //traits
 			"00000" . //weapons
 			"000000000000000000000000" . //skills
 			"000000000000000000000000" .
@@ -403,8 +403,7 @@ class BasicCodeTests extends TestCase {
 
 		$result = BinaryLoader::WriteCode($code);
 
-		for($i = 0; $i < strlen($rawCode); $i++)
-			$this->assertEquals($rawCode[$i], $result[$i]);
+		$this->assertEquals($rawCode, $result);
 	}
 }
 

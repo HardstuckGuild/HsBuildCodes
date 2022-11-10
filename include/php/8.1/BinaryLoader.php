@@ -116,7 +116,6 @@ class BitWriter {
 class BinaryLoader {
 	#region hardstuck codes
 
-	/** @remarks Requires PerProfessionData to be loaded or PerProfessionData::$LazyLoadMode to be set to something other than LazyLoadMode::NONE. */
 	public static function LoadBuildCode(string $raw) : BuildCode
 	{
 		$rawSpan = new BitReader($raw);
@@ -133,11 +132,8 @@ class BinaryLoader {
 		assert($code->Kind !== Kind::_UNDEFINED, "Code type not valid");
 		$code->Profession = Profession::from(1 + $rawSpan->DecodeNext(4));
 
-		if(PerProfessionData::$LazyLoadMode >= LazyLoadMode::OFFLINE_ONLY) PerProfessionData::Reload($code->Profession, PerProfessionData::$LazyLoadMode < LazyLoadMode::FULL);
-		$professionData = PerProfessionData::ByProfession($code->Profession);
-
 		for($i = 0; $i < 3; $i++) {
-			$traitLine = $professionData->IndexToId[$rawSpan->DecodeNext(4)];
+			$traitLine = $rawSpan->DecodeNext(7);
 			if($traitLine !== SpecializationId::_UNDEFINED) {
 				$choices = new TraitLineChoices();
 				for($j = 0; $j < 3; $j++)
@@ -292,7 +288,6 @@ class BinaryLoader {
 		return Arbitrary\NONE::GetInstance();
 	}
 
-	/** @remarks Requires PerProfessionData to be loaded or PerProfessionData::$LazyLoadMode to be set to something other than LazyLoadMode::NONE. */
 	public static function WriteCode(BuildCode $code) : string
 	{
 		$rawBits = new BitWriter();
@@ -308,15 +303,12 @@ class BinaryLoader {
 		
 		$rawBits->Write($code->Profession->value - 1, 4);
 
-		if(PerProfessionData::$LazyLoadMode >= LazyLoadMode::OFFLINE_ONLY) PerProfessionData::Reload($code->Profession, PerProfessionData::$LazyLoadMode < LazyLoadMode::FULL);
-		$professionData = PerProfessionData::ByProfession($code->Profession);
-
 		for($i = 0; $i < 3; $i++)
 		{
-			if($code->Specializations[$i] === null) $rawBits->Write(0, 4);
+			if($code->Specializations[$i]->SpecializationId === SpecializationId::_UNDEFINED) $rawBits->Write(0, 7);
 			else
 			{
-				$rawBits->Write($professionData->IdToIndex[$code->Specializations[$i]->SpecializationId], 4);
+				$rawBits->Write($code->Specializations[$i]->SpecializationId, 7);
 				for($j = 0; $j < 3; $j++)
 					$rawBits->Write($code->Specializations[$i]->Choices[$j]->value, 2);
 			}
@@ -608,7 +600,7 @@ class BinaryLoader {
 		$destination .= chr(0x0d); //code type
 		$destination .= chr($code->Profession->value);
 		for($i = 0; $i < 3; $i++) {
-			if($code->Specializations[$i] === null) continue;
+			if($code->Specializations[$i]->SpecializationId === SpecializationId::_UNDEFINED) continue;
 
 			$spec = $code->Specializations[$i];
 			$destination .= chr($spec->SpecializationId);

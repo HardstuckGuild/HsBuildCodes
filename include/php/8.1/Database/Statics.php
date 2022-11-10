@@ -18,7 +18,7 @@ class Statics
 
 		$potentialVersion = TextLoader::INVERSE_CHARSET[$vcValue];
 		// version may be lower or uppercase
-		if($potentialVersion > 26) $potentialVersion -= 26;
+		if($potentialVersion >= 26) $potentialVersion -= 26;
 
 		// NOTE(Rennorb): v1 codes start with the type indicator, which is never greater than 2. 
 		// since this is also the first versioned version we can conclude tha values above the current version are invalid
@@ -95,7 +95,7 @@ class Statics
 		}
 	}
 
-	public static function ResolveLegend(?Specialization $eliteSpec, ?string $str) : ?Legend
+	public static function ResolveLegend(Specialization $eliteSpec, ?string $str) : ?Legend
 	{ 
 		switch ($str) {
 			case "Legend1": return Legend::GLINT;
@@ -104,7 +104,7 @@ class Statics
 			case "Legend4": return Legend::MALLYX;
 			case "Legend5": return Legend::KALLA;
 			case "Legend6": return Legend::VENTARI;
-			case null: if($eliteSpec?->SpecializationId === SpecializationId::Vindicator) return Legend::VINDICATOR;
+			case null: if($eliteSpec->SpecializationId === SpecializationId::Vindicator) return Legend::VINDICATOR;
 			default: return null;
 		};
 	}

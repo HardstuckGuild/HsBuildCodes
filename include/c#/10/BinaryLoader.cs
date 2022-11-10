@@ -121,7 +121,6 @@ public static class BinaryLoader {
 
 	#region hardstuck codes
 
-	/// <remarks> Requires PerProfessionData to be loaded or <see cref="PerProfessionData.LazyLoadMode"/> to be set to something other than <see cref="LazyLoadMode.NONE"/>. </remarks>
 	public static BuildCode LoadBuildCode(ReadOnlySpan<byte> raw)
 	{
 		var rawSpan = new BitReader(raw);
@@ -138,11 +137,9 @@ public static class BinaryLoader {
 		Debug.Assert(code.Kind != Kind._UNDEFINED, "Code type not valid");
 		code.Profession = (Profession)1 + rawSpan.DecodeNext(4);
 
-		if(PerProfessionData.LazyLoadMode >= LazyLoadMode.OFFLINE_ONLY) PerProfessionData.Reload(code.Profession, PerProfessionData.LazyLoadMode < LazyLoadMode.FULL).Wait();
-		var professionData = PerProfessionData.ByProfession(code.Profession);
 
 		for(var i = 0; i < 3; i++) {
-			var traitLine = professionData.IndexToId[rawSpan.DecodeNext(4)];
+			var traitLine = (SpecializationId)rawSpan.DecodeNext(7);
 			if(traitLine != SpecializationId._UNDEFINED) {
 				var choices = new TraitLineChoices();
 				for(var j = 0; j < 3; j++)
@@ -300,7 +297,6 @@ public static class BinaryLoader {
 		return IArbitrary.NONE.Instance;
 	}
 
-	/// <remarks> Requires PerProfessionData to be loaded or <see cref="PerProfessionData.LazyLoadMode"/> to be set to something other than <see cref="LazyLoadMode.NONE"/>. </remarks>
 	/// <returns> The amount of bytes written. </returns>
 	public static int WriteCode(BuildCode code, Span<byte> destination)
 	{
@@ -317,17 +313,15 @@ public static class BinaryLoader {
 		
 		rawBits.Write((int)code.Profession - 1, 4);
 
-		if(PerProfessionData.LazyLoadMode >= LazyLoadMode.OFFLINE_ONLY) PerProfessionData.Reload(code.Profession, PerProfessionData.LazyLoadMode < LazyLoadMode.FULL).Wait();
-		var professionData = PerProfessionData.ByProfession(code.Profession);
 
 		for(int i = 0; i < 3; i++)
 		{
-			if(!code.Specializations[i].HasValue) rawBits.Write(0, 4);
+			if(code.Specializations[i].SpecializationId == SpecializationId._UNDEFINED) rawBits.Write(0, 7);
 			else
 			{
-				rawBits.Write(professionData.IdToIndex[code.Specializations[i]!.Value.SpecializationId], 4);
+				rawBits.Write((int)code.Specializations[i].SpecializationId, 7);
 				for(int j = 0; j < 3; j++)
-					rawBits.Write((int)code.Specializations[i]!.Value.Choices[j], 2);
+					rawBits.Write((int)code.Specializations[i].Choices[j], 2);
 			}
 		}
 
@@ -611,9 +605,9 @@ public static class BinaryLoader {
 		destination[0] = 0x0d; //code type
 		destination[1] = (byte)code.Profession;
 		for(int i = 0; i < 3; i++) {
-			if(!code.Specializations[i].HasValue) continue;
+			if(code.Specializations[i].SpecializationId == SpecializationId._UNDEFINED) continue;
 
-			var spec = code.Specializations[i]!.Value;
+			var spec = code.Specializations[i];
 			destination[2 + i * 2] = (byte)spec.SpecializationId;
 			destination[3 + i * 2] = (byte)((int)spec.Choices[0] | ((int)spec.Choices[1] << 2) | ((int)spec.Choices[2] << 4));
 		}

@@ -50,7 +50,6 @@ public static class TextLoader {
 
 	#region hardstuck codes
 
-	/// <remarks> Requires PerProfessionData to be loaded or <see cref="PerProfessionData.LazyLoadMode"/> to be set to something other than <see cref="LazyLoadMode.NONE"/>. </remarks>
 	public static BuildCode LoadBuildCode(ReadOnlySpan<char> text) {
 		var code = new BuildCode();
 		code.Version    = DecodeAndAdvance(ref text);
@@ -59,12 +58,9 @@ public static class TextLoader {
 		Debug.Assert(code.Kind != Kind._UNDEFINED, "Code type not valid");
 		code.Profession = (Profession)1 + DecodeAndAdvance(ref text);
 
-		if(PerProfessionData.LazyLoadMode >= LazyLoadMode.OFFLINE_ONLY) PerProfessionData.Reload(code.Profession, PerProfessionData.LazyLoadMode < LazyLoadMode.FULL).Wait();
-		var professionData = PerProfessionData.ByProfession(code.Profession);
-
 		for(var i = 0; i < 3; i++) {
 			if(!EatToken(ref text, '_')) {
-				var id = professionData.IndexToId[DecodeAndAdvance(ref text) + 1];
+				var id = (SpecializationId)DecodeAndAdvance(ref text, 2);
 				var mixed = DecodeAndAdvance(ref text);
 				var choices = new TraitLineChoices();
 				for(int j = 0; j < 3; j++)
@@ -259,7 +255,6 @@ public static class TextLoader {
 		else EncodeAndAdvance(ref destination, value, encodeWidth); 
 	}
 
-	/// <remarks> Requires PerProfessionData to be loaded or <see cref="PerProfessionData.LazyLoadMode"/> to be set to something other than <see cref="LazyLoadMode.NONE"/>. </remarks>
 	public static string WriteBuildCode(BuildCode code)
 	{
 		Span<char> buffer = stackalloc char[256];
@@ -267,24 +262,20 @@ public static class TextLoader {
 		return buffer[..length].ToString();
 	}
 
-	/// <remarks> Requires PerProfessionData to be loaded or <see cref="PerProfessionData.LazyLoadMode"/> to be set to something other than <see cref="LazyLoadMode.NONE"/>. </remarks>
 	/// <returns> Number of characters written. </returns>
 	public static int WriteBuildCode(BuildCode code, Span<char> destination)
 	{
-		if(PerProfessionData.LazyLoadMode >= LazyLoadMode.OFFLINE_ONLY) PerProfessionData.Reload(code.Profession, PerProfessionData.LazyLoadMode < LazyLoadMode.FULL).Wait();
-		var professionData = PerProfessionData.ByProfession(code.Profession);
-
 		var oldLen = destination.Length;
 		WriteAndAdvance(ref destination, CHARSET[code.Version]);
 		WriteAndAdvance(ref destination, CHARSET[(int)code.Kind]);
 		WriteAndAdvance(ref destination, CHARSET[(int)code.Profession - 1]);
 		for(int i = 0; i < 3; i++) {
 			var spec = code.Specializations[i];
-			if(!spec.HasValue) WriteAndAdvance(ref destination, '_');
+			if(spec.SpecializationId == SpecializationId._UNDEFINED) WriteAndAdvance(ref destination, '_');
 			else {
-				WriteAndAdvance(ref destination, CHARSET[professionData.IdToIndex[spec.Value.SpecializationId] - 1]);
+				EncodeAndAdvance(ref destination, (int)spec.SpecializationId, 2);
 				WriteAndAdvance(ref destination, CHARSET[
-					((int)spec.Value.Choices[0] << 4) | ((int)spec.Value.Choices[1] << 2) | (int)spec.Value.Choices[2]
+					((int)spec.Choices[0] << 4) | ((int)spec.Choices[1] << 2) | (int)spec.Choices[2]
 				]);
 			}
 		}
