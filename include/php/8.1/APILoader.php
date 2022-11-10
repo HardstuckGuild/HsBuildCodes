@@ -4,7 +4,7 @@ use Hardstuck\GuildWars2\BuildCodes\V2\Util\TraitLineChoices;
 
 class APILoader {
 
-	/// <summary> Produces a list of token scopes that are missing. </summary>
+	/** Produces a list of token scopes that are missing. */
 	public static function ValidateScopes(string $token) : array
 	{
 		$tokenInfo = API::RequestJson("/tokeninfo", $token);
@@ -15,10 +15,12 @@ class APILoader {
 
 	//NOTE(Rennorb): Removed Load from current character because php is not run on clients
 
-	/// <summary> This method assumes the scopes account, character and build are available, but does not explicitely test for them. </summary>
-	/// <exception cref="Gw2Sharp.WebApi.Exceptions.NotFoundException">If the character can't be found.</exception>
-	/// <exception cref="Gw2Sharp.WebApi.Exceptions.MissingScopesException"></exception>
-	/// <exception cref="Gw2Sharp.WebApi.Exceptions.InvalidAccessTokenException">If the token is not valid.</exception>
+	/** 
+	 * @remarks This method assumes the scopes account, character and build are available, but does not explicitly test for them.
+	 * @throws \Exception If the character can't be found.
+	 * @throws \Exception If scopes are missing.
+	 * @throws \Exception If the token is not valid.
+	 */
 	public static function LoadBuildCode(string $authToken, string $characterName, Kind $targetGameMode, bool $aquatic = false) : BuildCode
 	{
 		$code = new BuildCode();

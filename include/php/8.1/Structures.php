@@ -15,7 +15,7 @@ class BuildCode {
 	public WeaponSet              $WeaponSet2;
 	public AllSkills              $SlotSkills;
 	public int                    $Rune;
-	/// <summary> Note: for simplicity, pvp codes only have their amulet id set on the amulet </summary> //TODO @nocommit
+	/** Note: For simplicity, pvp codes only have their amulet id set on the amulet. */
 	public AllEquipmentStats      $EquipmentAttributes;
 	public AllEquipmentInfusions  $Infusions;
 	public int                    $Food;
@@ -86,8 +86,7 @@ enum WeaponSetNumber : int {
 	case Set2 = 2;
 }
 
-/// <remarks> All fields might be <see cref="WeaponType::_UNDEFINED"/> or <see cref="ItemId::_UNDEFINED"/> respectively.
-/// Twohanded weapons only set the main hand,->OffHand must be <see cref="WeaponType::_UNDEFINED"/> in that case. </remarks>
+/** @remarks All fields might be _UNDEFINED. Twohanded weapons only set the MainHand, OffHand must be WeaponType::_UNDEFINED in that case. */
 class WeaponSet {
 	public function __construct(
 		public WeaponType $MainHand = WeaponType::_UNDEFINED,
@@ -144,9 +143,9 @@ namespace Hardstuck\GuildWars2\BuildCodes\V2;
 
 
 class RangerData implements IProfessionSpecific {
-	/// <remarks> Is <see cref="PetId::_UNDEFINED"/> if the pet is not set. </remarks>
+	/** @remarks Is PetId::_UNDEFINED if the pet is not set. */
 	public int $Pet1 = PetId::_UNDEFINED;
-	/// <remarks> Is <see cref="PetId::_UNDEFINED"/> if the pet is not set. </remarks>
+	/** @remarks Is PetId::_UNDEFINED if the pet is not set. */
 	public int $Pet2 = PetId::_UNDEFINED;
 }
 
@@ -158,14 +157,14 @@ class PetId {
 
 class RevenantData implements IProfessionSpecific {
 	public int $Legend1 = Legend::_UNDEFINED;
-	/// <remarks> Is <see cref="Legend::_UNDEFINED"/> if the legend is not set. </remarks>
+	/** @remarks Is Legend::_UNDEFINED if the Legend is not set. */
 	public int $Legend2 = Legend::_UNDEFINED;
 
-	/// <remarks> Is <see cref="Legend::_UNDEFINED"/> if the second legend is not set. </remarks>
+	/** @remarks Is SkillId::_UNDEFINED if the second Legend is not set. */
 	public int $AltUtilitySkill1 = SkillId::_UNDEFINED;
-	/// <remarks> Is <see cref="Legend::_UNDEFINED"/> if the second legend is not set. </remarks>
+	/** @remarks Is SkillId::_UNDEFINED if the second Legend is not set. */
 	public int $AltUtilitySkill2 = SkillId::_UNDEFINED;
-	/// <remarks> Is <see cref="Legend::_UNDEFINED"/> if the second legend is not set. </remarks>
+	/** @remarks Is SkillId::_UNDEFINED if the second Legend is not set. */
 	public int $AltUtilitySkill3 = SkillId::_UNDEFINED;
 }
 
@@ -174,19 +173,19 @@ class Legend {
 	use Util\First;
 
 	public const _UNDEFINED = 0;
-	/// <summary> Assasin </summary>
+	/** Assasin */
 	public const SHIRO = 1;
-	/// <summary> Dragon </summary>
+	/** Dragon */
 	public const GLINT = 2;
-	/// <summary> Deamon </summary>
+	/** Deamon */
 	public const MALLYX = 3;
-	/// <summary> Dwarf </summary>
+	/** Dwarf */
 	public const JALIS = 4;
-	/// <summary> Centaur </summary>
+	/** Centaur */
 	public const VENTARI = 5;
-	/// <summary> Renegate </summary>
+	/** Renegate */
 	public const KALLA = 6;
-	/// <summary> Alliance </summary>
+	/** Alliance */
 	public const VINDICATOR = 7;
 }
 

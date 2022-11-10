@@ -47,13 +47,13 @@ class PerProfessionData {
 		$this->_lastUpdate = new \DateTime("1970-01-01");
 	}
 
-	/// <remarks> Once loaded also converts 0 &lt;-&gt; 0 for _UNDEFINED passthrough. </remarks>
+	/** @remarks Once loaded also converts 0 &lt;-&gt; 0 for _UNDEFINED passthrough. */
 	public $PalletteToSkill = [];
-	/// <remarks> Once loaded also converts 0 &lt;-&gt; 0 for _UNDEFINED passthrough. </remarks>
+	/** @remarks Once loaded also converts 0 &lt;-&gt; 0 for _UNDEFINED passthrough. */
 	public $SkillToPallette = [];
-	/// <remarks> Once loaded also converts 0 &lt;-&gt; 0 for _UNDEFINED passthrough. Indices are offset by 1. </remarks>
+	/** @remarks Once loaded also converts 0 &lt;-&gt; 0 for _UNDEFINED passthrough. Indices are offset by 1. */
 	public $IndexToId = [];
-	/// <remarks> Once loaded also converts 0 &lt;-&gt; 0 for _UNDEFINED passthrough. Indices are offset by 1. </remarks>
+	/** @remarks Once loaded also converts 0 &lt;-&gt; 0 for _UNDEFINED passthrough. Indices are offset by 1. */
 	public $IdToIndex = [];
 
 	public function TryInsertSkill(int $palletteId, int $skillId) : bool
@@ -113,7 +113,7 @@ class PerProfessionData {
 		}
 	}
 
-	/// <remarks> This will only ever add new entries, never remove them. </remarks>
+	/** @remarks This will only ever add new entries, never remove them. */
 	public static function ReloadAll(bool $skipOnline = false) : void
 	{
 		//TODO(Rennorb): make parallel
@@ -124,7 +124,7 @@ class PerProfessionData {
 		}
 	}
 
-	/// <remarks> This will only ever add new entries, never remove them. </remarks>
+	/** @remarks This will only ever add new entries, never remove them. */
 	public static function Reload(Profession $profession, bool $skipOnline = false) : void
 	{
 		$targetData = PerProfessionData::ByProfession($profession);
@@ -166,6 +166,7 @@ class PerProfessionData {
 			$targetData->ReloadFromOfflineFiles($profession);
 		}
 
+		//NOTE(Rennorb): no trimming either
 		//$targetData->TrimExcess();
 
 		$targetData->_lastUpdate = new \DateTime();

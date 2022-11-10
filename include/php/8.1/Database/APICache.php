@@ -51,8 +51,9 @@ class APICache {
 		return WeaponType::fromName($itemData->details->type);
 	}
 
-	/// <returns><see cref="StatId::_UNDEFINED"/> if the item does not have stats</returns>
-	/// <exception cref="InvalidOperationException">sad</exception>
+	/** 
+	 * @return StatId StatId::_UNDEFINED if the item does not have stats.
+	 */
 	public static function ResolveStatId(int $itemId) : StatId
 	{
 		$itemData = APICache::Get("/items/$itemId");

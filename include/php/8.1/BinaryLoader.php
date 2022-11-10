@@ -116,7 +116,7 @@ class BitWriter {
 class BinaryLoader {
 	#region hardstuck codes
 
-	/// <remarks> Requires PerProfessionData to be loaded or <see cref="PerProfessionData::LazyLoadMode"/> to be set to something other than <see cref="LazyLoadMode.NONE"/>. </remarks>
+	/** @remarks Requires PerProfessionData to be loaded or PerProfessionData::$LazyLoadMode to be set to something other than LazyLoadMode::NONE. */
 	public static function LoadBuildCode(string $raw) : BuildCode
 	{
 		$rawSpan = new BitReader($raw);
@@ -292,7 +292,7 @@ class BinaryLoader {
 		return Arbitrary\NONE::GetInstance();
 	}
 
-	/// <remarks> Requires PerProfessionData to be loaded or <see cref="PerProfessionData::LazyLoadMode"/> to be set to something other than <see cref="LazyLoadMode.NONE"/>. </remarks>
+	/** @remarks Requires PerProfessionData to be loaded or PerProfessionData::$LazyLoadMode to be set to something other than LazyLoadMode::NONE. */
 	public static function WriteCode(BuildCode $code) : string
 	{
 		$rawBits = new BitWriter();
@@ -479,8 +479,10 @@ class BinaryLoader {
 
 	#region official codes
 
-	/// <remarks> Requires PerProfessionData to be loaded or <see cref="PerProfessionData::LazyLoadMode"/> to be set to something other than <see cref="LazyLoadMode.NONE"/>. </remarks>
-	/** @param string $raw binary string */
+	/**
+	 * @param string $raw binary string
+	 * @remarks Requires PerProfessionData to be loaded or PerProfessionData::$LazyLoadMode to be set to something other than LazyLoadMode::NONE.
+	 */
 	public static function LoadOfficialBuildCode(string $raw, bool $aquatic = false) : BuildCode
 	{
 		$rawView = new StringView($raw);
@@ -596,7 +598,7 @@ class BinaryLoader {
 		}
 	}
 
-	/// <remarks> Requires PerProfessionData to be loaded or <see cref="PerProfessionData::LazyLoadMode"/> to be set to something other than <see cref="LazyLoadMode.NONE"/>. </remarks>
+	/** @remarks Requires PerProfessionData to be loaded or PerProfessionData::$LazyLoadMode to be set to something other than LazyLoadMode::NONE. */
 	public static function WriteOfficialBuildCode(BuildCode $code, bool $aquatic = false) : string
 	{
 		$destination = '';

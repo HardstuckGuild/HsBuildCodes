@@ -162,13 +162,13 @@ class AllEquipmentStats implements \ArrayAccess {
 	public int $Accessory2         = StatId::_UNDEFINED;
 	public int $Ring1              = StatId::_UNDEFINED;
 	public int $Ring2              = StatId::_UNDEFINED;
-	/// <remarks> Is <see cref="StatId::_UNDEFINED"/> if the weapon is not set. </remarks>
+	/** @remarks Is StatId::_UNDEFINED if the weapon is not set. */
 	public int $WeaponSet1MainHand = StatId::_UNDEFINED;
-	/// <remarks> Is <see cref="StatId::_UNDEFINED"/> if the weapon is not set. </remarks>
+	/** @remarks Is StatId::_UNDEFINED if the weapon is not set. */
 	public int $WeaponSet1OffHand  = StatId::_UNDEFINED;
-	/// <remarks> Is <see cref="StatId::_UNDEFINED"/> if the weapon is not set. </remarks>
+	/** @remarks Is StatId::_UNDEFINED if the weapon is not set. */
 	public int $WeaponSet2MainHand = StatId::_UNDEFINED;
-	/// <remarks> Is <see cref="StatId::_UNDEFINED"/> if the weapon is not set. </remarks>
+	/** @remarks Is StatId::_UNDEFINED if the weapon is not set. */
 	public int $WeaponSet2OffHand  = StatId::_UNDEFINED;
 	public int $Amulet             = StatId::_UNDEFINED;
 
@@ -367,7 +367,7 @@ class AllEquipmentInfusions implements \ArrayAccess {
 	/** @param int $offset */
 	public function offsetExists(mixed $offset) : bool { return 0 <= $offset && $offset <= 20; }
 
-	//NOTE(Rennorb): it isnt realy optimal to use this performance wise, but its very convenient.
+	//NOTE(Rennorb): It isn't really optimal to use this performance wise, but its very convenient.
 	public function HasAny() : bool
 	{
 		for($i = 0; $i < Statics::ALL_INFUSION_COUNT; $i++)

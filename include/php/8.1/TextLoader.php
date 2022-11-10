@@ -36,7 +36,7 @@ class TextLoader {
 		return $value;
 	}
 
-	/// <summary> eats the <paramref name="token"/> from <paramref name="text"/> if it is the right one. otherwise does nothing</summary>
+	/** Eats the token from view if it is the right one, otherwise does nothing. */
 	public static function EatToken(StringView $view, string $token) : bool
 	{
 		if($view->Data[$view->Pos] === $token) {
@@ -48,7 +48,7 @@ class TextLoader {
 
 	#region hardstuck codes
 
-	/// <remarks> Requires PerProfessionData to be loaded or <see cref="PerProfessionData::LazyLoadMode"/> to be set to something other than <see cref="LazyLoadMode.NONE"/>. </remarks>
+	/** @remarks Requires PerProfessionData to be loaded or PerProfessionData::$LazyLoadMode to be set to something other than LazyLoadMode::NONE. */
 	public static function LoadBuildCode(string $text) : BuildCode {
 		assert(strlen($text) > 10, "Code too short");
 		$view = new StringView($text);
@@ -230,13 +230,6 @@ class TextLoader {
 		return Arbitrary\NONE::GetInstance();
 	}
 
-
-	//TODO(Rennorb): performance
-	public static function WriteAndAdvance(string &$destination, string $chr) : void
-	{
-		$destination .= $chr;
-	}
-
 	//TODO(Rennorb): performance
 	public static function EncodeAndAdvance(string &$destination, int $value, int $width) : void
 	{
@@ -252,7 +245,7 @@ class TextLoader {
 
 	public static function EncodeOrUnderscoreOnZeroAndAdvance(string &$destination, int $value, int $encodeWidth) : void
 	{
-		if($value === 0) TextLoader::WriteAndAdvance($destination, '_');
+		if($value === 0) $destination .= '_';
 		else TextLoader::EncodeAndAdvance($destination, $value, $encodeWidth); 
 	}
 
@@ -264,34 +257,34 @@ class TextLoader {
 
 		$destination = '';
 
-		TextLoader::WriteAndAdvance($destination, TextLoader::CHARSET[$code->Version]);
-		TextLoader::WriteAndAdvance($destination, TextLoader::CHARSET[$code->Kind->value]);
-		TextLoader::WriteAndAdvance($destination, TextLoader::CHARSET[$code->Profession->value - 1]);
+		$destination .= TextLoader::CHARSET[$code->Version];
+		$destination .= TextLoader::CHARSET[$code->Kind->value];
+		$destination .= TextLoader::CHARSET[$code->Profession->value - 1];
 		for($i = 0; $i < 3; $i++) {
 			$spec = $code->Specializations[$i];
-			if($spec === null) TextLoader::WriteAndAdvance($destination, '_');
+			if($spec === null) $destination .= '_';
 			else {
-				TextLoader::WriteAndAdvance($destination, TextLoader::CHARSET[$professionData->IdToIndex[$spec->SpecializationId] - 1]);
-				TextLoader::WriteAndAdvance($destination, TextLoader::CHARSET[
+				$destination .= TextLoader::CHARSET[$professionData->IdToIndex[$spec->SpecializationId] - 1];
+				$destination .= TextLoader::CHARSET[
 					($spec->Choices[0]->value << 4) | ($spec->Choices[1]->value << 2) | $spec->Choices[2]->value
-				]);
+				];
 			}
 		}
 		
-		if(!$code->WeaponSet1->HasAny()) TextLoader::WriteAndAdvance($destination, '~');
+		if(!$code->WeaponSet1->HasAny()) $destination .= '~';
 		else
 		{
-			if($code->WeaponSet1->MainHand === WeaponType::_UNDEFINED) TextLoader::WriteAndAdvance($destination, '_');
-			else TextLoader::WriteAndAdvance($destination, TextLoader::CHARSET[$code->WeaponSet1->MainHand->value - WeaponType::_FIRST()]);
-			if($code->WeaponSet1->Sigil1 === ItemId::_UNDEFINED) TextLoader::WriteAndAdvance($destination, '_');
+			if($code->WeaponSet1->MainHand === WeaponType::_UNDEFINED) $destination .= '_';
+			else $destination .= TextLoader::CHARSET[$code->WeaponSet1->MainHand->value - WeaponType::_FIRST()];
+			if($code->WeaponSet1->Sigil1 === ItemId::_UNDEFINED) $destination .= '_';
 			else TextLoader::EncodeAndAdvance($destination, $code->WeaponSet1->Sigil1, 3);
 
-			if(!$code->WeaponSet2->HasAny()) TextLoader::WriteAndAdvance($destination, '~');
+			if(!$code->WeaponSet2->HasAny()) $destination .= '~';
 			else
 			{
-				if($code->WeaponSet2->MainHand === WeaponType::_UNDEFINED) TextLoader::WriteAndAdvance($destination, '_');
-				else TextLoader::WriteAndAdvance($destination, TextLoader::CHARSET[$code->WeaponSet2->MainHand->value - WeaponType::_FIRST()]);
-				if($code->WeaponSet2->Sigil1 === ItemId::_UNDEFINED) TextLoader::WriteAndAdvance($destination, '_');
+				if($code->WeaponSet2->MainHand === WeaponType::_UNDEFINED) $destination .= '_';
+				else $destination .= TextLoader::CHARSET[$code->WeaponSet2->MainHand->value - WeaponType::_FIRST()];
+				if($code->WeaponSet2->Sigil1 === ItemId::_UNDEFINED) $destination .= '_';
 				else TextLoader::EncodeAndAdvance($destination, $code->WeaponSet2->Sigil1, 3);
 			}
 		}
@@ -306,7 +299,7 @@ class TextLoader {
 
 		if($code->Kind !== Kind::PvP)
 		{
-			if(!$code->Infusions->HasAny()) TextLoader::WriteAndAdvance($destination, '~');
+			if(!$code->Infusions->HasAny()) $destination .= '~';
 			else TextLoader::EncodeInfusionsAndAdvance($destination, $code);
 
 			TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $code->Food, 3);
@@ -348,7 +341,7 @@ class TextLoader {
 				if($lastStat !== null)
 				{
 					TextLoader::EncodeAndAdvance($destination, $lastStat, 2);
-					TextLoader::WriteAndAdvance($destination, TextLoader::CHARSET[$repeatCount]);
+					$destination .= TextLoader::CHARSET[$repeatCount];
 				}
 
 				$lastStat = $weaponRef->EquipmentAttributes[$i];
@@ -362,7 +355,7 @@ class TextLoader {
 
 		TextLoader::EncodeAndAdvance($destination, $lastStat, 2);
 		if($repeatCount > 1)
-			TextLoader::WriteAndAdvance($destination, TextLoader::CHARSET[$repeatCount]);
+			$destination .= TextLoader::CHARSET[$repeatCount];
 	}
 
 	private static function EncodeInfusionsAndAdvance(string &$destination, BuildCode $weaponRef) : void
@@ -393,7 +386,7 @@ class TextLoader {
 				if($lastInfusion !== ItemId::_UNDEFINED)
 				{
 					TextLoader::EncodeAndAdvance($destination, $lastInfusion, 3);
-					TextLoader::WriteAndAdvance($destination, TextLoader::CHARSET[$repeatCount]);
+					$destination .= TextLoader::CHARSET[$repeatCount];
 				}
 
 				$lastInfusion = $weaponRef->Infusions[$i];
@@ -407,7 +400,7 @@ class TextLoader {
 
 		TextLoader::EncodeAndAdvance($destination, $lastInfusion, 2);
 		if($repeatCount > 1)
-			TextLoader::WriteAndAdvance($destination, TextLoader::CHARSET[$repeatCount]);
+			$destination .= TextLoader::CHARSET[$repeatCount];
 	}
 
 	private static function EncodeProfessionArbitrary(string &$destination, IProfessionSpecific $professionSpecific) : void
@@ -417,7 +410,7 @@ class TextLoader {
 			case RangerData::class:
 				/** @var RangerData $rangerData */
 				$rangerData = $professionSpecific;
-				if($rangerData->Pet1 === PetId::_UNDEFINED && $rangerData->Pet2 === PetId::_UNDEFINED) TextLoader::WriteAndAdvance($destination, '~');
+				if($rangerData->Pet1 === PetId::_UNDEFINED && $rangerData->Pet2 === PetId::_UNDEFINED) $destination .= '~';
 				else
 				{
 					TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $rangerData->Pet1, 2);
@@ -428,11 +421,11 @@ class TextLoader {
 			case RevenantData::class:
 				/** @var RevenantData $revenantData */
 				$revenantData = $professionSpecific;
-				TextLoader::WriteAndAdvance($destination, TextLoader::CHARSET[$revenantData->Legend1 - Legend::_FIRST()]);
-				if($revenantData->Legend2 === Legend::_UNDEFINED) TextLoader::WriteAndAdvance($destination, '_');
+				$destination .= TextLoader::CHARSET[$revenantData->Legend1 - Legend::_FIRST()];
+				if($revenantData->Legend2 === Legend::_UNDEFINED) $destination .= '_';
 				else
 				{
-					TextLoader::WriteAndAdvance($destination, TextLoader::CHARSET[$revenantData->Legend2 - Legend::_FIRST()]);
+					$destination .= TextLoader::CHARSET[$revenantData->Legend2 - Legend::_FIRST()];
 					TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $revenantData->AltUtilitySkill1, 3);
 					TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $revenantData->AltUtilitySkill2, 3);
 					TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $revenantData->AltUtilitySkill3, 3);
@@ -451,7 +444,10 @@ class TextLoader {
 
 	#region official codes
 
-	/// <inheritdoc cref="BinaryLoader.LoadOfficialBuildCode(ReadOnlySpan{byte}, bool)"/>
+	/**
+	 * @param string $chatLink base64 encoded raw link (without [&...]) or full link (with [&...])
+	 * @remarks Requires PerProfessionData to be loaded or PerProfessionData::$LazyLoadMode to be set to something other than LazyLoadMode::NONE.
+	 */
 	public static function LoadOfficialBuildCode(string $chatLink, bool $aquatic = false) : BuildCode
 	{
 		$base64 = $chatLink[0] === '[' ? substr($chatLink, 2, strlen($chatLink) - 3) : $chatLink;
@@ -459,7 +455,7 @@ class TextLoader {
 		return BinaryLoader::LoadOfficialBuildCode($buffer, $aquatic);
 	}
 
-	/// <inheritdoc cref="BinaryLoader.WriteOfficialBuildCode(BuildCode, Span{byte}, bool)"/>
+	/** @remarks Requires PerProfessionData to be loaded or PerProfessionData::$LazyLoadMode to be set to something other than LazyLoadMode::NONE. */
 	public static function WriteOfficialBuildCode(BuildCode $code, bool $aquatic = false) : string
 	{
 		$buffer = BinaryLoader::WriteOfficialBuildCode($code, $aquatic);

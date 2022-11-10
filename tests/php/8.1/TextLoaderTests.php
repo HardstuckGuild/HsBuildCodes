@@ -25,6 +25,7 @@ use Hardstuck\GuildWars2\BuildCodes\V2\Util\TraitLineChoices;
 set_include_path(__DIR__.'/../../../include/common/');
 
 class FunctionTests extends TestCase {
+
 	/** @test */
 	public function DecodeValueFixed()
 	{

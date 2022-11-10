@@ -1,32 +1,5 @@
 <?php namespace Hardstuck\GuildWars2\BuildCodes\V2\Util;
 
-class Statics {
-	public static function SliceAndAdvance(int $index, string &$input) : string
-	{
-		$ret = substr($input, 0, $index);
-		$input = substr($input, $index);
-		return $ret;
-	}
-
-	/** @return int first character */
-	public static function SliceAndAdvance1(string &$input) : int
-	{
-		$ret = $input[0];
-		$input = substr($input, 1);
-		return ord($ret);
-	}
-
-	public static function SliceAndAdvancePlus1(int $index, string &$input) : string
-	{
-		$ret = substr($input, 0, $index);
-		$input = substr($input, $index + 1);
-		return $ret;
-	}
-
-	private function __construct() {}
-	private function __clone() {}
-}
-
 trait FromName {
 	public static function fromName(string $name) : static
 	{

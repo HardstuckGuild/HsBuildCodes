@@ -1,7 +1,7 @@
 <?php namespace Hardstuck\GuildWars2\BuildCodes\V2;
 
 class Overrides {
-	/// <remarks> Requires PerProfessionData for Revs to be loaded first. </remarks>
+	/** @remarks Requires PerProfessionData for Revs to be loaded first. */
 	public static function RevPalletteToSkill(int $legend, int $palletteId) : int
 	{
 		switch($palletteId) {
@@ -54,7 +54,7 @@ class Overrides {
 			return PerProfessionData::$Revenant->PalletteToSkill[$palletteId];
 	}
 
-	/// <remarks> Requires PerProfessionData for Revs to be loaded first. </remarks>
+	/** @remarks Requires PerProfessionData for Revs to be loaded first. */
 	public static function RevSkillToPallette(SkillId $skillId) : int
 	{
 		switch($skillId->value) {

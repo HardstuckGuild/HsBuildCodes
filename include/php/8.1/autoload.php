@@ -6,7 +6,6 @@ spl_autoload_register(function($class) {
 	$relNamespace = substr($class, strlen(__NAMESPACE__));
 	//print "\n$class - ".__NAMESPACE__." -> [[$relNamespace]]\n";
 	switch($relNamespace) {
-		case '\Util\Statics':
 		case '\Util\StringView':
 		case '\APILoader':
 		case '\TextLoader':

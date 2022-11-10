@@ -1,5 +1,6 @@
 <?php namespace Hardstuck\GuildWars2\BuildCodes\V2;
 
+/** @remarks Incomplete, mostly for fixing 'curiosities' in the API. */
 class SpecializationId {
 	use Util\Enum;
 

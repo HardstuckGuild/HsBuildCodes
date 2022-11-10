@@ -1,6 +1,6 @@
 <?php namespace Hardstuck\GuildWars2\BuildCodes\V2;
 
-/// <summary> incomplete, mostly for fixing 'curiositys' in the api </summary>
+/** @remarks Incomplete, mostly for fixing 'curiosities' in the API. */
 class StatId  {
 	use Util\Enum;
 
