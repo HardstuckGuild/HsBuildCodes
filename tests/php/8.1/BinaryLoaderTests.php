@@ -1,5 +1,7 @@
 <?php namespace Hardstuck\GuildWars2\BuildCodes\V2\Tests\Binary;
 
+require_once 'TestUtilities.php';
+
 use PHPUnit\Framework\TestCase;
 use Hardstuck\GuildWars2\BuildCodes\V2;
 use Hardstuck\GuildWars2\BuildCodes\V2\BinaryLoader;
@@ -20,6 +22,7 @@ use Hardstuck\GuildWars2\BuildCodes\V2\Specialization;
 use Hardstuck\GuildWars2\BuildCodes\V2\SpecializationId;
 use Hardstuck\GuildWars2\BuildCodes\V2\Statics;
 use Hardstuck\GuildWars2\BuildCodes\V2\StatId;
+use Hardstuck\GuildWars2\BuildCodes\V2\Tests\TestUtilities;
 use Hardstuck\GuildWars2\BuildCodes\V2\TraitLineChoice;
 use Hardstuck\GuildWars2\BuildCodes\V2\Util\TraitLineChoices;
 
@@ -208,7 +211,7 @@ class BasicCodeTests extends TestCase {
 	/** @test */
 	public function ShouldThrowTooShort()
 	{
-		$rawCode = 'c'.chr(0x2);
+		$rawCode = 'd'.chr(0x2);
 		$this->expectWarning();
 		$this->expectWarningMessage("Uninitialized string offset 2");
 		$code = BinaryLoader::LoadBuildCode($rawCode);
@@ -220,22 +223,9 @@ class BasicCodeTests extends TestCase {
 		if($lazyload) PerProfessionData::$LazyLoadMode = LazyLoadMode::OFFLINE_ONLY;
 		else PerProfessionData::Reload(Profession::Guardian, true);
 
-		$rawCode = BasicCodeTests::BitStringToBytes(
-			"c" . //version
-			"00" . //type
-			"0000" . //profession
-			"0000000_0000000_0000000" . //traits
-			"00000" . //weapons
-			"000000000000000000000001" . //skills
-			"000000000000000000000010" .
-			"000000000000000000000011" .
-			"000000000000000000000100" .
-			"000000000000000000000101" .
-			"000000000000000000000000" . //rune
-			"0000000000000001" //stats (pvp)
-		 );
+		$rawCode = BasicCodeTests::BitStringToBytes(TestUtilities::$CodesV2Binary["minimal-pvp-with-skills"]);
 		$code = BinaryLoader::LoadBuildCode($rawCode);
-		$this->assertEquals(2                   , $code->Version);
+		$this->assertEquals(3                   , $code->Version);
 		$this->assertEquals(Kind::PvP           , $code->Kind);
 		$this->assertEquals(Profession::Guardian, $code->Profession);
 		for($i = 0; $i < 3; $i++)
@@ -264,26 +254,9 @@ class BasicCodeTests extends TestCase {
 		if($lazyload) PerProfessionData::$LazyLoadMode = LazyLoadMode::OFFLINE_ONLY;
 		else PerProfessionData::Reload(Profession::Guardian, true);
 
-		$rawCode = BasicCodeTests::BitStringToBytes(
-			"c" . //version
-			"10" . //type
-			"0000" . //profession
-			"0000000_0000000_0000000" . //traits
-			"00000" . //weapons
-			"000000000000000000000000" . //skills
-			"000000000000000000000000" .
-			"000000000000000000000000" .
-			"000000000000000000000000" .
-			"000000000000000000000000" .
-			"000000000000000000000000" . //rune
-			"0000000000000001" . //stats (pve)
-			"1100" .
-			"000000000000000000000000" . // infusions
-			"000000000000000000000000" . // food
-			"000000000000000000000000" // utility
-		 );
+		$rawCode = BasicCodeTests::BitStringToBytes(TestUtilities::$CodesV2Binary["minimal-pve"]);
 		$code = BinaryLoader::LoadBuildCode($rawCode);
-		$this->assertEquals(2                   , $code->Version);
+		$this->assertEquals(3                   , $code->Version);
 		$this->assertEquals(Kind::PvE           , $code->Kind);
 		$this->assertEquals(Profession::Guardian, $code->Profession);
 		for($i = 0; $i < 3; $i++)
@@ -311,25 +284,7 @@ class BasicCodeTests extends TestCase {
 		if($lazyload) PerProfessionData::$LazyLoadMode = LazyLoadMode::OFFLINE_ONLY;
 		else PerProfessionData::Reload(Profession::Ranger, true);
 
-		$rawCode = BasicCodeTests::BitStringToBytes(
-			"c" . //version
-			"10" . //type
-			"0011" . //profession
-			"0000000_0000000_0000000" . //traits
-			"00000" . //weapons
-			"000000000000000000000000" . //skills
-			"000000000000000000000000" .
-			"000000000000000000000000" .
-			"000000000000000000000000" .
-			"000000000000000000000000" .
-			"000000000000000000000000" . //rune
-			"0000000000000001" . //stats (pve)
-			"1100" .
-			"000000000000000000000000" . // infusions
-			"111100000000000000000110" . // food
-			"111100000000000000000110" . // utility
-			"0000000" // pets
-		 );
+		$rawCode = BasicCodeTests::BitStringToBytes(TestUtilities::$CodesV2Binary["minimal-ranger"]);
 		$code = BinaryLoader::LoadBuildCode($rawCode);
 		$this->assertEquals(Profession::Ranger, $code->Profession);
 		$this->assertInstanceOf(RangerData::class, $code->ProfessionSpecific);
@@ -344,25 +299,7 @@ class BasicCodeTests extends TestCase {
 		if($lazyload) PerProfessionData::$LazyLoadMode = LazyLoadMode::OFFLINE_ONLY;
 		else PerProfessionData::Reload(Profession::Revenant, true);
 
-		$rawCode = BasicCodeTests::BitStringToBytes(
-			"c" . //version
-			"10" . //type
-			"1000" . //profession
-			"0000000_0000000_0000000" . //traits
-			"00000" . //weapons
-			"000000000000000000000000" . //skills
-			"000000000000000000000000" .
-			"000000000000000000000000" .
-			"000000000000000000000000" .
-			"000000000000000000000000" .
-			"000000000000000000000000" . //rune
-			"0000000000000001" . //stats (pve)
-			"1100" .
-			"000000000000000000000000" . // infusions
-			"000000000000000000000000" . // food
-			"000000000000000000000000" . // utility
-			"0001_0000" // legends
-		 );
+		$rawCode = BasicCodeTests::BitStringToBytes(TestUtilities::$CodesV2Binary["minimal-revenant"]);
 		$code = BinaryLoader::LoadBuildCode($rawCode);
 		$this->assertEquals(Profession::Revenant, $code->Profession);
 		$this->assertInstanceOf(RevenantData::class, $code->ProfessionSpecific);
@@ -380,25 +317,7 @@ class BasicCodeTests extends TestCase {
 		if($lazyload) PerProfessionData::$LazyLoadMode = LazyLoadMode::OFFLINE_ONLY;
 		else PerProfessionData::Reload(Profession::Revenant, true);
 
-		$rawCode = BasicCodeTests::BitStringToBytes(
-			"c" . //version
-			"10" . //type
-			"1000" . //profession
-			"0000000_0000000_0000000" . //traits
-			"00000" . //weapons
-			"000000000000000000000000" . //skills
-			"000000000000000000000000" .
-			"000000000000000000000000" .
-			"000000000000000000000000" .
-			"000000000000000000000000" .
-			"000000000000000000000000" . //rune
-			"0000000000000001" . //stats (pve)
-			"1100" .
-			"000000000000000000000000" . // infusions
-			"000000000000000000000000" . // food
-			"000000000000000000000000" . // utility
-			"0001_0000" // legends
-		 );
+		$rawCode = BasicCodeTests::BitStringToBytes(TestUtilities::$CodesV2Binary["minimal-revenant"]);
 		$code = BinaryLoader::LoadBuildCode($rawCode);
 
 		$result = BinaryLoader::WriteCode($code);
@@ -418,7 +337,7 @@ class OfficialChatLinks extends TestCase
 		if($lazyload) PerProfessionData::$LazyLoadMode = LazyLoadMode::OFFLINE_ONLY;
 		else PerProfessionData::Reload(Profession::Necromancer, true);
 
-		$fullLink = "[&DQg1KTIlIjbBEgAAgQB1AUABgQB1AUABlQCVAAAAAAAAAAAAAAAAAAAAAAA=]";
+		$fullLink = TestUtilities::$CodesIngame["full-necro"];
 		$base64   = substr($fullLink, 2, strlen($fullLink) - 3);
 		$raw = base64_decode($base64);
 		$code = BinaryLoader::LoadOfficialBuildCode($raw);
@@ -484,7 +403,7 @@ class OfficialChatLinks extends TestCase
 
 		$buffer = BinaryLoader::WriteOfficialBuildCode($code);
 
-		$reference = "[&DQg1KTIlIjbBEgAAgQAAAEABAAB1AQAAlQAAAAAAAAAAAAAAAAAAAAAAAAA=]";
+		$reference = TestUtilities::$CodesIngame["full-necro2"];
 		$referenceBase64 = substr($reference, 2, strlen($reference) - 3);
 		$referenceBytes = base64_decode($referenceBase64);
 
@@ -497,7 +416,7 @@ class OfficialChatLinks extends TestCase
 		if($lazyload) PerProfessionData::$LazyLoadMode = LazyLoadMode::OFFLINE_ONLY;
 		else PerProfessionData::Reload(Profession::Revenant, true);
 
-		$fullLink = "[&DQkAAAAARQDcEdwRAAAAACsSAADUEQAAAAAAAAQCAwDUESsSAAAAAAAAAAA=]";
+		$fullLink = TestUtilities::$CodesIngame["partial-revenant"];
 		$base64   = substr($fullLink, 2, strlen($fullLink) - 3);
 		$raw = base64_decode($base64);
 		$code = BinaryLoader::LoadOfficialBuildCode($raw);

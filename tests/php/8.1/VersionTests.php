@@ -1,31 +1,30 @@
 <?php namespace Hardstuck\GuildWars2\BuildCodes\V2\Tests\API;
 
+require_once 'TestUtilities.php';
+
 use Hardstuck\GuildWars2\BuildCodes\V2\Statics;
+use Hardstuck\GuildWars2\BuildCodes\V2\Tests\TestUtilities;
+use Hardstuck\GuildWars2\BuildCodes\V2\TextLoader;
 use PHPUnit\Framework\TestCase;
 
 class VersionTests extends TestCase {
 	public function DataProvider() {
 		$invalidCodes = [
-			'x____________________________',
+			TestUtilities::$CodesInvalid["wrong-version"],
 		];
 		
-		$v1Codes = [
-			'v0_-------------------------',
-			"adbacadacahaaaa-aIvt-aHalaa-jNq_GQtg_GSl_GSG_GSl_GSG-ao-aj",
-			"abaccadaaagacckpsr-acbac-cfc-cfb-cfm_GTxg_ift_ifw_ifw_ift",
-			"acacacbccbhbbbdoNKId-jNn_GTug_GQx_GTJ",
-			"cgcacceaccfccaKLvMJighj_Abt_gQM_Dck_gQM_Dck",
-		];
+		$v1Codes = TestUtilities::$CodesV1;
 		
-		$v2Codes = [
-			'c_____________',
-			'C_____________',
-		];
+		$v2Codes = TestUtilities::$CodesV2;
 
 		return array_merge(
 			array_map(fn($code) => [$code, -1], $invalidCodes),
 			array_map(fn($code) => [$code, 1], $v1Codes),
-			array_map(fn($code) => [$code, 2], $v2Codes),
+			array_map(function($code) {
+				$version = TextLoader::INVERSE_CHARSET[ord($code[0])];
+				if($version >= 26) $version -= 26;
+				return [$code, $version];
+			}, $v2Codes),
 		 );
 	}
 

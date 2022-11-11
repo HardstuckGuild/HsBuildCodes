@@ -45,7 +45,7 @@ public class BasicCodesTests {
 	public void ShouldThrowVersion()
 	{
 		Assert.ThrowsAny<Exception>(() => {
-			var code = TextLoader.LoadBuildCode("Xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+			var code = TextLoader.LoadBuildCode(TestUtilities.CodesInvalid["wrong-version"]);
 		});
 	}
 
@@ -53,7 +53,7 @@ public class BasicCodesTests {
 	public void ShouldThrowTooShort()
 	{
 		Assert.ThrowsAny<Exception>(() => {
-			var code = TextLoader.LoadBuildCode("Ctoo-short");
+			var code = TextLoader.LoadBuildCode(TestUtilities.CodesInvalid["too-short"]);
 		});
 	}
 
@@ -61,19 +61,19 @@ public class BasicCodesTests {
 	public void ShouldThrowInvalidCharacters()
 	{
 		Assert.ThrowsAny<Exception>(() => {
-			var code = TextLoader.LoadBuildCode("C���������������������������������������������������������������������");
+			var code = TextLoader.LoadBuildCode(TestUtilities.CodesInvalid["invalid-chars"]);
 		});
 	}
 
 	[Fact]
 	public void MinimalPvP()
 	{
-		var code = TextLoader.LoadBuildCode("CpA___~______B~");
-		Assert.Equal(2                  , code.Version);
+		var code = TextLoader.LoadBuildCode(TestUtilities.CodesV2["minimal-pvp"]);
+		Assert.Equal(3                  , code.Version);
 		Assert.Equal(Kind.PvP           , code.Kind);
 		Assert.Equal(Profession.Guardian, code.Profession);
 		for(int i = 0; i < 3; i++)
-			Assert.Null(code.Specializations[i]);
+			Assert.Equal(SpecializationId._UNDEFINED, code.Specializations[i].SpecializationId);
 		Assert.False(code.WeaponSet1.HasAny);
 		Assert.False(code.WeaponSet2.HasAny);
 		for(int i = 0; i < 5; i++)
@@ -95,12 +95,12 @@ public class BasicCodesTests {
 	[Fact]
 	public void MinimalPvE()
 	{
-		var code = TextLoader.LoadBuildCode("CoA___~______B~M~__");
-		Assert.Equal(2                  , code.Version);
+		var code = TextLoader.LoadBuildCode(TestUtilities.CodesV2["minimal-pve"]);
+		Assert.Equal(3                  , code.Version);
 		Assert.Equal(Kind.PvE           , code.Kind);
 		Assert.Equal(Profession.Guardian, code.Profession);
 		for(int i = 0; i < 3; i++)
-			Assert.Null(code.Specializations[i]);
+			Assert.Equal(SpecializationId._UNDEFINED, code.Specializations[i].SpecializationId);
 		Assert.False(code.WeaponSet1.HasAny);
 		Assert.False(code.WeaponSet2.HasAny);
 		for(int i = 0; i < 5; i++)
@@ -121,7 +121,7 @@ public class BasicCodesTests {
 	[Fact]
 	public void MinimalRanger()
 	{
-		var code = TextLoader.LoadBuildCode("CoD___~______A~M~__~");
+		var code = TextLoader.LoadBuildCode(TestUtilities.CodesV2["minimal-ranger"]);
 		Assert.IsType<RangerData>(code.ProfessionSpecific);
 		var data = (RangerData)code.ProfessionSpecific;
 		Assert.Equal(PetId._UNDEFINED, data.Pet1);
@@ -131,7 +131,7 @@ public class BasicCodesTests {
 	[Fact]
 	public void MinimalRevenant()
 	{
-		var code = TextLoader.LoadBuildCode("CoI___~______A~M~__A_");
+		var code = TextLoader.LoadBuildCode(TestUtilities.CodesV2["minimal-revenant"]);
 		Assert.IsType<RevenantData>(code.ProfessionSpecific);
 		var data = (RevenantData)code.ProfessionSpecific;
 		Assert.Equal(Legend.SHIRO, data.Legend1);
@@ -144,7 +144,7 @@ public class BasicCodesTests {
 	[Fact]
 	public void CycleBasicCode()
 	{
-		var text1 = "CoI___~______A~M~__A_";
+		var text1 = TestUtilities.CodesV2["minimal-revenant"];
 		var code = TextLoader.LoadBuildCode(text1);
 		var text2 = TextLoader.WriteBuildCode(code);
 		Assert.Equal(text1, text2);
@@ -158,7 +158,7 @@ public class OfficialChatLinks {
 		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
 		else await PerProfessionData.Reload(Profession.Necromancer, true);
 
-		var code = TextLoader.LoadOfficialBuildCode("[&DQg1KTIlIjbBEgAAgQB1AUABgQB1AUABlQCVAAAAAAAAAAAAAAAAAAAAAAA=]");
+		var code = TextLoader.LoadOfficialBuildCode(TestUtilities.CodesIngame["full-necro"]);
 		Assert.Equal(Profession.Necromancer, code.Profession);
 
 		Assert.Equal(SpecializationId.Spite, code.Specializations[0].SpecializationId);
@@ -232,7 +232,7 @@ public class OfficialChatLinks {
 		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
 		else await PerProfessionData.Reload(Profession.Necromancer, true);
 
-		var reference = "[&DQg1KTIlIjbBEgAAgQAAAEABAAB1AQAAlQAAAAAAAAAAAAAAAAAAAAAAAAA=]";
+		var reference = TestUtilities.CodesIngame["full-necro2"];
 		var result = TextLoader.WriteOfficialBuildCode(code);
 		Assert.Equal(reference, result);
 	}

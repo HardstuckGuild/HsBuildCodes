@@ -114,6 +114,8 @@ class BitWriter {
 }
 
 class BinaryLoader {
+	use Util\_Static;
+
 	#region hardstuck codes
 
 	public static function LoadBuildCode(string $raw) : BuildCode
@@ -122,7 +124,7 @@ class BinaryLoader {
 
 		$code = new BuildCode();
 		$code->Version = $rawSpan->DecodeNext(8) - ord('a');
-		assert($code->Version === Statics::CURRENT_VERSION, "Code version mismatch");
+		assert($code->Version >= Statics::FIRST_VERSIONED_VERSION && $code->Version <= Statics::CURRENT_VERSION, "Code version mismatch");
 		$code->Kind    = match ($rawSpan->DecodeNext(2)) {
 			0 => Kind::PvP,
 			1 => Kind::WvW,
@@ -652,7 +654,4 @@ class BinaryLoader {
 	}
 
 	#endregion
-
-	private function __construct() {}
-	private function __clone() {}
 }

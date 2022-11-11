@@ -11,6 +11,8 @@ class CacheEntry {
 }
 
 class APICache {
+	use Util\_Static;
+
 	public const CACHE_SECONDS = 30 * 60;
 
 	/** @var CacheEntry[] */
@@ -108,7 +110,4 @@ class APICache {
 		
 		return SkillId::_UNDEFINED;
 	}
-
-	private function __construct() {}
-	private function __clone() {}
 }

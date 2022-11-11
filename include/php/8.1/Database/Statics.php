@@ -1,9 +1,10 @@
 <?php namespace Hardstuck\GuildWars2\BuildCodes\V2;
 
-class Statics
-{
-	public const FIRST_VERSIONED_VERSION = 2;
-	public const CURRENT_VERSION = 2;
+class Statics {
+	use Util\_Static;
+
+	public const FIRST_VERSIONED_VERSION = 3;
+	public const CURRENT_VERSION = 3;
 	public const OFFICIAL_CHAT_CODE_BYTE_LENGTH = 44;
 
 	public const ALL_EQUIPMENT_COUNT = 16;
@@ -171,7 +172,4 @@ class Statics
 
 		return $result;
 	}
-
-	private function __construct() {}
-	private function __clone() {}
 }

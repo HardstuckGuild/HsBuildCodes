@@ -6,6 +6,8 @@ use Hardstuck\GuildWars2\BuildCodes\V2\Util\StringView;
 use Hardstuck\GuildWars2\BuildCodes\V2\Util\TraitLineChoices;
 
 class TextLoader {
+	use Util\_Static;
+
 	public const CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-";
 	public const INVERSE_CHARSET = [
 		/*0x*/ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -455,7 +457,4 @@ class TextLoader {
 	}
 
 	#endregion
-
-	private function __construct() {}
-	private function __clone() {}
 }

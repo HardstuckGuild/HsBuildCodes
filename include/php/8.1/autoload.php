@@ -18,6 +18,7 @@ spl_autoload_register(function($class) {
 		case '\APICache':
 		case '\Overrides':
 		case '\PerProfessionData':
+		case '\LazyLoadMode':
 			require __DIR__.'/Database'.str_replace('\\', '/', $relNamespace).'.php';
 			break;
 		
@@ -31,6 +32,7 @@ spl_autoload_register(function($class) {
 		case '\Util\FromName':
 		case '\Util\First':
 		case '\Util\Enum':
+		case '\Util\_Static':
 			require_once __DIR__.'/Util/Statics.php';
 			break;
 

@@ -172,9 +172,3 @@ class PerProfessionData {
 		$targetData->_lastUpdate = new \DateTime();
 	}
 }
-
-enum LazyLoadMode : int {
-	case NONE = 0;
-	case OFFLINE_ONLY = 1;
-	case FULL = 2;
-}

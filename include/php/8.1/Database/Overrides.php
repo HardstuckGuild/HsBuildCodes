@@ -1,6 +1,8 @@
 <?php namespace Hardstuck\GuildWars2\BuildCodes\V2;
 
 class Overrides {
+	use Util\_Static;
+
 	/** @remarks Requires PerProfessionData for Revs to be loaded first. */
 	public static function RevPalletteToSkill(int $legend, int $palletteId) : int
 	{
@@ -119,7 +121,4 @@ class Overrides {
 			$code->SlotSkills->Elite = SkillId::Elite_Mortar_Kit;
 		}
 	}
-
-	private function __construct() {}
-	private function __clone() {}
 }

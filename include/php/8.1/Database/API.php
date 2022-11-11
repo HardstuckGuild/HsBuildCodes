@@ -1,6 +1,8 @@
 <?php namespace Hardstuck\GuildWars2\BuildCodes\V2;
 
 class API {
+	use Util\_Static;
+
 	public const BASE_PATH = "https://api.guildwars2.com/v2";
 
 	public static function RequestJson(string $path, ?string $apiToken = null, string $schemaVersion = 'latest') : mixed
@@ -18,7 +20,4 @@ class API {
 
 		return file_get_contents(API::BASE_PATH . $path, context: $context);
 	}
-
-	private function __construct() {}
-	private function __clone() {}
 }

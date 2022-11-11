@@ -205,28 +205,12 @@ public class BasicCodeTests {
 		});
 	}
 
-	[Theory] [InlineData(true)] [InlineData(false)]
-	public void MinimalPvPWithSkills(bool lazyload)
+	[Fact]
+	public void MinimalPvPWithSkills()
 	{
-		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
-		else PerProfessionData.Reload(Profession.Guardian, true).Wait();
-
-		var rawCode = BitStringToBytes(
-			"c" + //version
-			"00" + //type
-			"0000" + //profession
-			"0000000_0000000_0000000" + //traits
-			"00000" + //weapons
-			"000000000000000000000001" + //skills
-			"000000000000000000000010" +
-			"000000000000000000000011" +
-			"000000000000000000000100" +
-			"000000000000000000000101" +
-			"000000000000000000000000" + //rune
-			"0000000000000001" //stats (pvp)
-		 );
+		var rawCode = BitStringToBytes(TestUtilities.CodesV2Binary["minimal-pvp-with-skills"]);
 		var code = BinaryLoader.LoadBuildCode(rawCode);
-		Assert.Equal(2                  , code.Version);
+		Assert.Equal(3                  , code.Version);
 		Assert.Equal(Kind.PvP           , code.Kind);
 		Assert.Equal(Profession.Guardian, code.Profession);
 		for(int i = 0; i < 3; i++)
@@ -249,32 +233,12 @@ public class BasicCodeTests {
 		Assert.Equal(IArbitrary         .NONE.Instance, code.Arbitrary);
 	}
 
-	[Theory] [InlineData(true)] [InlineData(false)]
-	public void MinimalPvE(bool lazyload)
+	[Fact]
+	public void MinimalPvE()
 	{
-		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
-		else PerProfessionData.Reload(Profession.Guardian, true).Wait();
-
-		var rawCode = BitStringToBytes(
-			"c" + //version
-			"10" + //type
-			"0000" + //profession
-			"0000000_0000000_0000000" + //traits
-			"00000" + //weapons
-			"000000000000000000000000" + //skills
-			"000000000000000000000000" +
-			"000000000000000000000000" +
-			"000000000000000000000000" +
-			"000000000000000000000000" +
-			"000000000000000000000000" + //rune
-			"0000000000000001" + //stats (pve)
-			"1100" +
-			"000000000000000000000000" + // infusions
-			"000000000000000000000000" + // food
-			"000000000000000000000000" // utility
-		 );
+		var rawCode = BitStringToBytes(TestUtilities.CodesV2Binary["minimal-pve"]);
 		var code = BinaryLoader.LoadBuildCode(rawCode);
-		Assert.Equal(2                  , code.Version);
+		Assert.Equal(3                  , code.Version);
 		Assert.Equal(Kind.PvE           , code.Kind);
 		Assert.Equal(Profession.Guardian, code.Profession);
 		for(int i = 0; i < 3; i++)
@@ -296,31 +260,10 @@ public class BasicCodeTests {
 		Assert.Equal(IArbitrary         .NONE.Instance, code.Arbitrary);
 	}
 
-	[Theory] [InlineData(true)] [InlineData(false)]
-	public void MinimalRanger(bool lazyload)
+	[Fact]
+	public void MinimalRanger()
 	{
-		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
-		else PerProfessionData.Reload(Profession.Ranger, true).Wait();
-
-		var rawCode = BitStringToBytes(
-			"c" + //version
-			"10" + //type
-			"0011" + //profession
-			"0000000_0000000_0000000" + //traits
-			"00000" + //weapons
-			"000000000000000000000000" + //skills
-			"000000000000000000000000" +
-			"000000000000000000000000" +
-			"000000000000000000000000" +
-			"000000000000000000000000" +
-			"000000000000000000000000" + //rune
-			"0000000000000001" + //stats (pve)
-			"1100" +
-			"000000000000000000000000" + // infusions
-			"111100000000000000000110" + // food
-			"111100000000000000000110" + // utility
-			"0000000" // pets
-		 );
+		var rawCode = BitStringToBytes(TestUtilities.CodesV2Binary["minimal-ranger"]);
 		var code = BinaryLoader.LoadBuildCode(rawCode);
 		Assert.Equal(Profession.Ranger, code.Profession);
 		Assert.IsType<RangerData>(code.ProfessionSpecific);
@@ -329,31 +272,10 @@ public class BasicCodeTests {
 		Assert.Equal(PetId._UNDEFINED, data.Pet2);
 	}
 
-	[Theory] [InlineData(true)] [InlineData(false)]
-	public void MinimalRevenant(bool lazyload)
+	[Fact]
+	public void MinimalRevenant()
 	{
-		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
-		else PerProfessionData.Reload(Profession.Revenant, true).Wait();
-
-		var rawCode = BitStringToBytes(
-			"c" + //version
-			"10" + //type
-			"1000" + //profession
-			"0000000_0000000_0000000" + //traits
-			"00000" + //weapons
-			"000000000000000000000000" + //skills
-			"000000000000000000000000" +
-			"000000000000000000000000" +
-			"000000000000000000000000" +
-			"000000000000000000000000" +
-			"000000000000000000000000" + //rune
-			"0000000000000001" + //stats (pve)
-			"1100" +
-			"000000000000000000000000" + // infusions
-			"000000000000000000000000" + // food
-			"000000000000000000000000" + // utility
-			"0001_0000" // legends
-		 );
+		var rawCode = BitStringToBytes(TestUtilities.CodesV2Binary["minimal-revenant"]);
 		var code = BinaryLoader.LoadBuildCode(rawCode);
 		Assert.Equal(Profession.Revenant, code.Profession);
 		Assert.IsType<RevenantData>(code.ProfessionSpecific);
@@ -365,31 +287,10 @@ public class BasicCodeTests {
 		Assert.Equal(SkillId._UNDEFINED, data.AltUtilitySkill3);
 	}
 
-	[Theory] [InlineData(true)] [InlineData(false)]
-	public void LoopWriteMinimalRevenant(bool lazyload)
+	[Fact]
+	public void LoopWriteMinimalRevenant()
 	{
-		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
-		else PerProfessionData.Reload(Profession.Revenant, true).Wait();
-
-		var rawCode = BitStringToBytes(
-			"c" + //version
-			"10" + //type
-			"1000" + //profession
-			"0000000_0000000_0000000" + //traits
-			"00000" + //weapons
-			"000000000000000000000000" + //skills
-			"000000000000000000000000" +
-			"000000000000000000000000" +
-			"000000000000000000000000" +
-			"000000000000000000000000" +
-			"000000000000000000000000" + //rune
-			"0000000000000001" + //stats (pve)
-			"1100" +
-			"000000000000000000000000" + // infusions
-			"000000000000000000000000" + // food
-			"000000000000000000000000" + // utility
-			"0001_0000" // legends
-		 );
+		var rawCode = BitStringToBytes(TestUtilities.CodesV2Binary["minimal-revenant"]);
 		var code = BinaryLoader.LoadBuildCode(rawCode);
 
 		var result = new byte[rawCode.Length];
@@ -408,7 +309,7 @@ public class OfficialChatLinks
 		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
 		else await PerProfessionData.Reload(Profession.Necromancer, true);
 
-		var fullLink = "[&DQg1KTIlIjbBEgAAgQB1AUABgQB1AUABlQCVAAAAAAAAAAAAAAAAAAAAAAA=]";
+		var fullLink = TestUtilities.CodesIngame["full-necro"];
 		var base64   = fullLink[2..^1];
 		var raw = Convert.FromBase64String(base64);
 		var code = BinaryLoader.LoadOfficialBuildCode(raw);
@@ -488,7 +389,7 @@ public class OfficialChatLinks
 		var buffer = new byte[44];
 		BinaryLoader.WriteOfficialBuildCode(code, buffer);
 
-		var reference = "[&DQg1KTIlIjbBEgAAgQAAAEABAAB1AQAAlQAAAAAAAAAAAAAAAAAAAAAAAAA=]";
+		var reference = TestUtilities.CodesIngame["full-necro2"];
 		var referenceBase64 = reference[2..^1];
 		var referenceBytes = Convert.FromBase64String(referenceBase64);
 
@@ -501,7 +402,7 @@ public class OfficialChatLinks
 		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
 		else await PerProfessionData.Reload(Profession.Revenant, true);
 
-		var fullLink = "[&DQkAAAAARQDcEdwRAAAAACsSAADUEQAAAAAAAAQCAwDUESsSAAAAAAAAAAA=]";
+		var fullLink = TestUtilities.CodesIngame["partial-revenant"];
 		var base64   = fullLink[2..^1];
 		var raw = Convert.FromBase64String(base64);
 		var code = BinaryLoader.LoadOfficialBuildCode(raw);

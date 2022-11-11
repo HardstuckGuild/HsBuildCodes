@@ -1,5 +1,7 @@
 <?php namespace Hardstuck\GuildWars2\BuildCodes\V2\Tests\Text;
 
+require_once 'TestUtilities.php';
+
 use PHPUnit\Framework\TestCase;
 use Hardstuck\GuildWars2\BuildCodes\V2;
 use Hardstuck\GuildWars2\BuildCodes\V2\BuildCode;
@@ -17,6 +19,7 @@ use Hardstuck\GuildWars2\BuildCodes\V2\Specialization;
 use Hardstuck\GuildWars2\BuildCodes\V2\SpecializationId;
 use Hardstuck\GuildWars2\BuildCodes\V2\Statics;
 use Hardstuck\GuildWars2\BuildCodes\V2\StatId;
+use Hardstuck\GuildWars2\BuildCodes\V2\Tests\TestUtilities;
 use Hardstuck\GuildWars2\BuildCodes\V2\TextLoader;
 use Hardstuck\GuildWars2\BuildCodes\V2\TraitLineChoice;
 use Hardstuck\GuildWars2\BuildCodes\V2\Util\StringView;
@@ -68,7 +71,7 @@ class BasicCodesTests extends TestCase {
 	{
 		$this->expectException(\AssertionError::class);
 		$this->expectErrorMessageMatches('/[Vv]ersion/');
-		$code = TextLoader::LoadBuildCode("Xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		$code = TextLoader::LoadBuildCode(TestUtilities::$CodesInvalid["wrong-version"]);
 	}
 
 	/** @test */
@@ -76,7 +79,7 @@ class BasicCodesTests extends TestCase {
 	{
 		$this->expectException(\AssertionError::class);
 		$this->expectErrorMessageMatches('/[Ss]hort/');
-		$code = TextLoader::LoadBuildCode("CoAo-short");
+		$code = TextLoader::LoadBuildCode(TestUtilities::$CodesInvalid["too-short"]);
 	}
 
 	/** @test */
@@ -84,14 +87,14 @@ class BasicCodesTests extends TestCase {
 	{
 		$this->expectWarning();
 		$this->expectWarningMessage("Undefined array key 239");
-		$code = TextLoader::LoadBuildCode("C���������������������������������������������������������������������");
+		$code = TextLoader::LoadBuildCode(TestUtilities::$CodesInvalid["invalid-chars"]);
 	}
 
 	/** @test */
 	public function MinimalPvP()
 	{
-		$code = TextLoader::LoadBuildCode("CpA___~______B~");
-		$this->assertEquals(2                  , $code->Version);
+		$code = TextLoader::LoadBuildCode(TestUtilities::$CodesV2["minimal-pvp"]);
+		$this->assertEquals(3                   , $code->Version);
 		$this->assertEquals(Kind::PvP           , $code->Kind);
 		$this->assertEquals(Profession::Guardian, $code->Profession);
 		for($i = 0; $i < 3; $i++)
@@ -117,8 +120,8 @@ class BasicCodesTests extends TestCase {
 	/** @test */
 	public function MinimalPvE()
 	{
-		$code = TextLoader::LoadBuildCode("CoA___~______B~M~__");
-		$this->assertEquals(2                  , $code->Version);
+		$code = TextLoader::LoadBuildCode(TestUtilities::$CodesV2["minimal-pve"]);
+		$this->assertEquals(3                   , $code->Version);
 		$this->assertEquals(Kind::PvE           , $code->Kind);
 		$this->assertEquals(Profession::Guardian, $code->Profession);
 		for($i = 0; $i < 3; $i++)
@@ -143,7 +146,7 @@ class BasicCodesTests extends TestCase {
 	/** @test */
 	public function MinimalRanger()
 	{
-		$code = TextLoader::LoadBuildCode("CoD___~______A~M~__~");
+		$code = TextLoader::LoadBuildCode(TestUtilities::$CodesV2["minimal-ranger"]);
 		$this->assertInstanceOf(RangerData::class, $code->ProfessionSpecific);
 		/** @var RangerData */
 		$data = $code->ProfessionSpecific;
@@ -154,7 +157,7 @@ class BasicCodesTests extends TestCase {
 	/** @test */
 	public function MinimalRevenant()
 	{
-		$code = TextLoader::LoadBuildCode("CoI___~______A~M~__A_");
+		$code = TextLoader::LoadBuildCode(TestUtilities::$CodesV2["minimal-revenant"]);
 		$this->assertInstanceOf(RevenantData::class, $code->ProfessionSpecific);
 		/** @var RevenantData */
 		$data = $code->ProfessionSpecific;
@@ -168,7 +171,7 @@ class BasicCodesTests extends TestCase {
 	/** @test */
 	public function CycleBasicCode()
 	{
-		$text1 = "CoI___~______A~M~__A_";
+		$text1 = TestUtilities::$CodesV2["minimal-revenant"];
 		$code = TextLoader::LoadBuildCode($text1);
 		$text2 = TextLoader::WriteBuildCode($code);
 		$this->assertEquals($text1, $text2);
@@ -185,7 +188,7 @@ class OfficialChatLinks extends TestCase {
 		if($lazyload) PerProfessionData::$LazyLoadMode = LazyLoadMode::OFFLINE_ONLY;
 		else PerProfessionData::Reload(Profession::Necromancer, true);
 
-		$code = TextLoader::LoadOfficialBuildCode("[&DQg1KTIlIjbBEgAAgQB1AUABgQB1AUABlQCVAAAAAAAAAAAAAAAAAAAAAAA=]");
+		$code = TextLoader::LoadOfficialBuildCode(TestUtilities::$CodesIngame["full-necro"]);
 		$this->assertEquals(Profession::Necromancer, $code->Profession);
 
 		$this->assertEquals(SpecializationId::Spite, $code->Specializations[0]->SpecializationId);
@@ -246,7 +249,7 @@ class OfficialChatLinks extends TestCase {
 		if($lazyload) PerProfessionData::$LazyLoadMode = LazyLoadMode::OFFLINE_ONLY;
 		else PerProfessionData::Reload(Profession::Necromancer, true);
 
-		$reference = "[&DQg1KTIlIjbBEgAAgQAAAEABAAB1AQAAlQAAAAAAAAAAAAAAAAAAAAAAAAA=]";
+		$reference = TestUtilities::$CodesIngame["full-necro2"];
 		$result = TextLoader::WriteOfficialBuildCode($code);
 		$this->assertEquals($reference, $result);
 	}

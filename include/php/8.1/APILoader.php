@@ -3,6 +3,7 @@
 use Hardstuck\GuildWars2\BuildCodes\V2\Util\TraitLineChoices;
 
 class APILoader {
+	use Util\_Static;
 
 	/** Produces a list of token scopes that are missing. */
 	public static function ValidateScopes(string $token) : array
@@ -281,8 +282,4 @@ class APILoader {
 
 	private static function ResolveStatId($item) : int
 	{ return $item->stats !== null ? $item->stats->id : APICache::ResolveStatId($item->id); }
-
-
-	private function __construct() {}
-	private function __clone() {}
 }

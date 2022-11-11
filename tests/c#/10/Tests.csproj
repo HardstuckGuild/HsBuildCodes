@@ -7,6 +7,7 @@
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<RootNamespace>Hardstuck.GuildWars2.BuildCodes.V2.Tests</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -28,5 +29,9 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\include\c#\10\HsBuildCodes.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="../../common/codes.ini" CopyToOutputDirectory="PreserveNewest" Link="codes.ini" />
 	</ItemGroup>
 </Project>

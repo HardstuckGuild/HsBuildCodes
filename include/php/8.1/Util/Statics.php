@@ -1,7 +1,9 @@
 <?php namespace Hardstuck\GuildWars2\BuildCodes\V2\Util;
 
-use Hardstuck\GuildWars2\BuildCodes\V2\Statics;
-use Hardstuck\GuildWars2\BuildCodes\V2\TextLoader;
+trait _Static {
+	private function __construct() {}
+	private function __clone() {}
+}
 
 trait FromName {
 	public static function fromName(string $name) : static
@@ -17,6 +19,8 @@ trait First {
 }
 
 trait Enum {
+	use _Static;
+
 	public static function TryGetName(int $value) {
 		foreach(get_class_vars(static::class) as $name => $value) {
 			if($value === $value)
@@ -37,7 +41,4 @@ trait Enum {
 	{
 			return static::class::$$name;
 	}
-
-	private function __construct() {}
-	private function __clone() {}
 }

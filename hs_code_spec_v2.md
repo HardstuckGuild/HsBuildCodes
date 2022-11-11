@@ -1,4 +1,4 @@
-# HS BuildCode v2 Spec RFC
+# HS BuildCode V2.D Spec RFC
 
 ## Ethos
 The following considerations were taken into account in descending priority:
@@ -36,8 +36,8 @@ a c e ccabbcbgc bbcSUTRge        -cfc-cfm_GTxg_i ft_ ikm+     +        +  +
 V T P S.TS.TS.T WS..wS..WS..wS.. S..S..S..S..S.. R.. A..n,,,, I..n,,,, F..U.. A,,,,,
 ```
 
-`[V]` Version [1 character. currently `C`] used for backwards compatibility.
-  - Not contained in codes below version `C`.
+`[V]` Version [1 character. currently `D`] used for backwards compatibility.
+  - Not contained in codes below version `D`.
   - Lower case letters indicate binary format base64 encoded.
 
 `[T]` Type [1 character] `p`: pvp, `w`: wvw, `o`: other(pve)
