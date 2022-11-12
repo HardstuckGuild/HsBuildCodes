@@ -62,11 +62,11 @@ class TextLoader {
 
 		for($i = 0; $i < 3; $i++) {
 			if(!TextLoader::EatToken($view, '_')) {
-				$id = TextLoader::DecodeAndAdvance($view);
+				$id = TextLoader::DecodeAndAdvance($view, 2);
 				$mixed = TextLoader::DecodeAndAdvance($view);
 				$choices = new TraitLineChoices();
 				for($j = 0; $j < 3; $j++)
-					$choices[$j] = ($mixed >> (6 - $j * 2)) & 0b00000011;
+					$choices[$j] = ($mixed >> (4 - $j * 2)) & 0b00000011;
 				$code->Specializations[$i] = new Specialization($id, $choices);
 			}
 		}

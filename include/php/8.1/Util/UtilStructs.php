@@ -71,8 +71,8 @@ class TraitLineChoices implements \ArrayAccess {
 	}
 
 	/**
-	 * @param int              $offset
-	 * @param ?TraitLineChoice $value
+	 * @param int             $offset
+	 * @param TraitLineChoice $value
 	 */
 	public function offsetSet(mixed $offset, mixed $value) : void
 	{
@@ -120,8 +120,8 @@ class AllSkills implements \ArrayAccess {
 	}
 
 	/**
-	 * @param int  $offset
-	 * @param ?int $value
+	 * @param int $offset
+	 * @param int $value
 	 */
 	public function offsetSet(mixed $offset, mixed $value) : void
 	{
@@ -199,28 +199,28 @@ class AllEquipmentStats implements \ArrayAccess {
 	}
 	
 	/**
-	 * @param int  $offset
-	 * @param ?int $value
+	 * @param int $offset
+	 * @param int $value
 	 */
 	public function offsetSet(mixed $offset, mixed $value) : void
 	{
 		switch($offset) {
-			case  0: $this->Helmet              = $value; break;
-			case  1: $this->Shoulders           = $value; break;
-			case  2: $this->Chest               = $value; break;
-			case  3: $this->Gloves              = $value; break;
-			case  4: $this->Leggings            = $value; break;
-			case  5: $this->Boots               = $value; break;
-			case  6: $this->BackItem            = $value; break;
-			case  7: $this->Accessory1          = $value; break;
-			case  8: $this->Accessory2          = $value; break;
-			case  9: $this->Ring1               = $value; break;
-			case 10: $this->Ring2               = $value; break;
+			case  0: $this->Helmet             = $value; break;
+			case  1: $this->Shoulders          = $value; break;
+			case  2: $this->Chest              = $value; break;
+			case  3: $this->Gloves             = $value; break;
+			case  4: $this->Leggings           = $value; break;
+			case  5: $this->Boots              = $value; break;
+			case  6: $this->BackItem           = $value; break;
+			case  7: $this->Accessory1         = $value; break;
+			case  8: $this->Accessory2         = $value; break;
+			case  9: $this->Ring1              = $value; break;
+			case 10: $this->Ring2              = $value; break;
 			case 11: $this->WeaponSet1MainHand = $value; break;
 			case 12: $this->WeaponSet1OffHand  = $value; break;
 			case 13: $this->WeaponSet2MainHand = $value; break;
 			case 14: $this->WeaponSet2OffHand  = $value; break;
-			case 15: $this->Amulet              = $value; break;
+			case 15: $this->Amulet             = $value; break;
 			default: throw new \InvalidArgumentException("index($offset)");
 		};
 	}
@@ -306,8 +306,8 @@ class AllEquipmentInfusions implements \ArrayAccess {
 	}
 
 	/**
-	 * @param int  $offset
-	 * @param ?int $value
+	 * @param int $offset
+	 * @param int $value
 	 */
 	public function offsetSet(mixed $offset, mixed $value) : void
 	{

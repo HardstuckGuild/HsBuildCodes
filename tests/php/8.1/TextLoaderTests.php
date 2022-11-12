@@ -24,6 +24,7 @@ use Hardstuck\GuildWars2\BuildCodes\V2\TextLoader;
 use Hardstuck\GuildWars2\BuildCodes\V2\TraitLineChoice;
 use Hardstuck\GuildWars2\BuildCodes\V2\Util\StringView;
 use Hardstuck\GuildWars2\BuildCodes\V2\Util\TraitLineChoices;
+use Hardstuck\GuildWars2\BuildCodes\V2\WeaponType;
 
 set_include_path(__DIR__.'/../../../include/common/');
 
@@ -176,6 +177,45 @@ class BasicCodesTests extends TestCase {
 		$text2 = TextLoader::WriteBuildCode($code);
 		$this->assertEquals($text1, $text2);
 	}
+
+	/** @test */
+	public function MidNecro()
+	{
+		$code = TextLoader::LoadBuildCode(TestUtilities::$CodesV2["mid-necro"]);
+		$this->assertEquals(Profession::Necromancer, $code->Profession);
+
+		$this->assertEquals(WeaponType::_UNDEFINED, $code->WeaponSet1->MainHand);
+		$this->assertEquals(WeaponType::_UNDEFINED, $code->WeaponSet1->OffHand);
+		$this->assertEquals(WeaponType::_UNDEFINED, $code->WeaponSet2->MainHand);
+		$this->assertEquals(WeaponType::_UNDEFINED, $code->WeaponSet2->OffHand);
+
+		$this->assertEquals(SpecializationId::Spite, $code->Specializations[0]->SpecializationId);
+		$reference1 = new TraitLineChoices();
+		$reference1->Adept       = TraitLineChoice::TOP;
+		$reference1->Master      = TraitLineChoice::MIDDLE;
+		$reference1->Grandmaster = TraitLineChoice::MIDDLE;
+		$this->assertEquals($reference1, $code->Specializations[0]->Choices);
+
+		$this->assertEquals(SpecializationId::Soul_Reaping, $code->Specializations[1]->SpecializationId);
+		$reference2 = new TraitLineChoices();
+		$reference2->Adept       = TraitLineChoice::TOP;
+		$reference2->Master      = TraitLineChoice::TOP;
+		$reference2->Grandmaster = TraitLineChoice::MIDDLE;
+		$this->assertEquals($reference2, $code->Specializations[1]->Choices);
+
+		$this->assertEquals(SpecializationId::Reaper, $code->Specializations[2]->SpecializationId);
+		$reference3 = new TraitLineChoices();
+		$reference3->Adept       = TraitLineChoice::MIDDLE;
+		$reference3->Master      = TraitLineChoice::TOP;
+		$reference3->Grandmaster = TraitLineChoice::BOTTOM;
+		$this->assertEquals($reference3, $code->Specializations[2]->Choices);
+
+		$this->assertEquals(SkillId::Your_Soul_Is_Mine, $code->SlotSkills[0]);
+		$this->assertEquals(SkillId::Well_of_Suffering1, $code->SlotSkills[1]);
+		$this->assertEquals(SkillId::Well_of_Darkness1, $code->SlotSkills[2]);
+		$this->assertEquals(SkillId::Signet_of_Spite, $code->SlotSkills[3]);
+		$this->assertEquals(SkillId::Summon_Flesh_Golem, $code->SlotSkills[4]);
+	}
 }
 
 class OfficialChatLinks extends TestCase {
@@ -190,6 +230,11 @@ class OfficialChatLinks extends TestCase {
 
 		$code = TextLoader::LoadOfficialBuildCode(TestUtilities::$CodesIngame["full-necro"]);
 		$this->assertEquals(Profession::Necromancer, $code->Profession);
+
+		$this->assertEquals(WeaponType::_UNDEFINED, $code->WeaponSet1->MainHand);
+		$this->assertEquals(WeaponType::_UNDEFINED, $code->WeaponSet1->OffHand);
+		$this->assertEquals(WeaponType::_UNDEFINED, $code->WeaponSet2->MainHand);
+		$this->assertEquals(WeaponType::_UNDEFINED, $code->WeaponSet2->OffHand);
 
 		$this->assertEquals(SpecializationId::Spite, $code->Specializations[0]->SpecializationId);
 		$reference1 = new TraitLineChoices();

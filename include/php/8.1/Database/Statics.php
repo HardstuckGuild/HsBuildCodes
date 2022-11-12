@@ -58,7 +58,7 @@ class Statics {
 				return true;
 
 			default: 
-				assert(false, "invalid weapon {$weaponType}");
+				assert(false, "invalid weapon {$weaponType->name}");
 				return false;
 		}
 	}

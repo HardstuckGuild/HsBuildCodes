@@ -4,6 +4,7 @@
  *  the TestClass interface since most typecheckers can't inspect the phar file. */
 class TestCase {
 	public function assertEquals(mixed $expected, mixed $actual) : void { }
+	public function assertNotEquals(mixed $expected, mixed $actual) : void { }
 	public function assertNull(mixed $actual) : void { }
 	public function assertTrue(bool $actual) : void { }
 	public function assertFalse(bool $actual) : void { }

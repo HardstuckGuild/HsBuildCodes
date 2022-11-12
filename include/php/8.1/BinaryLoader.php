@@ -485,6 +485,7 @@ class BinaryLoader {
 
 		$code = new BuildCode();
 		$code->Version    = Statics::CURRENT_VERSION;
+		$code->Kind       = Kind::PvE;
 		$code->Profession = Profession::from($rawView->NextByte());
 
 		if(PerProfessionData::$LazyLoadMode >= LazyLoadMode::OFFLINE_ONLY) PerProfessionData::Reload($code->Profession, PerProfessionData::$LazyLoadMode < LazyLoadMode::FULL);

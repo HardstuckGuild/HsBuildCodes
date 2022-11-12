@@ -64,7 +64,7 @@ public static class TextLoader {
 				var mixed = DecodeAndAdvance(ref text);
 				var choices = new TraitLineChoices();
 				for(int j = 0; j < 3; j++)
-					choices[j] = (TraitLineChoice)((mixed >> (6 - j * 2)) & 0b00000011);
+					choices[j] = (TraitLineChoice)((mixed >> (4 - j * 2)) & 0b00000011);
 				code.Specializations[i] = new() {
 					SpecializationId = id,
 					Choices          = choices,

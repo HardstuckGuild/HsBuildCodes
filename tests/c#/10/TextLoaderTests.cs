@@ -149,6 +149,45 @@ public class BasicCodesTests {
 		var text2 = TextLoader.WriteBuildCode(code);
 		Assert.Equal(text1, text2);
 	}
+
+	/** @test */
+	public void MidNecro()
+	{
+		var code = TextLoader.LoadBuildCode(TestUtilities.CodesV2["mid-necro"]);
+		Assert.Equal(Profession.Necromancer, code.Profession);
+
+		Assert.Equal(WeaponType._UNDEFINED, code.WeaponSet1.MainHand);
+		Assert.Equal(WeaponType._UNDEFINED, code.WeaponSet1.OffHand);
+		Assert.Equal(WeaponType._UNDEFINED, code.WeaponSet2.MainHand);
+		Assert.Equal(WeaponType._UNDEFINED, code.WeaponSet2.OffHand);
+
+		Assert.Equal(SpecializationId.Spite, code.Specializations[0].SpecializationId);
+		Assert.Equal(new TraitLineChoices() {
+			Adept = TraitLineChoice.TOP,
+			Master = TraitLineChoice.MIDDLE,
+			Grandmaster = TraitLineChoice.MIDDLE,
+		}, code.Specializations[0].Choices);
+
+		Assert.Equal(SpecializationId.Soul_Reaping, code.Specializations[1].SpecializationId);
+		Assert.Equal(new TraitLineChoices() {
+			Adept = TraitLineChoice.TOP,
+			Master = TraitLineChoice.TOP,
+			Grandmaster = TraitLineChoice.MIDDLE,
+		}, code.Specializations[1].Choices);
+
+		Assert.Equal(SpecializationId.Reaper, code.Specializations[2].SpecializationId);
+		Assert.Equal(new TraitLineChoices() {
+			Adept = TraitLineChoice.MIDDLE,
+			Master = TraitLineChoice.TOP,
+			Grandmaster = TraitLineChoice.BOTTOM,
+		}, code.Specializations[2].Choices);
+
+		Assert.Equal(SkillId.Your_Soul_Is_Mine, code.SlotSkills[0]);
+		Assert.Equal(SkillId.Well_of_Suffering1, code.SlotSkills[1]);
+		Assert.Equal(SkillId.Well_of_Darkness1, code.SlotSkills[2]);
+		Assert.Equal(SkillId.Signet_of_Spite, code.SlotSkills[3]);
+		Assert.Equal(SkillId.Summon_Flesh_Golem, code.SlotSkills[4]);
+	}
 }
 
 public class OfficialChatLinks {

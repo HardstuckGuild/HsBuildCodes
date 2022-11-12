@@ -315,6 +315,11 @@ public class OfficialChatLinks
 		var code = BinaryLoader.LoadOfficialBuildCode(raw);
 		Assert.Equal(Profession.Necromancer, code.Profession);
 
+		Assert.Equal(WeaponType._UNDEFINED, code.WeaponSet1.MainHand);
+		Assert.Equal(WeaponType._UNDEFINED, code.WeaponSet1.OffHand);
+		Assert.Equal(WeaponType._UNDEFINED, code.WeaponSet2.MainHand);
+		Assert.Equal(WeaponType._UNDEFINED, code.WeaponSet2.OffHand);
+
 		Assert.Equal(SpecializationId.Spite, code.Specializations[0].SpecializationId);
 		Assert.Equal(new TraitLineChoices() {
 			Adept       = TraitLineChoice.TOP,

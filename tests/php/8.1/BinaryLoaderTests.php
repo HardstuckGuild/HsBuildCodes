@@ -25,6 +25,7 @@ use Hardstuck\GuildWars2\BuildCodes\V2\StatId;
 use Hardstuck\GuildWars2\BuildCodes\V2\Tests\TestUtilities;
 use Hardstuck\GuildWars2\BuildCodes\V2\TraitLineChoice;
 use Hardstuck\GuildWars2\BuildCodes\V2\Util\TraitLineChoices;
+use Hardstuck\GuildWars2\BuildCodes\V2\WeaponType;
 
 set_include_path(__DIR__.'/../../../include/common/');
 
@@ -341,7 +342,13 @@ class OfficialChatLinks extends TestCase
 		$base64   = substr($fullLink, 2, strlen($fullLink) - 3);
 		$raw = base64_decode($base64);
 		$code = BinaryLoader::LoadOfficialBuildCode($raw);
+		$this->assertNotEquals(Kind::_UNDEFINED, $code->Kind);
 		$this->assertEquals(Profession::Necromancer, $code->Profession);
+
+		$this->assertEquals(WeaponType::_UNDEFINED, $code->WeaponSet1->MainHand);
+		$this->assertEquals(WeaponType::_UNDEFINED, $code->WeaponSet1->OffHand);
+		$this->assertEquals(WeaponType::_UNDEFINED, $code->WeaponSet2->MainHand);
+		$this->assertEquals(WeaponType::_UNDEFINED, $code->WeaponSet2->OffHand);
 
 		$this->assertEquals(SpecializationId::Spite, $code->Specializations[0]->SpecializationId);
 		$reference1 = new TraitLineChoices();
