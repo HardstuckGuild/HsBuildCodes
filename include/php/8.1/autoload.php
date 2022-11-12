@@ -29,6 +29,11 @@ spl_autoload_register(function($class) {
 			require __DIR__.'/Database'.str_replace('\\', '/', $relNamespace).'s.php';
 			break;
 
+		case '\ICache':
+		case '\DefaultCacheImpl':
+			require_once __DIR__.'/Database/CacheImpl.php';
+			break;
+
 		case '\Util\FromName':
 		case '\Util\First':
 		case '\Util\Enum':
