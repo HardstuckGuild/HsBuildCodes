@@ -6,91 +6,25 @@ use Hardstuck\GuildWars2\BuildCodes\V2\Kind;
 use Hardstuck\GuildWars2\BuildCodes\V2\LazyLoadMode;
 use Hardstuck\GuildWars2\BuildCodes\V2\PerProfessionData;
 use Hardstuck\GuildWars2\BuildCodes\V2\Profession;
-use Hardstuck\GuildWars2\BuildCodes\V2\RangerData;
-use Hardstuck\GuildWars2\BuildCodes\V2\RevenantData;
 use Hardstuck\GuildWars2\BuildCodes\V2\SpecializationId;
 use Hardstuck\GuildWars2\BuildCodes\V2\Statics;
 use Hardstuck\GuildWars2\BuildCodes\V2\TextLoader;
+use Hardstuck\GuildWars2\BuildCodes\V2\TraitSlot;
+use Hardstuck\GuildWars2\BuildCodes\V2\WeaponSetNumber;
+use Hardstuck\GuildWars2\BuildCodes\V2\WeaponType;
 
 function ConvertToHsArray(BuildCode $code, string $codeText)
 {
-	if (!empty($build['equipment']['weaponset1'][0])) {
-		if (empty($build['weapon_skills'][0][0])) {
-				$equipw2 = $build['equipment']['weaponset1'][0]; 
-		} else {
-				$equipw1 = $build['equipment']['weaponset1'][0]; 
-		}
-	}
-	if(!$equipw2 && !empty($build['equipment']['weaponset1'][1])) {$equipw2 = $build['equipment']['weaponset1'][1]; }
-
-	if (!empty($build['equipment']['weaponset2'][0])) {
-			if (empty($build['weapon_skills'][1][0])) {
-					$equipw4 = $build['equipment']['weaponset2'][0]; 
-			} else {
-					$equipw3 = $build['equipment']['weaponset2'][0]; 
-			}				
-	}
-	if(!$equipw4 && !empty($build['equipment']['weaponset2'][1])) {$equipw4 = $build['equipment']['weaponset2'][1]; }
-
-	if (!empty($build['weapon_types'][0][0])) {
-			if (empty($build['weapon_skills'][0][0])) {
-					$wtype2 = $build['weapon_types'][0][0];
-			} else {
-					$wtype1 = $build['weapon_types'][0][0];
-					
-			}
-	}
-	if(!$wtype2 && !empty($build['weapon_types'][0][1])) $wtype2 = $build['weapon_types'][0][1];
-
-	if (!empty($build['weapon_types'][1][0]))  {
-			if (empty($build['weapon_skills'][1][0])) {
-					$wtype4 = $build['weapon_types'][1][0];
-			} else {
-					$wtype3 = $build['weapon_types'][1][0];
-			}				
-	}
-	if(!$wtype4 && !empty($build['weapon_types'][1][1])) $wtype4 = $build['weapon_types'][1][1];
-
-	if (!empty($build['equipment']['sigils'][0])) {
-			if(!$wtype1) {
-					$equips2 = $build['equipment']['sigils'][0]; 
-			} else {
-					$equips1 = $build['equipment']['sigils'][0]; 
-			}
-	}
-	if(!$equips2 && !empty($build['equipment']['sigils'][1])) $equips2 = $build['equipment']['sigils'][1];
-	if (!empty($build['equipment']['sigils'][2])) {
-			if(!$wtype3) {
-					$equips4 = $build['equipment']['sigils'][2]; 
-			} else {
-					$equips3 = $build['equipment']['sigils'][2]; 
-			}
-	}
-	if(!$equips4) $equips4 = (empty($build['equipment']['sigils'][3])) ? NULL : $build['equipment']['sigils'][3];
-
-	$duplicateWeaponSets = (isset($build['duplicateWeaponSets']) && $build['duplicateWeaponSets']==true) ? 1 : 0;
-	$oneMainOneOff = (isset($build['oneMainOneOff']) && $build['oneMainOneOff']==true) ? 1 : 0;
-
-	for ($i = 1; $i <= 4; $i++){
-			${'wt' . $i} = (isset(${'wtype' . $i}) && weapon_replace[${'wtype' . $i}]) ? weapon_replace[${'wtype' . $i}] : NULL;
-			
-	}
-	for ($i = 1; $i <= 6; $i++){
-			${'rune' . $i} = (isset(runes_replace[$build['equipment']['runes'][$i-1]])) ? runes_replace[$build['equipment']['runes'][$i-1]] : $build['equipment']['runes'][$i-1];
-	}
-
-	for ($i = 1; $i <= 4; $i++){
-			${'sigil' . $i} = (isset(sigils_replace[${'equips' . $i}])) ? sigils_replace[${'equips' . $i}] : ${'equips' . $i};
-			
-	}
-
-
-	if ($build['specializations'][2]['id'] == 59 && empty($build['skills']['elites'][0])) {
-					$build['skills']['elites'][0] = '45449';
-	}
-
 	PerProfessionData::$LazyLoadMode = LazyLoadMode::FULL;
-	$ingameLink = TextLoader::WriteOfficialBuildCode($build);
+	$ingameLink = TextLoader::WriteOfficialBuildCode($code);
+
+	$effectiveSet1 = Statics::ResolveEffectiveWeapons($code, WeaponSetNumber::Set1);
+	$effectiveSet2 = Statics::ResolveEffectiveWeapons($code, WeaponSetNumber::Set2);
+
+	//??
+	$duplicateWeaponSets = $code->WeaponSet1 == $code->WeaponSet2 
+		&& $code->EquipmentAttributes->WeaponSet1MainHand == $code->EquipmentAttributes->WeaponSet2MainHand;
+	$oneMainOneOff = $duplicateWeaponSets && !Statics::IsTwoHanded($code->WeaponSet1->MainHand);
 
 	$sql_data = array(
 			'hs_code'            => $codeText,
@@ -106,38 +40,38 @@ function ConvertToHsArray(BuildCode $code, string $codeText)
 			'spec1_trait3'       => APICache::ResolveTrait($code->Specializations->Choice1, TraitSlot::GrandMaster),
 			'spec2_id'           => $code->Specializations->Choice2->SpecializationId,
 			'spec2_name'         => SpecializationId::TryGetName($code->Specializations->Choice2->SpecializationId),
-			'spec2_trait1'       => $build['specializations'][1]['traits'][0],
-			'spec2_trait2'       => $build['specializations'][1]['traits'][1],
-			'spec2_trait3'       => $build['specializations'][1]['traits'][2],
+			'spec2_trait1'       => APICache::ResolveTrait($code->Specializations->Choice2, TraitSlot::Adept),
+			'spec2_trait2'       => APICache::ResolveTrait($code->Specializations->Choice2, TraitSlot::Master),
+			'spec2_trait3'       => APICache::ResolveTrait($code->Specializations->Choice2, TraitSlot::GrandMaster),
 			'spec3_id'           => $code->Specializations->Choice3->SpecializationId,
 			'spec3_name'         => SpecializationId::TryGetName($code->Specializations->Choice3->SpecializationId),
-			'spec3_trait1'       => $build['specializations'][2]['traits'][0],
-			'spec3_trait2'       => $build['specializations'][2]['traits'][1],
-			'spec3_trait3'       => $build['specializations'][2]['traits'][2],
-			'heal1'              => $build['skills']['heals'][0],
-			'heal2'              => $build['skills']['heals'][1],
-			'utility1'           => $build['skills']['utilities'][0],
-			'utility2'           => $build['skills']['utilities'][1],
-			'utility3'           => $build['skills']['utilities'][2],
-			'utility4'           => $build['skills']['utilities'][3],
-			'utility5'           => $build['skills']['utilities'][4],
-			'utility6'           => $build['skills']['utilities'][5],
-			'elite1'             => $build['skills']['elites'][0],
-			'elite2'             => $build['skills']['elites'][1],
-			'weapon1_s1'         => $build['weapon_skills'][0][0],
-			'weapon1_s2'         => $build['weapon_skills'][0][1],
-			'weapon1_s3'         => $build['weapon_skills'][0][2],
-			'weapon1_s4'         => $build['weapon_skills'][0][3],
-			'weapon1_s5'         => $build['weapon_skills'][0][4],
-			'weapon2_s1'         => $build['weapon_skills'][1][0],
-			'weapon2_s2'         => $build['weapon_skills'][1][1],
-			'weapon2_s3'         => $build['weapon_skills'][1][2],
-			'weapon2_s4'         => $build['weapon_skills'][1][3],
-			'weapon2_s5'         => $build['weapon_skills'][1][4],
-			'equipment_weapon1'  => $equipw1,
-			'equipment_weapon2'  => $equipw2,
-			'equipment_weapon3'  => $equipw3,
-			'equipment_weapon4'  => $equipw4,
+			'spec3_trait1'       => APICache::ResolveTrait($code->Specializations->Choice2, TraitSlot::Adept),
+			'spec3_trait2'       => APICache::ResolveTrait($code->Specializations->Choice2, TraitSlot::Master),
+			'spec3_trait3'       => APICache::ResolveTrait($code->Specializations->Choice2, TraitSlot::GrandMaster),
+			'heal1'              => $code->SlotSkills->Heal,
+			'heal2'              => null,
+			'utility1'           => $code->SlotSkills->Utility1,
+			'utility2'           => $code->SlotSkills->Utility2,
+			'utility3'           => $code->SlotSkills->Utility3,
+			'utility4'           => $code->Profession === Profession::Revenant ? $code->ProfessionSpecific->AltUtility1 : null,
+			'utility5'           => $code->Profession === Profession::Revenant ? $code->ProfessionSpecific->AltUtility2 : null,
+			'utility6'           => $code->Profession === Profession::Revenant ? $code->ProfessionSpecific->AltUtility3 : null,
+			'elite1'             => $code->SlotSkills->Elite,
+			'elite2'             => null,
+			'weapon1_s1'         => APICache::ResolveWeaponSkill($code, $effectiveSet1, 0),
+			'weapon1_s2'         => APICache::ResolveWeaponSkill($code, $effectiveSet1, 1),
+			'weapon1_s3'         => APICache::ResolveWeaponSkill($code, $effectiveSet1, 2),
+			'weapon1_s4'         => APICache::ResolveWeaponSkill($code, $effectiveSet1, 3),
+			'weapon1_s5'         => APICache::ResolveWeaponSkill($code, $effectiveSet1, 4),
+			'weapon2_s1'         => APICache::ResolveWeaponSkill($code, $effectiveSet2, 0),
+			'weapon2_s2'         => APICache::ResolveWeaponSkill($code, $effectiveSet2, 1),
+			'weapon2_s3'         => APICache::ResolveWeaponSkill($code, $effectiveSet2, 2),
+			'weapon2_s4'         => APICache::ResolveWeaponSkill($code, $effectiveSet2, 3),
+			'weapon2_s5'         => APICache::ResolveWeaponSkill($code, $effectiveSet2, 4),
+			'equipment_weapon1'  => $code->EquipmentAttributes->WeaponSet1MainHand,
+			'equipment_weapon2'  => $code->EquipmentAttributes->WeaponSet1OffHand,
+			'equipment_weapon3'  => $code->EquipmentAttributes->WeaponSet2MainHand,
+			'equipment_weapon4'  => $code->EquipmentAttributes->WeaponSet2OffHand,
 			'equipment_armor1'   => $code->EquipmentAttributes->Helmet,
 			'equipment_armor2'   => $code->EquipmentAttributes->Shoulders,
 			'equipment_armor3'   => $code->EquipmentAttributes->Chest,
@@ -162,14 +96,14 @@ function ConvertToHsArray(BuildCode $code, string $codeText)
 			'equipment_sigil4'   => $code->WeaponSet2->Sigil2,
 			'pvp_amulet'         => $code->EquipmentAttributes->Amulet,
 			'pvp_rune'           => $code->Rune,
-			'weapon_type1'       => $wtype1,
-			'weapon_type2'       => $wtype2,
-			'weapon_type3'       => $wtype3,
-			'weapon_type4'       => $wtype4,
-			'weapon_id1'         => $wt1,
-			'weapon_id2'         => $wt2,
-			'weapon_id3'         => $wt3,
-			'weapon_id4'         => $wt4,
+			'weapon_type1'       => WeaponType::TryGetName($code->WeaponSet1->MainHand),
+			'weapon_type2'       => WeaponType::TryGetName($code->WeaponSet1->OffHand),
+			'weapon_type3'       => WeaponType::TryGetName($code->WeaponSet2->MainHand),
+			'weapon_type4'       => WeaponType::TryGetName($code->WeaponSet2->OffHand),
+			'weapon_id1'         => Statics::ResolveDummyItemForWeaponType($code->WeaponSet1->MainHand, $code->EquipmentAttributes->WeaponSet1MainHand),
+			'weapon_id2'         => Statics::ResolveDummyItemForWeaponType($code->WeaponSet1->OffHand , $code->EquipmentAttributes->WeaponSet1OffHand ),
+			'weapon_id3'         => Statics::ResolveDummyItemForWeaponType($code->WeaponSet2->MainHand, $code->EquipmentAttributes->WeaponSet2MainHand),
+			'weapon_id4'         => Statics::ResolveDummyItemForWeaponType($code->WeaponSet2->OffHand , $code->EquipmentAttributes->WeaponSet2OffHand ),
 			'pet1'               => $code->Profession === Profession::Ranger ? $code->ProfessionSpecific->Pet1 : null,
 			'pet2'               => $code->Profession === Profession::Ranger ? $code->ProfessionSpecific->Pet1 : null,
 			'legend1'            => $code->Profession === Profession::Revenant ? $code->ProfessionSpecific->Legend1 : null,
@@ -182,28 +116,6 @@ function ConvertToHsArray(BuildCode $code, string $codeText)
 	$insertion = (HS_GW2_FORCE_BUILDS_REWRITE) ? $wpdb->replace(HS_GW2_BUILDS_DB, $sql_data) : $wpdb->insert(HS_GW2_BUILDS_DB, $sql_data); 
 	return ($insertion) ? $sql_data : false;
 }
-
-const weapon_replace = array(
-	'Axe' => '91622',
-	'Dagger' => '91636',
-	'Mace' => '91671',
-	'Pistol' => '91675',
-	'Scepter' => '91619',
-	'Sword' => '91649',
-	'Focus' => '91657',
-	'Shield' => '91633',
-	'Torch' => '91653',
-	'Warhorn' => '91676',
-	'Greatsword' => '91646',
-	'Hammer' => '91652',
-	'Longbow' => '91632',
-	'Rifle' => '91637',
-	'Shortbow' => '91628',
-	'Staff' => '91674',
-	'Harpoon Gun' => '90283',
-	'Spear' => '90226',
-	'Trident' => '90637'
-);
 
 const runes_replace = array(
 	'91638' => '38206',

@@ -172,4 +172,31 @@ class Statics {
 
 		return $result;
 	}
+
+	/** @remarks Also translates _UNDEFINED */
+	public static function ResolveDummyItemForWeaponType(int $weaponType, int $statId) : int
+	{
+		return match($weaponType) {
+			WeaponType::Axe        => ItemId::Mist_Lords_Axe          ,
+			WeaponType::Dagger     => ItemId::Mist_Lords_Dagger       ,
+			WeaponType::Mace       => ItemId::Mist_Lords_Mace         ,
+			WeaponType::Pistol     => ItemId::Mist_Lords_Pistol       ,
+			WeaponType::Scepter    => ItemId::Mist_Lords_Scepter      ,
+			WeaponType::Sword      => ItemId::Mist_Lords_Sword        ,
+			WeaponType::Focus      => ItemId::Mist_Lords_Focus        ,
+			WeaponType::Shield     => ItemId::Mist_Lords_Shield       ,
+			WeaponType::Torch      => ItemId::Mist_Lords_Torch        ,
+			WeaponType::Warhorn    => ItemId::Mist_Lords_Warhorn      ,
+			WeaponType::Greatsword => ItemId::Mist_Lords_Greatsword   ,
+			WeaponType::Hammer     => ItemId::Mist_Lords_Hammer       ,
+			WeaponType::Longbow    => ItemId::Mist_Lords_Longbow      ,
+			WeaponType::Rifle      => ItemId::Mist_Lords_Rifle        ,
+			WeaponType::ShortBow   => ItemId::Mist_Lords_Short_Bow    ,
+			WeaponType::Staff      => ItemId::Mist_Lords_Staff        ,
+			WeaponType::HarpoonGun => ItemId::Harpoon_Gun_of_the_Scion,
+			WeaponType::Spear      => ItemId::Impaler_of_the_Scion    ,
+			WeaponType::Trident    => ItemId::Trident_of_the_Scion    ,
+			default => ItemId::_UNDEFINED,
+		};
+	}
 }
