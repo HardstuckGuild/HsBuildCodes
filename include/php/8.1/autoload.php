@@ -26,6 +26,7 @@ spl_autoload_register(function($class) {
 		case '\SkillId':
 		case '\SpecializationId':
 		case '\StatId':
+		case '\TraitId':
 			require __DIR__.'/Database'.str_replace('\\', '/', $relNamespace).'s.php';
 			break;
 
@@ -53,6 +54,7 @@ spl_autoload_register(function($class) {
 		case '\Kind':
 		case '\Profession':
 		case '\Specialization':
+		case '\TraitSlot':
 		case '\TraitLineChoice':
 		case '\WeaponSetNumber':
 		case '\WeaponSet':

@@ -70,6 +70,12 @@ class Specialization {
 	) {}
 }
 
+enum TraitSlot : int {
+	case Adept       = 0;
+	case Master      = 1;
+	case GrandMaster = 2;
+}
+
 enum TraitLineChoice : int {
 	case NONE   = 0;
 	case TOP    = 1;

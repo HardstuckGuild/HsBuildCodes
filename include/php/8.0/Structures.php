@@ -75,6 +75,13 @@ class Specialization {
 	}
 }
 
+//NOTE(Rennorb): this doesn't not have _UNDEFINED as to allow for usage in indexing TraitLineChoices[index]
+class TraitSlot {
+	public const Adept       = 0;
+	public const Master      = 1;
+	public const GrandMaster = 2;
+}
+
 class TraitLineChoice {
 	use Util\Enum;
 

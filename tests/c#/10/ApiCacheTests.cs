@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using Gw2Sharp.WebApi.V2.Models;
 using Xunit;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2.Tests.APICache;
@@ -101,5 +101,25 @@ public class ResolveWeaponSkills {
 
 		for(int i = 0; i < reference.Length; i++)
 			Assert.Equal(reference[i], await V2.APICache.ResolveWeaponSkill(code, effective, i));
+	}
+
+	[Fact]
+	public async Task ResolveTraitId()
+	{
+		var code = new BuildCode(){
+			Profession = Profession.Mesmer,
+			Specializations = {
+				Choice1 = {
+					SpecializationId = SpecializationId.Dueling,
+					Choices = {
+						Adept = TraitLineChoice.MIDDLE,
+					}
+				}
+			}
+		};
+
+		var id = await V2.APICache.ResolveTrait(code.Specializations.Choice1, V2.TraitSlot.Adept);
+
+		Assert.Equal(TraitId.Desperate_Decoy, id);
 	}
 }

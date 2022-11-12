@@ -5,7 +5,11 @@ use Hardstuck\GuildWars2\BuildCodes\V2\BuildCode;
 use Hardstuck\GuildWars2\BuildCodes\V2\ItemId;
 use Hardstuck\GuildWars2\BuildCodes\V2\Profession;
 use Hardstuck\GuildWars2\BuildCodes\V2\SkillId;
+use Hardstuck\GuildWars2\BuildCodes\V2\SpecializationId;
 use Hardstuck\GuildWars2\BuildCodes\V2\Statics;
+use Hardstuck\GuildWars2\BuildCodes\V2\TraitId;
+use Hardstuck\GuildWars2\BuildCodes\V2\TraitLineChoice;
+use Hardstuck\GuildWars2\BuildCodes\V2\TraitSlot;
 use Hardstuck\GuildWars2\BuildCodes\V2\WeaponSetNumber;
 use Hardstuck\GuildWars2\BuildCodes\V2\WeaponType;
 use PHPUnit\Framework\TestCase;
@@ -94,5 +98,18 @@ class ResolveWeaponSkills extends TestCase {
 
 		for($i = 0; $i < count($reference); $i++)
 			$this->assertEquals($reference[$i], APICache::ResolveWeaponSkill($code, $effective, $i));
+	}
+
+	/** @test */
+	public function ResolveTraitId()
+	{
+		$code = new BuildCode();
+		$code->Profession = Profession::Mesmer;
+		$code->Specializations->Choice1->SpecializationId = SpecializationId::Dueling;
+		$code->Specializations->Choice1->Choices->Adept   = TraitLineChoice::MIDDLE;
+
+		$id = APICache::ResolveTrait($code->Specializations->Choice1, TraitSlot::Adept);
+
+		$this->assertEquals(TraitId::Desperate_Decoy, $id);
 	}
 }

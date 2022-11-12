@@ -39,6 +39,13 @@ public struct Specialization {
 	public TraitLineChoices Choices;
 }
 
+//NOTE(Rennorb): this doesn't not have _UNDEFINED as to allow for usage in indexing TraitLineChoices[index]
+public enum TraitSlot {
+	Adept       = 0,
+	Master      = 1,
+	GrandMaster = 2,
+}
+
 public enum TraitLineChoice {
 	NONE   = 0,
 	TOP    = 1,

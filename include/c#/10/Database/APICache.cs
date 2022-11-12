@@ -72,4 +72,23 @@ public static class APICache {
 
 		return (SkillId)weapon.Skills.First(w => w.Slot.Value == SkillSlot.Weapon1 + skillIndex).Id;
 	}
+
+	/// <returns> <see cref="TraitId._UNDEFINED" />  If spec is empty </returns>
+	public static async Task<TraitId> ResolveTrait(Specialization spec, TraitSlot traitSlot)
+	{
+		if(spec.SpecializationId == SpecializationId._UNDEFINED) return TraitId._UNDEFINED;
+		var traitPos = spec.Choices[(int)traitSlot];
+		if(traitPos == TraitLineChoice.NONE) return TraitId._UNDEFINED;
+
+		var allSpecializationData = await _client.WebApi.V2.Specializations.AllAsync();
+
+		foreach(var specialization in allSpecializationData)
+		{
+			if(specialization.Id != (int)spec.SpecializationId) continue;
+
+			return (TraitId)specialization.MajorTraits[(int)traitSlot * 3 + (int)traitPos - 1];
+		}
+
+		return TraitId._UNDEFINED;
+	}
 }

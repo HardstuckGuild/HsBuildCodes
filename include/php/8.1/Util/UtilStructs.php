@@ -21,7 +21,7 @@ class SpecializationChoices implements \ArrayAccess {
 			0 => $this->Choice1,
 			1 => $this->Choice2,
 			2 => $this->Choice3,
-			default => throw new \InvalidArgumentException("index"),
+			default => throw new \InvalidArgumentException("index($offset)"),
 		};
 	}
 
@@ -35,7 +35,7 @@ class SpecializationChoices implements \ArrayAccess {
 			case 0: $this->Choice1 = $value; break;
 			case 1: $this->Choice2 = $value; break;
 			case 2: $this->Choice3 = $value; break;
-			default: throw new \InvalidArgumentException("index");
+			default: throw new \InvalidArgumentException("index($offset)");
 		};
 	}
 
@@ -46,7 +46,7 @@ class SpecializationChoices implements \ArrayAccess {
 			case 0: unset($this->Choice1); break;
 			case 1: unset($this->Choice2); break;
 			case 2: unset($this->Choice3); break;
-			default: throw new \InvalidArgumentException("index");
+			default: throw new \InvalidArgumentException("index($offset)");
 		};
 	}
 	
@@ -66,7 +66,7 @@ class TraitLineChoices implements \ArrayAccess {
 			0 => $this->Adept,
 			1 => $this->Master,
 			2 => $this->Grandmaster,
-			default => throw new \InvalidArgumentException("index"),
+			default => throw new \InvalidArgumentException("index($offset)"),
 		};
 	}
 
@@ -80,7 +80,7 @@ class TraitLineChoices implements \ArrayAccess {
 			case 0: $this->Adept       = $value; break;
 			case 1: $this->Master      = $value; break;
 			case 2: $this->Grandmaster = $value; break;
-			default: throw new \InvalidArgumentException("index");
+			default: throw new \InvalidArgumentException("index($offset)");
 		};
 	}
 
@@ -91,7 +91,7 @@ class TraitLineChoices implements \ArrayAccess {
 			case 0: unset($this->Adept);
 			case 1: unset($this->Master);
 			case 2: unset($this->Grandmaster);
-			default: throw new \InvalidArgumentException("index");
+			default: throw new \InvalidArgumentException("index($offset)");
 		};
 	}
 
@@ -115,7 +115,7 @@ class AllSkills implements \ArrayAccess {
 			2 => $this->Utility2,
 			3 => $this->Utility3,
 			4 => $this->Elite,
-			default => throw new \InvalidArgumentException("index"),
+			default => throw new \InvalidArgumentException("index($offset)"),
 		};
 	}
 
@@ -131,7 +131,7 @@ class AllSkills implements \ArrayAccess {
 			case 2: $this->Utility2 = $value; break;
 			case 3: $this->Utility3 = $value; break;
 			case 4: $this->Elite    = $value; break;
-			default: throw new \InvalidArgumentException("index");
+			default: throw new \InvalidArgumentException("index($offset)");
 		};
 	}
 
@@ -144,7 +144,7 @@ class AllSkills implements \ArrayAccess {
 			case 2: unset($this->Utility2);
 			case 3: unset($this->Utility3);
 			case 4: unset($this->Elite);
-			default: throw new \InvalidArgumentException("index");
+			default: throw new \InvalidArgumentException("index($offset)");
 		};
 	}
 
@@ -194,7 +194,7 @@ class AllEquipmentStats implements \ArrayAccess {
 			13 => $this->WeaponSet2MainHand,
 			14 => $this->WeaponSet2OffHand ,
 			15 => $this->Amulet,
-			default => throw new \InvalidArgumentException("index"),
+			default => throw new \InvalidArgumentException("index($offset)"),
 		};
 	}
 	
@@ -221,7 +221,7 @@ class AllEquipmentStats implements \ArrayAccess {
 			case 13: $this->WeaponSet2MainHand = $value; break;
 			case 14: $this->WeaponSet2OffHand  = $value; break;
 			case 15: $this->Amulet              = $value; break;
-			default: throw new \InvalidArgumentException("index");
+			default: throw new \InvalidArgumentException("index($offset)");
 		};
 	}
 
@@ -245,7 +245,7 @@ class AllEquipmentStats implements \ArrayAccess {
 			case 13: unset($this->WeaponSet2MainHand);
 			case 14: unset($this->WeaponSet2OffHand );
 			case 15: unset($this->Amulet);
-			default: throw new \InvalidArgumentException("index");
+			default: throw new \InvalidArgumentException("index($offset)");
 		};
 	}
 
@@ -301,7 +301,7 @@ class AllEquipmentInfusions implements \ArrayAccess {
 			18 => $this->WeaponSet2_1,
 			19 => $this->WeaponSet2_2,
 			20 => $this->Amulet,
-			default => throw new \InvalidArgumentException("index"),
+			default => throw new \InvalidArgumentException("index($offset)"),
 		};
 	}
 
@@ -333,7 +333,7 @@ class AllEquipmentInfusions implements \ArrayAccess {
 			case 18: $this->WeaponSet2_1 = $value; break;
 			case 19: $this->WeaponSet2_2 = $value; break;
 			case 20: $this->Amulet       = $value; break;
-			default: throw new \InvalidArgumentException("index");
+			default: throw new \InvalidArgumentException("index($offset)");
 		};
 	}
 
@@ -362,7 +362,7 @@ class AllEquipmentInfusions implements \ArrayAccess {
 			case 18: unset($this->WeaponSet2_1);
 			case 19: unset($this->WeaponSet2_2);
 			case 20: unset($this->Amulet);
-			default: throw new \InvalidArgumentException("index");
+			default: throw new \InvalidArgumentException("index($offset)");
 		};
 	}
 

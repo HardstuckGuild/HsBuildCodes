@@ -5,7 +5,7 @@ class APICache {
 
 	public static ICache $CacheImpl;
 	
-	public static function Get(string $path, string $schemaVersion = 'latest') : object 
+	public static function Get(string $path, string $schemaVersion = 'latest') : mixed 
 	{
 		if(!isset(APICache::$CacheImpl))
 			APICache::$CacheImpl = new DefaultCacheImpl();
@@ -76,5 +76,24 @@ class APICache {
 		}
 		
 		return SkillId::_UNDEFINED;
+	}
+
+	/** @return TraitId::_UNDEFINED If spec is empty or trait choice is empty */
+	public static function ResolveTrait(Specialization $spec, int $traitSlot) : int
+	{
+		if($spec->SpecializationId === SpecializationId::_UNDEFINED) return TraitId::_UNDEFINED;
+		$traitPos = $spec->Choices[$traitSlot];
+		if($traitPos === TraitLineChoice::NONE) return TraitId::_UNDEFINED;
+
+		$allSpecializationData = APICache::Get('/specializations?ids=all');
+
+		foreach($allSpecializationData as $specialization)
+		{
+			if($specialization->id !== $spec->SpecializationId) continue;
+
+			return $specialization->major_traits[$traitSlot * 3 + $traitPos - 1];
+		}
+
+		return TraitId::_UNDEFINED;
 	}
 }

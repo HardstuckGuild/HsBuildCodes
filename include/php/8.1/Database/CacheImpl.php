@@ -1,14 +1,14 @@
 <?php namespace Hardstuck\GuildWars2\BuildCodes\V2;
 
 interface ICache {
-	public function Get(string $path, string $schemaVersion = 'latest') : object;
+	public function Get(string $path, string $schemaVersion = 'latest') : mixed;
 }
 
 class CacheEntry {
 	public \DateTimeImmutable $CacheTime;
-	public object             $Response;
+	public mixed              $Response;
 
-	public function __construct(\DateTimeImmutable $cacheTime, object $response) {
+	public function __construct(\DateTimeImmutable $cacheTime, mixed $response) {
 		$this->CacheTime = $cacheTime;
 		$this->Response  = $response;
 	}
@@ -19,7 +19,7 @@ class DefaultCacheImpl implements ICache {
 
 	/** @var CacheEntry[] */
 	private static array $_cache = [];
-	public function Get(string $path, string $schemaVersion = 'latest') : object
+	public function Get(string $path, string $schemaVersion = 'latest') : mixed
 	{
 		$key = $path.$schemaVersion;
 
