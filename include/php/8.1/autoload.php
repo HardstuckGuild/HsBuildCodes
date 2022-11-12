@@ -1,5 +1,7 @@
 <?php namespace Hardstuck\GuildWars2\BuildCodes\V2;
 
+set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__.'/../../common/');
+
 spl_autoload_register(function($class) {
 	$relNamespace = strstr($class, __NAMESPACE__);
 	if($relNamespace === false) return;

@@ -24,7 +24,8 @@ function ConvertToHsArray(BuildCode $code, string $codeText)
 	//??
 	$duplicateWeaponSets = $code->WeaponSet1 == $code->WeaponSet2 
 		&& $code->EquipmentAttributes->WeaponSet1MainHand == $code->EquipmentAttributes->WeaponSet2MainHand;
-	$oneMainOneOff = $duplicateWeaponSets && !Statics::IsTwoHanded($code->WeaponSet1->MainHand);
+	$oneMainOneOff = $duplicateWeaponSets && ($code->WeaponSet1->MainHand == WeaponType::_UNDEFINED 
+		|| !Statics::IsTwoHanded($code->WeaponSet1->MainHand));
 
 	$sql_data = array(
 			'hs_code'            => $codeText,

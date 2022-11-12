@@ -160,7 +160,7 @@ class PerProfessionData {
 			}
 			catch(\Error $ex)
 			{
-				assert(false, "Could not fetch skill pallette for $professionName, will fall back to offline list.\n{$ex}");
+				trigger_error("Could not fetch skill pallette for $professionName, will fall back to offline list.\n{$ex}", E_USER_WARNING);
 			}
 		}
 

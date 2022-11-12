@@ -18,6 +18,21 @@ set_include_path(__DIR__.'/../../../include/common/');
 
 class ResolveWeaponSkills extends TestCase {
 	/** @test */
+	public function ResolveWeaponSkillsEmpty() {
+		$code = new BuildCode();
+
+		$effective = Statics::ResolveEffectiveWeapons($code, WeaponSetNumber::Set1);
+
+		$this->assertEquals(WeaponType::_UNDEFINED, $effective->MainHand);
+		$this->assertEquals(WeaponType::_UNDEFINED, $effective->OffHand);
+
+		$reference = array_fill(0, 5, SkillId::_UNDEFINED);
+
+		for($i = 0; $i < count($reference); $i++)
+			$this->assertEquals($reference[$i], APICache::ResolveWeaponSkill($code, $effective, $i));
+	}
+
+	/** @test */
 	public function ResolveWeaponSkills2h() {
 		$code = new BuildCode();
 		$code->Profession = Profession::Necromancer;
