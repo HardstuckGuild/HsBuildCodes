@@ -4,7 +4,7 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "PHPUnit",
+			"label": "PHPUnit - 8.1",
 			"type": "shell",
 			"command": [
 				"G:/privat/programms/php/php-8.1.12-Win32-vs16-x64/php.exe",
@@ -14,6 +14,20 @@
 				"--test-suffix", "Tests.php",
 				"--bootstrap", "./include/php/8.1/autoload.php",
 				"./tests/php/8.1/"
+			],
+			"problemMatcher": []
+		},
+		{
+			"label": "PHPUnit - 8.0",
+			"type": "shell",
+			"command": [
+				"G:/privat/programms/php/php-8.0.25-Win32-vs16-x64/php.exe",
+				"./tests/php/8.0/phpunit-9.5.26.phar",
+				//"--stop-on-failure",
+				"--colors=auto",
+				"--test-suffix", "Tests.php",
+				"--bootstrap", "./include/php/8.0/autoload.php",
+				"./tests/php/8.0/"
 			],
 			"problemMatcher": []
 		},

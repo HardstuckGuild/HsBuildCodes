@@ -21,9 +21,9 @@ class APICache {
 	}
 
 	/** 
-	 * @return StatId StatId::_UNDEFINED if the item does not have stats.
+	 * @return int StatId::_UNDEFINED if the item does not have stats.
 	 */
-	public static function ResolveStatId(int $itemId) : StatId
+	public static function ResolveStatId(int $itemId) : int
 	{
 		$itemData = APICache::Get("/items/$itemId");
 		return $itemData->details->infix_upgrade?->id ?? StatId::_UNDEFINED;

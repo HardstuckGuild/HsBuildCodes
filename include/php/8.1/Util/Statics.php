@@ -22,23 +22,23 @@ trait Enum {
 	use _Static;
 
 	public static function TryGetName(int $value) {
-		foreach(get_class_vars(static::class) as $name => $value) {
-			if($value === $value)
+		foreach((new \ReflectionClass(static::class))->getConstants() as $name => $enumValue) {
+			if($value === $enumValue)
 				return $name;
 		}
-		return '__not_defined';
+		return "__not_defined($value)";
 	}
 
 	public static function TryGetValue(string $name) : int
 	{
 		if(property_exists(static::class, $name))
-			return static::class::$$name;
+			return constant(static::class.'::'.$name);
 		else
 			return 0;
 	}
 
 	public static function GetValue(string $name) : int
 	{
-			return static::class::$$name;
+		return constant(static::class.'::'.$name);
 	}
 }
