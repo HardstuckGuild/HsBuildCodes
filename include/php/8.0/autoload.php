@@ -61,6 +61,7 @@ spl_autoload_register(function($class) {
 		case '\WeaponSetNumber':
 		case '\WeaponSet':
 		case '\WeaponType':
+		case '\WeightClass':
 		case '\IProfessionSpecific':
 		case '\ProfessionSpecific\NONE':
 		case '\RangerData':

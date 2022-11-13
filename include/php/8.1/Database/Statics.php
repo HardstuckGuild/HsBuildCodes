@@ -199,4 +199,70 @@ class Statics {
 			default => ItemId::_UNDEFINED,
 		};
 	}
+
+	/** @remarks Does not translate weapon items. Use Static::ResolveDummyItemForWeaponType(WeaponType, StatId) for that. */
+	public static function ResolveDummyItemForEquipment(int $equipmentIndex, WeightClass $weightClass, int $statId) : int
+	{
+		return match($equipmentIndex) {
+			 0 => match ($weightClass) {
+				WeightClass::Light  => ItemId::Illustrious_Masque,
+				WeightClass::Medium => ItemId::Illustrious_Visage,
+				WeightClass::Heavy  => ItemId::Illustrious_Visor,
+				default => ItemId::_UNDEFINED,
+			 },
+			 1 => match ($weightClass) {
+				WeightClass::Light  => ItemId::Illustrious_Epaulets,
+				WeightClass::Medium => ItemId::Illustrious_Shoulderguard,
+				WeightClass::Heavy  => ItemId::Illustrious_Pauldrons,
+				default => ItemId::_UNDEFINED,
+			 },
+			 2 => match ($weightClass) {
+				WeightClass::Light  => ItemId::Illustrious_Doublet,
+				WeightClass::Medium => ItemId::Illustrious_Guise,
+				WeightClass::Heavy  => ItemId::Illustrious_Breastplate,
+				default => ItemId::_UNDEFINED,
+			 },
+			 3 => match ($weightClass) {
+				WeightClass::Light  => ItemId::Illustrious_Wristguards,
+				WeightClass::Medium => ItemId::Illustrious_Grips,
+				WeightClass::Heavy  => ItemId::Illustrious_Warfists,
+				default => ItemId::_UNDEFINED,
+			 },
+			 4 => match ($weightClass) {
+				WeightClass::Light  => ItemId::Illustrious_Breeches,
+				WeightClass::Medium => ItemId::Illustrious_Leggings,
+				WeightClass::Heavy  => ItemId::Illustrious_Tassets,
+				default => ItemId::_UNDEFINED,
+			 },
+			 5 => match ($weightClass) {
+				WeightClass::Light  => ItemId::Illustrious_Footwear,
+				WeightClass::Medium => ItemId::Illustrious_Striders,
+				WeightClass::Heavy  => ItemId::Illustrious_Greaves,
+				default => ItemId::_UNDEFINED,
+			 },
+			 6 => ItemId::Quiver_of_a_Thousand_Arrows,
+			 7 => ItemId::Black_Ice_Earing           ,
+			 8 => ItemId::Asgeirs_Talisman           ,
+			 9 => ItemId::Black_Ice_Band             ,
+			10 => ItemId::Mistborn_Band              ,
+			15 => ItemId::Asgeirs_Amulet             ,
+			default => ItemId::_UNDEFINED,
+		};
+	}
+
+	public static function ResolveWeightClass(Profession $profession) : WeightClass
+	{
+		return match($profession) {
+			Profession::Guardian     => WeightClass::Heavy,
+			Profession::Warrior      => WeightClass::Heavy,
+			Profession::Engineer     => WeightClass::Medium,
+			Profession::Ranger       => WeightClass::Medium,
+			Profession::Thief        => WeightClass::Medium,
+			Profession::Elementalist => WeightClass::Light,
+			Profession::Mesmer       => WeightClass::Light,
+			Profession::Necromancer  => WeightClass::Light,
+			Profession::Revenant     => WeightClass::Heavy,
+			default => WeightClass::_UNDEFINED,
+		};
+	}
 }

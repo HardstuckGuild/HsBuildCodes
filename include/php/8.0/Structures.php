@@ -65,6 +65,15 @@ class Profession {
 	public const Revenant     = 9;
 }
 
+class WeightClass {
+	use Util\Enum;
+
+	public const _UNDEFINED = 0;
+	public const Light      = 1;
+	public const Medium     = 2;
+	public const Heavy      = 3;
+}
+
 class Specialization {
 	public int              $SpecializationId;
 	public TraitLineChoices $Choices         ;

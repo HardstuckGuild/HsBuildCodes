@@ -35,4 +35,32 @@ class ItemId {
 	public const Harpoon_Gun_of_the_Scion = 90283;
 	public const Impaler_of_the_Scion     = 90226;
 	public const Trident_of_the_Scion     = 90637;
+
+	public const Quiver_of_a_Thousand_Arrows = 37000;
+	public const Black_Ice_Earing            = 79745;
+	public const Asgeirs_Talisman            = 92706;
+	public const Asgeirs_Amulet              = 92215;
+	public const Black_Ice_Band              = 79712;
+	public const Mistborn_Band               = 90369;
+
+	public const Illustrious_Masque        = 85128; //light helmet
+	public const Illustrious_Epaulets      = 84918; //light shoulders
+	public const Illustrious_Doublet       = 85333; //light chest
+	public const Illustrious_Wristguards   = 85070; //light gloves
+	public const Illustrious_Breeches      = 85362; //light legs
+	public const Illustrious_Footwear      = 80815; //light boots
+
+	public const Illustrious_Visage        = 84862; //med helm
+	public const Illustrious_Shoulderguard = 85182; //med shoulders
+	public const Illustrious_Guise         = 84977; //med chest
+	public const Illustrious_Grips         = 85169; //med gloves
+	public const Illustrious_Leggings      = 85264; //med legs
+	public const Illustrious_Striders      = 80836; //med boots
+
+	public const Illustrious_Visor         = 85193; //heavy helm
+	public const Illustrious_Pauldrons     = 84875; //heavy shoulders
+	public const Illustrious_Breastplate   = 85084; //heavy chest
+	public const Illustrious_Warfists      = 85140; //heavy gloves
+	public const Illustrious_Tassets       = 84887; //heavy legs
+	public const Illustrious_Greaves       = 85055; //heavy boots
 }

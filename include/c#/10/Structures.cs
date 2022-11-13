@@ -34,6 +34,13 @@ public enum Profession {
 	Guardian = 1, Warrior, Engineer, Ranger, Thief, Elementalist, Mesmer, Necromancer, Revenant,
 }
 
+public enum WeightClass {
+	_UNDEFINED = default,
+	Light      = 1,
+	Medium     = 2,
+	Heavy      = 3,
+}
+
 public struct Specialization {
 	public SpecializationId SpecializationId;
 	public TraitLineChoices Choices;

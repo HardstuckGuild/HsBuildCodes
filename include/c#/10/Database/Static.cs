@@ -197,4 +197,70 @@ public static class Static
 			_ => ItemId._UNDEFINED,
 		};
 	}
+
+	/// <remarks> Does not translate weapon items. Use <see cref="Static.ResolveDummyItemForWeaponType(WeaponType, StatId)" /> for that. </remarks>
+	public static ItemId ResolveDummyItemForEquipment(int equipmentIndex, WeightClass weightClass, StatId statId)
+	{
+		return (equipmentIndex) switch {
+			 0 => (weightClass) switch {
+				WeightClass.Light  => ItemId.Illustrious_Masque,
+				WeightClass.Medium => ItemId.Illustrious_Visage,
+				WeightClass.Heavy  => ItemId.Illustrious_Visor,
+				_ => ItemId._UNDEFINED,
+			 },
+			 1 => (weightClass) switch {
+				WeightClass.Light  => ItemId.Illustrious_Epaulets,
+				WeightClass.Medium => ItemId.Illustrious_Shoulderguard,
+				WeightClass.Heavy  => ItemId.Illustrious_Pauldrons,
+				_ => ItemId._UNDEFINED,
+			 },
+			 2 => (weightClass) switch {
+				WeightClass.Light  => ItemId.Illustrious_Doublet,
+				WeightClass.Medium => ItemId.Illustrious_Guise,
+				WeightClass.Heavy  => ItemId.Illustrious_Breastplate,
+				_ => ItemId._UNDEFINED,
+			 },
+			 3 => (weightClass) switch {
+				WeightClass.Light  => ItemId.Illustrious_Wristguards,
+				WeightClass.Medium => ItemId.Illustrious_Grips,
+				WeightClass.Heavy  => ItemId.Illustrious_Warfists,
+				_ => ItemId._UNDEFINED,
+			 },
+			 4 => (weightClass) switch {
+				WeightClass.Light  => ItemId.Illustrious_Breeches,
+				WeightClass.Medium => ItemId.Illustrious_Leggings,
+				WeightClass.Heavy  => ItemId.Illustrious_Tassets,
+				_ => ItemId._UNDEFINED,
+			 },
+			 5 => (weightClass) switch {
+				WeightClass.Light  => ItemId.Illustrious_Footwear,
+				WeightClass.Medium => ItemId.Illustrious_Striders,
+				WeightClass.Heavy  => ItemId.Illustrious_Greaves,
+				_ => ItemId._UNDEFINED,
+			 },
+			 6 => ItemId.Quiver_of_a_Thousand_Arrows,
+			 7 => ItemId.Black_Ice_Earing           ,
+			 8 => ItemId.Asgeirs_Talisman           ,
+			 9 => ItemId.Black_Ice_Band             ,
+			10 => ItemId.Mistborn_Band              ,
+			15 => ItemId.Asgeirs_Amulet             ,
+			_ => ItemId._UNDEFINED,
+		};
+	}
+
+	public static WeightClass ResolveWeightClass(Profession profession) 
+	{
+		return (profession) switch {
+			Profession.Guardian     => WeightClass.Heavy,
+			Profession.Warrior      => WeightClass.Heavy,
+			Profession.Engineer     => WeightClass.Medium,
+			Profession.Ranger       => WeightClass.Medium,
+			Profession.Thief        => WeightClass.Medium,
+			Profession.Elementalist => WeightClass.Light,
+			Profession.Mesmer       => WeightClass.Light,
+			Profession.Necromancer  => WeightClass.Light,
+			Profession.Revenant     => WeightClass.Heavy,
+			_ => WeightClass._UNDEFINED,
+		};
+	}
 }

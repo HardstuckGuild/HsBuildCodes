@@ -63,6 +63,13 @@ enum Profession : int {
 	case Revenant     = 9;
 }
 
+enum WeightClass : int {
+	case _UNDEFINED = 0;
+	case Light      = 1;
+	case Medium     = 2;
+	case Heavy      = 3;
+}
+
 class Specialization {
 	public function __construct(
 		public int              $SpecializationId = SpecializationId::_UNDEFINED,
