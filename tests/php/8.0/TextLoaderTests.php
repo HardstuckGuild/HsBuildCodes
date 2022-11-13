@@ -189,6 +189,11 @@ class BasicCodesTests extends TestCase {
 		$this->assertEquals(WeaponType::_UNDEFINED, $code->WeaponSet2->MainHand);
 		$this->assertEquals(WeaponType::_UNDEFINED, $code->WeaponSet2->OffHand);
 
+		$this->assertEquals(ItemId::_UNDEFINED, $code->Rune);
+		for($i = 0; $i < Statics::ALL_EQUIPMENT_COUNT; $i++) {
+			$this->assertEquals(StatId::_UNDEFINED, $code->EquipmentAttributes[$i]);
+		}
+
 		$this->assertEquals(SpecializationId::Spite, $code->Specializations[0]->SpecializationId);
 		$reference1 = new TraitLineChoices();
 		$reference1->Adept       = TraitLineChoice::TOP;

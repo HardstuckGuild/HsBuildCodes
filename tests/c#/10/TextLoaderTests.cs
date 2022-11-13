@@ -161,6 +161,11 @@ public class BasicCodesTests {
 		Assert.Equal(WeaponType._UNDEFINED, code.WeaponSet2.MainHand);
 		Assert.Equal(WeaponType._UNDEFINED, code.WeaponSet2.OffHand);
 
+		Assert.Equal(ItemId._UNDEFINED, code.Rune);
+		for(var i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++) {
+			Assert.Equal(StatId._UNDEFINED, code.EquipmentAttributes[i]);
+		}
+
 		Assert.Equal(SpecializationId.Spite, code.Specializations[0].SpecializationId);
 		Assert.Equal(new TraitLineChoices() {
 			Adept = TraitLineChoice.TOP,
