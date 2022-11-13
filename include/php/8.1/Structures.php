@@ -98,7 +98,7 @@ class WeaponSet {
 		public int        $Sigil2   =     ItemId::_UNDEFINED,
 	) {}
 
-	public function HasAny() : bool { return (bool)($this->MainHand->value & $this->OffHand->value); }
+	public function HasAny() : bool { return (bool)($this->MainHand->value | $this->OffHand->value); }
 }
 
 //NOTE(Rennorb): names match official API

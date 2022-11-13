@@ -8,6 +8,10 @@ public enum ItemId {
 	Superior_Sigil_of_Paralysation2  = 91398,
 	Superior_Sigil_of_Concentration2 = 91473,
 	Superior_Rune_of_the_Traveler2   = 91485,
+	Superior_Rune_of_the_Scholar     = 24836,
+
+	Bowl_of_Sweet_and_spicy_Butternut_Squash_Soup = 41569,
+	Tin_of_Fruitcake = 77569,
 
 	Mist_Lords_Axe           = 91622,
 	Mist_Lords_Dagger        = 91636,

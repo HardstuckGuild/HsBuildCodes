@@ -9,6 +9,10 @@ class ItemId {
 	public const Superior_Sigil_of_Paralysation2  = 91398;
 	public const Superior_Sigil_of_Concentration2 = 91473;
 	public const Superior_Rune_of_the_Traveler2   = 91485;
+	public const Superior_Rune_of_the_Scholar     = 24836;
+
+	public const Bowl_of_Sweet_and_spicy_Butternut_Squash_Soup = 41569;
+	public const Tin_of_Fruitcake = 77569;
 
 	public const Mist_Lords_Axe           = 91622;
 	public const Mist_Lords_Dagger        = 91636;

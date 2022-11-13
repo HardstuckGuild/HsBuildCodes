@@ -48,4 +48,7 @@ class StringView implements \ArrayAccess {
 	/** @param int $offset */
 	public function offsetExists(mixed $offset) : bool
 	{ return 0 <= $offset && $offset < strlen($this->Data) - $this->Pos; }
+
+	public function DebugPrint() : void
+	{ print "\n".$this->Data."\n".str_repeat(' ', $this->Pos)."^- Current Pos\n"; }
 }

@@ -68,7 +68,7 @@ public struct WeaponSet {
 	public ItemId Sigil1;
 	public ItemId Sigil2;
 
-	public bool HasAny => (MainHand & OffHand) != WeaponType._UNDEFINED;
+	public bool HasAny => (MainHand | OffHand) != WeaponType._UNDEFINED;
 }
 
 //NOTE(Rennorb): names match official API
