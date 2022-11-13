@@ -55,11 +55,13 @@ V T P S.TS.TS.T WS..wS..WS..wS.. S..S..S..S..S.. R.. A..n,,,, I..n,,,, F..U.. A,
         This effectively constructs `0b00aabbcc` with `aa` = pos of first choice, `bb` = pos of second choice, `cc` = pos of third choice. With a max value of 63 this can be used to index `character_set` and obtain the final encoding. Omit if trait line is empty.
 
 `[WS..wS..WS..wS..]` Weapons [2 * 3-8 characters] pairs of (1 char weapon type index, 1-3 char sigil id, 0-1 char weapon type index, 1-3 char sigil id):
-  - if the first weapon is two handed, the second weapon id in the set is omitted 
+  - The whole section can be omitted by replacing it with a `~` (tilde).
+  - If the first weapon is two handed, the second weapon id in the set is omitted.
   1. - `_` (underscore): empty weapon slot
      - `A-T`: weapon type index. Axe, Dagger, Mace, Pistol, Sword, Scepter, Focus, Shield, Torch, Warhorn, ShortBow, Greatsword, Hammer, Longbow, Rifle, Staff, HarpoonGun, Spear, Trident
   2. - `_` (underscore): empty sigil slot
      - `1-3 characters`: sigil id resolved by `/v2/items`, `encode(id, 3)`
+     - Omit if there is no weapon (no one-handed weapon and the first weapon is not two handed).
 
   - The second weapon set may be omitted from the code by replacing 
 the whole second set (`[WS..wS..]`) with a `~` (tilde). This section can be

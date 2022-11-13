@@ -107,9 +107,13 @@ public static class TextLoader {
 	{
 		var set = new WeaponSet();
 		if(!EatToken(ref text, '_')) set.MainHand = WeaponType._FIRST + DecodeAndAdvance(ref text);
-		if(!EatToken(ref text, '_')) set.Sigil1 = (ItemId)DecodeAndAdvance(ref text, 3);
-		if(!EatToken(ref text, '_')) set.OffHand = WeaponType._FIRST + DecodeAndAdvance(ref text);
-		if(!EatToken(ref text, '_')) set.Sigil2 = (ItemId)DecodeAndAdvance(ref text, 3);
+		if(set.MainHand != WeaponType._UNDEFINED)
+			if(!EatToken(ref text, '_')) set.Sigil1 = (ItemId)DecodeAndAdvance(ref text, 3);
+		
+		if(set.MainHand == WeaponType._UNDEFINED || !Static.IsTwoHanded(set.MainHand))
+			if(!EatToken(ref text, '_')) set.OffHand = WeaponType._FIRST + DecodeAndAdvance(ref text);
+		if(set.OffHand != WeaponType._UNDEFINED || (set.MainHand != WeaponType._UNDEFINED && Static.IsTwoHanded(set.MainHand)))
+			if(!EatToken(ref text, '_')) set.Sigil2 = (ItemId)DecodeAndAdvance(ref text, 3);
 		return set;
 	}
 

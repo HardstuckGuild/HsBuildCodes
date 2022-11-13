@@ -277,6 +277,20 @@ class BasicCodesTests extends TestCase {
 		$this->assertEquals(ItemId::Bowl_of_Sweet_and_spicy_Butternut_Squash_Soup, $code->Food);
 		$this->assertEquals(ItemId::Tin_of_Fruitcake, $code->Utility);
 	}
+
+	/** @test */
+	public function ParseAll()
+	{
+		foreach(TestUtilities::$CodesV2 as $name => $code) {
+			try {
+				$code = TextLoader::LoadBuildCode($code);
+			} catch(\Throwable $ex) {
+				throw new \Exception("$name ($code) failed", 0, $ex);
+			}
+		}
+
+		$this->assertTrue(true);
+	}
 }
 
 class OfficialChatLinks extends TestCase {

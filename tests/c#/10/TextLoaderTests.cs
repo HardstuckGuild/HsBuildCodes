@@ -249,6 +249,20 @@ public class BasicCodesTests {
 		Assert.Equal(ItemId.Bowl_of_Sweet_and_spicy_Butternut_Squash_Soup, code.Food);
 		Assert.Equal(ItemId.Tin_of_Fruitcake, code.Utility);
 	}
+
+	[Fact]
+	public void ParseAll()
+	{
+		foreach(var (name, code) in TestUtilities.CodesV2) {
+			try {
+				var code_ = TextLoader.LoadBuildCode(code);
+			} catch(Exception ex) {
+				throw new Exception($"{name} ({code}) failed", ex);
+			}
+		}
+
+		Assert.True(true);
+	}
 }
 
 public class OfficialChatLinks {

@@ -106,9 +106,13 @@ class TextLoader {
 	{
 		$set = new WeaponSet();
 		if(!TextLoader::EatToken($text, '_')) $set->MainHand = WeaponType::_FIRST() + TextLoader::DecodeAndAdvance($text);
-		if(!TextLoader::EatToken($text, '_')) $set->Sigil1 = TextLoader::DecodeAndAdvance($text, 3);
-		if(!TextLoader::EatToken($text, '_')) $set->OffHand = WeaponType::_FIRST() + TextLoader::DecodeAndAdvance($text);
-		if(!TextLoader::EatToken($text, '_')) $set->Sigil2 = TextLoader::DecodeAndAdvance($text, 3);
+		if($set->MainHand)
+			if(!TextLoader::EatToken($text, '_')) $set->Sigil1 = TextLoader::DecodeAndAdvance($text, 3);
+
+		if($set->MainHand === WeaponType::_UNDEFINED || !Statics::IsTwoHanded($set->MainHand))
+			if(!TextLoader::EatToken($text, '_')) $set->OffHand = WeaponType::_FIRST() + TextLoader::DecodeAndAdvance($text);
+		if($set->OffHand || ($set->MainHand && Statics::IsTwoHanded($set->MainHand)))
+			if(!TextLoader::EatToken($text, '_')) $set->Sigil2 = TextLoader::DecodeAndAdvance($text, 3);
 		return $set;
 	}
 
