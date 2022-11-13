@@ -14,6 +14,8 @@ class ItemId {
 	public const Bowl_of_Sweet_and_spicy_Butternut_Squash_Soup = 41569;
 	public const Tin_of_Fruitcake = 77569;
 
+	public const Mighty_5_Agony_Infusion = 39620;
+
 	public const Mist_Lords_Axe           = 91622;
 	public const Mist_Lords_Dagger        = 91636;
 	public const Mist_Lords_Mace          = 91671;

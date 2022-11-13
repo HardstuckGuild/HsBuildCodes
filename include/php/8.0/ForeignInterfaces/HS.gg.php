@@ -2,6 +2,7 @@
 
 use Hardstuck\GuildWars2\BuildCodes\V2\APICache;
 use Hardstuck\GuildWars2\BuildCodes\V2\BuildCode;
+use Hardstuck\GuildWars2\BuildCodes\V2\ItemId;
 use Hardstuck\GuildWars2\BuildCodes\V2\Kind;
 use Hardstuck\GuildWars2\BuildCodes\V2\LazyLoadMode;
 use Hardstuck\GuildWars2\BuildCodes\V2\PerProfessionData;
@@ -10,6 +11,7 @@ use Hardstuck\GuildWars2\BuildCodes\V2\SpecializationId;
 use Hardstuck\GuildWars2\BuildCodes\V2\Statics;
 use Hardstuck\GuildWars2\BuildCodes\V2\TextLoader;
 use Hardstuck\GuildWars2\BuildCodes\V2\TraitSlot;
+use Hardstuck\GuildWars2\BuildCodes\V2\Util\AllEquipmentInfusions;
 use Hardstuck\GuildWars2\BuildCodes\V2\WeaponSetNumber;
 use Hardstuck\GuildWars2\BuildCodes\V2\WeaponType;
 
@@ -109,6 +111,9 @@ function ConvertToHsArray(BuildCode $code, string $codeText)
 			'pet2'               => $code->Profession === Profession::Ranger ? $code->ProfessionSpecific->Pet1 : null,
 			'legend1'            => $code->Profession === Profession::Revenant ? $code->ProfessionSpecific->Legend1 : null,
 			'legend2'            => $code->Profession === Profession::Revenant ? $code->ProfessionSpecific->Legend2 : null,
+			'food'               => $code->Food,
+			'utility'            => $code->Utility,
+			'infusions'          => transform_infusion_data($code->Infusions),
 			'one_main_one_off'   => $oneMainOneOff,
 			'duplicate_weapon_sets' => $duplicateWeaponSets,
 	);
@@ -116,6 +121,20 @@ function ConvertToHsArray(BuildCode $code, string $codeText)
 	global $wpdb;
 	$insertion = (HS_GW2_FORCE_BUILDS_REWRITE) ? $wpdb->replace(HS_GW2_BUILDS_DB, $sql_data) : $wpdb->insert(HS_GW2_BUILDS_DB, $sql_data); 
 	return ($insertion) ? $sql_data : false;
+}
+
+function transform_infusion_data(AllEquipmentInfusions $infusions) : string
+{
+	$arr = [];
+	for($i = 0; $i < Statics::ALL_INFUSION_COUNT; $i++) {
+		$itemId = $infusions[$i];
+		if($itemId === ItemId::_UNDEFINED) continue;
+
+		if(array_key_exists($itemId, $arr)) $arr[$itemId]++;
+		else $arr[$itemId] = 1;
+	}
+
+	return json_encode($arr);
 }
 
 const runes_replace = array(

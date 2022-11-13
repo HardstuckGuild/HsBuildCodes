@@ -243,6 +243,10 @@ class BasicCodesTests extends TestCase {
 			$this->assertContains($code->EquipmentAttributes[$i], $berserkers, "index$i");
 		}
 
+		for($i = 0; $i < Statics::ALL_INFUSION_COUNT; $i++) {
+			$this->assertEquals(ItemId::Mighty_5_Agony_Infusion, $code->Infusions[$i]);
+		}
+
 		$this->assertEquals(SpecializationId::Spite, $code->Specializations[0]->SpecializationId);
 		$reference1 = new TraitLineChoices();
 		$reference1->Adept       = TraitLineChoice::TOP;

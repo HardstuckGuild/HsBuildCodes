@@ -215,6 +215,10 @@ public class BasicCodesTests {
 			Assert.Contains(code.EquipmentAttributes[i], berserkers);
 		}
 
+		for(var i = 0; i < Static.ALL_INFUSION_COUNT; i++) {
+			Assert.Equal(ItemId.Mighty_5_Agony_Infusion, code.Infusions[i]);
+		}
+
 		Assert.Equal(SpecializationId.Spite, code.Specializations[0].SpecializationId);
 		Assert.Equal(new TraitLineChoices() {
 			Adept = TraitLineChoice.TOP,

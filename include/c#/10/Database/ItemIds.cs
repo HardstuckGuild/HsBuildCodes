@@ -13,6 +13,8 @@ public enum ItemId {
 	Bowl_of_Sweet_and_spicy_Butternut_Squash_Soup = 41569,
 	Tin_of_Fruitcake = 77569,
 
+	Mighty_5_Agony_Infusion = 39620,
+
 	Mist_Lords_Axe           = 91622,
 	Mist_Lords_Dagger        = 91636,
 	Mist_Lords_Mace          = 91671,
