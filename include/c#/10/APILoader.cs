@@ -7,7 +7,15 @@ namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
 public static class APILoader {
 
-	/// <summary> Produces a list of token scopes that are missing. </summary>
+	/// <summary> Produces a list of token scopes that are required for the various methods but missing. </summary>
+	public static Task<IEnumerable<TokenPermission>> ValidateScopes(string authToken)
+	{
+		var connection = new Gw2Sharp.Connection(authToken);
+		using var client = new Gw2Sharp.Gw2Client(connection);
+		return ValidateScopes(client);
+	}
+
+	/// <summary> Produces a list of token scopes that are required for the various methods but missing. </summary>
 	public static async Task<IEnumerable<TokenPermission>> ValidateScopes(Gw2Sharp.Gw2Client client)
 	{
 		var tokenInfo = await client.WebApi.V2.TokenInfo.GetAsync();
