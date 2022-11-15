@@ -291,6 +291,62 @@ class BasicCodesTests extends TestCase {
 
 		$this->assertTrue(true);
 	}
+
+	/** @test */
+	public function FullNecroCompressed()
+	{
+		$code = TextLoader::LoadBuildCode(TestUtilities::$CodesV2["full-necro-binary"]);
+		$this->assertEquals(Profession::Necromancer, $code->Profession);
+
+		$this->assertEquals(WeaponType::Axe    , $code->WeaponSet1->MainHand);
+		$this->assertEquals(ItemId::Superior_Sigil_of_Paralysation2, $code->WeaponSet1->Sigil1);
+		$this->assertEquals(WeaponType::Dagger , $code->WeaponSet1->OffHand);
+		$this->assertEquals(ItemId::Superior_Sigil_of_Paralysation2, $code->WeaponSet1->Sigil2);
+		$this->assertEquals(WeaponType::Scepter, $code->WeaponSet2->MainHand);
+		$this->assertEquals(ItemId::Superior_Sigil_of_Paralysation2, $code->WeaponSet2->Sigil1);
+		$this->assertEquals(WeaponType::Focus  , $code->WeaponSet2->OffHand);
+		$this->assertEquals(ItemId::Superior_Sigil_of_Paralysation2, $code->WeaponSet2->Sigil2);
+
+		$this->assertEquals(ItemId::Superior_Rune_of_the_Scholar, $code->Rune);
+		$berserkers = [StatId::Berserkers1, StatId::Berserkers2, StatId::Berserkers3, StatId::Berserkers4, StatId::Berserkers5];
+		for($i = 0; $i < Statics::ALL_EQUIPMENT_COUNT; $i++) {
+			$this->assertContains($code->EquipmentAttributes[$i], $berserkers, "index$i");
+		}
+
+		for($i = 0; $i < Statics::ALL_INFUSION_COUNT; $i++) {
+			$this->assertEquals(ItemId::Mighty_5_Agony_Infusion, $code->Infusions[$i]);
+		}
+
+		$this->assertEquals(SpecializationId::Spite, $code->Specializations[0]->SpecializationId);
+		$reference1 = new TraitLineChoices();
+		$reference1->Adept       = TraitLineChoice::TOP;
+		$reference1->Master      = TraitLineChoice::MIDDLE;
+		$reference1->Grandmaster = TraitLineChoice::MIDDLE;
+		$this->assertEquals($reference1, $code->Specializations[0]->Choices);
+
+		$this->assertEquals(SpecializationId::Soul_Reaping, $code->Specializations[1]->SpecializationId);
+		$reference2 = new TraitLineChoices();
+		$reference2->Adept       = TraitLineChoice::TOP;
+		$reference2->Master      = TraitLineChoice::TOP;
+		$reference2->Grandmaster = TraitLineChoice::MIDDLE;
+		$this->assertEquals($reference2, $code->Specializations[1]->Choices);
+
+		$this->assertEquals(SpecializationId::Reaper, $code->Specializations[2]->SpecializationId);
+		$reference3 = new TraitLineChoices();
+		$reference3->Adept       = TraitLineChoice::MIDDLE;
+		$reference3->Master      = TraitLineChoice::TOP;
+		$reference3->Grandmaster = TraitLineChoice::BOTTOM;
+		$this->assertEquals($reference3, $code->Specializations[2]->Choices);
+
+		$this->assertEquals(SkillId::Your_Soul_Is_Mine, $code->SlotSkills[0]);
+		$this->assertEquals(SkillId::Well_of_Suffering1, $code->SlotSkills[1]);
+		$this->assertEquals(SkillId::Well_of_Darkness1, $code->SlotSkills[2]);
+		$this->assertEquals(SkillId::Signet_of_Spite, $code->SlotSkills[3]);
+		$this->assertEquals(SkillId::Summon_Flesh_Golem, $code->SlotSkills[4]);
+
+		$this->assertEquals(ItemId::Bowl_of_Sweet_and_spicy_Butternut_Squash_Soup, $code->Food);
+		$this->assertEquals(ItemId::Tin_of_Fruitcake, $code->Utility);
+	}
 }
 
 class OfficialChatLinks extends TestCase {

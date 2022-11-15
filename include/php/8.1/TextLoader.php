@@ -52,6 +52,12 @@ class TextLoader {
 
 	public static function LoadBuildCode(string $text) : BuildCode {
 		assert(strlen($text) > 10, "Code too short");
+
+		if(ctype_lower($text[0])) {
+			$binary = base64_decode(str_replace('-', '/', substr($text, 1)));
+			return BinaryLoader::LoadBuildCode($text[0].$binary);
+		}
+
 		$view = new StringView($text);
 		$code = new BuildCode();
 		$code->Version    = TextLoader::DecodeAndAdvance($view);

@@ -156,9 +156,9 @@ public static class BinaryLoader {
 				code.WeaponSet2 = LoadWeaponSet(ref rawSpan);
 		}
 		for(int i = 0; i < 5; i++)
-			code.SlotSkills[i] = rawSpan.DecodeNext_WriteMinusMinIfAtLeast<SkillId>(1, 24);
-		
-		rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref code.Rune, 1, 24);
+			code.SlotSkills[i] = (SkillId)rawSpan.DecodeNext(24);
+
+		code.Rune = (ItemId)rawSpan.DecodeNext(24);
 		
 		if(code.Kind != Kind.PvP)
 			code.EquipmentAttributes = LoadAllEquipmentStats(ref rawSpan, code);
@@ -168,8 +168,9 @@ public static class BinaryLoader {
 		if(code.Kind != Kind.PvP) {
 			if(!rawSpan.EatIfExpected(0, 24))
 				code.Infusions = LoadAllEquipmentInfusions(ref rawSpan, code);
-			rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref code.Food   , 1, 24);
-			rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref code.Utility, 1, 24);
+
+			code.Food    = (ItemId)rawSpan.DecodeNext(24);
+			code.Utility = (ItemId)rawSpan.DecodeNext(24);
 		}
 		code.ProfessionSpecific = LoadProfessionSpecific(ref rawSpan, code.Profession);
 		code.Arbitrary          = LoadArbitrary(ref rawSpan);
@@ -181,10 +182,10 @@ public static class BinaryLoader {
 	{
 		var set = new WeaponSet();
 		set.MainHand = WeaponType._FIRST + rawSpan.DecodeNext_WriteMinusMinIfAtLeast<int>(2, 5);
-		rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref set.Sigil1, 1, 24);
+		set.Sigil1 = (ItemId)rawSpan.DecodeNext(24);
 		if(set.MainHand != WeaponType._UNDEFINED && !IsTwoHanded(set.MainHand))
 			set.OffHand = WeaponType._FIRST + rawSpan.DecodeNext_WriteMinusMinIfAtLeast<int>(2, 5);
-		rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref set.Sigil2, 1, 24);
+		set.Sigil2 = (ItemId)rawSpan.DecodeNext(24);
 		return set;
 	}
 
@@ -199,7 +200,7 @@ public static class BinaryLoader {
 				data = (StatId)rawSpan.DecodeNext(16);
 
 				if(i == ALL_EQUIPMENT_COUNT - 1) repeatCount = 1;
-				else repeatCount = rawSpan.DecodeNext(4);
+				else repeatCount = rawSpan.DecodeNext(4) + 1;
 			}
 
 			switch(i) {
@@ -231,12 +232,12 @@ public static class BinaryLoader {
 
 		var repeatCount = 0;
 		var data = ItemId._UNDEFINED;
-		for(int i = 0; i < ALL_EQUIPMENT_COUNT; i++) {
+		for(int i = 0; i < ALL_INFUSION_COUNT; i++) {
 			if(repeatCount == 0) {
-				data = rawSpan.DecodeNext_WriteMinusMinIfAtLeast<ItemId>(2, 24);
+				data = rawSpan.DecodeNext_WriteMinusMinIfAtLeast<ItemId>(1, 24);
 
 				if(i == ALL_EQUIPMENT_COUNT - 1) repeatCount = 1;
-				else repeatCount = rawSpan.DecodeNext(5);
+				else repeatCount = rawSpan.DecodeNext(5) + 1;
 			}
 
 			switch(i) {
@@ -379,7 +380,7 @@ public static class BinaryLoader {
 						if(lastStat.HasValue)
 						{
 							rawBits.Write((int)lastStat.Value, 16);
-							rawBits.Write(repeatCount, 4);
+							rawBits.Write(repeatCount - 1, 4);
 						}
 
 						lastStat = code.EquipmentAttributes[i];
@@ -393,7 +394,7 @@ public static class BinaryLoader {
 
 				rawBits.Write((int)lastStat!.Value, 16);
 				if(repeatCount > 1)
-					rawBits.Write(repeatCount, 4);
+					rawBits.Write(repeatCount - 1, 4);
 			}
 
 			if(!code.Infusions.HasAny()) rawBits.Write(0, 24);
@@ -425,8 +426,8 @@ public static class BinaryLoader {
 					{
 						if(lastInfusion != ItemId._UNDEFINED)
 						{
-							rawBits.Write((int)lastInfusion, 24);
-							rawBits.Write(repeatCount, 5);
+							rawBits.Write((int)lastInfusion + 1, 24);
+							rawBits.Write(repeatCount - 1, 5);
 						}
 
 						lastInfusion = code.Infusions[i];
@@ -438,9 +439,9 @@ public static class BinaryLoader {
 					}
 				}
 
-				rawBits.Write((int)lastInfusion, 24);
+				rawBits.Write((int)lastInfusion + 1, 24);
 				if(repeatCount > 1)
-					rawBits.Write(repeatCount, 5);
+					rawBits.Write(repeatCount - 1, 5);
 			}
 
 			rawBits.Write((int)code.Food, 24);

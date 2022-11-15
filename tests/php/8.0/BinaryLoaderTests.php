@@ -234,7 +234,7 @@ class BasicCodeTests extends TestCase {
 		$this->assertFalse($code->WeaponSet1->HasAny());
 		$this->assertFalse($code->WeaponSet2->HasAny());
 		for($i = 0; $i < 5; $i++)
-			$this->assertEquals($i, $code->SlotSkills[$i]);
+			$this->assertEquals($i + 1, $code->SlotSkills[$i]);
 		$this->assertEquals(ItemId::_UNDEFINED, $code->Rune);
 		for($i = 0; $i < Statics::ALL_EQUIPMENT_COUNT; $i++) {
 			if($i >= 11 && $i <= 14) $this->assertEquals(StatId::_UNDEFINED, $code->EquipmentAttributes[$i]);

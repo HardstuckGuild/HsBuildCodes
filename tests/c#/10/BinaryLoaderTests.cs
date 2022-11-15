@@ -218,7 +218,7 @@ public class BasicCodeTests {
 		Assert.False(code.WeaponSet1.HasAny);
 		Assert.False(code.WeaponSet2.HasAny);
 		for(int i = 0; i < 5; i++)
-			Assert.Equal((SkillId)i, code.SlotSkills[i]);
+			Assert.Equal((SkillId)(i + 1), code.SlotSkills[i]);
 		Assert.Equal(ItemId._UNDEFINED, code.Rune);
 		for(int i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++) {
 			if(i >= 11 && i <= 14) Assert.Equal(StatId._UNDEFINED, code.EquipmentAttributes[i]);
@@ -297,7 +297,7 @@ public class BasicCodeTests {
 		BinaryLoader.WriteCode(code, result);
 
 		for(int i = 0; i < rawCode.Length; i++)
-			Assert.Equal(rawCode[i], result[i]);
+			Assert.True(rawCode[i] == result[i], $"Comparison failed at index {i}. og: {rawCode[i]}, cycle: {result[i]}");
 	}
 }
 

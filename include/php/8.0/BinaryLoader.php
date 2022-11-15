@@ -149,9 +149,9 @@ class BinaryLoader {
 				$code->WeaponSet2 = BinaryLoader::LoadWeaponSet($rawSpan);
 		}
 		for($i = 0; $i < 5; $i++)
-			$code->SlotSkills[$i] = $rawSpan->DecodeNext_GetMinusMinIfAtLeast(1, 24);
-		
-		$rawSpan->DecodeNext_WriteMinusMinIfAtLeast($code->Rune, 1, 24);
+			$code->SlotSkills[$i] = $rawSpan->DecodeNext(24);
+
+		$code->Rune = $rawSpan->DecodeNext(24);
 		
 		if($code->Kind !== Kind::PvP)
 			$code->EquipmentAttributes = BinaryLoader::LoadAllEquipmentStats($rawSpan, $code);
@@ -161,8 +161,9 @@ class BinaryLoader {
 		if($code->Kind !== Kind::PvP) {
 			if(!$rawSpan->EatIfExpected(0, 24))
 				$code->Infusions = BinaryLoader::LoadAllEquipmentInfusions($rawSpan, $code);
-			$rawSpan->DecodeNext_WriteMinusMinIfAtLeast($code->Food   , 1, 24);
-			$rawSpan->DecodeNext_WriteMinusMinIfAtLeast($code->Utility, 1, 24);
+
+			$code->Food    = $rawSpan->DecodeNext(24);
+			$code->Utility = $rawSpan->DecodeNext(24);
 		}
 		$code->ProfessionSpecific = BinaryLoader::LoadProfessionSpecific($rawSpan, $code->Profession);
 		$code->Arbitrary          = BinaryLoader::LoadArbitrary($rawSpan);
@@ -174,10 +175,10 @@ class BinaryLoader {
 	{
 		$set = new WeaponSet();
 		$set->MainHand = WeaponType::_FIRST() + $rawSpan->DecodeNext_GetMinusMinIfAtLeast(2, 5);
-		$rawSpan->DecodeNext_WriteMinusMinIfAtLeast($set->Sigil1, 1, 24);
+		$set->Sigil1 = $rawSpan->DecodeNext(24);
 		if($set->MainHand !== WeaponType::_UNDEFINED && !Statics::IsTwoHanded($set->MainHand))
 			$set->OffHand = WeaponType::_FIRST() + $rawSpan->DecodeNext_GetMinusMinIfAtLeast(2, 5);
-		$rawSpan->DecodeNext_WriteMinusMinIfAtLeast($set->Sigil2, 1, 24);
+		$set->Sigil2 = $rawSpan->DecodeNext(24);
 		return $set;
 	}
 
@@ -192,7 +193,7 @@ class BinaryLoader {
 				$data = $rawSpan->DecodeNext(16);
 
 				if($i === Statics::ALL_EQUIPMENT_COUNT - 1) $repeatCount = 1;
-				else $repeatCount = $rawSpan->DecodeNext(4);
+				else $repeatCount = $rawSpan->DecodeNext(4) + 1;
 			}
 
 			switch($i) {
@@ -224,12 +225,12 @@ class BinaryLoader {
 
 		$repeatCount = 0;
 		$data = ItemId::_UNDEFINED;
-		for($i = 0; $i < Statics::ALL_EQUIPMENT_COUNT; $i++) {
+		for($i = 0; $i < Statics::ALL_INFUSION_COUNT; $i++) {
 			if($repeatCount === 0) {
-				$data = $rawSpan->DecodeNext_GetMinusMinIfAtLeast(2, 24);
+				$data = $rawSpan->DecodeNext_GetMinusMinIfAtLeast(1, 24);
 
 				if($i === Statics::ALL_EQUIPMENT_COUNT - 1) $repeatCount = 1;
-				else $repeatCount = $rawSpan->DecodeNext(5);
+				else $repeatCount = $rawSpan->DecodeNext(5) + 1;
 			}
 
 			switch($i) {
@@ -370,7 +371,7 @@ class BinaryLoader {
 						if($lastStat !== null)
 						{
 							$rawBits->Write($lastStat, 16);
-							$rawBits->Write($repeatCount, 4);
+							$rawBits->Write($repeatCount - 1, 4);
 						}
 
 						$lastStat = $code->EquipmentAttributes[$i];
@@ -384,7 +385,7 @@ class BinaryLoader {
 
 				$rawBits->Write($lastStat, 16);
 				if($repeatCount > 1)
-					$rawBits->Write($repeatCount, 4);
+					$rawBits->Write($repeatCount - 1, 4);
 			}
 
 			if(!$code->Infusions->HasAny()) $rawBits->Write(0, 24);
@@ -416,8 +417,8 @@ class BinaryLoader {
 					{
 						if($lastInfusion !== ItemId::_UNDEFINED)
 						{
-							$rawBits->Write($lastInfusion, 24);
-							$rawBits->Write($repeatCount, 5);
+							$rawBits->Write($lastInfusion + 1, 24);
+							$rawBits->Write($repeatCount - 1, 5);
 						}
 
 						$lastInfusion = $code->Infusions[$i];
@@ -429,9 +430,9 @@ class BinaryLoader {
 					}
 				}
 
-				$rawBits->Write($lastInfusion, 24);
+				$rawBits->Write($lastInfusion + 1, 24);
 				if($repeatCount > 1)
-					$rawBits->Write($repeatCount, 5);
+					$rawBits->Write($repeatCount - 1, 5);
 			}
 
 			$rawBits->Write($code->Food, 24);

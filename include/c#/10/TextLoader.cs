@@ -51,6 +51,18 @@ public static class TextLoader {
 	#region hardstuck codes
 
 	public static BuildCode LoadBuildCode(ReadOnlySpan<char> text) {
+
+		if(char.IsLower(text[0])) {
+			Span<char> base64 = stackalloc char[text.Length - 1];
+			text[1..].CopyTo(base64);
+			for(int i = 0; i < base64.Length; i++) if(base64[i] == '-') base64[i] = '/';
+
+			Span<byte> buffer = stackalloc byte[base64.Length]; // raw will always be shorter than the base64 version
+			buffer[0] = (byte)text[0];
+			Convert.TryFromBase64Chars(base64, buffer[1..], out var len);
+			return BinaryLoader.LoadBuildCode(buffer[..(len + 1)]);
+		}
+
 		var code = new BuildCode();
 		code.Version    = DecodeAndAdvance(ref text);
 		Debug.Assert(code.Version >= FIRST_VERSIONED_VERSION && code.Version <= CURRENT_VERSION, "Code version mismatch");

@@ -263,6 +263,65 @@ public class BasicCodesTests {
 
 		Assert.True(true);
 	}
+
+	[Fact]
+	public void FullNecroCompressed()
+	{
+		var code = TextLoader.LoadBuildCode(TestUtilities.CodesV2["full-necro-binary"]);
+
+		Assert.Equal(Profession.Necromancer, code.Profession);
+
+		Assert.Equal(WeaponType.Axe, code.WeaponSet1.MainHand);
+		Assert.Equal(ItemId.Superior_Sigil_of_Paralysation2, code.WeaponSet1.Sigil1);
+		Assert.Equal(WeaponType.Dagger, code.WeaponSet1.OffHand);
+		Assert.Equal(ItemId.Superior_Sigil_of_Paralysation2, code.WeaponSet1.Sigil2);
+		Assert.Equal(WeaponType.Scepter, code.WeaponSet2.MainHand);
+		Assert.Equal(ItemId.Superior_Sigil_of_Paralysation2, code.WeaponSet2.Sigil1);
+		Assert.Equal(WeaponType.Focus, code.WeaponSet2.OffHand);
+		Assert.Equal(ItemId.Superior_Sigil_of_Paralysation2, code.WeaponSet2.Sigil2);
+
+		Assert.Equal(ItemId.Superior_Rune_of_the_Scholar, code.Rune);
+		var berserkers = new []{ StatId.Berserkers1, StatId.Berserkers2, StatId.Berserkers3, StatId.Berserkers4, StatId.Berserkers5};
+		for(var i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++)
+		{
+			Assert.Contains(code.EquipmentAttributes[i], berserkers);
+		}
+
+		for(var i = 0; i < Static.ALL_INFUSION_COUNT; i++)
+		{
+			Assert.Equal(ItemId.Mighty_5_Agony_Infusion, code.Infusions[i]);
+		}
+
+		Assert.Equal(SpecializationId.Spite, code.Specializations[0].SpecializationId);
+		Assert.Equal(new TraitLineChoices() {
+			Adept = TraitLineChoice.TOP,
+			Master = TraitLineChoice.MIDDLE,
+			Grandmaster = TraitLineChoice.MIDDLE,
+		}, code.Specializations[0].Choices);
+
+		Assert.Equal(SpecializationId.Soul_Reaping, code.Specializations[1].SpecializationId);
+		Assert.Equal(new TraitLineChoices() {
+			Adept = TraitLineChoice.TOP,
+			Master = TraitLineChoice.TOP,
+			Grandmaster = TraitLineChoice.MIDDLE,
+		}, code.Specializations[1].Choices);
+
+		Assert.Equal(SpecializationId.Reaper, code.Specializations[2].SpecializationId);
+		Assert.Equal(new TraitLineChoices() {
+			Adept = TraitLineChoice.MIDDLE,
+			Master = TraitLineChoice.TOP,
+			Grandmaster = TraitLineChoice.BOTTOM,
+		}, code.Specializations[2].Choices);
+
+		Assert.Equal(SkillId.Your_Soul_Is_Mine, code.SlotSkills[0]);
+		Assert.Equal(SkillId.Well_of_Suffering1, code.SlotSkills[1]);
+		Assert.Equal(SkillId.Well_of_Darkness1, code.SlotSkills[2]);
+		Assert.Equal(SkillId.Signet_of_Spite, code.SlotSkills[3]);
+		Assert.Equal(SkillId.Summon_Flesh_Golem, code.SlotSkills[4]);
+
+		Assert.Equal(ItemId.Bowl_of_Sweet_and_spicy_Butternut_Squash_Soup, code.Food);
+		Assert.Equal(ItemId.Tin_of_Fruitcake, code.Utility);
+	}
 }
 
 public class OfficialChatLinks {

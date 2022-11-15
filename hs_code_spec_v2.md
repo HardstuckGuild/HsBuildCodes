@@ -165,14 +165,14 @@ either
 or
 	dynamic repeat
 		16 : stat id
-		4  : repeat count
+		4  : repeat count - 1
 
 either
 	24 : 0 if infusions omitted
 or
 	dynamic repeat
-		24 : 1 if empty slot, 2 + infusion item id otherwise
-		5  : repeat count
+		24 : 1 if empty slot, 1 + infusion item id otherwise
+		5  : repeat count - 1
 
 24 : food item. 0 if none, item_id otherwise, omit for pvp codes
 24 : utility item. 0 if none, item_id otherwise, omit for pvp codes
