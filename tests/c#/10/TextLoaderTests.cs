@@ -150,7 +150,7 @@ public class BasicCodesTests {
 		Assert.Equal(text1, text2);
 	}
 
-	/** @test */
+	[Fact]
 	public void MidNecro()
 	{
 		var code = TextLoader.LoadBuildCode(TestUtilities.CodesV2["mid-necro"]);
