@@ -148,7 +148,7 @@ public enum ItemId {
 	Suuns_Greaves       = 95583,
 
 	// dragons / ritu accessories
-	Ad_Infinitum                = 37000,
+	Ad_Infinitum                = 74155,
 	Mists_Charged_Jade_Talisman = 98322,
 	Mists_Charged_Jade_Pendant  = 98299,
 	Mists_Charged_Jade_Band     = 98321,

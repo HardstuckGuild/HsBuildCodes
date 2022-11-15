@@ -149,7 +149,7 @@ class ItemId {
 	public const Suuns_Greaves       = 95583;
 
 	// dragons / ritu accessories
-	public const Ad_Infinitum                = 37000;
+	public const Ad_Infinitum                = 74155;
 	public const Mists_Charged_Jade_Talisman = 98322;
 	public const Mists_Charged_Jade_Pendant  = 98299;
 	public const Mists_Charged_Jade_Band     = 98321;
