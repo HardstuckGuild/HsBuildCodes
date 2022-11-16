@@ -140,10 +140,9 @@ public class PerProfessionData {
 		{
 			try
 			{
-				//TODO(Rennorb): @performance
-				var client = new Gw2Sharp.Gw2Client();
-				var professionData = await client.WebApi.V2.Professions.GetAsync(Enum.GetName(profession)!);
-				foreach(var (pallete, skill) in professionData.SkillsByPalette)
+				
+				var professionData = await APICache.Get<OfficialAPI.Profession>($"/professions/{Enum.GetName(profession)}", "2019-12-19T00:00:00.000Z");
+				foreach(var (pallete, skill) in professionData.SkillsByPalette!)
 				{
 					targetData.Assign((ushort)pallete, (SkillId)skill);
 				}

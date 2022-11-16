@@ -1,93 +1,73 @@
-using Gw2Sharp.Models;
-using Gw2Sharp.WebApi.V2.Models;
-
+using System.Diagnostics;
+using Hardstuck.GuildWars2.MumbleLink;
 using static Hardstuck.GuildWars2.BuildCodes.V2.Static;
+using Permission = Hardstuck.GuildWars2.BuildCodes.V2.OfficialAPI.Permission;
+using EquipmentItemSlot = Hardstuck.GuildWars2.BuildCodes.V2.OfficialAPI.EquipmentItemSlot;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
 public static class APILoader {
 
 	/// <summary> Produces a list of token scopes that are required for the various methods but missing. </summary>
-	public static Task<IEnumerable<TokenPermission>> ValidateScopes(string authToken)
+	public static async Task<IEnumerable<string>> ValidateScopes(string authToken)
 	{
-		var connection = new Gw2Sharp.Connection(authToken);
-		using var client = new Gw2Sharp.Gw2Client(connection);
-		return ValidateScopes(client);
+		var tokenInfo = await API.RequestJson<OfficialAPI.TokenInfo>("/tokeninfo", authToken);
+		Debug.Assert(tokenInfo != null);
+
+		var required = new[] { Permission.Account, Permission.Characters, Permission.Builds };
+		return required.Except(tokenInfo.Permissions);
 	}
 
-	/// <summary> Produces a list of token scopes that are required for the various methods but missing. </summary>
-	public static async Task<IEnumerable<TokenPermission>> ValidateScopes(Gw2Sharp.Gw2Client client)
-	{
-		var tokenInfo = await client.WebApi.V2.TokenInfo.GetAsync();
-
-		var required = new[] { TokenPermission.Account, TokenPermission.Characters, TokenPermission.Builds };
-		return required.Except(tokenInfo.Permissions.List.Select(e => e.Value));
-	}
-
-	/// <inheritdoc cref="LoadBuildCodeFromCurrentCharacter(Gw2Sharp.Gw2Client, bool)"/>
-	public static ValueTask<BuildCode?> LoadBuildCodeFromCurrentCharacter(string authToken, bool aquatic = false)
-	{
-		var connection = new Gw2Sharp.Connection(authToken);
-		using var client = new Gw2Sharp.Gw2Client(connection);
-		return LoadBuildCodeFromCurrentCharacter(client, aquatic);
-	}
+	static readonly MumbleReader _mumble = new(false);
 
 	/// <summary> This method assumes the scopes account, character and build are available, but does not explicitely test for them. </summary>
 	/// <exception cref="Gw2Sharp.WebApi.Exceptions.NotFoundException">If the character can't be found. Usually happens if the api key doenst actaully correspond to the logged in account.</exception>
 	/// <exception cref="Gw2Sharp.WebApi.Exceptions.MissingScopesException"></exception>
 	/// <exception cref="Gw2Sharp.WebApi.Exceptions.InvalidAccessTokenException">If the token is not valid.</exception>
 	/// <returns> Null if the characer can't be determined. </returns>
-	public static async ValueTask<BuildCode?> LoadBuildCodeFromCurrentCharacter(Gw2Sharp.Gw2Client authorizedClient, bool aquatic = false)
+	public static async ValueTask<BuildCode?> LoadBuildCodeFromCurrentCharacter(string authToken, bool aquatic = false)
 	{
-		authorizedClient.Mumble.Update();
+		_mumble.Update();
 
-		if(string.IsNullOrEmpty(authorizedClient.Mumble.CharacterName)) return null;
+		if(string.IsNullOrEmpty(_mumble.Data.Identity?.Name)) return null;
 
 		var gamemode = Kind.PvE;
-		switch(authorizedClient.Mumble.MapType)
+		switch(_mumble.Data.Context.MapType)
 		{
-			case MapType.Pvp:
-			case MapType.Gvg:
+			case MapType.PvP:
+			case MapType.GvG:
 			case MapType.Tournament:
 			case MapType.UserTournament:
 				gamemode = Kind.PvP;
 				break;
 
-			case MapType.Center:
-			case MapType.BlueHome:
-			case MapType.GreenHome:
-			case MapType.RedHome:
-			case MapType.JumpPuzzle:
-			case MapType.EdgeOfTheMists:
-			case MapType.WvwLounge:
+			case MapType.WvW_EBG:
+			case MapType.WvW_BBL:
+			case MapType.WvW_GBL:
+			case MapType.WvW_RBL:
+			case MapType.WvW_OS:
+			case MapType.WvW_EotM:
+			case MapType.WvW_Lounge:
 				gamemode = Kind.WvW;
 				break;
 		}
-		return await LoadBuildCode(authorizedClient, authorizedClient.Mumble.CharacterName, gamemode, aquatic);
-	}
-
-	/// <inheritdoc cref="LoadBuildCode(Gw2Sharp.Gw2Client, string, Kind, bool)"/>
-	public static Task<BuildCode> LoadBuildCode(string authToken, string characterName, Kind targetGameMode, bool aquatic = false)
-	{
-		var connection = new Gw2Sharp.Connection(authToken);
-		using var client = new Gw2Sharp.Gw2Client(connection);
-		return LoadBuildCode(client, characterName, targetGameMode, aquatic);
+		return await LoadBuildCode(authToken, _mumble.Data.Identity.Name, gamemode, aquatic);
 	}
 
 	/// <summary> This method assumes the scopes account, character and build are available, but does not explicitely test for them. </summary>
 	/// <exception cref="Gw2Sharp.WebApi.Exceptions.NotFoundException">If the character can't be found.</exception>
 	/// <exception cref="Gw2Sharp.WebApi.Exceptions.MissingScopesException"></exception>
 	/// <exception cref="Gw2Sharp.WebApi.Exceptions.InvalidAccessTokenException">If the token is not valid.</exception>
-	public static async Task<BuildCode> LoadBuildCode(Gw2Sharp.Gw2Client authorizedClient, string characterName, Kind targetGameMode, bool aquatic = false) {
+	public static async Task<BuildCode> LoadBuildCode(string authToken, string characterName, Kind targetGameMode, bool aquatic = false) {
 		var code = new BuildCode();
 		code.Version = CURRENT_VERSION;
 		code.Kind    = targetGameMode;
 
-		var playerData = await authorizedClient.WebApi.V2.Characters.GetAsync(characterName);
+		var playerData = await API.RequestJson<OfficialAPI.Character>($"/characters/{characterName}", authToken);
 		
 		code.Profession = Enum.Parse<Profession>(playerData.Profession);
 
-		var activeBuild = playerData.BuildTabs![playerData.ActiveBuildTab!.Value - 1].Build;
+		var activeBuild = playerData.BuildTabs.First(t => t.IsActive).Build;
 		for(var i = 0; i < 3; i++) {
 			var spec = activeBuild.Specializations[i];
 			if(!spec.Id.HasValue) continue;
@@ -95,19 +75,19 @@ public static class APILoader {
 			code.Specializations[i] = new() {
 				SpecializationId = (SpecializationId)spec.Id.Value,
 				Choices          = {
-					Adept       = await APICache.ResolvePosition(spec.Traits[0]),
-					Master      = await APICache.ResolvePosition(spec.Traits[1]),
-					Grandmaster = await APICache.ResolvePosition(spec.Traits[2]),
+					Adept       = await APICache.ResolvePosition(spec.Traits![0]),
+					Master      = await APICache.ResolvePosition(spec.Traits![1]),
+					Grandmaster = await APICache.ResolvePosition(spec.Traits![2]),
 				},
 			};
 		}
 
-		var activeEquipment = playerData.EquipmentTabs![playerData.ActiveEquipmentTab!.Value - 1];
+		var activeEquipment = playerData.EquipmentTabs.First(t => t.IsActive);
 		if(targetGameMode != Kind.PvP)
 		{
 			ItemId? runeId = null;
 
-			async void SetArmorData(int equipSlot, CharacterEquipmentItem item)
+			async void SetArmorData(int equipSlot, OfficialAPI.EquipmentItem item)
 			{
 				code.EquipmentAttributes[equipSlot] = await ResolveStatId(item);
 				code.Infusions          [equipSlot] = (ItemId?)item.Infusions?[0] ?? ItemId._UNDEFINED;
@@ -118,17 +98,17 @@ public static class APILoader {
 			}
 
 			foreach(var item in activeEquipment.Equipment!) {
-				switch(item.Slot.Value)
+				switch(item.Slot)
 				{
-					case ItemEquipmentSlotType.Helm       : if( aquatic) break; SetArmorData(0, item); break;
-					case ItemEquipmentSlotType.HelmAquatic: if(!aquatic) break; SetArmorData(0, item); break;
-					case ItemEquipmentSlotType.Shoulders  :                     SetArmorData(1, item); break;
-					case ItemEquipmentSlotType.Coat       :                     SetArmorData(2, item); break;
-					case ItemEquipmentSlotType.Gloves     :                     SetArmorData(3, item); break;
-					case ItemEquipmentSlotType.Leggings   :                     SetArmorData(4, item); break;
-					case ItemEquipmentSlotType.Boots      :                     SetArmorData(5, item); break;
+					case EquipmentItemSlot.Helm       : if( aquatic) break; SetArmorData(0, item); break;
+					case EquipmentItemSlot.HelmAquatic: if(!aquatic) break; SetArmorData(0, item); break;
+					case EquipmentItemSlot.Shoulders  :                     SetArmorData(1, item); break;
+					case EquipmentItemSlot.Coat       :                     SetArmorData(2, item); break;
+					case EquipmentItemSlot.Gloves     :                     SetArmorData(3, item); break;
+					case EquipmentItemSlot.Leggings   :                     SetArmorData(4, item); break;
+					case EquipmentItemSlot.Boots      :                     SetArmorData(5, item); break;
 						
-					case ItemEquipmentSlotType.Backpack:
+					case EquipmentItemSlot.Backpack:
 						code.EquipmentAttributes.BackItem = await ResolveStatId(item);
 						if(item.Infusions != null) {
 							code.Infusions.BackItem_1 = (ItemId)item.Infusions[0];
@@ -137,17 +117,17 @@ public static class APILoader {
 						}
 						break;
 
-					case ItemEquipmentSlotType.Accessory1:
+					case EquipmentItemSlot.Accessory1:
 						code.EquipmentAttributes.Accessory1 = await ResolveStatId(item);
 						code.Infusions          .Accessory1 = (ItemId?)item.Infusions?[0] ?? ItemId._UNDEFINED;
 						break;
 
-					case ItemEquipmentSlotType.Accessory2:
+					case EquipmentItemSlot.Accessory2:
 						code.EquipmentAttributes.Accessory2 = await ResolveStatId(item);
 						code.Infusions          .Accessory2 = (ItemId?)item.Infusions?[0] ?? ItemId._UNDEFINED;
 						break;
 
-					case ItemEquipmentSlotType.Ring1:
+					case EquipmentItemSlot.Ring1:
 						code.EquipmentAttributes.Ring1 = await ResolveStatId(item);
 						if(item.Infusions != null) {
 							code.Infusions.Ring1_1 = (ItemId)item.Infusions[0];
@@ -159,7 +139,7 @@ public static class APILoader {
 						}
 						break;
 						
-					case ItemEquipmentSlotType.Ring2:
+					case EquipmentItemSlot.Ring2:
 						code.EquipmentAttributes.Ring2 = await ResolveStatId(item);
 						if(item.Infusions != null) {
 							code.Infusions.Ring2_1 = (ItemId)item.Infusions[0];
@@ -171,7 +151,7 @@ public static class APILoader {
 						}
 						break;
 						
-					case ItemEquipmentSlotType.WeaponA1:
+					case EquipmentItemSlot.WeaponA1:
 						if(aquatic) break;
 						code.EquipmentAttributes.WeaponSet1MainHand = await ResolveStatId(item);
 						if(item.Infusions != null) {
@@ -187,7 +167,7 @@ public static class APILoader {
 						}
 						break;
 
-					case ItemEquipmentSlotType.WeaponAquaticA:
+					case EquipmentItemSlot.WeaponAquaticA:
 						if(!aquatic) break;
 						code.EquipmentAttributes.WeaponSet1MainHand = await ResolveStatId(item);
 						if(item.Infusions != null) {
@@ -203,7 +183,7 @@ public static class APILoader {
 						}
 						break;
 
-					case ItemEquipmentSlotType.WeaponA2:
+					case EquipmentItemSlot.WeaponA2:
 						if(aquatic) break;
 						code.EquipmentAttributes.WeaponSet1OffHand = await ResolveStatId(item);
 						code.Infusions.WeaponSet1_2 = (ItemId?)item.Infusions?[0] ?? ItemId._UNDEFINED; //NOTE(Rennorb): this assues that buidls with twohanded main weapons dont contain an 'empty' weapon with no upgrades
@@ -211,7 +191,7 @@ public static class APILoader {
 						code.WeaponSet1.Sigil2 = (ItemId?)item.Upgrades?[0] ?? ItemId._UNDEFINED; //NOTE(Rennorb): this assues that buidls with twohanded main weapons dont contain an 'empty' weapon with no upgrades
 						break;
 
-					case ItemEquipmentSlotType.WeaponB1:
+					case EquipmentItemSlot.WeaponB1:
 						if(aquatic) break;
 						code.EquipmentAttributes.WeaponSet2MainHand = await ResolveStatId(item);
 						if(item.Infusions != null) {
@@ -227,7 +207,7 @@ public static class APILoader {
 						}
 						break;
 
-					case ItemEquipmentSlotType.WeaponAquaticB:
+					case EquipmentItemSlot.WeaponAquaticB:
 						if(!aquatic) break;
 						code.EquipmentAttributes.WeaponSet2MainHand = await ResolveStatId(item);
 						if(item.Infusions != null) {
@@ -243,7 +223,7 @@ public static class APILoader {
 						}
 						break;
 
-					case ItemEquipmentSlotType.WeaponB2:
+					case EquipmentItemSlot.WeaponB2:
 						if(aquatic) break;
 						code.EquipmentAttributes.WeaponSet2OffHand = await ResolveStatId(item);
 						code.Infusions.WeaponSet2_2 = (ItemId?)item.Infusions?[0] ?? ItemId._UNDEFINED;
@@ -251,7 +231,7 @@ public static class APILoader {
 						code.WeaponSet2.Sigil2 = (ItemId?)item.Upgrades?[0] ?? ItemId._UNDEFINED;
 						break;
 
-					case ItemEquipmentSlotType.Amulet:
+					case EquipmentItemSlot.Amulet:
 						if(aquatic) break;
 						code.EquipmentAttributes.Amulet = await ResolveStatId(item);
 						code.Infusions          .Amulet = (ItemId?)item.Infusions?[0] ?? ItemId._UNDEFINED;
@@ -265,7 +245,7 @@ public static class APILoader {
 		{
 			var pvpEquip = activeEquipment.EquipmentPvp!;
 
-			code.EquipmentAttributes.Helmet = (StatId)(pvpEquip.Amulet ?? 0);
+			code.EquipmentAttributes.Helmet = (StatId)pvpEquip.Amulet;
 			code.Rune = (ItemId?)pvpEquip.Rune ?? ItemId._UNDEFINED;
 			code.WeaponSet1.Sigil1 = (ItemId?)pvpEquip.Sigils[0] ?? ItemId._UNDEFINED;
 			code.WeaponSet1.Sigil2 = (ItemId?)pvpEquip.Sigils[1] ?? ItemId._UNDEFINED;
@@ -336,6 +316,6 @@ public static class APILoader {
 		return code;
 	}
 
-	internal static async ValueTask<StatId> ResolveStatId(CharacterEquipmentItem item)
+	internal static async ValueTask<StatId> ResolveStatId(OfficialAPI.EquipmentItem item)
 		=> item.Stats != null ? (StatId)item.Stats.Id : await APICache.ResolveStatId(item.Id);
 }

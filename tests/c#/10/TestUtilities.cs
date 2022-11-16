@@ -25,6 +25,7 @@ static class TestUtilities {
 					"V2"       => CodesV2,
 					"Ingame"   => CodesIngame,
 					"V2Binary" => CodesV2Binary,
+					_ => throw new Exception(),
 				};
 			}
 			else

@@ -37,12 +37,6 @@ class APICache {
 		return $traitData->order + 1;
 	}
 
-	public static function ResolveSkillInfo(int $skillId) : object
-	{
-		// place to do overrides
-		return APICache::Get("/skills/{$skillId}");
-	}
-
 	public static function ResolveWeaponSkill(BuildCode $code, WeaponSet $effectiveWeapons, int $skillIndex) : int
 	{
 		$weapon = null;

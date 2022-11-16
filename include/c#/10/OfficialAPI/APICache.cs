@@ -1,59 +1,52 @@
-using Gw2Sharp.WebApi.Caching;
 using System.Diagnostics;
-using Gw2Sharp.WebApi.V2.Models;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
 public static class APICache {
-	static readonly Gw2Sharp.Connection _connection = new(null, default, cacheMethod: new MemoryCacheMethod(30 * 60 * 1000));
-	static readonly Gw2Sharp.Gw2Client  _client = new(_connection);
+	/// <summary> The cache implementation to use for all operations. </summary>
+	/// <remarks> If uninitialized before other functions are used this will automatically initialize to a reasonable default memory cache implementation. </remarks>
+	public static ICache? CacheImpl;
+
+	public static Task<T> Get<T>(string path, string schemaVersion = API.LATEST_SCHEMA)
+	{
+		if(CacheImpl == null) Interlocked.CompareExchange(ref CacheImpl, new DefaultCacheImpl(), null);
+		return CacheImpl.Get<T>(path, schemaVersion);
+	}
 
 	public static async Task<WeaponType> ResolveWeaponType(int itemId)
 	{
-		var itemData = await _client.WebApi.V2.Items.GetAsync(itemId);
-		Debug.Assert(itemData.Type.Value == ItemType.Weapon, $"Item is not a weapon:\n{itemData}");
+		var itemData = await Get<OfficialAPI.Item>($"/items/{itemId}");
+		Debug.Assert(itemData.Type == OfficialAPI.WeaponType.Weapon, $"Item is not a weapon:\n{itemData.Id}");
 
-		var weaponData = (ItemWeapon)itemData;
-		return weaponData.Details.Type.IsUnknown ? WeaponType._UNDEFINED : Enum.Parse<WeaponType>(weaponData.Details.Type.RawValue!);
+		if(!Enum.TryParse(itemData.Details.Type, out WeaponType type)) type = WeaponType._UNDEFINED;
+		return type;
 	}
 
 	/// <returns><see cref="StatId._UNDEFINED"/> if the item does not have stats</returns>
 	/// <exception cref="InvalidOperationException">sad</exception>
 	public static async Task<StatId> ResolveStatId(int itemId)
 	{
-		var itemData = await _client.WebApi.V2.Items.GetAsync(itemId);
-		return (StatId)((itemData) switch {
-			ItemWeapon   weaponData =>  weaponData.Details.InfixUpgrade?.Id ?? 0,
-			ItemArmor     armorData =>   armorData.Details.InfixUpgrade?.Id ?? 0,
-			ItemTrinket trinketData => trinketData.Details.InfixUpgrade?.Id ?? 0,
-			ItemBack       backData =>    backData.Details.InfixUpgrade?.Id ?? 0,
-			_ => 0,
-		});
+		var itemData = await Get<OfficialAPI.Item>($"/items/{itemId}");
+		return (StatId)(itemData.Details.InfixUpgrade?.Id ?? 0);
 	}
 
 	public static async ValueTask<TraitLineChoice> ResolvePosition(int? traitId)
 	{
 		if(!traitId.HasValue) return TraitLineChoice.NONE;
 
-		var traitData = await _client.WebApi.V2.Traits.GetAsync(traitId.Value);
+		var traitData = await Get<OfficialAPI.Trait>($"/traits/{traitId.Value}");
 		return (TraitLineChoice)(traitData.Order + 1);
-	}
-
-	public static async Task<Skill> ResolveSkillInfo(SkillId skillId)
-	{
-		// palce to do overrides
-		return await _client.WebApi.V2.Skills.GetAsync((int)skillId);
 	}
 
 	public static async ValueTask<SkillId> ResolveWeaponSkill(BuildCode code, WeaponSet effectiveWeapons, int skillIndex)
 	{
-		ProfessionWeapon weapon;
+		OfficialAPI.Weapon weapon;
 		if(skillIndex < 3)
 		{
 			if(effectiveWeapons.MainHand == WeaponType._UNDEFINED) return SkillId._UNDEFINED;
 
 			//NOTE(Rennorb): this isnt outside of the if to allow early bail if the guard condition isnt met.
-			var professionData = await _client.WebApi.V2.Professions.GetAsync(Enum.GetName(code.Profession)!);
+			var professionData = await Get<OfficialAPI.Profession>($"/professions/{Enum.GetName(code.Profession)}");
 			weapon = professionData.Weapons[Enum.GetName(effectiveWeapons.MainHand)!];
 		}
 		else
@@ -63,7 +56,7 @@ public static class APICache {
 				return SkillId._UNDEFINED;
 
 			//NOTE(Rennorb): this isnt outside of the if to allow early bail if the guard condition isnt met.
-			var professionData = await _client.WebApi.V2.Professions.GetAsync(Enum.GetName(code.Profession)!);
+			var professionData = await Get<OfficialAPI.Profession>($"/professions/{Enum.GetName(code.Profession)}")!;
 			if(effectiveWeapons.OffHand != WeaponType._UNDEFINED)
 				weapon = professionData.Weapons[Enum.GetName(effectiveWeapons.OffHand)!];
 			else
@@ -71,7 +64,7 @@ public static class APICache {
 
 		}
 
-		return (SkillId)weapon.Skills.First(w => w.Slot.Value == SkillSlot.Weapon1 + skillIndex).Id;
+		return (SkillId)weapon.Skills.First(w => w.Slot == $"Weapon_{skillIndex + 1}").Id;
 	}
 
 	/// <returns> <see cref="TraitId._UNDEFINED" />  If spec is empty </returns>
@@ -81,7 +74,7 @@ public static class APICache {
 		var traitPos = spec.Choices[(int)traitSlot];
 		if(traitPos == TraitLineChoice.NONE) return TraitId._UNDEFINED;
 
-		var allSpecializationData = await _client.WebApi.V2.Specializations.AllAsync();
+		var allSpecializationData = await Get<OfficialAPI.Specialization[]>("/specializations?ids=all");
 
 		foreach(var specialization in allSpecializationData)
 		{

@@ -115,7 +115,7 @@ public static class Overrides {
 	{
 		//NOTE(Rennorb): Apparrently, mortar kit is utterly broken with the api.
 		// Just guess that if the elite is empty that its actually mortar kit.
-		if(code.Profession == Profession.Engineer && code.SlotSkills.Elite == SkillId._UNDEFINED)
+		if(code.Profession == V2.Profession.Engineer && code.SlotSkills.Elite == SkillId._UNDEFINED)
 		{
 			code.SlotSkills.Elite = SkillId.Elite_Mortar_Kit;
 		}

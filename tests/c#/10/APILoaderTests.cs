@@ -1,5 +1,4 @@
-using Gw2Sharp.WebApi.Exceptions;
-using Gw2Sharp.WebApi.V2.Models;
+using Hardstuck.GuildWars2.BuildCodes.V2.OfficialAPI;
 using Xunit;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2.Tests.API;
@@ -27,13 +26,10 @@ public class FunctionTests {
 	[Fact]
 	public async Task ShouldFindMissinScopes()
 	{
-		var connection = new Gw2Sharp.Connection(MISSING_PERMS_KEY);
-		using var client = new Gw2Sharp.Gw2Client(connection);
-
-		var missingScopes = await APILoader.ValidateScopes(client);
+		var missingScopes = await APILoader.ValidateScopes(MISSING_PERMS_KEY);
 
 		Assert.Equal(new[] {
-			TokenPermission.Characters, TokenPermission.Builds,
+			Permission.Characters, Permission.Builds,
 		}, missingScopes);
 	}
 

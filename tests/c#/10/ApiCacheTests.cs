@@ -1,5 +1,4 @@
-﻿using Gw2Sharp.WebApi.V2.Models;
-using Xunit;
+﻿using Xunit;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2.Tests.APICache;
 
