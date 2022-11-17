@@ -16,8 +16,6 @@ spl_autoload_register(function($class) {
 			break;
 
 		case '\Statics':
-		case '\API':
-		case '\APICache':
 		case '\Overrides':
 		case '\PerProfessionData':
 		case '\LazyLoadMode':
@@ -34,7 +32,12 @@ spl_autoload_register(function($class) {
 
 		case '\ICache':
 		case '\DefaultCacheImpl':
-			require_once __DIR__.'/Database/CacheImpl.php';
+			require_once __DIR__.'/OfficialAPI/CacheImpl.php';
+			break;
+
+		case '\API':
+		case '\APICache':
+			require __DIR__.'/OfficialAPI'.str_replace('\\', '/', $relNamespace).'.php';
 			break;
 
 		case '\Util\FromName':
