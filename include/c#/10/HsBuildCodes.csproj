@@ -8,13 +8,35 @@
 		<RootNamespace>Hardstuck.GuildWars2.BuildCodes</RootNamespace>
 		<Version>2.0.0</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+		<PackageId>Hardstuck.GuildWars2.BuildCodes</PackageId>
+		<Description>
+A colelction of generators and converters for Hardstuck GW2 BuildCodes used by `hardstuck.gg/gw2/builds?b=[code]`.
+Replaces Hardstuck.GuildWars2.Builds.
+		</Description>
+		<Authors>Rennorb</Authors>
+		<Company>Hardstuck</Company>
+		<!--<Licence-->
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/SaculRennorb/HsBuildCodes</RepositoryUrl>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Content Include="../../common/offline/**" CopyToOutputDirectory="PreserveNewest" Link="offline/%(RecursiveDir)/%(Filename)%(Extension)" />
+		<Content Include="../../common/offline/**" CopyToOutputDirectory="PreserveNewest" Link="offline/%(RecursiveDir)%(Filename)%(Extension)">
+			<Pack>true</Pack>
+			<PackagePath>contentFiles/any/any/%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+		</Content>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Hardstuck.GuildWars2.MumbleLink" Version="1.2.2" />
+		<PackageReference Include="Hardstuck.GuildWars2.MumbleLink" Version="1.2.2" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
 	</ItemGroup>
 </Project>
