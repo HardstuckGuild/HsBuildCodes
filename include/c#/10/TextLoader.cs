@@ -65,7 +65,8 @@ public static class TextLoader {
 
 		var code = new BuildCode();
 		code.Version    = DecodeAndAdvance(ref text);
-		Debug.Assert(code.Version >= FIRST_VERSIONED_VERSION && code.Version <= CURRENT_VERSION, "Code version mismatch");
+		if(code.Version < FIRST_VERSIONED_VERSION || code.Version > CURRENT_VERSION) 
+			throw new Util.VersionException("Code version mismatch");
 		code.Kind       = (Kind)DecodeAndAdvance(ref text);
 		Debug.Assert(code.Kind != Kind._UNDEFINED, "Code type not valid");
 		code.Profession = (Profession)1 + DecodeAndAdvance(ref text);

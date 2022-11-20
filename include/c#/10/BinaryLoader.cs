@@ -127,7 +127,8 @@ public static class BinaryLoader {
 
 		var code = new BuildCode();
 		code.Version = rawSpan.DecodeNext(8) - 'a';
-		Debug.Assert(code.Version >= FIRST_VERSIONED_VERSION && code.Version <= CURRENT_VERSION, "Code version mismatch");
+		if(code.Version < FIRST_VERSIONED_VERSION || code.Version > CURRENT_VERSION)
+			throw new VersionException("Code version mismatch");
 		code.Kind    = (rawSpan.DecodeNext(2)) switch {
 			0 => Kind.PvP,
 			1 => Kind.WvW,

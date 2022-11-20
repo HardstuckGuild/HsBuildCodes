@@ -45,6 +45,6 @@ jobs:
         vendored_phpunit_path: tests/php/${{ matrix.php_version }}/phpunit-9.5.26.phar
         php_version: ${{ matrix.php_version }}
         php_extensions: mbstring openssl
-        bootstrap: tests/php/${{ matrix.php_version }}/autoload.php
+        bootstrap: include/php/${{ matrix.php_version }}/autoload.php
         test_suffix: Tests.php
         args: --colors=auto tests/php/${{ matrix.php_version }}
