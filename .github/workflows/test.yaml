@@ -15,6 +15,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Verify commit exists in origin/master
+      if: startsWith(github.event.ref, 'refs/tags/v')
       run: git branch --remote --contains | grep origin/master
 
     - name: Setup .NET
@@ -42,6 +43,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Verify commit exists in origin/master
+      if: startsWith(github.event.ref, 'refs/tags/v')
       run: git branch --remote --contains | grep origin/master
 
     - name: Test
