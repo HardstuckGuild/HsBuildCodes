@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: debug
-      run: echo ${{ fromJSON(github.event.workflow_run) }}
+      run: echo ${{ toJSON(github.event.workflow_run) }}
 
   build-and-publish:
     runs-on: ubuntu-latest
