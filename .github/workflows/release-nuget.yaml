@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: debug
-      run: echo ${{ toJSON(github.event) }}
+      run: echo ${{ toJSON(github) }}
 
   build-and-publish:
     runs-on: ubuntu-latest
