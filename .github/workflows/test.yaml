@@ -12,10 +12,15 @@ jobs:
     timeout-minutes: 15
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Verify commit exists in origin/master
       run: git branch --remote --contains | grep origin/master
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
 
     - name: 'Build Lib'
       run: dotnet build include/c#/10 --configuration Release
@@ -34,7 +39,7 @@ jobs:
         php_version: ['8.0', '8.1'] # strings so the .0 is preserved
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Verify commit exists in origin/master
       run: git branch --remote --contains | grep origin/master
