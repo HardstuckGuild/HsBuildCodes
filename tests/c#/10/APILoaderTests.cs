@@ -97,10 +97,20 @@ public class BasicCodesTests {
 		Assert.Equal(ItemId.Superior_Rune_of_the_Traveler2, code.Rune);
 	}
 
-	[Fact]
+	[PlatformFact(PlatformID.Win32NT)]
 	public async Task FromCurrentCharacterNullIfUnavailable()
 	{
 		var code = await APILoader.LoadBuildCodeFromCurrentCharacter(FunctionTests.VALID_KEY);
 		Assert.Null(code);
 	}
 }
+
+public class PlatformFactAttribute : FactAttribute {
+	public PlatformFactAttribute(PlatformID platform)
+	{
+		var currentPlatform = Environment.OSVersion.Platform;
+		if(currentPlatform != platform)
+			Skip = $"Skipped because current platform {currentPlatform} does not equal {platform}";
+	}
+}
+
