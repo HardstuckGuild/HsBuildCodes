@@ -23,10 +23,10 @@ jobs:
       with:
         dotnet-version: 6.0.x
 
-    - name: 'Build Lib'
+    - name: Build Lib
       run: dotnet build include/c#/10 --configuration Release
 
-    - name: 'Build Tests'
+    - name: Build Tests
       run: dotnet build tests/c#/10 --configuration Release
 
     - name: Test
@@ -55,3 +55,38 @@ jobs:
         bootstrap: include/php/${{ matrix.php_version }}/autoload.php
         test_suffix: Tests.php
         args: --colors=auto tests/php/${{ matrix.php_version }}
+
+  build-and-publish-nuget:
+    needs: [ XUnit, PHPUnit ]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: startsWith(github.event.ref, 'refs/tags/v')
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Extract release notes
+      run: |
+        git log --pretty=format:'%d %s' $REF | perl -pe 's| \(.*tag: v(\d+.\d+.\d+(-preview\d{3})?)(, .*?)*\)|\n## \1\n|g' > RELEASE-NOTES
+
+    - name: Set VERSION variable from tag
+      run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+
+    - name: Validate version
+      run: grep -i "<Version>${VERSION}" include/c#/10/HsBuildCodes.csproj
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Build
+      run: dotnet build include/c#/10 --configuration Release
+
+    - name: Pack
+      run: dotnet pack include/c#/10 --configuration Release --no-build --output .
+      
+    # - name: Push
+    #   run: dotnet nuget push NuGet.Workflow.${VERSION}.nupkg --source https://nuget.pkg.github.com/acraven/index.json --api-key ${NUGET_API_KEY}
+    #   env:
+    #     NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
