@@ -1,10 +1,10 @@
+name: Test
 on:
   push:
-    branches:
-    - main
+    branches: [ main ]
+    tags: [ 'v[0-9]+.[0-9]+.[0-9]+' ]
   pull_request:
-    branches:
-    - main
+    branches: [ main ]
 
 jobs:
   XUnit:
@@ -13,6 +13,9 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+
+    - name: Verify commit exists in origin/main
+      run: git branch --remote --contains | grep origin/main
 
     - name: 'Build Lib'
       run: dotnet build include/c#/10 --configuration Release
@@ -32,6 +35,9 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+
+    - name: Verify commit exists in origin/main
+      run: git branch --remote --contains | grep origin/main
 
     - name: Test
       uses: php-actions/phpunit@v3
