@@ -16,15 +16,17 @@ Replaces Hardstuck.GuildWars2.Builds.
 		</Description>
 		<Authors>Rennorb</Authors>
 		<Company>Hardstuck</Company>
-		<!--<Licence-->
+		<Copyright>Apache-2.0</Copyright>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/SaculRennorb/HsBuildCodes</RepositoryUrl>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
 		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 	</PropertyGroup>
 
@@ -38,5 +40,12 @@ Replaces Hardstuck.GuildWars2.Builds.
 	<ItemGroup>
 		<PackageReference Include="Hardstuck.GuildWars2.MumbleLink" Version="1.2.2" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="../../../LICENSE">
+			<Pack>true</Pack>
+			<PackagePath></PackagePath>
+		</None>
 	</ItemGroup>
 </Project>

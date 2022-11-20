@@ -1,0 +1,45 @@
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  XUnit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: 'Build Lib'
+      run: dotnet build include/c#/10 --configuration Release
+
+    - name: 'Build Tests'
+      run: dotnet build tests/c#/10 --configuration Release
+
+    - name: Test
+      run: dotnet test tests/c#/10 --configuration Release --no-build
+
+  PHPUnit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        php_version: [8.0, 8.1]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Test
+      uses: php-actions/phpunit@v3
+      with:
+        vendored_phpunit_path: tests/php/${{ matrix.php_version }}/phpunit-9.5.26.phar
+        php_version: ${{ matrix.php_version }}
+        php_extensions:
+        - mbstring
+        - openssh
+        bootstrap: tests/php/${{ matrix.php_version }}/autoload.php
+        args: --colors=auto --test-suffix Tests.php tests/php/${{ matrix.php_version }}
