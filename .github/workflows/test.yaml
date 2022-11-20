@@ -44,8 +44,6 @@ jobs:
       with:
         vendored_phpunit_path: tests/php/${{ matrix.php_version }}/phpunit-9.5.26.phar
         php_version: ${{ matrix.php_version }}
-        php_extensions:
-        - mbstring
-        - openssh
+        php_extensions: mbstring openssh
         bootstrap: tests/php/${{ matrix.php_version }}/autoload.php
         args: --colors=auto --test-suffix Tests.php tests/php/${{ matrix.php_version }}
