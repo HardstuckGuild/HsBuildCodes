@@ -53,8 +53,11 @@ class TextLoader {
 		console.assert(text.length > 10, "Code too short");
 
 		if(text[0] === text[0].toLowerCase()) {
-			const binary = atob(text.slice(1).replace('-', '/'));
-			return BinaryLoader.LoadBuildCode(text[0]+binary);
+			const binary = Buffer.from(text.slice(1).replace('-', '/'), 'base64');
+			const buffer = new Uint8Array(binary.length + 1);
+			buffer[0] = text.charCodeAt(0);
+			buffer.set(binary, 1);
+			return BinaryLoader.LoadBuildCode(Buffer.from(buffer));
 		}
 
 		const view = new StringView(text);
@@ -452,7 +455,7 @@ class TextLoader {
 	public static LoadOfficialBuildCode(chatLink : string , aquatic : boolean = false) : BuildCode
 	{
 		const base64 = chatLink[0] === '[' ? chatLink.slice(2, -1) : chatLink;
-		const buffer = (new TextEncoder()).encode(atob(base64));
+		const buffer = Buffer.from(base64, 'base64');
 		return BinaryLoader.LoadOfficialBuildCode(buffer, aquatic);
 	}
 
@@ -460,7 +463,7 @@ class TextLoader {
 	public static WriteOfficialBuildCode(code : BuildCode, aquatic : boolean = false) : string
 	{
 		const buffer = BinaryLoader.WriteOfficialBuildCode(code, aquatic);
-		return "[&"+btoa(buffer)+']';
+		return "[&"+Buffer.from(buffer).toString('base64')+']';
 	}
 
 	//#endregion

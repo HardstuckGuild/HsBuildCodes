@@ -11,10 +11,10 @@ import BinaryView from "./Util/BinaryView";
 
 //TODO(Rennorb): rewrite these using ArrayBuffers
 export class BitReader {
-	public Data   : string;
+	public Data   : Buffer;
 	public BitPos : number;
 
-	public constructor(data : string) {
+	public constructor(data : Buffer) {
 		this.Data   = data;
 		this.BitPos = 0;
 	}
@@ -46,7 +46,7 @@ export class BitReader {
 		const containsData = [0, 0, 0, 0];
 		const additionalBytes = containsData.length - sourceByteWidth;
 		for(let i = 0; i < sourceByteWidth; i++)
-			containsData[additionalBytes + i] = this.Data.charCodeAt(sourceByteStart + i);
+			containsData[additionalBytes + i] = this.Data.at(sourceByteStart + i) as number;
 		const bitShiftRight = 8 - (this.BitPos + width) & 7;
 		const bitShiftLeft = ((this.BitPos & 7) - (8 - (width & 7))) & 7;
 		for(let i = 3; i > additionalBytes; i--)
@@ -74,8 +74,8 @@ export class BitReader {
 			if(i > 0 && i % 8 === 0) s += "| ";
 
 			if(i === this.BitPos / 8)
-				s += "_["+this.Data.charCodeAt(i).toString(2).padStart(8, '0')+']';
-			else s += '_'+this.Data.charCodeAt(i).toString(2).padStart(8, '0');
+				s += "_["+this.Data.at(i)!.toString(2).padStart(8, '0')+']';
+			else s += '_'+this.Data.at(i)!.toString(2).padStart(8, '0');
 		}
 		return s;
 	}
@@ -119,7 +119,7 @@ export class BitWriter {
 class BinaryLoader {
 	//#region hardstuck codes
 
-	public static LoadBuildCode(raw : string) : BuildCode
+	public static LoadBuildCode(raw : Buffer) : BuildCode
 	{
 		const rawSpan = new BitReader(raw);
 
@@ -489,7 +489,7 @@ class BinaryLoader {
 		code.Kind       = Kind.PvE;
 		code.Profession = rawView.NextByte() as Profession;
 
-		if(PerProfessionData.LazyLoadMode >= LazyLoadMode.OFFLINE_ONLY) PerProfessionData.Reload(code.Profession, PerProfessionData.LazyLoadMode < LazyLoadMode.FULL);
+		if(PerProfessionData.LazyLoadMode >= LazyLoadMode.OFFLINE_ONLY) PerProfessionData.Reload(code.Profession/*, PerProfessionData.LazyLoadMode < LazyLoadMode.FULL*/);
 		const professionData = PerProfessionData.ByProfession(code.Profession);
 
 		for(let i = 0; i < 3; i++) {
@@ -593,72 +593,70 @@ class BinaryLoader {
 	}
 
 	/** @remarks Requires PerProfessionData to be loaded or PerProfessionData.LazyLoadMode to be set to something other than LazyLoadMode.NONE. */
-	public static WriteOfficialBuildCode(code : BuildCode, aquatic : boolean = false) : string
+	public static WriteOfficialBuildCode(code : BuildCode, aquatic : boolean = false) : ArrayBuffer
 	{
-		let destination = '';
-		if(PerProfessionData.LazyLoadMode >= LazyLoadMode.OFFLINE_ONLY) PerProfessionData.Reload(code.Profession, PerProfessionData.LazyLoadMode < LazyLoadMode.FULL);
+		const destination = new ArrayBuffer(44);
+		let pos = 0;
+		function WriteByte(byte : number) {
+			destination[pos++] = byte;
+		}
+		
+		if(PerProfessionData.LazyLoadMode >= LazyLoadMode.OFFLINE_ONLY) PerProfessionData.Reload(code.Profession/*, PerProfessionData.LazyLoadMode < LazyLoadMode.FULL*/);
 		const professionData = PerProfessionData.ByProfession(code.Profession);
 
-		destination += String.fromCharCode(0x0d); //code type
-		destination += String.fromCharCode(code.Profession);
+		WriteByte(0x0d); //code type
+		WriteByte(code.Profession);
 		for(let i = 0; i < 3; i++) {
 			if(code.Specializations[i].SpecializationId === SpecializationId._UNDEFINED) continue;
 
 			const spec = code.Specializations[i];
-			destination += String.fromCharCode(spec.SpecializationId);
-			destination += String.fromCharCode(spec.Choices[0] | (spec.Choices[1] << 2) | (spec.Choices[2] << 4));
+			WriteByte(spec.SpecializationId);
+			WriteByte((spec.Choices[0] | (spec.Choices[1] << 2) | (spec.Choices[2] << 4)));
 		}
 
 		{
-			if(aquatic) destination += String.fromCharCode(0, 0);
-			var buffer = new ArrayBuffer(20);
-			var view = new DataView(buffer);
+			if(aquatic) pos += 2;
+			var view = new DataView(destination, pos);
 			for(let i = 0; i < 5; i++) {
 				const palletteIndex = professionData.SkillToPallette[code.SlotSkills[i]];
 				view.setUint16(i * 4, palletteIndex, true);
 			}
-			destination += (new TextDecoder()).decode(buffer);
-			if(!aquatic) destination += String.fromCharCode(0, 0);
+			if(!aquatic) pos += 2;
 		}
 
 		switch(code.Profession)
 		{
 			case Profession.Ranger:
 				const rangerData = code.ProfessionSpecific as RangerData;
-				if(aquatic) destination += String.fromCharCode(0, 0);
-				destination += String.fromCharCode(1 + rangerData.Pet1);
-				destination += String.fromCharCode(1 + rangerData.Pet2);
+				if(aquatic) pos += 2;
+				WriteByte(1 + rangerData.Pet1);
+				WriteByte(1 + rangerData.Pet2);
 				break;
 
 			case Profession.Revenant:
 				const revenantData = code.ProfessionSpecific as RevenantData;
 
-				if(aquatic) destination += String.fromCharCode(0, 0);
-				destination += String.fromCharCode(revenantData.Legend1);
-				destination += String.fromCharCode(revenantData.Legend2);
+				if(aquatic) pos += 2;
+				WriteByte(revenantData.Legend1);
+				WriteByte(revenantData.Legend2);
 
-				if(aquatic) destination += String.fromCharCode(0, 0, 0, 0, 0, 0);
-				else destination += String.fromCharCode(0, 0);
+				if(aquatic) pos += 6;
+				else pos += 2;
 
 				const altSkill1PalletteId = professionData.SkillToPallette[revenantData.AltUtilitySkill1];
 				const altSkill2PalletteId = professionData.SkillToPallette[revenantData.AltUtilitySkill2];
 				const altSkill3PalletteId = professionData.SkillToPallette[revenantData.AltUtilitySkill3];
 
 				{
-					var buffer = new ArrayBuffer(6);
-					var view = new DataView(buffer);
+					var view = new DataView(destination, pos);
 					view.setUint16(0, altSkill1PalletteId, true);
 					view.setUint16(2, altSkill2PalletteId, true);
 					view.setUint16(4, altSkill3PalletteId, true);
-					destination += (new TextDecoder()).decode(buffer);
 				}
 
-				if(!aquatic) destination += String.fromCharCode(0, 0, 0, 0, 0, 0);
+				if(!aquatic) pos += 6;
 				break;
 		}
-
-		const padding = 44 - destination.length;
-		if(padding > 0) destination += String.fromCharCode(0).repeat(padding);
 
 		return destination;
 	}

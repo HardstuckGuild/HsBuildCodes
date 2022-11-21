@@ -118,18 +118,18 @@ class PerProfessionData {
 	// }
 
 	/** @remarks This will only ever add new entries, never remove them. */
-	public static ReloadAll(skipOnline : boolean = false) : void
+	public static ReloadAll(/*skipOnline : boolean = false*/) : void
 	{
 		//TODO(Rennorb): make parallel
 		for(const profession of Object.values(Profession)) {
 			if(profession === Profession._UNDEFINED) continue;
 
-			PerProfessionData.Reload(profession as Profession, skipOnline);
+			PerProfessionData.Reload(profession as Profession/*, skipOnline*/);
 		}
 	}
 
 	/** @remarks This will only ever add new entries, never remove them. */
-	public static Reload(profession : Profession, skipOnline : boolean = false) : void
+	public static Reload(profession : Profession/*, skipOnline : boolean = false*/) : void
 	{
 		const targetData = PerProfessionData.ByProfession(profession);
 
@@ -144,8 +144,8 @@ class PerProfessionData {
 		}
 
 		let loaded = false;
-		if(!skipOnline)
-		{
+		// if(!skipOnline)
+		// {
 			try
 			{
 				const professionData = APICache.Get("/professions/"+Profession[profession], '2019-12-19T00:00:00.000Z');
@@ -165,7 +165,7 @@ class PerProfessionData {
 				//console.warn("Could not fetch skill pallette for $professionName, will fall back to offline list.", ex);
 				console.error(`Could not fetch skill pallette for ${Profession[profession]}.`, ex);
 			}
-		}
+		// }
 
 		// if(!loaded) {
 		// 	targetData.ReloadFromOfflineFiles(profession);
