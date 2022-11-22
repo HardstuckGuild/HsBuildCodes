@@ -71,7 +71,9 @@ jobs:
       run: git branch --remote --contains | grep origin/master
 
     - name: Setup Node
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
 
     - name: Setup Jest
       run: npm ci
