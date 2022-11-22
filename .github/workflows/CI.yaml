@@ -55,6 +55,30 @@ jobs:
         test_suffix: Tests.php
         args: --colors=auto tests/php/${{ matrix.php_version }}
 
+  Jest:
+    runs-on: runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: tests/ts
+
+     steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Verify commit exists in origin/master
+      if: ${{ ! startsWith(github.event.ref, 'refs/tags/v') }}
+      run: git branch --remote --contains | grep origin/master
+
+    - name: Setup Node
+      uses: actions/setup-node@v1
+
+    - name: Setup Jest
+      run: npm ci
+
+    - name: Test
+      run: npm test
+
   build-and-publish-nuget:
     needs: [ XUnit, PHPUnit ]
     runs-on: ubuntu-latest
