@@ -8,13 +8,14 @@ import StatId from "./Database/StatIds";
 import { Arbitrary, BuildCode, IArbitrary, IProfessionSpecific, Kind, Legend, PetId, Profession, ProfessionSpecific, RangerData, RevenantData, Specialization, TraitLineChoice, WeaponSet, WeaponType } from "./Structures";
 import { AllEquipmentInfusions, AllEquipmentStats, TraitLineChoices } from "./Util/UtilStructs";
 import BinaryView from "./Util/BinaryView";
+import { Assert } from "./Util/Static";
 
 //TODO(Rennorb): rewrite these using ArrayBuffers
 export class BitReader {
-	public Data   : Buffer;
+	public Data   : Uint8Array;
 	public BitPos : number;
 
-	public constructor(data : Buffer) {
+	public constructor(data : Uint8Array) {
 		this.Data   = data;
 		this.BitPos = 0;
 	}
@@ -46,7 +47,7 @@ export class BitReader {
 		const containsData = [0, 0, 0, 0];
 		const additionalBytes = containsData.length - sourceByteWidth;
 		for(let i = 0; i < sourceByteWidth; i++)
-			containsData[additionalBytes + i] = this.Data.at(sourceByteStart + i) as number;
+			containsData[additionalBytes + i] = this.Data[sourceByteStart + i];
 		const bitShiftRight = 8 - (this.BitPos + width) & 7;
 		const bitShiftLeft = ((this.BitPos & 7) - (8 - (width & 7))) & 7;
 		for(let i = 3; i > additionalBytes; i--)
@@ -61,9 +62,8 @@ export class BitReader {
 
 		this.BitPos += width;
 
-		const data = new Uint8Array(containsData);
-		const intData = new Uint32Array(data, 0, containsData.length / Uint32Array.BYTES_PER_ELEMENT);
-		return intData[0];
+		const data = new DataView(new Uint8Array(containsData).buffer);
+		return data.getUint32(0);
 	}
 
 	public DebugPrint() : string
@@ -74,8 +74,8 @@ export class BitReader {
 			if(i > 0 && i % 8 === 0) s += "| ";
 
 			if(i === this.BitPos / 8)
-				s += "_["+this.Data.at(i)!.toString(2).padStart(8, '0')+']';
-			else s += '_'+this.Data.at(i)!.toString(2).padStart(8, '0');
+				s += "_["+this.Data[i]!.toString(2).padStart(8, '0')+']';
+			else s += '_'+this.Data[i]!.toString(2).padStart(8, '0');
 		}
 		return s;
 	}
@@ -90,13 +90,13 @@ export class BitWriter {
 		const posInByte = this.BitPos & 7;
 		const bytesTouched = (posInByte + bitWidth + 7) >> 3;
 
-		const intBuff = new Uint32Array(1);
-		intBuff[0] = value << (32 - bitWidth - posInByte);
-		const buffer = new Uint8Array(intBuff);
+		const buffer = new ArrayBuffer(4);
+		const view = new DataView(buffer);
+		view.setUint32(0, value << (32 - bitWidth - posInByte));
 
 		const dest = this.BitPos >> 3;
 		for(let i = 0; i < bytesTouched; i++)
-			this.Data[dest + i] = (this.Data[dest + i] !== undefined ? this.Data[dest + i] : 0) | buffer[i];
+			this.Data[dest + i] = (this.Data[dest + i] !== undefined ? this.Data[dest + i] : 0) | view.getUint8(i);
 
 		this.BitPos += bitWidth;
 	}
@@ -119,20 +119,21 @@ export class BitWriter {
 class BinaryLoader {
 	//#region hardstuck codes
 
-	public static LoadBuildCode(raw : Buffer) : BuildCode
+	public static LoadBuildCode(raw : Uint8Array) : BuildCode
 	{
+		Assert(raw.length > 10, "Too short.");
 		const rawSpan = new BitReader(raw);
 
 		const code = new BuildCode();
 		code.Version = rawSpan.DecodeNext(8) - 'a'.charCodeAt(0);
-		console.assert(code.Version >= Static.FIRST_VERSIONED_VERSION && code.Version <= Static.CURRENT_VERSION, "Code version mismatch");
+		Assert(code.Version >= Static.FIRST_VERSIONED_VERSION && code.Version <= Static.CURRENT_VERSION, "Code version mismatch");
 		switch (rawSpan.DecodeNext(2)) {
 			case 0: code.Kind = Kind.PvP; break;
 			case 1: code.Kind = Kind.WvW; break;
 			case 2: code.Kind = Kind.PvE; break;
 			default: code.Kind = Kind._UNDEFINED;
 		};
-		console.assert(code.Kind !== Kind._UNDEFINED, "Code type not valid");
+		Assert(code.Kind !== Kind._UNDEFINED, "Code type not valid");
 		code.Profession = (1 + rawSpan.DecodeNext(4)) as Profession;
 
 		for(let i = 0; i < 3; i++) {
@@ -141,7 +142,7 @@ class BinaryLoader {
 				const choices = new TraitLineChoices();
 				for(let j = 0; j < 3; j++)
 					choices[j] = rawSpan.DecodeNext(2) as TraitLineChoice;
-				code.Specializations[i] = {traitLine, choices};
+				code.Specializations[i] = new Specialization(traitLine, choices);
 			}
 		}
 		if(!rawSpan.EatIfExpected(0, 5)) {
@@ -292,7 +293,7 @@ class BinaryLoader {
 		return Arbitrary.NONE.GetInstance();
 	}
 
-	public static WriteCode(code : BuildCode) : string
+	public static WriteCode(code : BuildCode) : Uint8Array
 	{
 		const rawBits = new BitWriter();
 		rawBits.Data[0] = 'a'.charCodeAt(0) + code.Version;
@@ -466,8 +467,7 @@ class BinaryLoader {
 				break;
 		}
 
-		const buffer = new Uint8Array(rawBits.Data);
-		return (new TextDecoder()).decode(buffer);
+		return new Uint8Array(rawBits.Data);
 	}
 
 	//#endregion
@@ -478,18 +478,18 @@ class BinaryLoader {
 	 * @param raw binary data
 	 * @remarks Requires PerProfessionData to be loaded or PerProfessionData.LazyLoadMode to be set to something other than LazyLoadMode.NONE.
 	 */
-	public static LoadOfficialBuildCode(raw : ArrayBuffer, aquatic : boolean = false) : BuildCode
+	public static async LoadOfficialBuildCode(raw : Uint8Array, aquatic : boolean = false) : Promise<BuildCode>
 	{
-		const rawView = new BinaryView(raw);
+		const rawView = new BinaryView(raw.buffer);
 		const codeType = rawView.NextByte();
-		console.assert(codeType === 0x0D);
+		Assert(codeType === 0x0D);
 
 		const code = new BuildCode();
 		code.Version    = Static.CURRENT_VERSION;
 		code.Kind       = Kind.PvE;
 		code.Profession = rawView.NextByte() as Profession;
 
-		if(PerProfessionData.LazyLoadMode >= LazyLoadMode.OFFLINE_ONLY) PerProfessionData.Reload(code.Profession/*, PerProfessionData.LazyLoadMode < LazyLoadMode.FULL*/);
+		if(PerProfessionData.LazyLoadMode >= LazyLoadMode.OFFLINE_ONLY) await PerProfessionData.Reload(code.Profession/*, PerProfessionData.LazyLoadMode < LazyLoadMode.FULL*/);
 		const professionData = PerProfessionData.ByProfession(code.Profession);
 
 		for(let i = 0; i < 3; i++) {
@@ -501,7 +501,7 @@ class BinaryLoader {
 			for(let j = 0; j < 3; j++) {
 				choices[j] = ((mix >> (j * 2)) & 0b00000011) as TraitLineChoice;
 			}
-			code.Specializations[i] = { spec, choices };
+			code.Specializations[i] = new Specialization(spec, choices);
 		}
 
 		const offset = aquatic ? 2 : 0;
@@ -593,15 +593,15 @@ class BinaryLoader {
 	}
 
 	/** @remarks Requires PerProfessionData to be loaded or PerProfessionData.LazyLoadMode to be set to something other than LazyLoadMode.NONE. */
-	public static WriteOfficialBuildCode(code : BuildCode, aquatic : boolean = false) : ArrayBuffer
+	public static async WriteOfficialBuildCode(code : BuildCode, aquatic : boolean = false) : Promise<Uint8Array>
 	{
-		const destination = new ArrayBuffer(44);
+		const destination = new Uint8Array(44);
 		let pos = 0;
 		function WriteByte(byte : number) {
 			destination[pos++] = byte;
 		}
 		
-		if(PerProfessionData.LazyLoadMode >= LazyLoadMode.OFFLINE_ONLY) PerProfessionData.Reload(code.Profession/*, PerProfessionData.LazyLoadMode < LazyLoadMode.FULL*/);
+		if(PerProfessionData.LazyLoadMode >= LazyLoadMode.OFFLINE_ONLY) await PerProfessionData.Reload(code.Profession/*, PerProfessionData.LazyLoadMode < LazyLoadMode.FULL*/);
 		const professionData = PerProfessionData.ByProfession(code.Profession);
 
 		WriteByte(0x0d); //code type
@@ -616,7 +616,7 @@ class BinaryLoader {
 
 		{
 			if(aquatic) pos += 2;
-			var view = new DataView(destination, pos);
+			var view = new DataView(destination.buffer, pos);
 			for(let i = 0; i < 5; i++) {
 				const palletteIndex = professionData.SkillToPallette[code.SlotSkills[i]];
 				view.setUint16(i * 4, palletteIndex, true);
@@ -648,7 +648,7 @@ class BinaryLoader {
 				const altSkill3PalletteId = professionData.SkillToPallette[revenantData.AltUtilitySkill3];
 
 				{
-					var view = new DataView(destination, pos);
+					var view = new DataView(destination.buffer, pos);
 					view.setUint16(0, altSkill1PalletteId, true);
 					view.setUint16(2, altSkill2PalletteId, true);
 					view.setUint16(4, altSkill3PalletteId, true);

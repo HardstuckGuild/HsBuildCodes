@@ -39,6 +39,17 @@
 				"./tests/c#/10/Tests.sln"
 			],
 			"problemMatcher": []
+		},
+		{
+			"label": "Jest",
+			"type": "shell",
+			"command": [
+				"npm", "test"
+			],
+			"options": {
+				"cwd": "tests/ts"
+			},
+			"problemMatcher": []
 		}
 	]
 }

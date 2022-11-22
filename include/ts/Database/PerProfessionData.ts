@@ -4,30 +4,21 @@ import LazyLoadMode from "./LazyLoadMode";
 import SkillId from "./SkillIds";
 import SpecializationId from "./SpecializationIds";
 
+type Store<A extends string | number | symbol, B> = {
+	[index in A]: B;
+};
 class PerProfessionData {
 	public static LazyLoadMode : LazyLoadMode = LazyLoadMode.NONE;
 
-	public static Guardian     : PerProfessionData;
-	public static Warrior      : PerProfessionData;
-	public static Engineer     : PerProfessionData;
-	public static Ranger       : PerProfessionData;
-	public static Thief        : PerProfessionData;
-	public static Elementalist : PerProfessionData;
-	public static Mesmer       : PerProfessionData;
-	public static Necromancer  : PerProfessionData;
-	public static Revenant     : PerProfessionData;
-
-	public static __construct_static() {
-		PerProfessionData.Guardian     = new PerProfessionData();
-		PerProfessionData.Warrior      = new PerProfessionData();
-		PerProfessionData.Engineer     = new PerProfessionData();
-		PerProfessionData.Ranger       = new PerProfessionData();
-		PerProfessionData.Thief        = new PerProfessionData();
-		PerProfessionData.Elementalist = new PerProfessionData();
-		PerProfessionData.Mesmer       = new PerProfessionData();
-		PerProfessionData.Necromancer  = new PerProfessionData();
-		PerProfessionData.Revenant     = new PerProfessionData();
-	}
+	public static Guardian     : PerProfessionData = new PerProfessionData();
+	public static Warrior      : PerProfessionData = new PerProfessionData();
+	public static Engineer     : PerProfessionData = new PerProfessionData();
+	public static Ranger       : PerProfessionData = new PerProfessionData();
+	public static Thief        : PerProfessionData = new PerProfessionData();
+	public static Elementalist : PerProfessionData = new PerProfessionData();
+	public static Mesmer       : PerProfessionData = new PerProfessionData();
+	public static Necromancer  : PerProfessionData = new PerProfessionData();
+	public static Revenant     : PerProfessionData = new PerProfessionData();
 
 	public static ByProfession(profession : Profession) : PerProfessionData
 	{
@@ -51,14 +42,14 @@ class PerProfessionData {
 		this._lastUpdate = new Date("1970-01-01");
 	}
 
-		/** @remarks Once loaded also converts 0 &lt;-&gt; 0 for _UNDEFINED passthrough. */
-	public PalletteToSkill : Array<SkillId> = [];
 	/** @remarks Once loaded also converts 0 &lt;-&gt; 0 for _UNDEFINED passthrough. */
-	public SkillToPallette : Array<number> = [];
+	public PalletteToSkill : Store<number, SkillId> = {};
+	/** @remarks Once loaded also converts 0 &lt;-&gt; 0 for _UNDEFINED passthrough. */
+	public SkillToPallette : Store<SkillId, number> = {} as any;
 	/** @remarks Once loaded also converts 0 &lt;-&gt; 0 for _UNDEFINED passthrough. Indices are offset by 1. */
-	public IndexToId : Array<number> = [];
+	public IndexToId : Store<number, SpecializationId> = {};
 	/** @remarks Once loaded also converts 0 &lt;-&gt; 0 for _UNDEFINED passthrough. Indices are offset by 1. */
-	public IdToIndex : Array<number> = [];
+	public IdToIndex : Store<SpecializationId, number> = {} as any;
 
 	public TryInsertSkill(palletteId : number, skillId : SkillId) : boolean
 	{
@@ -118,26 +109,23 @@ class PerProfessionData {
 	// }
 
 	/** @remarks This will only ever add new entries, never remove them. */
-	public static ReloadAll(/*skipOnline : boolean = false*/) : void
+	public static ReloadAll(/*skipOnline : boolean = false*/) : Promise<void[]>
 	{
-		//TODO(Rennorb): make parallel
-		for(const profession of Object.values(Profession)) {
-			if(profession === Profession._UNDEFINED) continue;
-
-			PerProfessionData.Reload(profession as Profession/*, skipOnline*/);
-		}
+		return Promise.all(Object.values(Profession)
+			.filter(p => p !== Profession._UNDEFINED && typeof p !== 'string')
+			.map(p => PerProfessionData.Reload(p as Profession/*, skipOnline*/)));
 	}
 
 	/** @remarks This will only ever add new entries, never remove them. */
-	public static Reload(profession : Profession/*, skipOnline : boolean = false*/) : void
+	public static async Reload(profession : Profession/*, skipOnline : boolean = false*/) : Promise<void>
 	{
 		const targetData = PerProfessionData.ByProfession(profession);
 
 		if((new Date).getTime() - targetData._lastUpdate.getTime() < 5 * 60) return;
 
-		if(targetData.PalletteToSkill.length === 0)
+		if(targetData.PalletteToSkill[0] === undefined)
 		{
-			//NOTE(Rennorb): php doesn't allow preallocation
+			//NOTE(Rennorb): js doesn't allow preallocation
 
 			targetData.TryInsertSkill(0, SkillId._UNDEFINED);
 			targetData.TryInsertSpec(0, SpecializationId._UNDEFINED);
@@ -148,7 +136,7 @@ class PerProfessionData {
 		// {
 			try
 			{
-				const professionData = APICache.Get("/professions/"+Profession[profession], '2019-12-19T00:00:00.000Z');
+				const professionData = await APICache.Get("/professions/"+Profession[profession], '2019-12-19T00:00:00.000Z');
 				for(const [palette, skill] of professionData.skills_by_palette)
 				{
 					targetData.AssignSkill(palette, skill);

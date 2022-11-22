@@ -5,7 +5,8 @@ import Static from "./Database/Static";
 import StatId from "./Database/StatIds";
 import { Arbitrary, BuildCode, IArbitrary, IProfessionSpecific, Kind, Legend, PetId, Profession, ProfessionSpecific, RangerData, RevenantData, Specialization, TraitLineChoice, WeaponSet, WeaponType } from "./Structures";
 import StringView from "./Util/StringView"
-import { AllEquipmentInfusions, AllEquipmentStats, TraitLineChoices } from "./Util/UtilStructs";
+import { AllEquipmentInfusions, AllEquipmentStats, SpecializationChoices, TraitLineChoices } from "./Util/UtilStructs";
+import { Assert, Base64Decode, Base64Encode } from "./Util/Static";
 
 class TextLoader {
 	public static CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-";
@@ -50,22 +51,23 @@ class TextLoader {
 	///#region hardstuck codes
 
 	public static LoadBuildCode(text : string) : BuildCode {
-		console.assert(text.length > 10, "Code too short");
+		Assert(text.length > 10, "Code too short");
 
 		if(text[0] === text[0].toLowerCase()) {
-			const binary = Buffer.from(text.slice(1).replace('-', '/'), 'base64');
+			new TextEncoder().encode()
+			const binary = Base64Decode(text.slice(1).replace('-', '/'));
 			const buffer = new Uint8Array(binary.length + 1);
 			buffer[0] = text.charCodeAt(0);
 			buffer.set(binary, 1);
-			return BinaryLoader.LoadBuildCode(Buffer.from(buffer));
+			return BinaryLoader.LoadBuildCode(buffer);
 		}
 
 		const view = new StringView(text);
 		const code = new BuildCode();
 		code.Version    = TextLoader.DecodeAndAdvance(view);
-		console.assert(code.Version === Static.CURRENT_VERSION, "Code version mismatch");
+		Assert(code.Version === Static.CURRENT_VERSION, "Code version mismatch");
 		code.Kind       = TextLoader.DecodeAndAdvance(view) as Kind;
-		console.assert(code.Kind !== Kind._UNDEFINED, "Code type not valid");
+		Assert(code.Kind !== Kind._UNDEFINED, "Code type not valid");
 		code.Profession = (1 + TextLoader.DecodeAndAdvance(view)) as Profession;
 
 		for(let i = 0; i < 3; i++) {
@@ -75,7 +77,7 @@ class TextLoader {
 				const choices = new TraitLineChoices();
 				for(let j = 0; j < 3; j++)
 					choices[j] = (((mixed >> (4 - j * 2)) & 0b00000011)) as TraitLineChoice;
-				code.Specializations[i] = { id, choices };
+				code.Specializations[i] = new Specialization(id, choices);
 			}
 		}
 		if(!TextLoader.EatToken(view, '~')) {
@@ -452,18 +454,17 @@ class TextLoader {
 	 * @param chatLink base64 encoded raw link (without [&...]) or full link (with [&...])
 	 * @remarks Requires PerProfessionData to be loaded or PerProfessionData.LazyLoadMode to be set to something other than LazyLoadMode.NONE.
 	 */
-	public static LoadOfficialBuildCode(chatLink : string , aquatic : boolean = false) : BuildCode
+	public static LoadOfficialBuildCode(chatLink : string , aquatic : boolean = false) : Promise<BuildCode>
 	{
 		const base64 = chatLink[0] === '[' ? chatLink.slice(2, -1) : chatLink;
-		const buffer = Buffer.from(base64, 'base64');
-		return BinaryLoader.LoadOfficialBuildCode(buffer, aquatic);
+		return BinaryLoader.LoadOfficialBuildCode(Base64Decode(base64), aquatic);
 	}
 
 	/** @remarks Requires PerProfessionData to be loaded or PerProfessionData.LazyLoadMode to be set to something other than LazyLoadMode.NONE. */
-	public static WriteOfficialBuildCode(code : BuildCode, aquatic : boolean = false) : string
+	public static async WriteOfficialBuildCode(code : BuildCode, aquatic : boolean = false) : Promise<string>
 	{
-		const buffer = BinaryLoader.WriteOfficialBuildCode(code, aquatic);
-		return "[&"+Buffer.from(buffer).toString('base64')+']';
+		const buffer = await BinaryLoader.WriteOfficialBuildCode(code, aquatic);
+		return "[&"+Base64Encode(buffer)+']';
 	}
 
 	//#endregion

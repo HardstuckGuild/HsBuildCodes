@@ -51,10 +51,10 @@ export enum WeightClass {
 }
 
 export class Specialization {
-	public SpecializationId : SpecializationId = SpecializationId._UNDEFINED;
-	public Choices          : TraitLineChoices = new TraitLineChoices();
+	public SpecializationId : SpecializationId;
+	public Choices          : TraitLineChoices;
 
-	public constructor(specId : SpecializationId, choices : TraitLineChoices) {
+	public constructor(specId : SpecializationId = SpecializationId._UNDEFINED, choices : TraitLineChoices = new TraitLineChoices()) {
 		this.SpecializationId = specId;
 		this.Choices          = choices;
 	}

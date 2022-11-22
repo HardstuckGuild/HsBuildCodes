@@ -1,7 +1,7 @@
 import API from "./API";
 
 export interface ICache {
-	Get : (path : string , schemaVersion : string) => any;
+	Get : (path : string , schemaVersion : string) => Promise<any>;
 }
 
 class CacheEntry {

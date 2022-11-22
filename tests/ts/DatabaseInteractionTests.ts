@@ -3,9 +3,9 @@ import PerProfessionData from "../../include/ts/Database/PerProfessionData";
 import { Profession } from "../../include/ts/Structures";
 
 describe('DatabaseInteractionTests', () => {
-	test('CanDownloadSkillPallettes', () => {
-		PerProfessionData.Reload(Profession.Revenant);
-		expect(PerProfessionData.Revenant.SkillToPallette.length).toBeGreaterThan(2);
+	test('CanDownloadSkillPallettes', async () => {
+		await PerProfessionData.Reload(Profession.Revenant);
+		expect(PerProfessionData.Revenant.SkillToPallette[0]).not.toBe(undefined);
 	});
 
 	// test('CanFindOfflinePallette', () => {

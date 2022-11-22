@@ -12,27 +12,21 @@ const VALID_KEY = "92CE5A6C-E594-9D4D-B92B-5621ACFE047D436C02BD-0810-47D9-B9D4-2
 const MISSING_PERMS_KEY = "AD041D99-AEEF-2E45-8732-0057285EFE370740BF1D-6427-4191-8C4F-84DD1C97F05F";
 
 describe('FunctionTests', () => {
-	test('ShouldThrowNotAToken', () => {
-		expect(() => {
-			const code = APILoader.LoadBuildCode("xxx", "sss", Kind.PvE);
-		}).toThrow();
+	test('ShouldThrowNotAToken', async () => {
+		await expect(APILoader.LoadBuildCode("xxx", "sss", Kind.PvE)).rejects.toBeInstanceOf(Error);
 	});
 	
-	test('ShouldThrowInvalidScopes', () => {
-		expect(() => {
-			const code = APILoader.LoadBuildCode(MISSING_PERMS_KEY, "sss", Kind.PvE);
-		}).toThrow();
+	test('ShouldThrowInvalidScopes', async () => {
+		await expect(APILoader.LoadBuildCode(MISSING_PERMS_KEY, "sss", Kind.PvE)).rejects.toBeInstanceOf(Error);
 	});
 
-	test('ShouldFindMissinScopes', () => {
-		const missingScopes = APILoader.ValidateScopes(MISSING_PERMS_KEY);
-		expect(missingScopes).toBe(["characters", "builds"]);
+	test('ShouldFindMissinScopes', async () => {
+		const missingScopes = await APILoader.ValidateScopes(MISSING_PERMS_KEY);
+		expect(missingScopes).toStrictEqual(["characters", "builds"]);
 	});
 
-	test('ShouldThrowNoSuchCharacter', () => {
-		expect(() => {
-			const code = APILoader.LoadBuildCode(VALID_KEY, "does not exist", Kind.PvE);
-		}).toThrow();
+	test('ShouldThrowNoSuchCharacter', async () => {
+		await expect(APILoader.LoadBuildCode(VALID_KEY, "does not exist", Kind.PvE)).rejects.toBeInstanceOf(Error);
 	});
 });
 
@@ -46,21 +40,21 @@ describe('BasicCodesTests', () => {
 		reference1.Adept       = TraitLineChoice.BOTTOM;
 		reference1.Master      = TraitLineChoice.MIDDLE;
 		reference1.Grandmaster = TraitLineChoice.TOP;
-		expect(code.Specializations[0].Choices).toBe(reference1);
+		expect(code.Specializations[0].Choices).toStrictEqual(reference1);
 
 		expect(code.Specializations[1].SpecializationId).toBe(SpecializationId.Trickery);
 		const reference2 = new TraitLineChoices();
 		reference2.Adept       = TraitLineChoice.BOTTOM;
 		reference2.Master      = TraitLineChoice.TOP;
 		reference2.Grandmaster = TraitLineChoice.TOP;
-		expect(code.Specializations[1].Choices).toBe(reference2);
+		expect(code.Specializations[1].Choices).toStrictEqual(reference2);
 
 		expect(code.Specializations[2].SpecializationId).toBe(SpecializationId.Specter);
 		const reference3 = new TraitLineChoices();
 		reference3.Adept       = TraitLineChoice.BOTTOM;
 		reference3.Master      = TraitLineChoice.BOTTOM;
 		reference3.Grandmaster = TraitLineChoice.TOP;
-		expect(code.Specializations[2].Choices).toBe(reference3);
+		expect(code.Specializations[2].Choices).toStrictEqual(reference3);
 		
 		expect(code.WeaponSet1.MainHand).toBe(WeaponType.Scepter);
 		expect(code.WeaponSet1.OffHand).toBe(WeaponType.Dagger );

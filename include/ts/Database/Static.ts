@@ -1,5 +1,6 @@
 import { BuildCode, Legend, Profession, Specialization, WeaponSet, WeaponSetNumber, WeaponType, WeightClass } from "../Structures";
 import TextLoader from "../TextLoader";
+import { Assert } from "../Util/Static";
 import ItemId from "./ItemIds";
 import SpecializationId from "./SpecializationIds";
 import StatId from "./StatIds";
@@ -60,7 +61,7 @@ class Static {
 				return true;
 
 			default: 
-				console.error(false, "invalid weapon", weaponType);
+				Assert(false, "invalid weapon", weaponType);
 				return false;
 		}
 	}
@@ -93,7 +94,7 @@ class Static {
 				return true;
 
 			default:
-				console.error(false, "invalid weapon", weaponType);
+				Assert(false, "invalid weapon", weaponType);
 				return false;
 		}
 	}

@@ -8,7 +8,7 @@ import APICache from '../../include/ts/OfficialAPI/APICache';
 import { BuildCode, Profession, TraitLineChoice, TraitSlot, WeaponSetNumber, WeaponType } from '../../include/ts/Structures';
 
 describe("ResolveWeaponSkills", () => {
-	test('ResolveWeaponSkillsEmpty', () => {
+	test('ResolveWeaponSkillsEmpty', async () => {
 		const code = new BuildCode();
 
 		const effective = Static.ResolveEffectiveWeapons(code, WeaponSetNumber.Set1);
@@ -19,10 +19,10 @@ describe("ResolveWeaponSkills", () => {
 		const reference = new Array(5).fill(SkillId._UNDEFINED, 0, 5);
 
 		for(let i = 0; i < reference.length; i++)
-			expect(APICache.ResolveWeaponSkill(code, effective, i)).toBe(reference[i]);
+			expect(await APICache.ResolveWeaponSkill(code, effective, i)).toBe(reference[i]);
 	});
 	
-	test('ResolveWeaponSkills2h', () => {
+	test('ResolveWeaponSkills2h', async () => {
 		const code = new BuildCode();
 		code.Profession = Profession.Necromancer;
 		code.WeaponSet1.MainHand = WeaponType.Staff;
@@ -35,10 +35,10 @@ describe("ResolveWeaponSkills", () => {
 		const reference = [ SkillId.Necrotic_Grasp, SkillId.Mark_of_Blood, SkillId.Chillblains, SkillId.Putrid_Mark, SkillId.Reapers_Mark ];
 
 		for(let i = 0; i < reference.length; i++)
-			expect(APICache.ResolveWeaponSkill(code, effective, i)).toBe(reference[i]);
+			expect(await APICache.ResolveWeaponSkill(code, effective, i)).toBe(reference[i]);
 	});
 
-	test('ResolveWeaponSkillsNormal', () => {
+	test('ResolveWeaponSkillsNormal', async () => {
 		const code = new BuildCode();
 		code.Profession = Profession.Necromancer;
 		code.WeaponSet1.MainHand = WeaponType.Dagger;
@@ -52,10 +52,10 @@ describe("ResolveWeaponSkills", () => {
 		const reference = [ SkillId.Necrotic_Slash, SkillId.Life_Siphon, SkillId.Dark_Pact, SkillId.Deathly_Swarm, SkillId.Enfeebling_Blood ];
 
 		for(let i = 0; i < reference.length; i++)
-			expect(APICache.ResolveWeaponSkill(code, effective, i)).toBe(reference[i]);
+			expect(await APICache.ResolveWeaponSkill(code, effective, i)).toBe(reference[i]);
 	});
 
-	test('ResolveWeaponSkillsFromOtherSet', () => {
+	test('ResolveWeaponSkillsFromOtherSet', async () => {
 		const code = new BuildCode();
 		code.Profession = Profession.Necromancer;
 		code.WeaponSet1.MainHand = WeaponType.Dagger;
@@ -74,10 +74,10 @@ describe("ResolveWeaponSkills", () => {
 		const reference = [ SkillId.Necrotic_Slash, SkillId.Life_Siphon, SkillId.Dark_Pact, SkillId.Deathly_Swarm, SkillId.Enfeebling_Blood ];
 
 		for(let i = 0; i < reference.length; i++)
-			expect(APICache.ResolveWeaponSkill(code, effective, i)).toBe(reference[i]);
+			expect(await APICache.ResolveWeaponSkill(code, effective, i)).toBe(reference[i]);
 	});
 
-	test('ResolveWeaponSkillsFromOtherSetExcept2h', () => {
+	test('ResolveWeaponSkillsFromOtherSetExcept2h', async () => {
 		const code = new BuildCode();
 		code.Profession = Profession.Necromancer;
 		code.WeaponSet1.MainHand = WeaponType.Dagger;
@@ -96,16 +96,16 @@ describe("ResolveWeaponSkills", () => {
 		const reference = [ SkillId.Necrotic_Slash, SkillId.Life_Siphon, SkillId.Dark_Pact, SkillId._UNDEFINED, SkillId._UNDEFINED ];
 
 		for(let i = 0; i < reference.length; i++)
-			expect(APICache.ResolveWeaponSkill(code, effective, i)).toBe(reference[i]);
+			expect(await APICache.ResolveWeaponSkill(code, effective, i)).toBe(reference[i]);
 	});
 
-	test('ResolveTraitId', () => {
+	test('ResolveTraitId', async () => {
 		const code = new BuildCode();
 		code.Profession = Profession.Mesmer;
 		code.Specializations.Choice1.SpecializationId = SpecializationId.Dueling;
 		code.Specializations.Choice1.Choices.Adept    = TraitLineChoice.MIDDLE;
 
-		const id = APICache.ResolveTrait(code.Specializations.Choice1, TraitSlot.Adept);
+		const id = await APICache.ResolveTrait(code.Specializations.Choice1, TraitSlot.Adept);
 
 		expect(id).toBe(TraitId.Desperate_Decoy);
 	});

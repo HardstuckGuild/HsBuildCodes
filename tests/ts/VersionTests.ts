@@ -15,8 +15,8 @@ describe('VersionTests', () => {
 
 		return [
 			...invalidCodes.map((code) => [code, -1]),
-			...v1Codes.map((code) => [code, 1]),
-			...v2Codes.map((code) => {
+			...Object.values(v1Codes).map((code) => [code, 1]),
+			...Object.values(v2Codes).map((code) => {
 				let version = TextLoader.INVERSE_CHARSET[code.charCodeAt(0)];
 				if(version >= 26) version -= 26;
 				return [code, version];

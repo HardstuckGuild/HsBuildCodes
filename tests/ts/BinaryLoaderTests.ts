@@ -8,56 +8,57 @@ import SpecializationId from "../../include/ts/Database/SpecializationIds";
 import Static from "../../include/ts/Database/Static";
 import StatId from "../../include/ts/Database/StatIds";
 import { Arbitrary, BuildCode, Kind, Legend, PetId, Profession, ProfessionSpecific, RangerData, RevenantData, Specialization, TraitLineChoice, WeaponType } from "../../include/ts/Structures";
+import { Assert, Base64Decode } from "../../include/ts/Util/Static";
 import { TraitLineChoices } from "../../include/ts/Util/UtilStructs";
 import TestUtilities from "./TestUtilities";
 
 describe('FunctionTests', () => {
 	test('DecodeByteValue', () => {
-		const data = Buffer.from([0b00110011]);
+		const data = new Uint8Array([0b00110011]);
 		const bitspan = new BitReader(data);
 		expect(bitspan.DecodeNext(4)).toBe(3);
 	});
 
 	test('SuccessiveDecodeByteValue', () => {
-		const data = Buffer.from([0b0011_1100]);
+		const data = new Uint8Array([0b0011_1100]);
 		const bitspan = new BitReader(data);
 		expect(bitspan.DecodeNext(4)).toBe( 3);
 		expect(bitspan.DecodeNext(4)).toBe(12);
 	});
 
 	test('DecodeMultibyteValue', () => {
-		const data = Buffer.from([0b0000_0000, 0b0001_0000]);
+		const data = new Uint8Array([0b0000_0000, 0b0001_0000]);
 		const bitspan = new BitReader(data);
 		expect(bitspan.DecodeNext(12)).toBe(1);
 
-		const data2 = Buffer.from([0b1000_0000, 0b0000_0000]);
+		const data2 = new Uint8Array([0b1000_0000, 0b0000_0000]);
 		const bitspan2 = new BitReader(data2);
 		expect(bitspan2.DecodeNext(12)).toBe(0b1000_0000_0000);
 	});
 
 	test('DecodeMultibyteValue2', () => {
-		const data = Buffer.from([0b0000_0000, 0b0000_0000, 0b0000_0000, 0b0000_0010]);
+		const data = new Uint8Array([0b0000_0000, 0b0000_0000, 0b0000_0000, 0b0000_0010]);
 		const bitspan = new BitReader(data);
 		bitspan.BitPos = 7;
 		expect(bitspan.DecodeNext(24)).toBe(1);
 	});
 
 	test('SuccessiveDecodeMultibyteValue', () => {
-		const data = Buffer.from([0b00110011, 0b00110001]);
+		const data = new Uint8Array([0b00110011, 0b00110001]);
 		const bitspan = new BitReader(data);
 		expect(bitspan.DecodeNext(12)).toBe(0b001100110011);
 		expect(bitspan.DecodeNext(4)).toBe(1);
 	});
 
 	test('SuccessiveDecodeValueCrossByteBoundary', () => {
-		const data = Buffer.from([0b01010101, 0b10101010, 0b11110000]);
+		const data = new Uint8Array([0b01010101, 0b10101010, 0b11110000]);
 		const bitspan = new BitReader(data);
 		expect(bitspan.DecodeNext(12)).toBe(0b010101011010);
 		expect(bitspan.DecodeNext(6)).toBe(0b101011);
 	});
 
 	test('EatIfExpected', () => {
-		const data = Buffer.from([0b00000011, 0b00110001]);
+		const data = new Uint8Array([0b00000011, 0b00110001]);
 		const bitspan = new BitReader(data);
 		expect(bitspan.EatIfExpected(8, 5)).toBeFalsy();
 		expect(bitspan.BitPos).toBe(0);
@@ -74,7 +75,7 @@ describe('FunctionTests', () => {
 	test('WriteManyBits', () => {
 		const bitStream = new BitWriter();
 		bitStream.Write(3, 24);
-		expect(bitStream.Data).toBe([0, 0, 0b00000011]);
+		expect(bitStream.Data).toStrictEqual([0, 0, 0b00000011]);
 	});
 
 	test('SuccessiveWriteBits', () => {
@@ -96,15 +97,15 @@ describe('FunctionTests', () => {
 		const bitStream = new BitWriter();
 		bitStream.Write(3, 20);
 		bitStream.Write(3, 24);
-		expect(bitStream.Data).toBe([0, 0, 0b00110000, 0, 0, 0b00110000]);
+		expect(bitStream.Data).toStrictEqual([0, 0, 0b00110000, 0, 0, 0b00110000]);
 	});
 });
 
-function BitStringToBytes(data : string) : Buffer {
+function BitStringToBytes(data : string) : Uint8Array {
 	let list : Array<number> = [];
 	let counter = 0;
 	let current = 0;
-	for(const c of data) {
+	for(const c of data.split('')) {
 		switch(c)
 		{
 			case '0':
@@ -119,7 +120,7 @@ function BitStringToBytes(data : string) : Buffer {
 				break;
 
 			default: if(c >= 'a' && c <= 'z' || (c >= 'A' && c <= 'Z')) {
-					if(counter !== 0) console.assert(false, "only on byte boundries");
+					if(counter !== 0) Assert(false, "only on byte boundries");
 					list.push(c.charCodeAt(0));
 				}
 				break;
@@ -138,7 +139,7 @@ function BitStringToBytes(data : string) : Buffer {
 		list.push((current << (8 - counter)) & 0xFF);
 	}
 
-	return Buffer.from(list);
+	return new Uint8Array(list);
 }
 
 const TrueFalseProvider = [true, false];
@@ -146,17 +147,17 @@ const TrueFalseProvider = [true, false];
 describe('BasicCodeTests', () => {
 	test('HelperWorking', () => {
 		const rawCode0 = BitStringToBytes("b01010101");
-		expect(rawCode0).toBe('b'+String.fromCharCode(0b01010101));
+		expect(rawCode0).toStrictEqual(new Uint8Array(['b'.charCodeAt(0), 0b01010101]));
 
 		const rawCode1 = BitStringToBytes("b010001");
-		expect(rawCode1).toBe('b'+String.fromCharCode(0b01000100));
+		expect(rawCode1).toStrictEqual(new Uint8Array(['b'.charCodeAt(0), 0b01000100]));
 
 		const rawCode2 = BitStringToBytes("b0100_01");
-		expect(rawCode2).toBe('b'+String.fromCharCode(0b01000100));
+		expect(rawCode2).toStrictEqual(new Uint8Array(['b'.charCodeAt(0), 0b01000100]));
 	});
 
 	test('ShouldThrowVersion', () => {
-		const rawCode = Buffer.from(['B'.charCodeAt(0), ...(new Array(79).fill(0x2))]);
+		const rawCode = new Uint8Array(['B'.charCodeAt(0), ...(new Array(79).fill(0x2))]);
 
 		expect(() => {
 			const code = BinaryLoader.LoadBuildCode(rawCode);
@@ -164,15 +165,15 @@ describe('BasicCodeTests', () => {
 	});
 
 	test('ShouldThrowTooShort', () => {
-		const rawCode = Buffer.from(['d'.charCodeAt(0), 0x2]);
+		const rawCode = new Uint8Array(['d'.charCodeAt(0), 0x2]);
 		expect(() => {
 			const code = BinaryLoader.LoadBuildCode(rawCode);
 		}).toThrow();
 	});
 
-	test.each(TrueFalseProvider)('MinimalPvPWithSkills', (lazyload : boolean) => {
+	test.each(TrueFalseProvider)('MinimalPvPWithSkills', async (lazyload : boolean) => {
 		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
-		else PerProfessionData.Reload(Profession.Guardian/*, true*/);
+		else await PerProfessionData.Reload(Profession.Guardian/*, true*/);
 
 		const rawCode = BitStringToBytes(TestUtilities.CodesV2Binary["minimal-pvp-with-skills"]);
 		const code = BinaryLoader.LoadBuildCode(rawCode);
@@ -199,9 +200,9 @@ describe('BasicCodeTests', () => {
 		expect(code.Arbitrary)         .toBe(Arbitrary         .NONE.GetInstance());
 	});
 
-	test.each(TrueFalseProvider)('MinimalPvE', (lazyload : boolean) => {
+	test.each(TrueFalseProvider)('MinimalPvE', async (lazyload : boolean) => {
 		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
-		else PerProfessionData.Reload(Profession.Guardian/*, true*/);
+		else await PerProfessionData.Reload(Profession.Guardian/*, true*/);
 
 		const rawCode = BitStringToBytes(TestUtilities.CodesV2Binary["minimal-pve"]);
 		const code = BinaryLoader.LoadBuildCode(rawCode);
@@ -228,9 +229,9 @@ describe('BasicCodeTests', () => {
 	});
 
 	/** @test @dataProvider TrueFalseProvider  */
-	test.each(TrueFalseProvider)('MinimalRanger', (lazyload : boolean) => {
+	test.each(TrueFalseProvider)('MinimalRanger', async (lazyload : boolean) => {
 		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
-		else PerProfessionData.Reload(Profession.Ranger/*, true*/);
+		else await PerProfessionData.Reload(Profession.Ranger/*, true*/);
 
 		const rawCode = BitStringToBytes(TestUtilities.CodesV2Binary["minimal-ranger"]);
 		const code = BinaryLoader.LoadBuildCode(rawCode);
@@ -241,9 +242,9 @@ describe('BasicCodeTests', () => {
 		expect(data.Pet2).toBe(PetId._UNDEFINED);
 	});
 
-	test.each(TrueFalseProvider)('MinimalRevenant', (lazyload : boolean) => {
+	test.each(TrueFalseProvider)('MinimalRevenant', async (lazyload : boolean) => {
 		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
-		else PerProfessionData.Reload(Profession.Revenant/*, true*/);
+		else await PerProfessionData.Reload(Profession.Revenant/*, true*/);
 
 		const rawCode = BitStringToBytes(TestUtilities.CodesV2Binary["minimal-revenant"]);
 		const code = BinaryLoader.LoadBuildCode(rawCode);
@@ -257,28 +258,27 @@ describe('BasicCodeTests', () => {
 		expect(data.AltUtilitySkill3).toBe(SkillId._UNDEFINED);
 	});
 
-	test.each(TrueFalseProvider)('LoopWriteMinimalRevenant', (lazyload : boolean) => {
+	test.each(TrueFalseProvider)('LoopWriteMinimalRevenant', async (lazyload : boolean) => {
 		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
-		else PerProfessionData.Reload(Profession.Revenant/*, true*/);
+		else await PerProfessionData.Reload(Profession.Revenant/*, true*/);
 
 		const rawCode = BitStringToBytes(TestUtilities.CodesV2Binary["minimal-revenant"]);
 		const code = BinaryLoader.LoadBuildCode(rawCode);
 
 		const result = BinaryLoader.WriteCode(code);
 
-		expect(result).toBe(rawCode);
+		expect(result).toStrictEqual(rawCode);
 	});
 });
 
 describe.each(TrueFalseProvider)('OfficialChatLinks', (lazyload : boolean) => {
-	test('LoadOfficialLink', () => {
+	test('LoadOfficialLink', async () => {
 		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
-		else PerProfessionData.Reload(Profession.Necromancer/*, true*/);
+		else await PerProfessionData.Reload(Profession.Necromancer/*, true*/);
 
 		const fullLink = TestUtilities.CodesIngame["full-necro"];
-		const base64   = fullLink.substring(2, -1);
-		const raw = Buffer.from(base64, 'base64');
-		const code = BinaryLoader.LoadOfficialBuildCode(raw);
+		const base64   = fullLink.slice(2, -1);
+		const code = await BinaryLoader.LoadOfficialBuildCode(Base64Decode(base64));
 		expect(code.Kind).not.toBe(Kind._UNDEFINED);
 		expect(code.Profession).toBe(Profession.Necromancer);
 
@@ -292,21 +292,21 @@ describe.each(TrueFalseProvider)('OfficialChatLinks', (lazyload : boolean) => {
 		reference1.Adept       = TraitLineChoice.TOP;
 		reference1.Master      = TraitLineChoice.MIDDLE;
 		reference1.Grandmaster = TraitLineChoice.MIDDLE;
-		expect(code.Specializations[0].Choices).toBe(reference1);
+		expect(code.Specializations[0].Choices).toStrictEqual(reference1);
 
 		expect(code.Specializations[1].SpecializationId).toBe(SpecializationId.Soul_Reaping);
 		const reference2 = new TraitLineChoices();
 		reference2.Adept       = TraitLineChoice.TOP;
 		reference2.Master      = TraitLineChoice.TOP;
 		reference2.Grandmaster = TraitLineChoice.MIDDLE;
-		expect(code.Specializations[1].Choices).toBe(reference2);
+		expect(code.Specializations[1].Choices).toStrictEqual(reference2);
 
 		expect(code.Specializations[2].SpecializationId).toBe(SpecializationId.Reaper);
 		const reference3 = new TraitLineChoices();
 		reference3.Adept       = TraitLineChoice.MIDDLE;
 		reference3.Master      = TraitLineChoice.TOP;
 		reference3.Grandmaster = TraitLineChoice.BOTTOM;
-		expect(code.Specializations[2].Choices).toBe(reference3);
+		expect(code.Specializations[2].Choices).toStrictEqual(reference3);
 
 		expect(code.SlotSkills[0]).toBe(SkillId.Your_Soul_Is_Mine);
 		expect(code.SlotSkills[1]).toBe(SkillId.Well_of_Suffering1);
@@ -315,7 +315,7 @@ describe.each(TrueFalseProvider)('OfficialChatLinks', (lazyload : boolean) => {
 		expect(code.SlotSkills[4]).toBe(SkillId.Summon_Flesh_Golem);
 	});
 
-	test('WriteOfficialLink', () => {
+	test('WriteOfficialLink', async () => {
 		const code = new BuildCode();
 		code.Profession = Profession.Necromancer;
 		const choices1 = new TraitLineChoices();
@@ -341,26 +341,25 @@ describe.each(TrueFalseProvider)('OfficialChatLinks', (lazyload : boolean) => {
 		code.SlotSkills.Elite    = SkillId.Summon_Flesh_Golem;
 
 		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
-		else PerProfessionData.Reload(Profession.Necromancer/*, true*/);
+		else await PerProfessionData.Reload(Profession.Necromancer/*, true*/);
 
-		const buffer = BinaryLoader.WriteOfficialBuildCode(code);
+		const buffer = await BinaryLoader.WriteOfficialBuildCode(code);
 
 		const reference = TestUtilities.CodesIngame["full-necro2"];
-		const referenceBase64 = reference.substring(2, -1);
-		const referenceBytes = Buffer.from(referenceBase64, 'base64');
+		const referenceBase64 = reference.slice(2, -1);
+		const referenceBytes = Base64Decode(referenceBase64);
 
-		expect(buffer).toBe(referenceBytes);
+		expect(buffer).toStrictEqual(referenceBytes);
 	});
 
 	// our very special boy spec
-	test('LoadOfficiaRevlLink', () => {
+	test('LoadOfficiaRevlLink', async () => {
 		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
-		else PerProfessionData.Reload(Profession.Revenant/*, true*/);
+		else await PerProfessionData.Reload(Profession.Revenant/*, true*/);
 
 		const fullLink = TestUtilities.CodesIngame["partial-revenant"];
-		const base64   = fullLink.substring(2, -1);
-		const raw = Buffer.from(base64, 'base64');
-		const code = BinaryLoader.LoadOfficialBuildCode(raw);
+		const base64   = fullLink.slice(2, -1);
+		const code = await BinaryLoader.LoadOfficialBuildCode(Base64Decode(base64));
 		expect(code.Profession).toBe(Profession.Revenant);
 		expect(code.SlotSkills[0]).toBe(SkillId.Empowering_Misery);
 		expect(code.SlotSkills[1]).toBe(SkillId._UNDEFINED);

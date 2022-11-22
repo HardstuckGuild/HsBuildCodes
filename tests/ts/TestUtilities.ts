@@ -1,49 +1,52 @@
-import readline from 'readline';
-import fs from 'fs';
+import * as readline from 'readline';
+import * as fs from 'fs';
+import { Assert } from '../../include/ts/Util/Static';
+
+type Store = {
+	[key : string] : string;
+}
 
 class TestUtilities {
 	/** @var array<string, string> */
-	public static CodesInvalid : Array<string>  = [];
+	public CodesInvalid : Store  = {};
 	/** @var array<string, string> */
-	public static CodesV1 : Array<string>       = [];
+	public CodesV1 : Store       = {};
 	/** @var array<string, string> */
-	public static CodesV2 : Array<string>       = [];
+	public CodesV2 : Store       = {};
 	/** @var array<string, string> */
-	public static CodesIngame : Array<string>   = [];
+	public CodesIngame : Store   = {};
 	/** @var array<string, string> */
-	public static CodesV2Binary : Array<string> = [];
+	public CodesV2Binary : Store = {};
 
-	static __construct_static() {
-		let dict : Array<string>|null = null;
+	public constructor() {
+		let dict : Store|null = null;
 		let currentDict : string|null = null;
 		let currentKey : string|null = null;
 		let currentAccumulator = '';
-		const file = readline.createInterface({
-			input: fs.createReadStream('../../common/codes.ini'),
-			output: process.stdout,
-			terminal: false
-		});
-		file.on('line', (line_ : string) => {
+		const file = fs.readFileSync('../common/codes.ini', "utf-8");
+		for(const line_ of file.split(/[\r\n]/)) {
 			const comment = line_.indexOf(';');
-			const line : string = (comment !== -1 ? line_.substring(0, comment) : line_).trim();
-			if(line.length === 0) return;
+			const line : string = (comment !== -1 ? line_.slice(0, comment) : line_).trim();
+			if(line.length === 0) continue;
 
 			if(line.startsWith('[') && line.endsWith(']'))
 			{
-				const currentDict = line.substring(1, -1);
+				currentDict = line.slice(1, -1);
 				switch (currentDict) {
-					case "Invalid" : dict = TestUtilities.CodesInvalid; break;
-					case "V1"      : dict = TestUtilities.CodesV1; break;
-					case "V2"      : dict = TestUtilities.CodesV2; break;
-					case "Ingame"  : dict = TestUtilities.CodesIngame; break;
-					case "V2Binary": dict = TestUtilities.CodesV2Binary; break;
+					case "Invalid" : dict = this.CodesInvalid; break;
+					case "V1"      : dict = this.CodesV1; break;
+					case "V2"      : dict = this.CodesV2; break;
+					case "Ingame"  : dict = this.CodesIngame; break;
+					case "V2Binary": dict = this.CodesV2Binary; break;
 				};
 			}
 			else
 			{
 				if(currentDict !== 'V2Binary')
 				{
-					const [key, value] = line.split('=', 2);
+					const split = line.indexOf('=');
+					const key = line.slice(0, split);
+					const value = line.slice(split + 1);
 					dict![key.trim()] = value.trim();
 				}
 				else if(line === "<end>")
@@ -56,7 +59,7 @@ class TestUtilities {
 					const split = line.indexOf('=');
 					if(split !== -1)
 					{
-						currentKey = line.substring(0, split).trim();
+						currentKey = line.slice(0, split).trim();
 					}
 					else
 					{
@@ -64,9 +67,10 @@ class TestUtilities {
 					}
 				}
 			}
-		});
+		}
 	}
 }
 
-TestUtilities.__construct_static();
-export default TestUtilities;
+const TestUtilities_ = new TestUtilities();
+
+export default TestUtilities_;

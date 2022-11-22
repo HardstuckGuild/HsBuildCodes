@@ -13,9 +13,8 @@ class APILoader {
 	public static async ValidateScopes(token : string) : Promise<string[]>
 	{
 		const tokenInfo = await API.RequestJson("/tokeninfo", token);
-
 		const required = [ "account", "characters", "builds"  ];
-		return required.filter(req => !tokenInfo.permissions[req]);
+		return required.filter(req => !tokenInfo.permissions.includes(req));
 	}
 
 	//NOTE(Rennorb): Removed Load from current character because php is not run on clients
@@ -34,7 +33,7 @@ class APILoader {
 
 		const playerData = await API.RequestJson("/characters/"+characterName, authToken);
 		
-		code.Profession = playerData.profession as Profession;
+		code.Profession = Profession[playerData.profession as keyof typeof Profession];
 
 		const activeBuild = playerData.build_tabs[playerData.active_build_tab - 1].build;
 		for(let i = 0; i < 3; i++) {
@@ -42,9 +41,9 @@ class APILoader {
 			if(spec.id === null) continue;
 
 			const choices = new TraitLineChoices();
-			choices.Adept       = APICache.ResolvePosition(spec.traits[0]);
-			choices.Master      = APICache.ResolvePosition(spec.traits[1]);
-			choices.Grandmaster = APICache.ResolvePosition(spec.traits[2]);
+			choices.Adept       = await APICache.ResolvePosition(spec.traits[0]);
+			choices.Master      = await APICache.ResolvePosition(spec.traits[1]);
+			choices.Grandmaster = await APICache.ResolvePosition(spec.traits[2]);
 			code.Specializations[i] = new Specialization(spec.id, choices);
 		}
 
@@ -124,7 +123,7 @@ class APILoader {
 							if(item.infusions.length > 1)
 								code.Infusions.WeaponSet1_2 = item.infusions[1];
 						}
-						code.WeaponSet1.MainHand = APICache.ResolveWeaponType(item.id);
+						code.WeaponSet1.MainHand = await APICache.ResolveWeaponType(item.id);
 						if(item.upgrades) {
 							code.WeaponSet1.Sigil1 = item.upgrades[0];
 							if(item.upgrades.length > 1)
@@ -140,7 +139,7 @@ class APILoader {
 							if(item.infusions.length > 1)
 								code.Infusions.WeaponSet1_2 = item.infusions[1];
 						}
-						code.WeaponSet1.MainHand = APICache.ResolveWeaponType(item.id);
+						code.WeaponSet1.MainHand = await APICache.ResolveWeaponType(item.id);
 						if(item.upgrades) {
 							code.WeaponSet1.Sigil1 = item.upgrades[0];
 							if(item.upgrades.length > 1)
@@ -152,7 +151,7 @@ class APILoader {
 						if(aquatic) break;
 						code.EquipmentAttributes.WeaponSet1OffHand = APILoader.ResolveStatId(item);
 						code.Infusions.WeaponSet1_2 = item.infusions ? item.infusions[0] : ItemId._UNDEFINED; //NOTE(Rennorb): this assues that buidls with twohanded main weapons dont contain an 'empty' weapon with no upgrades
-						code.WeaponSet1.OffHand = APICache.ResolveWeaponType(item.id);
+						code.WeaponSet1.OffHand = await APICache.ResolveWeaponType(item.id);
 						code.WeaponSet1.Sigil2 =  item.upgrades ? item.upgrades[0] : ItemId._UNDEFINED; //NOTE(Rennorb): this assues that buidls with twohanded main weapons dont contain an 'empty' weapon with no upgrades
 						break;
 
@@ -164,7 +163,7 @@ class APILoader {
 							if(item.infusions.length > 1)
 								code.Infusions.WeaponSet2_2 = item.infusions[1];
 						}
-						code.WeaponSet2.MainHand = APICache.ResolveWeaponType(item.id);
+						code.WeaponSet2.MainHand = await APICache.ResolveWeaponType(item.id);
 						if(item.upgrades) {
 							code.WeaponSet2.Sigil1 = item.upgrades[0];
 							if(Static.IsTwoHanded(code.WeaponSet2.MainHand) && item.upgrades.length > 1)
@@ -180,7 +179,7 @@ class APILoader {
 							if(item.infusions.length > 1)
 								code.Infusions.WeaponSet2_2 = item.infusions[1];
 						}
-						code.WeaponSet2.MainHand = APICache.ResolveWeaponType(item.id);
+						code.WeaponSet2.MainHand = await APICache.ResolveWeaponType(item.id);
 						if(item.upgrades) {
 							code.WeaponSet2.Sigil1 = item.upgrades[0];
 							if(item.upgrades.length > 1)
@@ -192,7 +191,7 @@ class APILoader {
 						if(aquatic) break;
 						code.EquipmentAttributes.WeaponSet2OffHand = APILoader.ResolveStatId(item);
 						code.Infusions.WeaponSet2_2 = item.infusions ? item.infusions[0] : ItemId._UNDEFINED;
-						code.WeaponSet2.OffHand = APICache.ResolveWeaponType(item.id);
+						code.WeaponSet2.OffHand = await APICache.ResolveWeaponType(item.id);
 						code.WeaponSet2.Sigil2 = item.upgrades ? item.upgrades[0] : ItemId._UNDEFINED;
 						break;
 

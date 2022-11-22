@@ -62,8 +62,8 @@ describe('BasicCodesTests', () => {
 
 	test('MinimalPvP', () => {
 		const code = TextLoader.LoadBuildCode(TestUtilities.CodesV2["minimal-pvp"]);
-		expect(code.Version).toBe(3                   );
-		expect(code.Kind).toBe(Kind.PvP           );
+		expect(code.Version).toBe(3);
+		expect(code.Kind).toBe(Kind.PvP);
 		expect(code.Profession).toBe(Profession.Guardian);
 		for(let i = 0; i < 3; i++)
 			expect(code.Specializations[i].SpecializationId).toBe(SpecializationId._UNDEFINED);
@@ -155,21 +155,21 @@ describe('BasicCodesTests', () => {
 		reference1.Adept       = TraitLineChoice.TOP;
 		reference1.Master      = TraitLineChoice.MIDDLE;
 		reference1.Grandmaster = TraitLineChoice.MIDDLE;
-		expect(code.Specializations[0].Choices).toBe(reference1);
+		expect(code.Specializations[0].Choices).toStrictEqual(reference1);
 
 		expect(code.Specializations[1].SpecializationId).toBe(SpecializationId.Soul_Reaping);
 		const reference2 = new TraitLineChoices();
 		reference2.Adept       = TraitLineChoice.TOP;
 		reference2.Master      = TraitLineChoice.TOP;
 		reference2.Grandmaster = TraitLineChoice.MIDDLE;
-		expect(code.Specializations[1].Choices).toBe(reference2);
+		expect(code.Specializations[1].Choices).toStrictEqual(reference2);
 
 		expect(code.Specializations[2].SpecializationId).toBe(SpecializationId.Reaper);
 		const reference3 = new TraitLineChoices();
 		reference3.Adept       = TraitLineChoice.MIDDLE;
 		reference3.Master      = TraitLineChoice.TOP;
 		reference3.Grandmaster = TraitLineChoice.BOTTOM;
-		expect(code.Specializations[2].Choices).toBe(reference3);
+		expect(code.Specializations[2].Choices).toStrictEqual(reference3);
 
 		expect(code.SlotSkills[0]).toBe(SkillId.Your_Soul_Is_Mine);
 		expect(code.SlotSkills[1]).toBe(SkillId.Well_of_Suffering1);
@@ -206,21 +206,21 @@ describe('BasicCodesTests', () => {
 		reference1.Adept       = TraitLineChoice.TOP;
 		reference1.Master      = TraitLineChoice.MIDDLE;
 		reference1.Grandmaster = TraitLineChoice.MIDDLE;
-		expect(code.Specializations[0].Choices).toBe(reference1);
+		expect(code.Specializations[0].Choices).toStrictEqual(reference1);
 
 		expect(code.Specializations[1].SpecializationId).toBe(SpecializationId.Soul_Reaping);
 		const reference2 = new TraitLineChoices();
 		reference2.Adept       = TraitLineChoice.TOP;
 		reference2.Master      = TraitLineChoice.TOP;
 		reference2.Grandmaster = TraitLineChoice.MIDDLE;
-		expect(code.Specializations[1].Choices).toBe(reference2);
+		expect(code.Specializations[1].Choices).toStrictEqual(reference2);
 
 		expect(code.Specializations[2].SpecializationId).toBe(SpecializationId.Reaper);
 		const reference3 = new TraitLineChoices();
 		reference3.Adept       = TraitLineChoice.MIDDLE;
 		reference3.Master      = TraitLineChoice.TOP;
 		reference3.Grandmaster = TraitLineChoice.BOTTOM;
-		expect(code.Specializations[2].Choices).toBe(reference3);
+		expect(code.Specializations[2].Choices).toStrictEqual(reference3);
 
 		expect(code.SlotSkills[0]).toBe(SkillId.Your_Soul_Is_Mine);
 		expect(code.SlotSkills[1]).toBe(SkillId.Well_of_Suffering1);
@@ -233,7 +233,7 @@ describe('BasicCodesTests', () => {
 	});
 
 	test('ParseAll', () => {
-		for(const [name, code] of TestUtilities.CodesV2.entries()) {
+		for(const [name, code] of Object.entries(TestUtilities.CodesV2)) {
 			try {
 				const code_ = TextLoader.LoadBuildCode(code);
 			} catch(ex : any) {
@@ -273,21 +273,21 @@ describe('BasicCodesTests', () => {
 		reference1.Adept       = TraitLineChoice.TOP;
 		reference1.Master      = TraitLineChoice.MIDDLE;
 		reference1.Grandmaster = TraitLineChoice.MIDDLE;
-		expect(code.Specializations[0].Choices).toBe(reference1);
+		expect(code.Specializations[0].Choices).toStrictEqual(reference1);
 
 		expect(code.Specializations[1].SpecializationId).toBe(SpecializationId.Soul_Reaping);
 		const reference2 = new TraitLineChoices();
 		reference2.Adept       = TraitLineChoice.TOP;
 		reference2.Master      = TraitLineChoice.TOP;
 		reference2.Grandmaster = TraitLineChoice.MIDDLE;
-		expect(code.Specializations[1].Choices).toBe(reference2);
+		expect(code.Specializations[1].Choices).toStrictEqual(reference2);
 
 		expect(code.Specializations[2].SpecializationId).toBe(SpecializationId.Reaper);
 		const reference3 = new TraitLineChoices();
 		reference3.Adept       = TraitLineChoice.MIDDLE;
 		reference3.Master      = TraitLineChoice.TOP;
 		reference3.Grandmaster = TraitLineChoice.BOTTOM;
-		expect(code.Specializations[2].Choices).toBe(reference3);
+		expect(code.Specializations[2].Choices).toStrictEqual(reference3);
 
 		expect(code.SlotSkills[0]).toBe(SkillId.Your_Soul_Is_Mine);
 		expect(code.SlotSkills[1]).toBe(SkillId.Well_of_Suffering1);
@@ -302,11 +302,11 @@ describe('BasicCodesTests', () => {
 
 describe.each([true])('OfficialChatLinks', (lazyload) => {
 	/** @test @dataProvider TrueFalseProvider */
-	test('LoadOfficialLink', () => {
+	test('LoadOfficialLink', async () => {
 		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
-		else PerProfessionData.Reload(Profession.Necromancer/*, true*/);
+		else await PerProfessionData.Reload(Profession.Necromancer/*, true*/);
 
-		const code = TextLoader.LoadOfficialBuildCode(TestUtilities.CodesIngame["full-necro"]);
+		const code = await TextLoader.LoadOfficialBuildCode(TestUtilities.CodesIngame["full-necro"]);
 		expect(code.Profession).toBe(Profession.Necromancer);
 
 		expect(code.WeaponSet1.MainHand).toBe(WeaponType._UNDEFINED);
@@ -319,21 +319,21 @@ describe.each([true])('OfficialChatLinks', (lazyload) => {
 		reference1.Adept       = TraitLineChoice.TOP;
 		reference1.Master      = TraitLineChoice.MIDDLE;
 		reference1.Grandmaster = TraitLineChoice.MIDDLE;
-		expect(code.Specializations[0].Choices).toBe(reference1);
+		expect(code.Specializations[0].Choices).toStrictEqual(reference1);
 
 		expect(code.Specializations[1].SpecializationId).toBe(SpecializationId.Soul_Reaping);
 		const reference2 = new TraitLineChoices();
 		reference2.Adept       = TraitLineChoice.TOP;
 		reference2.Master      = TraitLineChoice.TOP;
 		reference2.Grandmaster = TraitLineChoice.MIDDLE;
-		expect(code.Specializations[1].Choices).toBe(reference2);
+		expect(code.Specializations[1].Choices).toStrictEqual(reference2);
 
 		expect(code.Specializations[2].SpecializationId).toBe(SpecializationId.Reaper);
 		const reference3 = new TraitLineChoices();
 		reference3.Adept       = TraitLineChoice.MIDDLE;
 		reference3.Master      = TraitLineChoice.TOP;
 		reference3.Grandmaster = TraitLineChoice.BOTTOM;
-		expect(code.Specializations[2].Choices).toBe(reference3);
+		expect(code.Specializations[2].Choices).toStrictEqual(reference3);
 
 		expect(code.SlotSkills[0]).toBe(SkillId.Your_Soul_Is_Mine);
 		expect(code.SlotSkills[1]).toBe(SkillId.Well_of_Suffering1);
@@ -342,7 +342,7 @@ describe.each([true])('OfficialChatLinks', (lazyload) => {
 		expect(code.SlotSkills[4]).toBe(SkillId.Summon_Flesh_Golem);
 	});
 
-	test('WriteOfficialLink', () => {
+	test('WriteOfficialLink', async () => {
 		const code = new BuildCode();
 		code.Profession = Profession.Necromancer;
 		const choices1 = new TraitLineChoices();
@@ -368,10 +368,10 @@ describe.each([true])('OfficialChatLinks', (lazyload) => {
 		code.SlotSkills.Elite    = SkillId.Summon_Flesh_Golem;
 
 		if(lazyload) PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
-		else PerProfessionData.Reload(Profession.Necromancer/*, true*/);
+		else await PerProfessionData.Reload(Profession.Necromancer/*, true*/);
 
 		const reference = TestUtilities.CodesIngame["full-necro2"];
-		const result = TextLoader.WriteOfficialBuildCode(code);
+		const result = await TextLoader.WriteOfficialBuildCode(code);
 		expect(result).toBe(reference);
 	});
 });

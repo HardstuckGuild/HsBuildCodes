@@ -19,7 +19,9 @@ class BinaryView {
 	}
 
 	public NextUShortLE() : number {
-		return this._view.getUint16(this.Pos++, true);
+		const val = this._view.getUint16(this.Pos, true);
+		this.Pos += 2;
+		return val;
 	}
 
 	public Slice(offset : number) : BinaryView {
