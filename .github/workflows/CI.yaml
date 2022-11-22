@@ -82,7 +82,7 @@ jobs:
       run: npm test
 
   build-and-publish-nuget:
-    needs: [ XUnit, PHPUnit ]
+    needs: [ XUnit, PHPUnit, Jest ]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     if: startsWith(github.event.ref, 'refs/tags/v')
