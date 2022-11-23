@@ -11,7 +11,7 @@
 
 		<PackageId>Hardstuck.GuildWars2.BuildCodes</PackageId>
 		<Description>
-A colelction of generators and converters for Hardstuck GW2 BuildCodes used by `hardstuck.gg/gw2/builds?b=[code]`.
+A collection of generators and converters for Hardstuck GW2 BuildCodes used by `hardstuck.gg/gw2/builds?b=[code]`.
 Replaces Hardstuck.GuildWars2.Builds.
 		</Description>
 		<Authors>Rennorb</Authors>
@@ -19,7 +19,7 @@ Replaces Hardstuck.GuildWars2.Builds.
 		<Copyright>Apache-2.0</Copyright>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<RepositoryType>git</RepositoryType>
-		<RepositoryUrl>https://github.com/SaculRennorb/HsBuildCodes</RepositoryUrl>
+		<RepositoryUrl>https://github.com/HardstuckGuild/HsBuildCodes</RepositoryUrl>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<IncludeSymbols>true</IncludeSymbols>
