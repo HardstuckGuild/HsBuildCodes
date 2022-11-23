@@ -8,7 +8,7 @@
 			"type": "shell",
 			"command": [
 				"G:/privat/programms/php/php-8.1.12-Win32-vs16-x64/php.exe",
-				"./tests/php/8.1/phpunit-9.5.26.phar",
+				"G:/privat/programms/php/phpunit-9.5.26.phar",
 				//"--stop-on-failure",
 				"--colors=auto",
 				"--test-suffix", "Tests.php",
@@ -22,7 +22,7 @@
 			"type": "shell",
 			"command": [
 				"G:/privat/programms/php/php-8.0.25-Win32-vs16-x64/php.exe",
-				"./tests/php/8.0/phpunit-9.5.26.phar",
+				"G:/privat/programms/php/phpunit-9.5.26.phar",
 				//"--stop-on-failure",
 				"--colors=auto",
 				"--test-suffix", "Tests.php",

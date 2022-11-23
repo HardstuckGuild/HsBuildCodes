@@ -45,15 +45,20 @@ jobs:
       if: ${{ ! startsWith(github.event.ref, 'refs/tags/v') }}
       run: git branch --remote --contains | grep origin/master
 
-    - name: Test
-      uses: php-actions/phpunit@v3
+    - name: Setup PHP(-Unit)
+      uses: shivammathur/setup-php@v2
       with:
-        vendored_phpunit_path: tests/php/${{ matrix.php_version }}/phpunit-9.5.26.phar
         php_version: ${{ matrix.php_version }}
-        php_extensions: mbstring openssl
-        bootstrap: include/php/${{ matrix.php_version }}/autoload.php
-        test_suffix: Tests.php
-        args: --colors=auto tests/php/${{ matrix.php_version }}
+        php_extensions: none, mbstring, openssl
+        tools: none, phpunit:9.5.26
+        
+    - name: Test
+      run: |
+        phpunit
+        --colors=auto
+        --test-suffix Tests.php
+        --bootstrap include/php/${{ matrix.php_version }}/autoload.php
+        ./tests/php/${{ matrix.php_version }}
 
   Jest:
     runs-on: ubuntu-latest
