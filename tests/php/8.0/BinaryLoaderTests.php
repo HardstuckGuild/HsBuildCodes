@@ -321,7 +321,7 @@ class BasicCodeTests extends TestCase {
 		$rawCode = BasicCodeTests::BitStringToBytes(TestUtilities::$CodesV2Binary["minimal-revenant"]);
 		$code = BinaryLoader::LoadBuildCode($rawCode);
 
-		$result = BinaryLoader::WriteCode($code);
+		$result = BinaryLoader::WriteBuildCode($code);
 
 		$this->assertEquals($rawCode, $result);
 	}

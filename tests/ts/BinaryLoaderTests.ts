@@ -265,7 +265,7 @@ describe('BasicCodeTests', () => {
 		const rawCode = BitStringToBytes(TestUtilities.CodesV2Binary["minimal-revenant"]);
 		const code = BinaryLoader.LoadBuildCode(rawCode);
 
-		const result = BinaryLoader.WriteCode(code);
+		const result = BinaryLoader.WriteBuildCode(code);
 
 		expect(result).toStrictEqual(rawCode);
 	});

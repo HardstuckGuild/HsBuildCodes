@@ -291,7 +291,7 @@ class BinaryLoader {
 		return Arbitrary\NONE::GetInstance();
 	}
 
-	public static function WriteCode(BuildCode $code) : string
+	public static function WriteBuildCode(BuildCode $code) : string
 	{
 		$rawBits = new BitWriter();
 		$rawBits->Data[0] = ord('a') + $code->Version;

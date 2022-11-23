@@ -293,7 +293,7 @@ class BinaryLoader {
 		return Arbitrary.NONE.GetInstance();
 	}
 
-	public static WriteCode(code : BuildCode) : Uint8Array
+	public static WriteBuildCode(code : BuildCode) : Uint8Array
 	{
 		const rawBits = new BitWriter();
 		rawBits.Data[0] = 'a'.charCodeAt(0) + code.Version;

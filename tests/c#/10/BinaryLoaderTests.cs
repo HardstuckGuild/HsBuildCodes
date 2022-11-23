@@ -294,7 +294,7 @@ public class BasicCodeTests {
 		var code = BinaryLoader.LoadBuildCode(rawCode);
 
 		var result = new byte[rawCode.Length];
-		BinaryLoader.WriteCode(code, result);
+		BinaryLoader.WriteBuildCode(code, result);
 
 		for(int i = 0; i < rawCode.Length; i++)
 			Assert.True(rawCode[i] == result[i], $"Comparison failed at index {i}. og: {rawCode[i]}, cycle: {result[i]}");

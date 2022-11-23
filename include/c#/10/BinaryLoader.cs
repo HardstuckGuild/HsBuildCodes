@@ -300,7 +300,7 @@ public static class BinaryLoader {
 	}
 
 	/// <returns> The amount of bytes written. </returns>
-	public static int WriteCode(BuildCode code, Span<byte> destination)
+	public static int WriteBuildCode(BuildCode code, Span<byte> destination)
 	{
 		var rawBits = new BitWriter(destination);
 		rawBits.Data[0] = (byte)('a' + code.Version);
