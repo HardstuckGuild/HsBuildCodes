@@ -70,7 +70,7 @@ class BasicCodesTests extends TestCase {
 	/** @test */
 	public function ShouldThrowVersion()
 	{
-		$this->expectException(\AssertionError::class);
+		$this->expectException(\Exception::class);
 		$this->expectErrorMessageMatches('/[Vv]ersion/');
 		$code = TextLoader::LoadBuildCode(TestUtilities::$CodesInvalid["wrong-version"]);
 	}
@@ -78,7 +78,7 @@ class BasicCodesTests extends TestCase {
 	/** @test */
 	public function ShouldThrowTooShort()
 	{
-		$this->expectException(\AssertionError::class);
+		$this->expectException(\Exception::class);
 		$this->expectErrorMessageMatches('/[Ss]hort/');
 		$code = TextLoader::LoadBuildCode(TestUtilities::$CodesInvalid["too-short"]);
 	}

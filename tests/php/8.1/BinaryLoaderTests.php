@@ -204,7 +204,7 @@ class BasicCodeTests extends TestCase {
 	{
 		$rawCode = 'B'.str_repeat(chr(0x2), 79);
 
-		$this->expectException(\AssertionError::class);
+		$this->expectException(\Exception::class);
 		$this->expectErrorMessageMatches('/[Vv]ersion/');
 		$code = BinaryLoader::LoadBuildCode($rawCode);
 	}
