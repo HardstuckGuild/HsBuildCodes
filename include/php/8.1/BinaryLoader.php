@@ -124,7 +124,7 @@ class BinaryLoader {
 
 		$code = new BuildCode();
 		$code->Version = $rawSpan->DecodeNext(8) - ord('a');
-		assert($code->Version >= Statics::FIRST_VERSIONED_VERSION && $code->Version <= Statics::CURRENT_VERSION, "Code version mismatch");
+		if($code->Version < Statics::FIRST_VERSIONED_VERSION || $code->Version > Statics::CURRENT_VERSION) throw new \Exception("Code version mismatch");
 		$code->Kind    = match ($rawSpan->DecodeNext(2)) {
 			0 => Kind::PvP,
 			1 => Kind::WvW,

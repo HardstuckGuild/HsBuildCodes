@@ -51,7 +51,7 @@ class TextLoader {
 	#region hardstuck codes
 
 	public static function LoadBuildCode(string $text) : BuildCode {
-		assert(strlen($text) > 10, "Code too short");
+		if(strlen($text) <= 10) throw new \Exception("Code too short");
 
 		if(ctype_lower($text[0])) {
 			$binary = base64_decode(str_replace('-', '/', substr($text, 1)));
@@ -61,7 +61,7 @@ class TextLoader {
 		$view = new StringView($text);
 		$code = new BuildCode();
 		$code->Version    = TextLoader::DecodeAndAdvance($view);
-		assert($code->Version === Statics::CURRENT_VERSION, "Code version mismatch");
+		if($code->Version < Statics::FIRST_VERSIONED_VERSION || $code->Version > Statics::CURRENT_VERSION) throw new \Exception("Code version mismatch");
 		$code->Kind       = TextLoader::DecodeAndAdvance($view);
 		assert($code->Kind !== Kind::_UNDEFINED, "Code type not valid");
 		$code->Profession = Profession::_FIRST() + TextLoader::DecodeAndAdvance($view);
