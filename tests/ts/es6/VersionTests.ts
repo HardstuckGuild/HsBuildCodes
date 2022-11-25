@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
-import Static from "../../include/ts/Database/Static";
-import TextLoader from "../../include/ts/TextLoader";
+import Static from "../../../include/ts/es6/Database/Static";
+import TextLoader from "../../../include/ts/es6/TextLoader";
 import TestUtilities from "./TestUtilities";
 
 describe('VersionTests', () => {

@@ -1,6 +1,6 @@
 import * as readline from 'readline';
 import * as fs from 'fs';
-import { Assert } from '../../include/ts/Util/Static';
+import { Assert } from '../../../include/ts/es6/Util/Static';
 
 type Store = {
 	[key : string] : string;
@@ -23,7 +23,7 @@ class TestUtilities {
 		let currentDict : string|null = null;
 		let currentKey : string|null = null;
 		let currentAccumulator = '';
-		const file = fs.readFileSync('../common/codes.ini', "utf-8");
+		const file = fs.readFileSync('../../common/codes.ini', "utf-8");
 		for(const line_ of file.split(/[\r\n]/)) {
 			const comment = line_.indexOf(';');
 			const line : string = (comment !== -1 ? line_.slice(0, comment) : line_).trim();

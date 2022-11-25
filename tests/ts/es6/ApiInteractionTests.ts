@@ -1,11 +1,11 @@
 import {describe, expect, test} from '@jest/globals';
-import ItemId from '../../include/ts/Database/ItemIds';
-import SkillId from '../../include/ts/Database/SkillIds';
-import SpecializationId from '../../include/ts/Database/SpecializationIds';
-import Static from '../../include/ts/Database/Static';
-import TraitId from '../../include/ts/Database/TraitIds';
-import APICache from '../../include/ts/OfficialAPI/APICache';
-import { BuildCode, Profession, TraitLineChoice, TraitSlot, WeaponSetNumber, WeaponType } from '../../include/ts/Structures';
+import ItemId from '../../../include/ts/es6/Database/ItemIds';
+import SkillId from '../../../include/ts/es6/Database/SkillIds';
+import SpecializationId from '../../../include/ts/es6/Database/SpecializationIds';
+import Static from '../../../include/ts/es6/Database/Static';
+import TraitId from '../../../include/ts/es6/Database/TraitIds';
+import APICache from '../../../include/ts/es6/OfficialAPI/APICache';
+import { BuildCode, Profession, TraitLineChoice, TraitSlot, WeaponSetNumber, WeaponType } from '../../../include/ts/es6/Structures';
 
 describe("ResolveWeaponSkills", () => {
 	test('ResolveWeaponSkillsEmpty', async () => {

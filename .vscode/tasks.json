@@ -47,7 +47,7 @@
 				"npm", "test"
 			],
 			"options": {
-				"cwd": "tests/ts"
+				"cwd": "tests/ts/es6"
 			},
 			"problemMatcher": []
 		}

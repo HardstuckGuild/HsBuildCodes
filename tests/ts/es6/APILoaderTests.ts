@@ -1,12 +1,12 @@
 import { describe, expect, test } from "@jest/globals";
-import APILoader from "../../include/ts/APILoader";
-import ItemId from "../../include/ts/Database/ItemIds";
-import SkillId from "../../include/ts/Database/SkillIds";
-import SpecializationId from "../../include/ts/Database/SpecializationIds";
-import Static from "../../include/ts/Database/Static";
-import StatId from "../../include/ts/Database/StatIds";
-import { Kind, Profession, TraitLineChoice, WeaponType } from "../../include/ts/Structures";
-import { TraitLineChoices } from "../../include/ts/Util/UtilStructs";
+import APILoader from "../../../include/ts/es6/APILoader";
+import ItemId from "../../../include/ts/es6/Database/ItemIds";
+import SkillId from "../../../include/ts/es6/Database/SkillIds";
+import SpecializationId from "../../../include/ts/es6/Database/SpecializationIds";
+import Static from "../../../include/ts/es6/Database/Static";
+import StatId from "../../../include/ts/es6/Database/StatIds";
+import { Kind, Profession, TraitLineChoice, WeaponType } from "../../../include/ts/es6/Structures";
+import { TraitLineChoices } from "../../../include/ts/es6/Util/UtilStructs";
 
 const VALID_KEY = "92CE5A6C-E594-9D4D-B92B-5621ACFE047D436C02BD-0810-47D9-B9D4-2620EB7DD598";
 const MISSING_PERMS_KEY = "AD041D99-AEEF-2E45-8732-0057285EFE370740BF1D-6427-4191-8C4F-84DD1C97F05F";

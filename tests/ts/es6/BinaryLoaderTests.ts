@@ -1,15 +1,15 @@
 import { describe, expect, test } from "@jest/globals";
-import BinaryLoader, { BitReader, BitWriter } from "../../include/ts/BinaryLoader";
-import ItemId from "../../include/ts/Database/ItemIds";
-import LazyLoadMode from "../../include/ts/Database/LazyLoadMode";
-import PerProfessionData from "../../include/ts/Database/PerProfessionData";
-import SkillId from "../../include/ts/Database/SkillIds";
-import SpecializationId from "../../include/ts/Database/SpecializationIds";
-import Static from "../../include/ts/Database/Static";
-import StatId from "../../include/ts/Database/StatIds";
-import { Arbitrary, BuildCode, Kind, Legend, PetId, Profession, ProfessionSpecific, RangerData, RevenantData, Specialization, TraitLineChoice, WeaponType } from "../../include/ts/Structures";
-import { Assert, Base64Decode } from "../../include/ts/Util/Static";
-import { TraitLineChoices } from "../../include/ts/Util/UtilStructs";
+import BinaryLoader, { BitReader, BitWriter } from "../../../include/ts/es6/BinaryLoader";
+import ItemId from "../../../include/ts/es6/Database/ItemIds";
+import LazyLoadMode from "../../../include/ts/es6/Database/LazyLoadMode";
+import PerProfessionData from "../../../include/ts/es6/Database/PerProfessionData";
+import SkillId from "../../../include/ts/es6/Database/SkillIds";
+import SpecializationId from "../../../include/ts/es6/Database/SpecializationIds";
+import Static from "../../../include/ts/es6/Database/Static";
+import StatId from "../../../include/ts/es6/Database/StatIds";
+import { Arbitrary, BuildCode, Kind, Legend, PetId, Profession, ProfessionSpecific, RangerData, RevenantData, Specialization, TraitLineChoice, WeaponType } from "../../../include/ts/es6/Structures";
+import { Assert, Base64Decode } from "../../../include/ts/es6/Util/Static";
+import { TraitLineChoices } from "../../../include/ts/es6/Util/UtilStructs";
 import TestUtilities from "./TestUtilities";
 
 describe('FunctionTests', () => {

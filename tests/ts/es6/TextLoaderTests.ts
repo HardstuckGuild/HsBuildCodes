@@ -1,15 +1,15 @@
 import { describe, expect, test } from "@jest/globals";
-import ItemId from "../../include/ts/Database/ItemIds";
-import LazyLoadMode from "../../include/ts/Database/LazyLoadMode";
-import PerProfessionData from "../../include/ts/Database/PerProfessionData";
-import SkillId from "../../include/ts/Database/SkillIds";
-import SpecializationId from "../../include/ts/Database/SpecializationIds";
-import Static from "../../include/ts/Database/Static";
-import StatId from "../../include/ts/Database/StatIds";
-import { Arbitrary, BuildCode, Kind, Legend, PetId, Profession, ProfessionSpecific, RangerData, RevenantData, Specialization, TraitLineChoice, WeaponType } from "../../include/ts/Structures";
-import TextLoader from "../../include/ts/TextLoader";
-import StringView from "../../include/ts/Util/StringView";
-import { TraitLineChoices } from "../../include/ts/Util/UtilStructs";
+import ItemId from "../../../include/ts/es6/Database/ItemIds";
+import LazyLoadMode from "../../../include/ts/es6/Database/LazyLoadMode";
+import PerProfessionData from "../../../include/ts/es6/Database/PerProfessionData";
+import SkillId from "../../../include/ts/es6/Database/SkillIds";
+import SpecializationId from "../../../include/ts/es6/Database/SpecializationIds";
+import Static from "../../../include/ts/es6/Database/Static";
+import StatId from "../../../include/ts/es6/Database/StatIds";
+import { Arbitrary, BuildCode, Kind, Legend, PetId, Profession, ProfessionSpecific, RangerData, RevenantData, Specialization, TraitLineChoice, WeaponType } from "../../../include/ts/es6/Structures";
+import TextLoader from "../../../include/ts/es6/TextLoader";
+import StringView from "../../../include/ts/es6/Util/StringView";
+import { TraitLineChoices } from "../../../include/ts/es6/Util/UtilStructs";
 import TestUtilities from "./TestUtilities";
 
 describe('FunctionTests', () => {
