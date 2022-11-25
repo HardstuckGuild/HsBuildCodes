@@ -52,3 +52,20 @@ int bytesWritten2 = BinaryLoader.WriteOfficialBuildCode(code, buffer2);
 ```
 
 There are multiple overloads available for most of those operations.
+
+### Other utility functions available:
+
+```csharp
+boolean     Static.IsTwoHanded(WeaponType weapon);
+boolean     Static.IsAquatic(WeaponType weapon);
+WeaponSet   Static.ResolveEffectiveWeapons(BuildCode code, WeaponSetNumber set);
+ItemId      Static.ResolveDummyItemForWeaponType(WeaponType weaponType, StatId statId);
+ItemId      Static.ResolveDummyItemForEquipment(int equipmentIndex, WeightClass weightClass, StatId statId);
+WeightClass Static.ResolveWeightClass(Profession profession);
+
+Task<WeaponType>           APICache.ResolveWeaponType(int itemId);
+Task<StatId>               APICache.ResolveStatId(int itemId);
+ValueTask<TraitLineChoice> APICache.ResolvePosition(int? traitId);
+ValueTask<SkillId>         APICache.ResolveWeaponSkill(BuildCode code, WeaponSet effectiveWeapons, int skillIndex);
+Task<TraitId>              APICache.ResolveTrait(Specialization spec, TraitSlot traitSlot);
+```

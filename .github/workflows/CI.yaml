@@ -60,7 +60,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        working-directory: tests/ts
+        working-directory: tests/ts/es6
 
     steps:
     - name: Checkout

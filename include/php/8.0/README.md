@@ -60,3 +60,20 @@ $buffer = BinaryLoader::WriteOfficialBuildCode($code);
 ```
 
 There are multiple overloads available for most of those operations.
+
+### Other utility functions available:
+
+```php
+Static::IsTwoHanded(int $weapon) : boolean;
+Static::IsAquatic(int $weapon) : boolean;
+Static::ResolveEffectiveWeapons(BuildCode $code, int $set) : WeaponSet;
+Static::ResolveDummyItemForWeaponType(int $weaponType, int $statId) : int;
+Static::ResolveDummyItemForEquipment(int $equipmentIndex, int $weightClass, int $statId) : int;
+Static::ResolveWeightClass(int $profession) : int;
+
+APICache::ResolveWeaponType(int $itemId) : int;
+APICache::ResolveStatId(int $itemId) : int;
+APICache::ResolvePosition(int? $traitId) : int;
+APICache::ResolveWeaponSkill(BuildCode $code, WeaponSet $effectiveWeapons, int $skillIndex) : int;
+APICache::ResolveTrait(int $spec, int $traitSlot) : int;
+```

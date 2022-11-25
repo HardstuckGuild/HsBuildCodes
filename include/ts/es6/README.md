@@ -56,3 +56,20 @@ const buffer = await BinaryLoader.WriteOfficialBuildCode(code);
 ```
 
 There are multiple overloads available for most of those operations.
+
+### Other utility functions available:
+
+```ts
+Static.IsTwoHanded(weapon : WeaponType) : boolean;
+Static.IsAquatic(weapon : WeaponType) : boolean;
+Static.ResolveEffectiveWeapons(code : BuildCode, set : WeaponSetNumber) : WeaponSet;
+Static.ResolveDummyItemForWeaponType(weaponType : WeaponType, statId : StatId) : ItemId;
+Static.ResolveDummyItemForEquipment(equipmentIndex : int, weightClass : WeightClass, statId : StatId) : ItemId;
+Static.ResolveWeightClass(profession : Profession) : WeightClass;
+
+APICache.ResolveWeaponType(itemId : int) : Promise<WeaponType>;
+APICache.ResolveStatId(itemId : int) : Promise<StatId>;
+APICache.ResolvePosition(traitId : int) : Promise<TraitLineChoice>;
+APICache.ResolveWeaponSkill(code : BuildCode, effectiveWeapons : WeaponSet, skillIndex : int) : Promise<SkillId>;
+APICache.ResolveTrait(spec : Specialization, traitSlot : TraitSlot) : Promise<TraitId>;
+```
