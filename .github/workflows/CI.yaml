@@ -112,6 +112,6 @@ jobs:
       run: dotnet pack include/c#/10 --configuration Release --no-build --output .
       
     - name: Push
-      run: dotnet nuget push "*.${VERSION}.nupkg" -k ${NUGET_API_KEY} && dotnet nuget push "*.${VERSION}.snupkg" -k ${NUGET_API_KEY}
+      run: dotnet nuget push "*.${VERSION}.nupkg" -k ${NUGET_API_KEY} -s https://api.nuget.org/v3/index.json
       env:
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
