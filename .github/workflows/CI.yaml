@@ -13,10 +13,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Verify commit exists in origin/master
-      if: ${{ ! startsWith(github.event.ref, 'refs/tags/v') }}
-      run: git branch --remote --contains | grep origin/master
-
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
@@ -41,15 +37,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Verify commit exists in origin/master
-      if: ${{ ! startsWith(github.event.ref, 'refs/tags/v') }}
-      run: git branch --remote --contains | grep origin/master
-
     - name: Setup PHP(-Unit)
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php_version }}
-        extensions: none, mbstring, openssl, tokenizer
+        extensions: none, mbstring, openssl, tokenizer, ctype
         tools: none, phpunit:9.5.26
         
     - name: Test
@@ -65,10 +57,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-
-    - name: Verify commit exists in origin/master
-      if: ${{ ! startsWith(github.event.ref, 'refs/tags/v') }}
-      run: git branch --remote --contains | grep origin/master
 
     - name: Setup Node
       uses: actions/setup-node@v3
