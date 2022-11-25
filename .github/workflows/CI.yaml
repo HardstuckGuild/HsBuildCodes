@@ -48,8 +48,8 @@ jobs:
     - name: Setup PHP(-Unit)
       uses: shivammathur/setup-php@v2
       with:
-        php_version: ${{ matrix.php_version }}
-        php_extensions: none, mbstring, openssl
+        php-version: ${{ matrix.php_version }}
+        extensions: none, mbstring, openssl
         tools: none, phpunit:9.5.26
         
     - name: Test
