@@ -282,18 +282,12 @@ class TextLoader {
 		if(!code.WeaponSet1.HasAny()) destination += '~';
 		else
 		{
-			if(code.WeaponSet1.MainHand === WeaponType._UNDEFINED) destination += '_';
-			else destination += TextLoader.CHARSET[code.WeaponSet1.MainHand - WeaponType._FIRST];
-			if(code.WeaponSet1.Sigil1 === ItemId._UNDEFINED) destination += '_';
-			else TextLoader.Encode(code.WeaponSet1.Sigil1, 3);
+			destination += TextLoader.EncodeWeaponSet(code.WeaponSet1);
 
 			if(!code.WeaponSet2.HasAny()) destination += '~';
 			else
 			{
-				if(code.WeaponSet2.MainHand === WeaponType._UNDEFINED) destination += '_';
-				else destination += TextLoader.CHARSET[code.WeaponSet2.MainHand - WeaponType._FIRST];
-				if(code.WeaponSet2.Sigil1 === ItemId._UNDEFINED) destination += '_';
-				else destination += TextLoader.Encode(code.WeaponSet2.Sigil1, 3);
+				destination += TextLoader.EncodeWeaponSet(code.WeaponSet2);
 			}
 		}
 
@@ -316,6 +310,26 @@ class TextLoader {
 
 		destination += TextLoader.EncodeProfessionArbitrary(code.ProfessionSpecific);
 		destination += TextLoader.EncodeArbitrary(code.Arbitrary);
+
+		return destination;
+	}
+
+	private static EncodeWeaponSet(set : WeaponSet) : string
+	{
+		let destination = '';
+		if(set.MainHand == WeaponType._UNDEFINED) destination += '_';
+		else {
+			destination += TextLoader.CHARSET[set.MainHand - WeaponType._FIRST];
+			if(set.Sigil1 == ItemId._UNDEFINED) destination += '_';
+			else destination += TextLoader.Encode(set.Sigil1, 3);
+		}
+		if(set.MainHand == WeaponType._UNDEFINED || !Static.IsTwoHanded(set.MainHand))
+		{
+			if(set.OffHand == WeaponType._UNDEFINED) destination += '_';
+			else destination += TextLoader.CHARSET[set.OffHand - WeaponType._FIRST];
+		}
+		if(set.Sigil2 == ItemId._UNDEFINED) destination += '_';
+		else destination += TextLoader.Encode(set.Sigil2, 3);
 
 		return destination;
 	}
@@ -368,7 +382,7 @@ class TextLoader {
 		return destination;
 	}
 
-	private static EncodeInfusions(weaponRef : BuildCode) : void
+	private static EncodeInfusions(weaponRef : BuildCode) : string
 	{
 		let destination = '';
 		let lastInfusion = ItemId._UNDEFINED;
@@ -412,6 +426,8 @@ class TextLoader {
 		destination += TextLoader.Encode(lastInfusion, 2);
 		if(repeatCount > 1)
 			destination += TextLoader.CHARSET[repeatCount];
+
+		return destination;
 	}
 
 	private static EncodeProfessionArbitrary(professionSpecific : IProfessionSpecific) : string

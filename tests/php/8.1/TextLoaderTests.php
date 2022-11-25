@@ -278,18 +278,28 @@ class BasicCodesTests extends TestCase {
 		$this->assertEquals(ItemId::Tin_of_Fruitcake, $code->Utility);
 	}
 
-	/** @test */
-	public function ParseAll()
-	{
+	public function AllCodesProvider() {
+		$arr = [];
 		foreach(TestUtilities::$CodesV2 as $name => $code) {
-			try {
-				$code = TextLoader::LoadBuildCode($code);
-			} catch(\Throwable $ex) {
-				throw new \Exception("$name ($code) failed", 0, $ex);
-			}
+			if(str_contains($name, "binary")) continue;
+			array_push($arr, [$name, $code]);
 		}
+		return $arr;
+	}
 
+	/** @test @dataProvider AllCodesProvider */
+	public function ParseAll(string $name, string $code)
+	{
+		$code = TextLoader::LoadBuildCode($code);
 		$this->assertTrue(true);
+	}
+
+	/** @test @dataProvider AllCodesProvider */
+	public function ReencodeAll(string $name, string $code)
+	{
+		$code_ = TextLoader::LoadBuildCode($code);
+		$reencoded = TextLoader::WriteBuildCode($code_);
+		$this->assertEquals($code, $reencoded);
 	}
 
 	/** @test */

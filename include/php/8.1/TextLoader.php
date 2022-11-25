@@ -278,18 +278,12 @@ class TextLoader {
 		if(!$code->WeaponSet1->HasAny()) $destination .= '~';
 		else
 		{
-			if($code->WeaponSet1->MainHand === WeaponType::_UNDEFINED) $destination .= '_';
-			else $destination .= TextLoader::CHARSET[$code->WeaponSet1->MainHand->value - WeaponType::_FIRST()];
-			if($code->WeaponSet1->Sigil1 === ItemId::_UNDEFINED) $destination .= '_';
-			else TextLoader::EncodeAndAdvance($destination, $code->WeaponSet1->Sigil1, 3);
+			TextLoader::EncodeWeaponSetAndAdvance($destination, $code->WeaponSet1);
 
 			if(!$code->WeaponSet2->HasAny()) $destination .= '~';
 			else
 			{
-				if($code->WeaponSet2->MainHand === WeaponType::_UNDEFINED) $destination .= '_';
-				else $destination .= TextLoader::CHARSET[$code->WeaponSet2->MainHand->value - WeaponType::_FIRST()];
-				if($code->WeaponSet2->Sigil1 === ItemId::_UNDEFINED) $destination .= '_';
-				else TextLoader::EncodeAndAdvance($destination, $code->WeaponSet2->Sigil1, 3);
+				TextLoader::EncodeWeaponSetAndAdvance($destination, $code->WeaponSet2);
 			}
 		}
 
@@ -314,6 +308,23 @@ class TextLoader {
 		TextLoader::EncodeArbitrary($destination, $code->Arbitrary);
 
 		return $destination;
+	}
+
+	private static function EncodeWeaponSetAndAdvance(string &$destination, WeaponSet $set) : void
+	{
+		if($set->MainHand === WeaponType::_UNDEFINED) $destination .= '_';
+		else {
+			$destination .= TextLoader::CHARSET[$set->MainHand->value - WeaponType::_FIRST()];
+			if($set->Sigil1 === ItemId::_UNDEFINED) $destination .= '_';
+			else TextLoader::EncodeAndAdvance($destination, $set->Sigil1, 3);
+		}
+		if($set->MainHand === WeaponType::_UNDEFINED || !Statics::IsTwoHanded($set->MainHand))
+		{
+			if($set->OffHand === ItemId::_UNDEFINED) $destination .= '_';
+			else $destination .= TextLoader::CHARSET[$set->OffHand->value - WeaponType::_FIRST()];
+		} 
+			if($set->Sigil2 === ItemId::_UNDEFINED) $destination .= '_';
+			else TextLoader::EncodeAndAdvance($destination, $set->Sigil2, 3);
 	}
 
 	private static function EncodeStatsAndAdvance(string &$destination, BuildCode $weaponRef) :  void

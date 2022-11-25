@@ -262,8 +262,8 @@ public static class TextLoader {
 			value >>= 6;
 			pos++;
 		} while(value > 0);
-		if(pos < width) destination[pos] = '~';
-		destination = destination[(pos + 1)..];
+		if(pos < width) destination[pos++] = '~';
+		destination = destination[pos..];
 	}
 
 	public static void EncodeOrUnderscoreOnZeroAndAdvance(ref Span<char> destination, int value, int encodeWidth)
@@ -300,18 +300,12 @@ public static class TextLoader {
 		if(!code.WeaponSet1.HasAny) WriteAndAdvance(ref destination, '~');
 		else
 		{
-			if(code.WeaponSet1.MainHand == WeaponType._UNDEFINED) WriteAndAdvance(ref destination, '_');
-			else WriteAndAdvance(ref destination, CHARSET[code.WeaponSet1.MainHand - WeaponType._FIRST]);
-			if(code.WeaponSet1.Sigil1 == ItemId._UNDEFINED) WriteAndAdvance(ref destination, '_');
-			else EncodeAndAdvance(ref destination, (int)code.WeaponSet1.Sigil1, 3);
+			EncodeWeaponSetAndAdvance(ref destination, code.WeaponSet1);
 
 			if(!code.WeaponSet2.HasAny) WriteAndAdvance(ref destination, '~');
 			else
 			{
-				if(code.WeaponSet2.MainHand == WeaponType._UNDEFINED) WriteAndAdvance(ref destination, '_');
-				else WriteAndAdvance(ref destination, CHARSET[code.WeaponSet2.MainHand - WeaponType._FIRST]);
-				if(code.WeaponSet2.Sigil1 == ItemId._UNDEFINED) WriteAndAdvance(ref destination, '_');
-				else EncodeAndAdvance(ref destination, (int)code.WeaponSet2.Sigil1, 3);
+				EncodeWeaponSetAndAdvance(ref destination, code.WeaponSet2);
 			}
 		}
 
@@ -336,6 +330,23 @@ public static class TextLoader {
 		EncodeArbitrary(ref destination, code.Arbitrary);
 
 		return oldLen - destination.Length;
+	}
+
+	static void EncodeWeaponSetAndAdvance(ref Span<char> destination, in WeaponSet set)
+	{
+		if(set.MainHand == WeaponType._UNDEFINED) WriteAndAdvance(ref destination, '_');
+		else {
+			WriteAndAdvance(ref destination, CHARSET[set.MainHand - WeaponType._FIRST]);
+			if(set.Sigil1 == ItemId._UNDEFINED) WriteAndAdvance(ref destination, '_');
+			else EncodeAndAdvance(ref destination, (int)set.Sigil1, 3);
+		}
+		if(set.MainHand == WeaponType._UNDEFINED || !Static.IsTwoHanded(set.MainHand))
+		{
+			if(set.OffHand == WeaponType._UNDEFINED) WriteAndAdvance(ref destination, '_');
+			else WriteAndAdvance(ref destination, CHARSET[set.OffHand - WeaponType._FIRST]);
+		}
+		if(set.Sigil2 == ItemId._UNDEFINED) WriteAndAdvance(ref destination, '_');
+		else EncodeAndAdvance(ref destination, (int)set.Sigil2, 3);
 	}
 
 	private static void EncodeStatsAndAdvance(ref Span<char> destination, BuildCode weaponRef)

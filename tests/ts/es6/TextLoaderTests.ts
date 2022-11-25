@@ -232,17 +232,17 @@ describe('BasicCodesTests', () => {
 		expect(code.Utility).toBe(ItemId.Tin_of_Fruitcake);
 	});
 
-	test('ParseAll', () => {
-		for(const [name, code] of Object.entries(TestUtilities.CodesV2)) {
-			try {
-				const code_ = TextLoader.LoadBuildCode(code);
-			} catch(ex : any) {
-				console.error(`${name} (${code}) failed`, ex);
-				throw new Error(`${name} (${code}) failed`);
-			}
-		}
+	const allCodes = Object.entries(TestUtilities.CodesV2).filter(([name, _]) => !name.includes('binary'));
 
+	test.each(allCodes)('ParseAll', (name : string, code : string) => {
+		const code_ = TextLoader.LoadBuildCode(code);
 		expect(true).toBeTruthy();
+	});
+
+	test.each(allCodes)('ReencodeAll', (name : string, code : string) => {
+		const code_ = TextLoader.LoadBuildCode(code);
+		const reencoded = TextLoader.WriteBuildCode(code_);
+		expect(reencoded).toEqual(code);
 	});
 
 	test('FullNecroCompressed', () => {

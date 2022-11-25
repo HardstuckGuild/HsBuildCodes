@@ -250,18 +250,21 @@ public class BasicCodesTests {
 		Assert.Equal(ItemId.Tin_of_Fruitcake, code.Utility);
 	}
 
-	[Fact]
-	public void ParseAll()
-	{
-		foreach(var (name, code) in TestUtilities.CodesV2) {
-			try {
-				var code_ = TextLoader.LoadBuildCode(code);
-			} catch(Exception ex) {
-				throw new Exception($"{name} ({code}) failed", ex);
-			}
-		}
+	public static IEnumerable<object[]> AllCodesProvider() => TestUtilities.CodesV2.Where(a => !a.Key.Contains("binary", StringComparison.OrdinalIgnoreCase)).Select(a => new [] { a.Key, a.Value });
 
+	[Theory] [MemberData(nameof(AllCodesProvider))]
+	public void ParseAll(string name, string code)
+	{
+		var code_ = TextLoader.LoadBuildCode(code);
 		Assert.True(true);
+	}
+
+	[Theory] [MemberData(nameof(AllCodesProvider))]
+	public void ReencodeAll(string name, string code)
+	{
+		var code_ = TextLoader.LoadBuildCode(code);
+		var reencoded = TextLoader.WriteBuildCode(code_);
+		Assert.Equal(code, reencoded);
 	}
 
 	[Fact]
