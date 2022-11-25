@@ -124,8 +124,8 @@ enum WeaponType : int {
 	case Shield     =  8;
 	case Torch      =  9;
 	case Warhorn    = 10;
-	case ShortBow   = 11;
 
+	case ShortBow   = 11;
 	case Greatsword = 12;
 	case Hammer     = 13;
 	case Longbow    = 14;

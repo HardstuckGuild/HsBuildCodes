@@ -81,8 +81,8 @@ public struct WeaponSet {
 //NOTE(Rennorb): names match official API
 public enum WeaponType {
 	_UNDEFINED = default,
-	Axe = 1, Dagger, Mace, Pistol, Sword, Scepter, Focus, Shield, Torch, Warhorn, ShortBow, 
-	Greatsword, Hammer, Longbow, Rifle, Staff, HarpoonGun, Spear, Trident,
+	Axe = 1, Dagger, Mace, Pistol, Sword, Scepter, Focus, Shield, Torch, Warhorn, 
+	ShortBow, Greatsword, Hammer, Longbow, Rifle, Staff, HarpoonGun, Spear, Trident,
 	_FIRST = Axe,
 }
 

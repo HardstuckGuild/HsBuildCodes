@@ -47,9 +47,9 @@ class Static {
 			case WeaponType.Shield:
 			case WeaponType.Torch:
 			case WeaponType.Warhorn:
-			case WeaponType.ShortBow:
 				return false;
 
+			case WeaponType.ShortBow:
 			case WeaponType.Greatsword:
 			case WeaponType.Hammer:
 			case WeaponType.Longbow:
