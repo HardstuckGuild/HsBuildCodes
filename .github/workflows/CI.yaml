@@ -49,7 +49,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php_version }}
-        extensions: none, mbstring, openssl, tokenizer
+        extensions: none, mbstring, openssl, tokenizer, ctype
         tools: none, phpunit:9.5.26
         
     - name: Test
