@@ -55,17 +55,16 @@ V T P S.TS.TS.T WS..wS..WS..wS.. S..S..S..S..S.. R.. A..n,,,, I..n,,,, F..U.. A,
         This effectively constructs `0b00aabbcc` with `aa` = pos of first choice, `bb` = pos of second choice, `cc` = pos of third choice. With a max value of 63 this can be used to index `character_set` and obtain the final encoding. Omit if trait line is empty.
 
 `[WS..wS..WS..wS..]` Weapons [2 * 3-8 characters] pairs of (1 char weapon type index, 1-3 char sigil id, 0-1 char weapon type index, 1-3 char sigil id):
-  - The whole section can be omitted by replacing it with a `~` (tilde).
-  - If the first weapon is two handed, the second weapon id in the set is omitted.
+  - Repeat twice, once for each weapon set (or for each underwater weapon):
   1. - `_` (underscore): empty weapon slot
      - `A-T`: weapon type index. Axe, Dagger, Mace, Pistol, Sword, Scepter, Focus, Shield, Torch, Warhorn, ShortBow, Greatsword, Hammer, Longbow, Rifle, Staff, HarpoonGun, Spear, Trident
   2. - `_` (underscore): empty sigil slot
      - `1-3 characters`: sigil id resolved by `/v2/items`, `encode(id, 3)`
-     - Omit if there is no weapon (no one-handed weapon and the first weapon is not two handed).
-
-  - The second weapon set may be omitted from the code by replacing 
-the whole second set (`[WS..wS..]`) with a `~` (tilde). This section can be
-omitted completely by replacing the whole section with a single `~` (tilde).
+  3. repeat of (1.)
+  4. repeat of (2.)
+  - If the weapon is two handed, the id is stored in the first slot of the set, and the second weapon type index in the set is omitted.
+  - The second weapon set may be omitted from the code by replacing the whole second set (`[WS..wS..]`) with a `~` (tilde).
+  - This section can be omitted completely by replacing the whole section with a single `~` (tilde).
 
 `[S..S..S..S..S..]` Slot skills [5 * 1-3 characters] each:
   - `_` (underscore): empty skill slot
