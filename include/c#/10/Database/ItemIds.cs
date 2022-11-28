@@ -4,16 +4,25 @@
 public enum ItemId {
 	_UNDEFINED = default,
 
-	Superior_Sigil_of_Deamons2       = 91388,
-	Superior_Sigil_of_Paralysation2  = 91398,
-	Superior_Sigil_of_Concentration2 = 91473,
-	Superior_Rune_of_the_Traveler2   = 91485,
-	Superior_Rune_of_the_Scholar     = 24836,
+	Superior_Rune_of_the_Scholar = 24836,
+
+	Legendary_Rune_of_the_Traveler   = 91485,
+	Legendary_Rune_of_Divinity       = 91428,
+
+	Legendary_Sigil_of_Concentration = 91473,
+	Legendary_Sigil_of_Paralysation  = 91398,
+	Legendary_Sigil_of_Deamons       = 91388,
+	Legendary_Sigil_of_Transference  = 91448,
+	Legendary_Sigil_of_Renewal       = 91400,
+	Legendary_Sigil_of_Energy        = 91441,
 
 	Bowl_of_Sweet_and_spicy_Butternut_Squash_Soup = 41569,
 	Tin_of_Fruitcake = 77569,
 
 	Mighty_5_Agony_Infusion = 39620,
+	Plus_9_Agony_Infusion   = 49432,
+	Expertise_WvW_Infusion  = 87218,
+	WxP_Enrichment          = 87417,
 
 	Mist_Lords_Axe           = 91622,
 	Mist_Lords_Dagger        = 91636,

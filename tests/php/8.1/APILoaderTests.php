@@ -82,10 +82,10 @@ class BasicCodesTests extends TestCase {
 		$this->assertEquals(WeaponType::_UNDEFINED, $code->WeaponSet2->MainHand);
 		$this->assertEquals(WeaponType::Pistol , $code->WeaponSet2->OffHand);
 
-		$this->assertEquals(ItemId::Superior_Sigil_of_Deamons2, $code->WeaponSet1->Sigil1);
-		$this->assertEquals(ItemId::Superior_Sigil_of_Concentration2, $code->WeaponSet1->Sigil2);
+		$this->assertEquals(ItemId::Legendary_Sigil_of_Deamons, $code->WeaponSet1->Sigil1);
+		$this->assertEquals(ItemId::Legendary_Sigil_of_Concentration, $code->WeaponSet1->Sigil2);
 		$this->assertEquals(ItemId::_UNDEFINED, $code->WeaponSet2->Sigil1);
-		$this->assertEquals(ItemId::Superior_Sigil_of_Paralysation2, $code->WeaponSet2->Sigil2);
+		$this->assertEquals(ItemId::Legendary_Sigil_of_Paralysation, $code->WeaponSet2->Sigil2);
 
 		$celestialStatsKEKW = [ StatId::Celestial1, StatId::Celestial2, StatId::Celestial3, StatId::Celestial4 ];
 		for($i = 0; $i < Statics::ALL_EQUIPMENT_COUNT; $i++)
@@ -98,6 +98,6 @@ class BasicCodesTests extends TestCase {
 		$this->assertEquals(SkillId::Well_of_Sorrow , $code->SlotSkills->Utility3);
 		$this->assertEquals(SkillId::Shadowfall     , $code->SlotSkills->Elite);
 
-		$this->assertEquals(ItemId::Superior_Rune_of_the_Traveler2, $code->Rune);
+		$this->assertEquals(ItemId::Legendary_Rune_of_the_Traveler, $code->Rune);
 	}
 }

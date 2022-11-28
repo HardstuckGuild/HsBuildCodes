@@ -51,20 +51,20 @@ public class ResolveWeaponSkills {
 			Profession = Profession.Necromancer,
 			WeaponSet1 = {
 				MainHand = WeaponType.Dagger,
-				Sigil1 = ItemId.Superior_Sigil_of_Deamons2,
+				Sigil1 = ItemId.Legendary_Sigil_of_Deamons,
 			}, 
 			WeaponSet2 = {
 				OffHand = WeaponType.Dagger,
-				Sigil2 = ItemId.Superior_Sigil_of_Concentration2,
+				Sigil2 = ItemId.Legendary_Sigil_of_Concentration,
 			}
 		};
 
 		var effective = Static.ResolveEffectiveWeapons(code, WeaponSetNumber.Set1);
 
 		Assert.Equal(WeaponType.Dagger, effective.MainHand);
-		Assert.Equal(ItemId.Superior_Sigil_of_Deamons2, effective.Sigil1);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Deamons, effective.Sigil1);
 		Assert.Equal(WeaponType.Dagger, effective.OffHand);
-		Assert.Equal(ItemId.Superior_Sigil_of_Concentration2, effective.Sigil2);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Concentration, effective.Sigil2);
 
 
 		var reference = new SkillId[5] { SkillId.Necrotic_Slash, SkillId.Life_Siphon, SkillId.Dark_Pact, SkillId.Deathly_Swarm, SkillId.Enfeebling_Blood };
@@ -80,18 +80,18 @@ public class ResolveWeaponSkills {
 			Profession = Profession.Necromancer,
 			WeaponSet1 = {
 				MainHand = WeaponType.Dagger,
-				Sigil1 = ItemId.Superior_Sigil_of_Deamons2,
+				Sigil1 = ItemId.Legendary_Sigil_of_Deamons,
 			},
 			WeaponSet2 = {
 				MainHand = WeaponType.Staff,
-				Sigil2 = ItemId.Superior_Sigil_of_Concentration2,
+				Sigil2 = ItemId.Legendary_Sigil_of_Concentration,
 			}
 		};
 
 		var effective = Static.ResolveEffectiveWeapons(code, WeaponSetNumber.Set1);
 
 		Assert.Equal(WeaponType.Dagger, effective.MainHand);
-		Assert.Equal(ItemId.Superior_Sigil_of_Deamons2, effective.Sigil1);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Deamons, effective.Sigil1);
 		Assert.Equal(WeaponType._UNDEFINED, effective.OffHand);
 		Assert.Equal(ItemId._UNDEFINED, effective.Sigil2);
 

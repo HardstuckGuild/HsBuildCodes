@@ -61,10 +61,10 @@ describe('BasicCodesTests', () => {
 		expect(code.WeaponSet2.MainHand).toBe(WeaponType._UNDEFINED);
 		expect(code.WeaponSet2.OffHand).toBe(WeaponType.Pistol );
 
-		expect(code.WeaponSet1.Sigil1).toBe(ItemId.Superior_Sigil_of_Deamons2);
-		expect(code.WeaponSet1.Sigil2).toBe(ItemId.Superior_Sigil_of_Concentration2);
+		expect(code.WeaponSet1.Sigil1).toBe(ItemId.Legendary_Sigil_of_Deamons);
+		expect(code.WeaponSet1.Sigil2).toBe(ItemId.Legendary_Sigil_of_Concentration);
 		expect(code.WeaponSet2.Sigil1).toBe(ItemId._UNDEFINED);
-		expect(code.WeaponSet2.Sigil2).toBe(ItemId.Superior_Sigil_of_Paralysation2);
+		expect(code.WeaponSet2.Sigil2).toBe(ItemId.Legendary_Sigil_of_Paralysation);
 
 		const celestialStatsKEKW = [ StatId.Celestial1, StatId.Celestial2, StatId.Celestial3, StatId.Celestial4 ];
 		for(let i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++)
@@ -77,6 +77,6 @@ describe('BasicCodesTests', () => {
 		expect(code.SlotSkills.Utility3).toBe(SkillId.Well_of_Sorrow );
 		expect(code.SlotSkills.Elite).toBe(SkillId.Shadowfall     );
 
-		expect(code.Rune).toBe(ItemId.Superior_Rune_of_the_Traveler2);
+		expect(code.Rune).toBe(ItemId.Legendary_Rune_of_the_Traveler);
 	});
 });

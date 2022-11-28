@@ -73,16 +73,16 @@ class ResolveWeaponSkills extends TestCase {
 		$code = new BuildCode();
 		$code->Profession = Profession::Necromancer;
 		$code->WeaponSet1->MainHand = WeaponType::Dagger;
-		$code->WeaponSet1->Sigil1 = ItemId::Superior_Sigil_of_Deamons2;
+		$code->WeaponSet1->Sigil1 = ItemId::Legendary_Sigil_of_Deamons;
 		$code->WeaponSet2->OffHand  = WeaponType::Dagger;
-		$code->WeaponSet2->Sigil2 = ItemId::Superior_Sigil_of_Concentration2;
+		$code->WeaponSet2->Sigil2 = ItemId::Legendary_Sigil_of_Concentration;
 
 		$effective = Statics::ResolveEffectiveWeapons($code, WeaponSetNumber::Set1);
 
 		$this->assertEquals(WeaponType::Dagger, $effective->MainHand);
-		$this->assertEquals(ItemId::Superior_Sigil_of_Deamons2, $effective->Sigil1);
+		$this->assertEquals(ItemId::Legendary_Sigil_of_Deamons, $effective->Sigil1);
 		$this->assertEquals(WeaponType::Dagger, $effective->OffHand);
-		$this->assertEquals(ItemId::Superior_Sigil_of_Concentration2, $effective->Sigil2);
+		$this->assertEquals(ItemId::Legendary_Sigil_of_Concentration, $effective->Sigil2);
 
 
 		$reference = [ SkillId::Necrotic_Slash, SkillId::Life_Siphon, SkillId::Dark_Pact, SkillId::Deathly_Swarm, SkillId::Enfeebling_Blood ];
@@ -97,14 +97,14 @@ class ResolveWeaponSkills extends TestCase {
 		$code = new BuildCode();
 		$code->Profession = Profession::Necromancer;
 		$code->WeaponSet1->MainHand = WeaponType::Dagger;
-		$code->WeaponSet1->Sigil1 = ItemId::Superior_Sigil_of_Deamons2;
+		$code->WeaponSet1->Sigil1 = ItemId::Legendary_Sigil_of_Deamons;
 		$code->WeaponSet2->MainHand  = WeaponType::Staff;
-		$code->WeaponSet2->Sigil2 = ItemId::Superior_Sigil_of_Concentration2;
+		$code->WeaponSet2->Sigil2 = ItemId::Legendary_Sigil_of_Concentration;
 
 		$effective = Statics::ResolveEffectiveWeapons($code, WeaponSetNumber::Set1);
 
 		$this->assertEquals(WeaponType::Dagger, $effective->MainHand);
-		$this->assertEquals(ItemId::Superior_Sigil_of_Deamons2, $effective->Sigil1);
+		$this->assertEquals(ItemId::Legendary_Sigil_of_Deamons, $effective->Sigil1);
 		$this->assertEquals(WeaponType::_UNDEFINED, $effective->OffHand);
 		$this->assertEquals(ItemId::_UNDEFINED, $effective->Sigil2);
 

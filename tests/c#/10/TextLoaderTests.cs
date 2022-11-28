@@ -204,13 +204,13 @@ public class BasicCodesTests {
 		Assert.Equal(Profession.Necromancer, code.Profession);
 
 		Assert.Equal(WeaponType.Axe    , code.WeaponSet1.MainHand);
-		Assert.Equal(ItemId.Superior_Sigil_of_Paralysation2, code.WeaponSet1.Sigil1);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Paralysation, code.WeaponSet1.Sigil1);
 		Assert.Equal(WeaponType.Dagger , code.WeaponSet1.OffHand);
-		Assert.Equal(ItemId.Superior_Sigil_of_Paralysation2, code.WeaponSet1.Sigil2);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Paralysation, code.WeaponSet1.Sigil2);
 		Assert.Equal(WeaponType.Scepter, code.WeaponSet2.MainHand);
-		Assert.Equal(ItemId.Superior_Sigil_of_Paralysation2, code.WeaponSet2.Sigil1);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Paralysation, code.WeaponSet2.Sigil1);
 		Assert.Equal(WeaponType.Focus  , code.WeaponSet2.OffHand);
-		Assert.Equal(ItemId.Superior_Sigil_of_Paralysation2, code.WeaponSet2.Sigil2);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Paralysation, code.WeaponSet2.Sigil2);
 
 		Assert.Equal(ItemId.Superior_Rune_of_the_Scholar, code.Rune);
 		var berserkers = new []{ StatId.Berserkers1, StatId.Berserkers2, StatId.Berserkers3, StatId.Berserkers4, StatId.Berserkers5};
@@ -278,13 +278,13 @@ public class BasicCodesTests {
 		Assert.Equal(Profession.Necromancer, code.Profession);
 
 		Assert.Equal(WeaponType.Axe, code.WeaponSet1.MainHand);
-		Assert.Equal(ItemId.Superior_Sigil_of_Paralysation2, code.WeaponSet1.Sigil1);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Paralysation, code.WeaponSet1.Sigil1);
 		Assert.Equal(WeaponType.Dagger, code.WeaponSet1.OffHand);
-		Assert.Equal(ItemId.Superior_Sigil_of_Paralysation2, code.WeaponSet1.Sigil2);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Paralysation, code.WeaponSet1.Sigil2);
 		Assert.Equal(WeaponType.Scepter, code.WeaponSet2.MainHand);
-		Assert.Equal(ItemId.Superior_Sigil_of_Paralysation2, code.WeaponSet2.Sigil1);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Paralysation, code.WeaponSet2.Sigil1);
 		Assert.Equal(WeaponType.Focus, code.WeaponSet2.OffHand);
-		Assert.Equal(ItemId.Superior_Sigil_of_Paralysation2, code.WeaponSet2.Sigil2);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Paralysation, code.WeaponSet2.Sigil2);
 
 		Assert.Equal(ItemId.Superior_Rune_of_the_Scholar, code.Rune);
 		var berserkers = new []{ StatId.Berserkers1, StatId.Berserkers2, StatId.Berserkers3, StatId.Berserkers4, StatId.Berserkers5};
@@ -353,35 +353,35 @@ public class BasicCodesTests {
 			},
 			Food  = ItemId._UNDEFINED,
 			Infusions  = {
-				Helmet  = (ItemId)49432,
-				Shoulders  = (ItemId)49432,
-				Chest  = (ItemId)49432,
-				Gloves  = (ItemId)49432,
-				Leggings  = (ItemId)49432,
-				Boots  = (ItemId)49432,
+				Helmet  = ItemId.Plus_9_Agony_Infusion,
+				Shoulders  = ItemId.Plus_9_Agony_Infusion,
+				Chest  = ItemId.Plus_9_Agony_Infusion,
+				Gloves  = ItemId.Plus_9_Agony_Infusion,
+				Leggings  = ItemId.Plus_9_Agony_Infusion,
+				Boots  = ItemId.Plus_9_Agony_Infusion,
 
-				BackItem_1  = (ItemId)49432,
+				BackItem_1  = ItemId.Plus_9_Agony_Infusion,
 				BackItem_2  = ItemId._UNDEFINED,
-				Accessory1  = (ItemId)87218,
-				Accessory2  = (ItemId)87218,
+				Accessory1  = ItemId.Expertise_WvW_Infusion,
+				Accessory2  = ItemId.Expertise_WvW_Infusion,
 				
-				Ring1_1  = (ItemId)49432,
-				Ring1_2  = (ItemId)49432,
-				Ring1_3  = (ItemId)49432,
-				Ring2_1  = (ItemId)49432,
-				Ring2_2  = (ItemId)49432,
-				Ring2_3  = (ItemId)49432,
+				Ring1_1  = ItemId.Plus_9_Agony_Infusion,
+				Ring1_2  = ItemId.Plus_9_Agony_Infusion,
+				Ring1_3  = ItemId.Plus_9_Agony_Infusion,
+				Ring2_1  = ItemId.Plus_9_Agony_Infusion,
+				Ring2_2  = ItemId.Plus_9_Agony_Infusion,
+				Ring2_3  = ItemId.Plus_9_Agony_Infusion,
 				
 				WeaponSet1_1  = ItemId._UNDEFINED,
 				WeaponSet1_2  = ItemId._UNDEFINED,
 				WeaponSet2_1  = ItemId._UNDEFINED,
 				WeaponSet2_2  = ItemId._UNDEFINED,
 
-				Amulet  = (ItemId)87417,
+				Amulet  = ItemId.WxP_Enrichment,
 			},
 			Kind  = Kind.PvE,
 			Profession  = Profession.Warrior,
-			Rune  = (ItemId)91428,
+			Rune  = ItemId.Legendary_Rune_of_Divinity,
 			SlotSkills  = {
 				Elite  = SkillId.Winds_of_Disenchantment,
 				Heal  = SkillId.To_the_Limit,
@@ -420,14 +420,14 @@ public class BasicCodesTests {
 			WeaponSet1  = {
 				MainHand  = WeaponType.Hammer,
 				OffHand  = WeaponType._UNDEFINED,
-				Sigil1  = (ItemId)91448,
-				Sigil2  = (ItemId)91400,
+				Sigil1  = ItemId.Legendary_Sigil_of_Transference,
+				Sigil2  = ItemId.Legendary_Sigil_of_Renewal,
 			},
 			WeaponSet2  = {
 			MainHand  = WeaponType.Sword,
 			OffHand  = WeaponType.Warhorn,
-			Sigil1  = (ItemId)91448,
-			Sigil2  = (ItemId)91441,
+			Sigil1  = ItemId.Legendary_Sigil_of_Transference,
+			Sigil2  = ItemId.Legendary_Sigil_of_Energy,
 			}
 		};
 

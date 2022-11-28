@@ -78,10 +78,10 @@ public class BasicCodesTests {
 		Assert.Equal(WeaponType._UNDEFINED, code.WeaponSet2.MainHand);
 		Assert.Equal(WeaponType.Pistol , code.WeaponSet2.OffHand);
 
-		Assert.Equal(ItemId.Superior_Sigil_of_Deamons2, code.WeaponSet1.Sigil1);
-		Assert.Equal(ItemId.Superior_Sigil_of_Concentration2, code.WeaponSet1.Sigil2);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Deamons, code.WeaponSet1.Sigil1);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Concentration, code.WeaponSet1.Sigil2);
 		Assert.Equal(ItemId._UNDEFINED, code.WeaponSet2.Sigil1);
-		Assert.Equal(ItemId.Superior_Sigil_of_Paralysation2, code.WeaponSet2.Sigil2);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Paralysation, code.WeaponSet2.Sigil2);
 
 		var celestialStatsKEKW = new StatId[]{ StatId.Celestial1, StatId.Celestial2, StatId.Celestial3, StatId.Celestial4 };
 		for(var i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++)
@@ -94,7 +94,7 @@ public class BasicCodesTests {
 		Assert.Equal(SkillId.Well_of_Sorrow , code.SlotSkills.Utility3);
 		Assert.Equal(SkillId.Shadowfall     , code.SlotSkills.Elite);
 
-		Assert.Equal(ItemId.Superior_Rune_of_the_Traveler2, code.Rune);
+		Assert.Equal(ItemId.Legendary_Rune_of_the_Traveler, code.Rune);
 	}
 
 	[PlatformFact(PlatformID.Win32NT)]

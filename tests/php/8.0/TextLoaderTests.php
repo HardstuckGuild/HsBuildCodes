@@ -229,13 +229,13 @@ class BasicCodesTests extends TestCase {
 		$this->assertEquals(Profession::Necromancer, $code->Profession);
 
 		$this->assertEquals(WeaponType::Axe    , $code->WeaponSet1->MainHand);
-		$this->assertEquals(ItemId::Superior_Sigil_of_Paralysation2, $code->WeaponSet1->Sigil1);
+		$this->assertEquals(ItemId::Legendary_Sigil_of_Paralysation, $code->WeaponSet1->Sigil1);
 		$this->assertEquals(WeaponType::Dagger , $code->WeaponSet1->OffHand);
-		$this->assertEquals(ItemId::Superior_Sigil_of_Paralysation2, $code->WeaponSet1->Sigil2);
+		$this->assertEquals(ItemId::Legendary_Sigil_of_Paralysation, $code->WeaponSet1->Sigil2);
 		$this->assertEquals(WeaponType::Scepter, $code->WeaponSet2->MainHand);
-		$this->assertEquals(ItemId::Superior_Sigil_of_Paralysation2, $code->WeaponSet2->Sigil1);
+		$this->assertEquals(ItemId::Legendary_Sigil_of_Paralysation, $code->WeaponSet2->Sigil1);
 		$this->assertEquals(WeaponType::Focus  , $code->WeaponSet2->OffHand);
-		$this->assertEquals(ItemId::Superior_Sigil_of_Paralysation2, $code->WeaponSet2->Sigil2);
+		$this->assertEquals(ItemId::Legendary_Sigil_of_Paralysation, $code->WeaponSet2->Sigil2);
 
 		$this->assertEquals(ItemId::Superior_Rune_of_the_Scholar, $code->Rune);
 		$berserkers = [StatId::Berserkers1, StatId::Berserkers2, StatId::Berserkers3, StatId::Berserkers4, StatId::Berserkers5];
@@ -309,13 +309,13 @@ class BasicCodesTests extends TestCase {
 		$this->assertEquals(Profession::Necromancer, $code->Profession);
 
 		$this->assertEquals(WeaponType::Axe    , $code->WeaponSet1->MainHand);
-		$this->assertEquals(ItemId::Superior_Sigil_of_Paralysation2, $code->WeaponSet1->Sigil1);
+		$this->assertEquals(ItemId::Legendary_Sigil_of_Paralysation, $code->WeaponSet1->Sigil1);
 		$this->assertEquals(WeaponType::Dagger , $code->WeaponSet1->OffHand);
-		$this->assertEquals(ItemId::Superior_Sigil_of_Paralysation2, $code->WeaponSet1->Sigil2);
+		$this->assertEquals(ItemId::Legendary_Sigil_of_Paralysation, $code->WeaponSet1->Sigil2);
 		$this->assertEquals(WeaponType::Scepter, $code->WeaponSet2->MainHand);
-		$this->assertEquals(ItemId::Superior_Sigil_of_Paralysation2, $code->WeaponSet2->Sigil1);
+		$this->assertEquals(ItemId::Legendary_Sigil_of_Paralysation, $code->WeaponSet2->Sigil1);
 		$this->assertEquals(WeaponType::Focus  , $code->WeaponSet2->OffHand);
-		$this->assertEquals(ItemId::Superior_Sigil_of_Paralysation2, $code->WeaponSet2->Sigil2);
+		$this->assertEquals(ItemId::Legendary_Sigil_of_Paralysation, $code->WeaponSet2->Sigil2);
 
 		$this->assertEquals(ItemId::Superior_Rune_of_the_Scholar, $code->Rune);
 		$berserkers = [StatId::Berserkers1, StatId::Berserkers2, StatId::Berserkers3, StatId::Berserkers4, StatId::Berserkers5];
@@ -379,30 +379,30 @@ class BasicCodesTests extends TestCase {
 		$code->EquipmentAttributes->WeaponSet2MainHand  = StatId::Celestial1;
 		$code->EquipmentAttributes->WeaponSet2OffHand  = StatId::Celestial1;
 		$code->Food = ItemId::_UNDEFINED;
-		$code->Infusions->Helmet  = 49432;
-		$code->Infusions->Shoulders  = 49432;
-		$code->Infusions->Chest  = 49432;
-		$code->Infusions->Gloves  = 49432;
-		$code->Infusions->Leggings  = 49432;
-		$code->Infusions->Boots  = 49432;
-		$code->Infusions->BackItem_1  = 49432;
+		$code->Infusions->Helmet  = ItemId::Plus_9_Agony_Infusion;
+		$code->Infusions->Shoulders  = ItemId::Plus_9_Agony_Infusion;
+		$code->Infusions->Chest  = ItemId::Plus_9_Agony_Infusion;
+		$code->Infusions->Gloves  = ItemId::Plus_9_Agony_Infusion;
+		$code->Infusions->Leggings  = ItemId::Plus_9_Agony_Infusion;
+		$code->Infusions->Boots  = ItemId::Plus_9_Agony_Infusion;
+		$code->Infusions->BackItem_1  = ItemId::Plus_9_Agony_Infusion;
 		$code->Infusions->BackItem_2  = ItemId::_UNDEFINED;
-		$code->Infusions->Accessory1  = 87218;
-		$code->Infusions->Accessory2  = 87218;
-		$code->Infusions->Ring1_1  = 49432;
-		$code->Infusions->Ring1_2  = 49432;
-		$code->Infusions->Ring1_3  = 49432;
-		$code->Infusions->Ring2_1  = 49432;
-		$code->Infusions->Ring2_2  = 49432;
-		$code->Infusions->Ring2_3  = 49432;
+		$code->Infusions->Accessory1  = ItemId::Expertise_WvW_Infusion;
+		$code->Infusions->Accessory2  = ItemId::Expertise_WvW_Infusion;
+		$code->Infusions->Ring1_1  = ItemId::Plus_9_Agony_Infusion;
+		$code->Infusions->Ring1_2  = ItemId::Plus_9_Agony_Infusion;
+		$code->Infusions->Ring1_3  = ItemId::Plus_9_Agony_Infusion;
+		$code->Infusions->Ring2_1  = ItemId::Plus_9_Agony_Infusion;
+		$code->Infusions->Ring2_2  = ItemId::Plus_9_Agony_Infusion;
+		$code->Infusions->Ring2_3  = ItemId::Plus_9_Agony_Infusion;
 		$code->Infusions->WeaponSet1_1  = ItemId::_UNDEFINED;
 		$code->Infusions->WeaponSet1_2  = ItemId::_UNDEFINED;
 		$code->Infusions->WeaponSet2_1  = ItemId::_UNDEFINED;
 		$code->Infusions->WeaponSet2_2  = ItemId::_UNDEFINED;
-		$code->Infusions->Amulet  = 87417;
+		$code->Infusions->Amulet  = ItemId::WxP_Enrichment;
 		$code->Kind  = Kind::PvE;
 		$code->Profession  = Profession::Warrior;
-		$code->Rune  = 91428;
+		$code->Rune  = ItemId::Legendary_Rune_of_Divinity;
 		$code->SlotSkills->Elite  = SkillId::Winds_of_Disenchantment;
 		$code->SlotSkills->Heal  = SkillId::To_the_Limit;
 		$code->SlotSkills->Utility1  = SkillId::Banner_of_Tactics1;
@@ -424,12 +424,12 @@ class BasicCodesTests extends TestCase {
 		$code->Version  = 3;
 		$code->WeaponSet1->MainHand  = WeaponType::Hammer;
 		$code->WeaponSet1->OffHand  = WeaponType::_UNDEFINED;
-		$code->WeaponSet1->Sigil1  = 91448;
-		$code->WeaponSet1->Sigil2  = 91400;
+		$code->WeaponSet1->Sigil1  = ItemId::Legendary_Sigil_of_Transference;
+		$code->WeaponSet1->Sigil2  = ItemId::Legendary_Sigil_of_Renewal;
 		$code->WeaponSet2->MainHand  = WeaponType::Sword;
 		$code->WeaponSet2->OffHand  = WeaponType::Warhorn;
-		$code->WeaponSet2->Sigil1  = 91448;
-		$code->WeaponSet2->Sigil2  = 91441;
+		$code->WeaponSet2->Sigil1  = ItemId::Legendary_Sigil_of_Transference;
+		$code->WeaponSet2->Sigil2  = ItemId::Legendary_Sigil_of_Energy;
 
 
 		$text = TextLoader::WriteBuildCode($code);
