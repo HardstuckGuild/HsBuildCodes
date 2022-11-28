@@ -385,7 +385,7 @@ class TextLoader {
 	private static EncodeInfusions(weaponRef : BuildCode) : string
 	{
 		let destination = '';
-		let lastInfusion = ItemId._UNDEFINED;
+		let lastInfusion : ItemId|null = null;
 		let repeatCount = 0;
 		for(let i = 0; i < Static.ALL_INFUSION_COUNT; i++)
 		{
@@ -408,7 +408,7 @@ class TextLoader {
 
 			if(weaponRef.Infusions[i] !== lastInfusion)
 			{
-				if(lastInfusion !== ItemId._UNDEFINED)
+				if(lastInfusion !== null)
 				{
 					destination += TextLoader.Encode(lastInfusion, 3);
 					destination += TextLoader.CHARSET[repeatCount];
@@ -423,7 +423,8 @@ class TextLoader {
 			}
 		}
 
-		destination += TextLoader.Encode(lastInfusion, 2);
+		if(lastInfusion === null) destination += '_';
+		else destination += TextLoader.Encode(lastInfusion, 2);
 		if(repeatCount > 1)
 			destination += TextLoader.CHARSET[repeatCount];
 

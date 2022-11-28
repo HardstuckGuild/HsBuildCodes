@@ -9,7 +9,7 @@ import StatId from "../../../include/ts/es6/Database/StatIds";
 import { Arbitrary, BuildCode, Kind, Legend, PetId, Profession, ProfessionSpecific, RangerData, RevenantData, Specialization, TraitLineChoice, WeaponType } from "../../../include/ts/es6/Structures";
 import TextLoader from "../../../include/ts/es6/TextLoader";
 import StringView from "../../../include/ts/es6/Util/StringView";
-import { TraitLineChoices } from "../../../include/ts/es6/Util/UtilStructs";
+import { SpecializationChoices, TraitLineChoices } from "../../../include/ts/es6/Util/UtilStructs";
 import TestUtilities from "./TestUtilities";
 
 describe('FunctionTests', () => {
@@ -234,12 +234,12 @@ describe('BasicCodesTests', () => {
 
 	const allCodes = Object.entries(TestUtilities.CodesV2).filter(([name, _]) => !name.includes('binary'));
 
-	test.each(allCodes)('ParseAll', (name : string, code : string) => {
+	test.each(allCodes)('ParseAll', (name: string, code: string) => {
 		const code_ = TextLoader.LoadBuildCode(code);
 		expect(true).toBeTruthy();
 	});
 
-	test.each(allCodes)('ReencodeAll', (name : string, code : string) => {
+	test.each(allCodes)('ReencodeAll', (name: string, code: string) => {
 		const code_ = TextLoader.LoadBuildCode(code);
 		const reencoded = TextLoader.WriteBuildCode(code_);
 		expect(reencoded).toEqual(code);
@@ -297,6 +297,85 @@ describe('BasicCodesTests', () => {
 
 		expect(code.Food).toBe(ItemId.Bowl_of_Sweet_and_spicy_Butternut_Squash_Soup);
 		expect(code.Utility).toBe(ItemId.Tin_of_Fruitcake);
+	});
+
+	/* regression: mixed infusions w+w/ empty slots in the middle */
+	test('Plenyx1', () => {
+		const code = new BuildCode();
+		code.EquipmentAttributes.Accessory1  = StatId.Celestial2;
+		code.EquipmentAttributes.Accessory2  = StatId.Celestial2;
+		code.EquipmentAttributes.Amulet      = StatId.Celestial2;
+		code.EquipmentAttributes.BackItem   = StatId.Celestial2;
+		code.EquipmentAttributes.Boots  = StatId.Celestial1;
+		code.EquipmentAttributes.Chest  = StatId.Celestial1;
+		code.EquipmentAttributes.Gloves  = StatId.Celestial1;
+		code.EquipmentAttributes.Helmet  = StatId.Celestial1;
+		code.EquipmentAttributes.Leggings  = StatId.Celestial1;
+		code.EquipmentAttributes.Ring1  = StatId.Celestial2;
+		code.EquipmentAttributes.Ring2  = StatId.Celestial2;
+		code.EquipmentAttributes.Shoulders  = StatId.Celestial1;
+		code.EquipmentAttributes.WeaponSet1MainHand  = StatId.Celestial1;
+		code.EquipmentAttributes.WeaponSet1OffHand  = StatId._UNDEFINED;
+		code.EquipmentAttributes.WeaponSet2MainHand  = StatId.Celestial1;
+		code.EquipmentAttributes.WeaponSet2OffHand  = StatId.Celestial1;
+		code.Food = ItemId._UNDEFINED;
+		code.Infusions.Helmet  = 49432;
+		code.Infusions.Shoulders  = 49432;
+		code.Infusions.Chest  = 49432;
+		code.Infusions.Gloves  = 49432;
+		code.Infusions.Leggings  = 49432;
+		code.Infusions.Boots  = 49432;
+		code.Infusions.BackItem_1  = 49432;
+		code.Infusions.BackItem_2  = ItemId._UNDEFINED;
+		code.Infusions.Accessory1  = 87218;
+		code.Infusions.Accessory2  = 87218;
+		code.Infusions.Ring1_1  = 49432;
+		code.Infusions.Ring1_2  = 49432;
+		code.Infusions.Ring1_3  = 49432;
+		code.Infusions.Ring2_1  = 49432;
+		code.Infusions.Ring2_2  = 49432;
+		code.Infusions.Ring2_3  = 49432;
+		code.Infusions.WeaponSet1_1  = ItemId._UNDEFINED;
+		code.Infusions.WeaponSet1_2  = ItemId._UNDEFINED;
+		code.Infusions.WeaponSet2_1  = ItemId._UNDEFINED;
+		code.Infusions.WeaponSet2_2  = ItemId._UNDEFINED;
+		code.Infusions.Amulet  = 87417;
+		code.Kind  = Kind.PvE;
+		code.Profession  = Profession.Warrior;
+		code.Rune  = 91428;
+		code.SlotSkills.Elite  = SkillId.Winds_of_Disenchantment;
+		code.SlotSkills.Heal  = SkillId.To_the_Limit;
+		code.SlotSkills.Utility1  = SkillId.Banner_of_Tactics1;
+		code.SlotSkills.Utility2  = SkillId.Balanced_Stance;
+		code.SlotSkills.Utility3  = SkillId.Shake_It_Off;
+		code.Specializations.Choice1.Choices.Adept  = TraitLineChoice.BOTTOM;
+		code.Specializations.Choice1.Choices.Grandmaster  = TraitLineChoice.MIDDLE;
+		code.Specializations.Choice1.Choices.Master  = TraitLineChoice.MIDDLE;
+		code.Specializations.Choice1.SpecializationId  = SpecializationId.Tactics;
+		code.Specializations.Choice2.Choices.Adept  = TraitLineChoice.MIDDLE;
+		code.Specializations.Choice2.Choices.Grandmaster  = TraitLineChoice.BOTTOM;
+		code.Specializations.Choice2.Choices.Master  = TraitLineChoice.TOP;
+		code.Specializations.Choice2.SpecializationId  = SpecializationId.Discipline;
+		code.Specializations.Choice3.Choices.Adept  = TraitLineChoice.BOTTOM;
+		code.Specializations.Choice3.Choices.Grandmaster  = TraitLineChoice.TOP;
+		code.Specializations.Choice3.Choices.Master  = TraitLineChoice.TOP;
+		code.Specializations.Choice3.SpecializationId  = SpecializationId.Spellbreaker;
+		code.Utility  = ItemId._UNDEFINED;
+		code.Version  = 3;
+		code.WeaponSet1.MainHand  = WeaponType.Hammer;
+		code.WeaponSet1.OffHand  = WeaponType._UNDEFINED;
+		code.WeaponSet1.Sigil1  = 91448;
+		code.WeaponSet1.Sigil2  = 91400;
+		code.WeaponSet2.MainHand  = WeaponType.Sword;
+		code.WeaponSet2.OffHand  = WeaponType.Warhorn;
+		code.WeaponSet2.Sigil1  = 91448;
+		code.WeaponSet2.Sigil2  = 91441;
+
+
+		var text = TextLoader.WriteBuildCode(code);
+		var reencode = TextLoader.LoadBuildCode(text);
+
+		expect(reencode).toStrictEqual(code);
 	});
 });
 

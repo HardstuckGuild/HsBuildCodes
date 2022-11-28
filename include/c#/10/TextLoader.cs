@@ -396,7 +396,7 @@ public static class TextLoader {
 
 	private static void EncodeInfusionsAndAdvance(ref Span<char> destination, BuildCode weaponRef)
 	{
-		var lastInfusion = ItemId._UNDEFINED;
+		ItemId? lastInfusion = null;
 		var repeatCount = 0;
 		for(int i = 0; i < ALL_INFUSION_COUNT; i++)
 		{
@@ -419,7 +419,7 @@ public static class TextLoader {
 
 			if(weaponRef.Infusions[i] != lastInfusion)
 			{
-				if(lastInfusion != ItemId._UNDEFINED)
+				if(lastInfusion.HasValue)
 				{
 					EncodeAndAdvance(ref destination, (int)lastInfusion, 3);
 					WriteAndAdvance(ref destination, CHARSET[repeatCount]);
@@ -434,7 +434,8 @@ public static class TextLoader {
 			}
 		}
 
-		EncodeAndAdvance(ref destination, (int)lastInfusion, 2);
+		if(!lastInfusion.HasValue) WriteAndAdvance(ref destination, '_');
+		else EncodeAndAdvance(ref destination, (int)lastInfusion, 2);
 		if(repeatCount > 1)
 			WriteAndAdvance(ref destination, CHARSET[repeatCount]);
 	}

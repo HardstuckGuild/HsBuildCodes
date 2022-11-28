@@ -375,7 +375,8 @@ class TextLoader {
 
 	private static function EncodeInfusionsAndAdvance(string &$destination, BuildCode $weaponRef) : void
 	{
-		$lastInfusion = ItemId::_UNDEFINED;
+		/** @var null|int $lastInfusion */
+		$lastInfusion = null;
 		$repeatCount = 0;
 		for($i = 0; $i < Statics::ALL_INFUSION_COUNT; $i++)
 		{
@@ -398,7 +399,7 @@ class TextLoader {
 
 			if($weaponRef->Infusions[$i] !== $lastInfusion)
 			{
-				if($lastInfusion !== ItemId::_UNDEFINED)
+				if($lastInfusion !== null)
 				{
 					TextLoader::EncodeAndAdvance($destination, $lastInfusion, 3);
 					$destination .= TextLoader::CHARSET[$repeatCount];
@@ -413,7 +414,8 @@ class TextLoader {
 			}
 		}
 
-		TextLoader::EncodeAndAdvance($destination, $lastInfusion, 2);
+		if($lastInfusion === null) $destination .= '_';
+		else TextLoader::EncodeAndAdvance($destination, $lastInfusion, 2);
 		if($repeatCount > 1)
 			$destination .= TextLoader::CHARSET[$repeatCount];
 	}

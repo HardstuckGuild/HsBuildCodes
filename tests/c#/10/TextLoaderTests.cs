@@ -1,4 +1,7 @@
 using Hardstuck.GuildWars2.BuildCodes.V2.Util;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Xunit;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2.Tests.Text;
@@ -324,6 +327,119 @@ public class BasicCodesTests {
 
 		Assert.Equal(ItemId.Bowl_of_Sweet_and_spicy_Butternut_Squash_Soup, code.Food);
 		Assert.Equal(ItemId.Tin_of_Fruitcake, code.Utility);
+	}
+
+	[Fact] /* regression: mixed infusions w+w/ empty slots in the middle */
+	public void Plenyx1()
+	{
+		var code = new BuildCode() {
+			EquipmentAttributes	  = {
+				Accessory1  = StatId.Celestial2,
+				Accessory2  = StatId.Celestial2,
+				Amulet      = StatId.Celestial2,
+				BackItem   = StatId.Celestial2,
+				Boots  = StatId.Celestial1,
+				Chest  = StatId.Celestial1,
+				Gloves  = StatId.Celestial1,
+				Helmet  = StatId.Celestial1,
+				Leggings  = StatId.Celestial1,
+				Ring1  = StatId.Celestial2,
+				Ring2  = StatId.Celestial2,
+				Shoulders  = StatId.Celestial1,
+				WeaponSet1MainHand  = StatId.Celestial1,
+				WeaponSet1OffHand  = StatId._UNDEFINED,
+				WeaponSet2MainHand  = StatId.Celestial1,
+				WeaponSet2OffHand  = StatId.Celestial1,
+			},
+			Food  = ItemId._UNDEFINED,
+			Infusions  = {
+				Helmet  = (ItemId)49432,
+				Shoulders  = (ItemId)49432,
+				Chest  = (ItemId)49432,
+				Gloves  = (ItemId)49432,
+				Leggings  = (ItemId)49432,
+				Boots  = (ItemId)49432,
+
+				BackItem_1  = (ItemId)49432,
+				BackItem_2  = ItemId._UNDEFINED,
+				Accessory1  = (ItemId)87218,
+				Accessory2  = (ItemId)87218,
+				
+				Ring1_1  = (ItemId)49432,
+				Ring1_2  = (ItemId)49432,
+				Ring1_3  = (ItemId)49432,
+				Ring2_1  = (ItemId)49432,
+				Ring2_2  = (ItemId)49432,
+				Ring2_3  = (ItemId)49432,
+				
+				WeaponSet1_1  = ItemId._UNDEFINED,
+				WeaponSet1_2  = ItemId._UNDEFINED,
+				WeaponSet2_1  = ItemId._UNDEFINED,
+				WeaponSet2_2  = ItemId._UNDEFINED,
+
+				Amulet  = (ItemId)87417,
+			},
+			Kind  = Kind.PvE,
+			Profession  = Profession.Warrior,
+			Rune  = (ItemId)91428,
+			SlotSkills  = {
+				Elite  = SkillId.Winds_of_Disenchantment,
+				Heal  = SkillId.To_the_Limit,
+				Utility1  = SkillId.Banner_of_Tactics1,
+				Utility2  = SkillId.Balanced_Stance,
+				Utility3  = SkillId.Shake_It_Off,
+			},
+			Specializations  = {
+				Choice1  = {
+					Choices  = {
+						Adept  = TraitLineChoice.BOTTOM,
+						Grandmaster  = TraitLineChoice.MIDDLE,
+						Master  = TraitLineChoice.MIDDLE,
+					},
+					SpecializationId  = SpecializationId.Tactics,
+				},
+				Choice2  = {
+					Choices  = {
+						Adept  = TraitLineChoice.MIDDLE,
+						Grandmaster  = TraitLineChoice.BOTTOM,
+						Master  = TraitLineChoice.TOP,
+					},
+					SpecializationId  = SpecializationId.Discipline,
+				},
+				Choice3  = {
+					Choices  = {
+						Adept  = TraitLineChoice.BOTTOM,
+						Grandmaster  = TraitLineChoice.TOP,
+						Master  = TraitLineChoice.TOP,
+					},
+					SpecializationId  = SpecializationId.Spellbreaker,
+				},
+			},
+			Utility  = ItemId._UNDEFINED,
+			Version  = 3,
+			WeaponSet1  = {
+				MainHand  = WeaponType.Hammer,
+				OffHand  = WeaponType._UNDEFINED,
+				Sigil1  = (ItemId)91448,
+				Sigil2  = (ItemId)91400,
+			},
+			WeaponSet2  = {
+			MainHand  = WeaponType.Sword,
+			OffHand  = WeaponType.Warhorn,
+			Sigil1  = (ItemId)91448,
+			Sigil2  = (ItemId)91441,
+			}
+		};
+
+
+		var text = TextLoader.WriteBuildCode(code);
+		var reencode = TextLoader.LoadBuildCode(text);
+
+		var options = new JsonSerializerOptions(){
+			IncludeFields = true,
+			WriteIndented = true,
+		};
+		Assert.Equal(JsonSerializer.Serialize(code, options), JsonSerializer.Serialize(reencode, options));
 	}
 }
 
