@@ -245,7 +245,7 @@ public static class APILoader {
 		{
 			var pvpEquip = activeEquipment.EquipmentPvp!;
 
-			code.EquipmentAttributes.Helmet = (StatId)pvpEquip.Amulet;
+			code.EquipmentAttributes.Helmet = (StatId)pvpEquip.Amulet.GetValueOrDefault();
 			code.Rune = (ItemId?)pvpEquip.Rune ?? ItemId._UNDEFINED;
 			code.WeaponSet1.Sigil1 = (ItemId?)pvpEquip.Sigils[0] ?? ItemId._UNDEFINED;
 			code.WeaponSet1.Sigil2 = (ItemId?)pvpEquip.Sigils[1] ?? ItemId._UNDEFINED;
