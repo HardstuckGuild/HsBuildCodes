@@ -51,7 +51,7 @@ public class ResolveWeaponSkills {
 			Profession = Profession.Necromancer,
 			WeaponSet1 = {
 				MainHand = WeaponType.Dagger,
-				Sigil1 = ItemId.Legendary_Sigil_of_Deamons,
+				Sigil1 = ItemId.Legendary_Sigil_of_Demons,
 			}, 
 			WeaponSet2 = {
 				OffHand = WeaponType.Dagger,
@@ -62,7 +62,7 @@ public class ResolveWeaponSkills {
 		var effective = Static.ResolveEffectiveWeapons(code, WeaponSetNumber.Set1);
 
 		Assert.Equal(WeaponType.Dagger, effective.MainHand);
-		Assert.Equal(ItemId.Legendary_Sigil_of_Deamons, effective.Sigil1);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Demons, effective.Sigil1);
 		Assert.Equal(WeaponType.Dagger, effective.OffHand);
 		Assert.Equal(ItemId.Legendary_Sigil_of_Concentration, effective.Sigil2);
 
@@ -80,7 +80,7 @@ public class ResolveWeaponSkills {
 			Profession = Profession.Necromancer,
 			WeaponSet1 = {
 				MainHand = WeaponType.Dagger,
-				Sigil1 = ItemId.Legendary_Sigil_of_Deamons,
+				Sigil1 = ItemId.Legendary_Sigil_of_Demons,
 			},
 			WeaponSet2 = {
 				MainHand = WeaponType.Staff,
@@ -91,7 +91,7 @@ public class ResolveWeaponSkills {
 		var effective = Static.ResolveEffectiveWeapons(code, WeaponSetNumber.Set1);
 
 		Assert.Equal(WeaponType.Dagger, effective.MainHand);
-		Assert.Equal(ItemId.Legendary_Sigil_of_Deamons, effective.Sigil1);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Demons, effective.Sigil1);
 		Assert.Equal(WeaponType._UNDEFINED, effective.OffHand);
 		Assert.Equal(ItemId._UNDEFINED, effective.Sigil2);
 

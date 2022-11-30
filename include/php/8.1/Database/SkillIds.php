@@ -632,6 +632,10 @@ class SkillId {
 	public const Soothing_Stone2 = 56661;
 	public const Pitfall = 56880;
 	public const Thousand_Needles = 56898;
+	public const Rectifier_Signet = 63049;
+	public const Overclock_Signet = 63095;
+	public const Force_Signet = 63253;
+	public const Shift_Signet = 63111;
 	public const Well_of_Gloom = 63292;
 	public const Well_of_Silence = 63230;
 	public const Shadowfall = 63275;

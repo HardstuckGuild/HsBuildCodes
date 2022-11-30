@@ -78,10 +78,10 @@ public class BasicCodesTests {
 		Assert.Equal(WeaponType._UNDEFINED, code.WeaponSet2.MainHand);
 		Assert.Equal(WeaponType.Pistol , code.WeaponSet2.OffHand);
 
-		Assert.Equal(ItemId.Legendary_Sigil_of_Deamons, code.WeaponSet1.Sigil1);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Demons, code.WeaponSet1.Sigil1);
 		Assert.Equal(ItemId.Legendary_Sigil_of_Concentration, code.WeaponSet1.Sigil2);
 		Assert.Equal(ItemId._UNDEFINED, code.WeaponSet2.Sigil1);
-		Assert.Equal(ItemId.Legendary_Sigil_of_Paralysation, code.WeaponSet2.Sigil2);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Paralyzation, code.WeaponSet2.Sigil2);
 
 		var celestialStatsKEKW = new StatId[]{ StatId.Celestial1, StatId.Celestial2, StatId.Celestial3, StatId.Celestial4 };
 		for(var i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++)

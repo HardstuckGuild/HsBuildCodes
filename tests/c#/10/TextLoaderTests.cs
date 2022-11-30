@@ -204,13 +204,13 @@ public class BasicCodesTests {
 		Assert.Equal(Profession.Necromancer, code.Profession);
 
 		Assert.Equal(WeaponType.Axe    , code.WeaponSet1.MainHand);
-		Assert.Equal(ItemId.Legendary_Sigil_of_Paralysation, code.WeaponSet1.Sigil1);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Paralyzation, code.WeaponSet1.Sigil1);
 		Assert.Equal(WeaponType.Dagger , code.WeaponSet1.OffHand);
-		Assert.Equal(ItemId.Legendary_Sigil_of_Paralysation, code.WeaponSet1.Sigil2);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Paralyzation, code.WeaponSet1.Sigil2);
 		Assert.Equal(WeaponType.Scepter, code.WeaponSet2.MainHand);
-		Assert.Equal(ItemId.Legendary_Sigil_of_Paralysation, code.WeaponSet2.Sigil1);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Paralyzation, code.WeaponSet2.Sigil1);
 		Assert.Equal(WeaponType.Focus  , code.WeaponSet2.OffHand);
-		Assert.Equal(ItemId.Legendary_Sigil_of_Paralysation, code.WeaponSet2.Sigil2);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Paralyzation, code.WeaponSet2.Sigil2);
 
 		Assert.Equal(ItemId.Superior_Rune_of_the_Scholar, code.Rune);
 		var berserkers = new []{ StatId.Berserkers1, StatId.Berserkers2, StatId.Berserkers3, StatId.Berserkers4, StatId.Berserkers5};
@@ -278,13 +278,13 @@ public class BasicCodesTests {
 		Assert.Equal(Profession.Necromancer, code.Profession);
 
 		Assert.Equal(WeaponType.Axe, code.WeaponSet1.MainHand);
-		Assert.Equal(ItemId.Legendary_Sigil_of_Paralysation, code.WeaponSet1.Sigil1);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Paralyzation, code.WeaponSet1.Sigil1);
 		Assert.Equal(WeaponType.Dagger, code.WeaponSet1.OffHand);
-		Assert.Equal(ItemId.Legendary_Sigil_of_Paralysation, code.WeaponSet1.Sigil2);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Paralyzation, code.WeaponSet1.Sigil2);
 		Assert.Equal(WeaponType.Scepter, code.WeaponSet2.MainHand);
-		Assert.Equal(ItemId.Legendary_Sigil_of_Paralysation, code.WeaponSet2.Sigil1);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Paralyzation, code.WeaponSet2.Sigil1);
 		Assert.Equal(WeaponType.Focus, code.WeaponSet2.OffHand);
-		Assert.Equal(ItemId.Legendary_Sigil_of_Paralysation, code.WeaponSet2.Sigil2);
+		Assert.Equal(ItemId.Legendary_Sigil_of_Paralyzation, code.WeaponSet2.Sigil2);
 
 		Assert.Equal(ItemId.Superior_Rune_of_the_Scholar, code.Rune);
 		var berserkers = new []{ StatId.Berserkers1, StatId.Berserkers2, StatId.Berserkers3, StatId.Berserkers4, StatId.Berserkers5};
@@ -435,10 +435,85 @@ public class BasicCodesTests {
 		var text = TextLoader.WriteBuildCode(code);
 		var reencode = TextLoader.LoadBuildCode(text);
 
-		var options = new JsonSerializerOptions(){
-			IncludeFields = true,
-			WriteIndented = true,
-		};
+		var options = new JsonSerializerOptions() { IncludeFields = true, };
+		Assert.Equal(JsonSerializer.Serialize(code, options), JsonSerializer.Serialize(reencode, options));
+	}
+
+	[Fact] /* regression: specific infusion orders break encoding */
+	public void Plenyx2()
+	{
+		var code = new BuildCode();
+		code.EquipmentAttributes.Helmet             = StatId.Berserkers1;
+		code.EquipmentAttributes.Shoulders          = StatId.Berserkers1;
+		code.EquipmentAttributes.Chest              = StatId.Berserkers1;
+		code.EquipmentAttributes.Gloves             = StatId.Berserkers1;
+		code.EquipmentAttributes.Leggings           = StatId.Berserkers1;
+		code.EquipmentAttributes.Boots              = StatId.Berserkers1;
+		code.EquipmentAttributes.BackItem           = StatId.Berserkers2;
+		code.EquipmentAttributes.Accessory1         = StatId.Berserkers2;
+		code.EquipmentAttributes.Accessory2         = StatId.Berserkers2;
+		code.EquipmentAttributes.Ring1              = StatId.Berserkers2;
+		code.EquipmentAttributes.Ring2              = StatId.Berserkers2;
+		code.EquipmentAttributes.WeaponSet1MainHand = StatId.Berserkers1;
+		code.EquipmentAttributes.WeaponSet1OffHand  = StatId._UNDEFINED;
+		code.EquipmentAttributes.WeaponSet2MainHand = StatId._UNDEFINED;
+		code.EquipmentAttributes.WeaponSet2OffHand  = StatId._UNDEFINED;
+		code.EquipmentAttributes.Amulet             = StatId.Berserkers2;
+		code.Infusions.Helmet       = ItemId.Mighty_7_Agony_Infusion;
+		code.Infusions.Shoulders    = ItemId.Precise_7_Agony_Infusion;
+		code.Infusions.Chest        = ItemId.Precise_7_Agony_Infusion;
+		code.Infusions.Gloves       = ItemId.Precise_7_Agony_Infusion;
+		code.Infusions.Leggings     = ItemId.Precise_7_Agony_Infusion;
+		code.Infusions.Boots        = ItemId.Precise_7_Agony_Infusion;
+		code.Infusions.BackItem_1   = ItemId.Concentration_WvW_Infusion;
+		code.Infusions.BackItem_2   = ItemId._UNDEFINED;
+		code.Infusions.Accessory1   = ItemId.Concentration_WvW_Infusion;
+		code.Infusions.Accessory2   = ItemId.Precise_WvW_Infusion;
+		code.Infusions.Ring1_1      = ItemId.Concentration_WvW_Infusion;
+		code.Infusions.Ring1_2      = ItemId.Concentration_WvW_Infusion;
+		code.Infusions.Ring1_3      = ItemId.Concentration_WvW_Infusion;
+		code.Infusions.Ring2_1      = ItemId.Concentration_WvW_Infusion;
+		code.Infusions.Ring2_2      = ItemId.Concentration_WvW_Infusion;
+		code.Infusions.Ring2_3      = ItemId.Concentration_WvW_Infusion;
+		code.Infusions.WeaponSet1_1 = ItemId.Concentration_WvW_Infusion;
+		code.Infusions.WeaponSet1_2 = ItemId.Concentration_WvW_Infusion;
+		code.Infusions.WeaponSet2_1 = ItemId._UNDEFINED;
+		code.Infusions.WeaponSet2_2 = ItemId._UNDEFINED;
+		code.Infusions.Amulet       = ItemId._UNDEFINED;
+		code.Kind = Kind.PvE;
+		code.Profession = Profession.Engineer;
+		code.Rune = ItemId.Legendary_Rune_of_the_Scholar;
+		code.SlotSkills.Elite    = SkillId.Overclock_Signet;
+		code.SlotSkills.Heal     = SkillId.Rectifier_Signet;
+		code.SlotSkills.Utility1 = SkillId.Throw_Mine2;
+		code.SlotSkills.Utility2 = SkillId.Force_Signet;
+		code.SlotSkills.Utility3 = SkillId.Shift_Signet;
+		code.Specializations.Choice1.Choices.Adept       = TraitLineChoice.BOTTOM;
+		code.Specializations.Choice1.Choices.Grandmaster = TraitLineChoice.BOTTOM;
+		code.Specializations.Choice1.Choices.Master      = TraitLineChoice.TOP;
+		code.Specializations.Choice1.SpecializationId    = SpecializationId.Explosives;
+		code.Specializations.Choice2.Choices.Adept       = TraitLineChoice.BOTTOM;
+		code.Specializations.Choice2.Choices.Grandmaster = TraitLineChoice.MIDDLE;
+		code.Specializations.Choice2.Choices.Master      = TraitLineChoice.BOTTOM;
+		code.Specializations.Choice2.SpecializationId    = SpecializationId.Firearms;
+		code.Specializations.Choice3.Choices.Adept       = TraitLineChoice.BOTTOM;
+		code.Specializations.Choice3.Choices.Grandmaster = TraitLineChoice.TOP;
+		code.Specializations.Choice3.Choices.Master      = TraitLineChoice.BOTTOM;
+		code.Specializations.Choice3.SpecializationId    = SpecializationId.Mechanist;
+		code.Version = 3;
+		code.WeaponSet1.MainHand = WeaponType.Rifle;
+		code.WeaponSet1.OffHand  = WeaponType._UNDEFINED;
+		code.WeaponSet1.Sigil1   = ItemId.Legendary_Sigil_of_Force;
+		code.WeaponSet1.Sigil2   = ItemId.Legendary_Sigil_of_the_Night;
+		code.WeaponSet2.MainHand = WeaponType._UNDEFINED;
+		code.WeaponSet2.OffHand  = WeaponType._UNDEFINED;
+		code.WeaponSet2.Sigil1   = ItemId._UNDEFINED;
+		code.WeaponSet2.Sigil2   = ItemId._UNDEFINED;
+
+		var text = TextLoader.WriteBuildCode(code);
+		var reencode = TextLoader.LoadBuildCode(text);
+
+		var options = new JsonSerializerOptions() { IncludeFields = true, };
 		Assert.Equal(JsonSerializer.Serialize(code, options), JsonSerializer.Serialize(reencode, options));
 	}
 }

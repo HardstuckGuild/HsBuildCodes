@@ -59,14 +59,14 @@ describe("ResolveWeaponSkills", () => {
 		const code = new BuildCode();
 		code.Profession = Profession.Necromancer;
 		code.WeaponSet1.MainHand = WeaponType.Dagger;
-		code.WeaponSet1.Sigil1 = ItemId.Legendary_Sigil_of_Deamons;
+		code.WeaponSet1.Sigil1 = ItemId.Legendary_Sigil_of_Demons;
 		code.WeaponSet2.OffHand  = WeaponType.Dagger;
 		code.WeaponSet2.Sigil2 = ItemId.Legendary_Sigil_of_Concentration;
 
 		const effective = Static.ResolveEffectiveWeapons(code, WeaponSetNumber.Set1);
 
 		expect(effective.MainHand).toBe(WeaponType.Dagger);
-		expect(effective.Sigil1).toBe(ItemId.Legendary_Sigil_of_Deamons);
+		expect(effective.Sigil1).toBe(ItemId.Legendary_Sigil_of_Demons);
 		expect(effective.OffHand).toBe(WeaponType.Dagger);
 		expect(effective.Sigil2).toBe(ItemId.Legendary_Sigil_of_Concentration);
 
@@ -81,14 +81,14 @@ describe("ResolveWeaponSkills", () => {
 		const code = new BuildCode();
 		code.Profession = Profession.Necromancer;
 		code.WeaponSet1.MainHand = WeaponType.Dagger;
-		code.WeaponSet1.Sigil1 = ItemId.Legendary_Sigil_of_Deamons;
+		code.WeaponSet1.Sigil1 = ItemId.Legendary_Sigil_of_Demons;
 		code.WeaponSet2.MainHand  = WeaponType.Staff;
 		code.WeaponSet2.Sigil2 = ItemId.Legendary_Sigil_of_Concentration;
 
 		const effective = Static.ResolveEffectiveWeapons(code, WeaponSetNumber.Set1);
 
 		expect(effective.MainHand).toBe(WeaponType.Dagger);
-		expect(effective.Sigil1).toBe(ItemId.Legendary_Sigil_of_Deamons);
+		expect(effective.Sigil1).toBe(ItemId.Legendary_Sigil_of_Demons);
 		expect(effective.OffHand).toBe(WeaponType._UNDEFINED);
 		expect(effective.Sigil2).toBe(ItemId._UNDEFINED);
 

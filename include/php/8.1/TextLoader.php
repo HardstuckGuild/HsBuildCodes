@@ -129,13 +129,6 @@ class TextLoader {
 		$repeatCount = 0;
 		$data = StatId::_UNDEFINED;
 		for($i = 0; $i < Statics::ALL_EQUIPMENT_COUNT; $i++) {
-			if($repeatCount === 0) {
-				$data = TextLoader::DecodeAndAdvance($text, 2);
-
-				if($i === Statics::ALL_EQUIPMENT_COUNT - 1) $repeatCount = 1;
-				else $repeatCount = TextLoader::DecodeAndAdvance($text);
-			}
-
 			switch($i) {
 				case 11:
 					if(!$weaponRef->WeaponSet1->HasAny()) { $i += 3; continue 2; }
@@ -153,6 +146,13 @@ class TextLoader {
 					else break;
 			}
 
+			if($repeatCount === 0) {
+				$data = TextLoader::DecodeAndAdvance($text, 2);
+
+				if($i === Statics::ALL_EQUIPMENT_COUNT - 1) $repeatCount = 1;
+				else $repeatCount = TextLoader::DecodeAndAdvance($text);
+			}
+
 			$allData[$i] = $data;
 			$repeatCount--;
 		}
@@ -167,29 +167,28 @@ class TextLoader {
 		$data = ItemId::_UNDEFINED;
 		for($i = 0; $i < Statics::ALL_INFUSION_COUNT; $i++)
 		{
-			if($repeatCount === 0)
-			{
-				$data = TextLoader::EatToken($text, '_') ? ItemId::_UNDEFINED : TextLoader::DecodeAndAdvance($text, 3);
-
-				if($i === Statics::ALL_INFUSION_COUNT - 1) $repeatCount = 1;
-				else $repeatCount = TextLoader::DecodeAndAdvance($text);
-			}
-
 			switch($i) {
 				case 16:
 					if(!$weaponRef->WeaponSet1->HasAny()) { $i += 3; continue 2; }
 					else if($weaponRef->WeaponSet1->MainHand === WeaponType::_UNDEFINED) { continue 2; }
 					else break;
 				case 17:
-					if($weaponRef->WeaponSet1->OffHand === WeaponType::_UNDEFINED) continue 2;
+					if($weaponRef->WeaponSet1->OffHand === WeaponType::_UNDEFINED && !Statics::IsTwoHanded($weaponRef->WeaponSet1->MainHand)) continue 2;
 					else break;
 				case 18:
 					if(!$weaponRef->WeaponSet2->HasAny()) { $i++; continue 2; }
 					else if($weaponRef->WeaponSet2->MainHand === WeaponType::_UNDEFINED) continue 2;
 					else break;
 				case 19:
-					if($weaponRef->WeaponSet2->OffHand === WeaponType::_UNDEFINED) continue 2;
+					if($weaponRef->WeaponSet2->OffHand === WeaponType::_UNDEFINED && !Statics::IsTwoHanded($weaponRef->WeaponSet2->MainHand)) continue 2;
 					else break;
+			}
+
+			if($repeatCount === 0) {
+				$data = TextLoader::EatToken($text, '_') ? ItemId::_UNDEFINED : TextLoader::DecodeAndAdvance($text, 3);
+
+				if($i === Statics::ALL_INFUSION_COUNT - 1) $repeatCount = 1;
+				else $repeatCount = TextLoader::DecodeAndAdvance($text);
 			}
 
 			$allData[$i] = $data;
@@ -386,14 +385,14 @@ class TextLoader {
 					else if($weaponRef->WeaponSet1->MainHand === WeaponType::_UNDEFINED) { continue 2; }
 					else break;
 				case 17:
-					if($weaponRef->WeaponSet1->OffHand === WeaponType::_UNDEFINED) continue 2;
+					if($weaponRef->WeaponSet1->OffHand === WeaponType::_UNDEFINED && !Statics::IsTwoHanded($weaponRef->WeaponSet1->MainHand)) continue 2;
 					else break;
 				case 18:
 					if(!$weaponRef->WeaponSet2->HasAny()) { $i++; continue 2; }
 					else if($weaponRef->WeaponSet2->MainHand === WeaponType::_UNDEFINED) continue 2;
 					else break;
 				case 19:
-					if($weaponRef->WeaponSet2->OffHand === WeaponType::_UNDEFINED) continue 2;
+					if($weaponRef->WeaponSet2->OffHand === WeaponType::_UNDEFINED && !Statics::IsTwoHanded($weaponRef->WeaponSet2->MainHand)) continue 2;
 					else break;
 			}
 
@@ -401,7 +400,7 @@ class TextLoader {
 			{
 				if($lastInfusion !== null)
 				{
-					TextLoader::EncodeAndAdvance($destination, $lastInfusion, 3);
+					TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $lastInfusion, 3);
 					$destination .= TextLoader::CHARSET[$repeatCount];
 				}
 
@@ -414,8 +413,7 @@ class TextLoader {
 			}
 		}
 
-		if($lastInfusion === null) $destination .= '_';
-		else TextLoader::EncodeAndAdvance($destination, $lastInfusion, 2);
+		TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $lastInfusion ?? StatId::_UNDEFINED, 2);
 		if($repeatCount > 1)
 			$destination .= TextLoader::CHARSET[$repeatCount];
 	}

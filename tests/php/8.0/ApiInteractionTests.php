@@ -73,14 +73,14 @@ class ResolveWeaponSkills extends TestCase {
 		$code = new BuildCode();
 		$code->Profession = Profession::Necromancer;
 		$code->WeaponSet1->MainHand = WeaponType::Dagger;
-		$code->WeaponSet1->Sigil1 = ItemId::Legendary_Sigil_of_Deamons;
+		$code->WeaponSet1->Sigil1 = ItemId::Legendary_Sigil_of_Demons;
 		$code->WeaponSet2->OffHand  = WeaponType::Dagger;
 		$code->WeaponSet2->Sigil2 = ItemId::Legendary_Sigil_of_Concentration;
 
 		$effective = Statics::ResolveEffectiveWeapons($code, WeaponSetNumber::Set1);
 
 		$this->assertEquals(WeaponType::Dagger, $effective->MainHand);
-		$this->assertEquals(ItemId::Legendary_Sigil_of_Deamons, $effective->Sigil1);
+		$this->assertEquals(ItemId::Legendary_Sigil_of_Demons, $effective->Sigil1);
 		$this->assertEquals(WeaponType::Dagger, $effective->OffHand);
 		$this->assertEquals(ItemId::Legendary_Sigil_of_Concentration, $effective->Sigil2);
 
@@ -97,14 +97,14 @@ class ResolveWeaponSkills extends TestCase {
 		$code = new BuildCode();
 		$code->Profession = Profession::Necromancer;
 		$code->WeaponSet1->MainHand = WeaponType::Dagger;
-		$code->WeaponSet1->Sigil1 = ItemId::Legendary_Sigil_of_Deamons;
+		$code->WeaponSet1->Sigil1 = ItemId::Legendary_Sigil_of_Demons;
 		$code->WeaponSet2->MainHand  = WeaponType::Staff;
 		$code->WeaponSet2->Sigil2 = ItemId::Legendary_Sigil_of_Concentration;
 
 		$effective = Statics::ResolveEffectiveWeapons($code, WeaponSetNumber::Set1);
 
 		$this->assertEquals(WeaponType::Dagger, $effective->MainHand);
-		$this->assertEquals(ItemId::Legendary_Sigil_of_Deamons, $effective->Sigil1);
+		$this->assertEquals(ItemId::Legendary_Sigil_of_Demons, $effective->Sigil1);
 		$this->assertEquals(WeaponType::_UNDEFINED, $effective->OffHand);
 		$this->assertEquals(ItemId::_UNDEFINED, $effective->Sigil2);
 

@@ -137,13 +137,6 @@ public static class TextLoader {
 		var repeatCount = 0;
 		var data = StatId._UNDEFINED;
 		for(int i = 0; i < ALL_EQUIPMENT_COUNT; i++) {
-			if(repeatCount == 0) {
-				data = (StatId)DecodeAndAdvance(ref text, 2);
-
-				if(i == ALL_EQUIPMENT_COUNT - 1) repeatCount = 1;
-				else repeatCount = DecodeAndAdvance(ref text);
-			}
-
 			switch(i) {
 				case 11:
 					if(!weaponRef.WeaponSet1.HasAny) { i += 3; continue; }
@@ -161,6 +154,13 @@ public static class TextLoader {
 					else break;
 			}
 
+			if(repeatCount == 0) {
+				data = (StatId)DecodeAndAdvance(ref text, 2);
+
+				if(i == ALL_EQUIPMENT_COUNT - 1) repeatCount = 1;
+				else repeatCount = DecodeAndAdvance(ref text);
+			}
+
 			allData[i] = data;
 			repeatCount--;
 		}
@@ -175,29 +175,28 @@ public static class TextLoader {
 		var data = ItemId._UNDEFINED;
 		for(int i = 0; i < ALL_INFUSION_COUNT; i++)
 		{
-			if(repeatCount == 0)
-			{
-				data = EatToken(ref text, '_') ? ItemId._UNDEFINED : (ItemId)DecodeAndAdvance(ref text, 3);
-
-				if(i == ALL_INFUSION_COUNT - 1) repeatCount = 1;
-				else repeatCount = DecodeAndAdvance(ref text);
-			}
-
 			switch(i) {
 				case 16:
 					if(!weaponRef.WeaponSet1.HasAny) { i += 3; continue; }
 					else if(weaponRef.WeaponSet1.MainHand == WeaponType._UNDEFINED) { continue; }
 					else break;
 				case 17:
-					if(weaponRef.WeaponSet1.OffHand == WeaponType._UNDEFINED) continue;
+					if(weaponRef.WeaponSet1.OffHand == WeaponType._UNDEFINED && !IsTwoHanded(weaponRef.WeaponSet1.MainHand)) continue;
 					else break;
 				case 18:
 					if(!weaponRef.WeaponSet2.HasAny) { i++; continue; }
 					else if(weaponRef.WeaponSet2.MainHand == WeaponType._UNDEFINED) continue;
 					else break;
 				case 19:
-					if(weaponRef.WeaponSet2.OffHand == WeaponType._UNDEFINED) continue;
+					if(weaponRef.WeaponSet2.OffHand == WeaponType._UNDEFINED && !IsTwoHanded(weaponRef.WeaponSet2.MainHand)) continue;
 					else break;
+			}
+
+			if(repeatCount == 0) {
+				data = EatToken(ref text, '_') ? ItemId._UNDEFINED : (ItemId)DecodeAndAdvance(ref text, 3);
+
+				if(i == ALL_INFUSION_COUNT - 1) repeatCount = 1;
+				else repeatCount = DecodeAndAdvance(ref text);
 			}
 
 			allData[i] = data;
@@ -406,14 +405,14 @@ public static class TextLoader {
 					else if(weaponRef.WeaponSet1.MainHand == WeaponType._UNDEFINED) { continue; }
 					else break;
 				case 17:
-					if(weaponRef.WeaponSet1.OffHand == WeaponType._UNDEFINED) continue;
+					if(weaponRef.WeaponSet1.OffHand == WeaponType._UNDEFINED && !IsTwoHanded(weaponRef.WeaponSet1.MainHand)) continue;
 					else break;
 				case 18:
 					if(!weaponRef.WeaponSet2.HasAny) { i++; continue; }
 					else if(weaponRef.WeaponSet2.MainHand == WeaponType._UNDEFINED) continue;
 					else break;
 				case 19:
-					if(weaponRef.WeaponSet2.OffHand == WeaponType._UNDEFINED) continue;
+					if(weaponRef.WeaponSet2.OffHand == WeaponType._UNDEFINED && !IsTwoHanded(weaponRef.WeaponSet2.MainHand)) continue;
 					else break;
 			}
 
@@ -421,7 +420,7 @@ public static class TextLoader {
 			{
 				if(lastInfusion.HasValue)
 				{
-					EncodeAndAdvance(ref destination, (int)lastInfusion, 3);
+					EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)lastInfusion, 3);
 					WriteAndAdvance(ref destination, CHARSET[repeatCount]);
 				}
 
@@ -434,8 +433,7 @@ public static class TextLoader {
 			}
 		}
 
-		if(!lastInfusion.HasValue) WriteAndAdvance(ref destination, '_');
-		else EncodeAndAdvance(ref destination, (int)lastInfusion, 2);
+		EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)lastInfusion.GetValueOrDefault(), 2);
 		if(repeatCount > 1)
 			WriteAndAdvance(ref destination, CHARSET[repeatCount]);
 	}

@@ -82,10 +82,10 @@ class BasicCodesTests extends TestCase {
 		$this->assertEquals(WeaponType::_UNDEFINED, $code->WeaponSet2->MainHand);
 		$this->assertEquals(WeaponType::Pistol , $code->WeaponSet2->OffHand);
 
-		$this->assertEquals(ItemId::Legendary_Sigil_of_Deamons, $code->WeaponSet1->Sigil1);
+		$this->assertEquals(ItemId::Legendary_Sigil_of_Demons, $code->WeaponSet1->Sigil1);
 		$this->assertEquals(ItemId::Legendary_Sigil_of_Concentration, $code->WeaponSet1->Sigil2);
 		$this->assertEquals(ItemId::_UNDEFINED, $code->WeaponSet2->Sigil1);
-		$this->assertEquals(ItemId::Legendary_Sigil_of_Paralysation, $code->WeaponSet2->Sigil2);
+		$this->assertEquals(ItemId::Legendary_Sigil_of_Paralyzation, $code->WeaponSet2->Sigil2);
 
 		$celestialStatsKEKW = [ StatId::Celestial1, StatId::Celestial2, StatId::Celestial3, StatId::Celestial4 ];
 		for($i = 0; $i < Statics::ALL_EQUIPMENT_COUNT; $i++)
