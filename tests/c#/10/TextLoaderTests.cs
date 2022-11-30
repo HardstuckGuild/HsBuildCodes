@@ -351,7 +351,6 @@ public class BasicCodesTests {
 				WeaponSet2MainHand  = StatId.Celestial1,
 				WeaponSet2OffHand  = StatId.Celestial1,
 			},
-			Food  = ItemId._UNDEFINED,
 			Infusions  = {
 				Helmet  = ItemId.Plus_9_Agony_Infusion,
 				Shoulders  = ItemId.Plus_9_Agony_Infusion,
@@ -381,41 +380,6 @@ public class BasicCodesTests {
 			},
 			Kind  = Kind.PvE,
 			Profession  = Profession.Warrior,
-			Rune  = ItemId.Legendary_Rune_of_Divinity,
-			SlotSkills  = {
-				Elite  = SkillId.Winds_of_Disenchantment,
-				Heal  = SkillId.To_the_Limit,
-				Utility1  = SkillId.Banner_of_Tactics1,
-				Utility2  = SkillId.Balanced_Stance,
-				Utility3  = SkillId.Shake_It_Off,
-			},
-			Specializations  = {
-				Choice1  = {
-					Choices  = {
-						Adept  = TraitLineChoice.BOTTOM,
-						Grandmaster  = TraitLineChoice.MIDDLE,
-						Master  = TraitLineChoice.MIDDLE,
-					},
-					SpecializationId  = SpecializationId.Tactics,
-				},
-				Choice2  = {
-					Choices  = {
-						Adept  = TraitLineChoice.MIDDLE,
-						Grandmaster  = TraitLineChoice.BOTTOM,
-						Master  = TraitLineChoice.TOP,
-					},
-					SpecializationId  = SpecializationId.Discipline,
-				},
-				Choice3  = {
-					Choices  = {
-						Adept  = TraitLineChoice.BOTTOM,
-						Grandmaster  = TraitLineChoice.TOP,
-						Master  = TraitLineChoice.TOP,
-					},
-					SpecializationId  = SpecializationId.Spellbreaker,
-				},
-			},
-			Utility  = ItemId._UNDEFINED,
 			Version  = 3,
 			WeaponSet1  = {
 				MainHand  = WeaponType.Hammer,
@@ -482,24 +446,6 @@ public class BasicCodesTests {
 		code.Infusions.Amulet       = ItemId._UNDEFINED;
 		code.Kind = Kind.PvE;
 		code.Profession = Profession.Engineer;
-		code.Rune = ItemId.Legendary_Rune_of_the_Scholar;
-		code.SlotSkills.Elite    = SkillId.Overclock_Signet;
-		code.SlotSkills.Heal     = SkillId.Rectifier_Signet;
-		code.SlotSkills.Utility1 = SkillId.Throw_Mine2;
-		code.SlotSkills.Utility2 = SkillId.Force_Signet;
-		code.SlotSkills.Utility3 = SkillId.Shift_Signet;
-		code.Specializations.Choice1.Choices.Adept       = TraitLineChoice.BOTTOM;
-		code.Specializations.Choice1.Choices.Grandmaster = TraitLineChoice.BOTTOM;
-		code.Specializations.Choice1.Choices.Master      = TraitLineChoice.TOP;
-		code.Specializations.Choice1.SpecializationId    = SpecializationId.Explosives;
-		code.Specializations.Choice2.Choices.Adept       = TraitLineChoice.BOTTOM;
-		code.Specializations.Choice2.Choices.Grandmaster = TraitLineChoice.MIDDLE;
-		code.Specializations.Choice2.Choices.Master      = TraitLineChoice.BOTTOM;
-		code.Specializations.Choice2.SpecializationId    = SpecializationId.Firearms;
-		code.Specializations.Choice3.Choices.Adept       = TraitLineChoice.BOTTOM;
-		code.Specializations.Choice3.Choices.Grandmaster = TraitLineChoice.TOP;
-		code.Specializations.Choice3.Choices.Master      = TraitLineChoice.BOTTOM;
-		code.Specializations.Choice3.SpecializationId    = SpecializationId.Mechanist;
 		code.Version = 3;
 		code.WeaponSet1.MainHand = WeaponType.Rifle;
 		code.WeaponSet1.OffHand  = WeaponType._UNDEFINED;
