@@ -3,7 +3,7 @@ import { Specialization, TraitLineChoice } from "../Structures";
 import ItemId from "../Database/ItemIds";
 import StatId from "../Database/StatIds";
 import SkillId from "../Database/SkillIds";
-import Static from "../Database/Static";
+import { ALL_INFUSION_COUNT } from "../Database/Static";
 
 export class SpecializationChoices {
 	public Choice1 : Specialization = new Specialization();
@@ -180,7 +180,7 @@ export class AllEquipmentInfusions {
 	//NOTE(Rennorb): It isn't really optimal to use this performance wise, but its very convenient.
 	public HasAny() : boolean
 	{
-		for(let i = 0; i < Static.ALL_INFUSION_COUNT; i++)
+		for(let i = 0; i < ALL_INFUSION_COUNT; i++)
 			if(this[i] !== ItemId._UNDEFINED)
 				return true;
 		return false;

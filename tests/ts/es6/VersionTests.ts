@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
-import Static from "../../../include/ts/es6/Database/Static";
+import { DetermineCodeVersion } from "../../../include/ts/es6/Database/Static";
 import TextLoader from "../../../include/ts/es6/TextLoader";
 import TestUtilities from "./TestUtilities";
 
@@ -25,6 +25,6 @@ describe('VersionTests', () => {
 	}
 
 	test.each(DataProvider())('DetermineCodeVersion', (code : string, expectedVersion : number) => {
-		expect(Static.DetermineCodeVersion(code)).toBe(expectedVersion);
+		expect(DetermineCodeVersion(code)).toBe(expectedVersion);
 	});
 });

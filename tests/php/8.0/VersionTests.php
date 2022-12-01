@@ -2,10 +2,11 @@
 
 require_once 'TestUtilities.php';
 
-use Hardstuck\GuildWars2\BuildCodes\V2\Statics;
 use Hardstuck\GuildWars2\BuildCodes\V2\Tests\TestUtilities;
 use Hardstuck\GuildWars2\BuildCodes\V2\TextLoader;
 use PHPUnit\Framework\TestCase;
+
+use function Hardstuck\GuildWars2\BuildCodes\V2\DetermineCodeVersion;
 
 class VersionTests extends TestCase {
 	public function DataProvider() {
@@ -30,6 +31,6 @@ class VersionTests extends TestCase {
 
 	/** @test @dataProvider DataProvider */
 	public function VersionDetectionTest(string $code, int $expectedVersion) {
-		$this->assertEquals($expectedVersion, Statics::DetermineCodeVersion($code));
+		$this->assertEquals($expectedVersion, DetermineCodeVersion($code));
 	}
 }

@@ -1,7 +1,7 @@
 import BinaryLoader from "./BinaryLoader";
 import ItemId from "./Database/ItemIds";
 import SpecializationId from "./Database/SpecializationIds";
-import Static from "./Database/Static";
+import { ALL_EQUIPMENT_COUNT, ALL_INFUSION_COUNT, CURRENT_VERSION, IsTwoHanded } from "./Database/Static";
 import StatId from "./Database/StatIds";
 import { Arbitrary, BuildCode, IArbitrary, IProfessionSpecific, Kind, Legend, PetId, Profession, ProfessionSpecific, RangerData, RevenantData, Specialization, TraitLineChoice, WeaponSet, WeaponType } from "./Structures";
 import StringView from "./Util/StringView"
@@ -65,7 +65,7 @@ class TextLoader {
 		const view = new StringView(text);
 		const code = new BuildCode();
 		code.Version    = TextLoader.DecodeAndAdvance(view);
-		Assert(code.Version === Static.CURRENT_VERSION, "Code version mismatch");
+		Assert(code.Version === CURRENT_VERSION, "Code version mismatch");
 		code.Kind       = TextLoader.DecodeAndAdvance(view) as Kind;
 		Assert(code.Kind !== Kind._UNDEFINED, "Code type not valid");
 		code.Profession = (1 + TextLoader.DecodeAndAdvance(view)) as Profession;
@@ -119,9 +119,9 @@ class TextLoader {
 		if(set.MainHand)
 			if(!TextLoader.EatToken(text, '_')) set.Sigil1 = TextLoader.DecodeAndAdvance(text, 3);
 
-		if(set.MainHand === WeaponType._UNDEFINED || !Static.IsTwoHanded(set.MainHand))
+		if(set.MainHand === WeaponType._UNDEFINED || !IsTwoHanded(set.MainHand))
 			if(!TextLoader.EatToken(text, '_')) set.OffHand = (WeaponType._FIRST + TextLoader.DecodeAndAdvance(text)) as WeaponType;
-		if(set.OffHand || (set.MainHand && Static.IsTwoHanded(set.MainHand)))
+		if(set.OffHand || (set.MainHand && IsTwoHanded(set.MainHand)))
 			if(!TextLoader.EatToken(text, '_')) set.Sigil2 = TextLoader.DecodeAndAdvance(text, 3);
 		return set;
 	}
@@ -132,7 +132,7 @@ class TextLoader {
 
 		let repeatCount = 0;
 		let data = StatId._UNDEFINED;
-		for(let i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++) {
+		for(let i = 0; i < ALL_EQUIPMENT_COUNT; i++) {
 			switch(i) {
 				case 11:
 					if(!weaponRef.WeaponSet1.HasAny()) { i += 3; continue; }
@@ -153,7 +153,7 @@ class TextLoader {
 			if(repeatCount === 0) {
 				data = TextLoader.DecodeAndAdvance(text, 2);
 
-				if(i === Static.ALL_EQUIPMENT_COUNT - 1) repeatCount = 1;
+				if(i === ALL_EQUIPMENT_COUNT - 1) repeatCount = 1;
 				else repeatCount = TextLoader.DecodeAndAdvance(text);
 			}
 
@@ -169,7 +169,7 @@ class TextLoader {
 
 		let repeatCount = 0;
 		let data = ItemId._UNDEFINED;
-		for(let i = 0; i < Static.ALL_INFUSION_COUNT; i++)
+		for(let i = 0; i < ALL_INFUSION_COUNT; i++)
 		{
 			switch(i) {
 				case 16:
@@ -177,21 +177,21 @@ class TextLoader {
 					else if(weaponRef.WeaponSet1.MainHand === WeaponType._UNDEFINED) { continue; }
 					else break;
 				case 17:
-					if(weaponRef.WeaponSet1.OffHand === WeaponType._UNDEFINED && !Static.IsTwoHanded(weaponRef.WeaponSet1.MainHand)) continue;
+					if(weaponRef.WeaponSet1.OffHand === WeaponType._UNDEFINED && !IsTwoHanded(weaponRef.WeaponSet1.MainHand)) continue;
 					else break;
 				case 18:
 					if(!weaponRef.WeaponSet2.HasAny()) { i++; continue; }
 					else if(weaponRef.WeaponSet2.MainHand === WeaponType._UNDEFINED) continue;
 					else break;
 				case 19:
-					if(weaponRef.WeaponSet2.OffHand === WeaponType._UNDEFINED && !Static.IsTwoHanded(weaponRef.WeaponSet2.MainHand)) continue;
+					if(weaponRef.WeaponSet2.OffHand === WeaponType._UNDEFINED && !IsTwoHanded(weaponRef.WeaponSet2.MainHand)) continue;
 					else break;
 			}
 
 			if(repeatCount === 0) {
 				data = TextLoader.EatToken(text, '_') ? ItemId._UNDEFINED : TextLoader.DecodeAndAdvance(text, 3);
 
-				if(i === Static.ALL_INFUSION_COUNT - 1) repeatCount = 1;
+				if(i === ALL_INFUSION_COUNT - 1) repeatCount = 1;
 				else repeatCount = TextLoader.DecodeAndAdvance(text);
 			}
 
@@ -322,7 +322,7 @@ class TextLoader {
 			if(set.Sigil1 == ItemId._UNDEFINED) destination += '_';
 			else destination += TextLoader.Encode(set.Sigil1, 3);
 		}
-		if(set.MainHand == WeaponType._UNDEFINED || !Static.IsTwoHanded(set.MainHand))
+		if(set.MainHand == WeaponType._UNDEFINED || !IsTwoHanded(set.MainHand))
 		{
 			if(set.OffHand == WeaponType._UNDEFINED) destination += '_';
 			else destination += TextLoader.CHARSET[set.OffHand - WeaponType._FIRST];
@@ -338,7 +338,7 @@ class TextLoader {
 		let destination = '';
 		let lastStat : number|null = null;
 		let repeatCount = 0;
-		for(let i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++)
+		for(let i = 0; i < ALL_EQUIPMENT_COUNT; i++)
 		{
 			switch(i) {
 				case 11:
@@ -386,7 +386,7 @@ class TextLoader {
 		let destination = '';
 		let lastInfusion : ItemId|null = null;
 		let repeatCount = 0;
-		for(let i = 0; i < Static.ALL_INFUSION_COUNT; i++)
+		for(let i = 0; i < ALL_INFUSION_COUNT; i++)
 		{
 			switch(i) {
 				case 16:
@@ -394,14 +394,14 @@ class TextLoader {
 					else if(weaponRef.WeaponSet1.MainHand === WeaponType._UNDEFINED) { continue; }
 					else break;
 				case 17:
-					if(weaponRef.WeaponSet1.OffHand === WeaponType._UNDEFINED && !Static.IsTwoHanded(weaponRef.WeaponSet1.MainHand)) continue;
+					if(weaponRef.WeaponSet1.OffHand === WeaponType._UNDEFINED && !IsTwoHanded(weaponRef.WeaponSet1.MainHand)) continue;
 					else break;
 				case 18:
 					if(!weaponRef.WeaponSet2.HasAny()) { i++; continue; }
 					else if(weaponRef.WeaponSet2.MainHand === WeaponType._UNDEFINED) continue;
 					else break;
 				case 19:
-					if(weaponRef.WeaponSet2.OffHand === WeaponType._UNDEFINED && !Static.IsTwoHanded(weaponRef.WeaponSet2.MainHand)) continue;
+					if(weaponRef.WeaponSet2.OffHand === WeaponType._UNDEFINED && !IsTwoHanded(weaponRef.WeaponSet2.MainHand)) continue;
 					else break;
 			}
 

@@ -3,9 +3,10 @@
 use Hardstuck\GuildWars2\BuildCodes\V2\ItemId;
 use Hardstuck\GuildWars2\BuildCodes\V2\SkillId;
 use Hardstuck\GuildWars2\BuildCodes\V2\Specialization;
-use Hardstuck\GuildWars2\BuildCodes\V2\Statics;
 use Hardstuck\GuildWars2\BuildCodes\V2\StatId;
 use Hardstuck\GuildWars2\BuildCodes\V2\TraitLineChoice;
+
+use const Hardstuck\GuildWars2\BuildCodes\V2\ALL_INFUSION_COUNT;
 
 class SpecializationChoices implements \ArrayAccess {
 	public Specialization $Choice1;
@@ -376,7 +377,7 @@ class AllEquipmentInfusions implements \ArrayAccess {
 	//NOTE(Rennorb): It isn't really optimal to use this performance wise, but its very convenient.
 	public function HasAny() : bool
 	{
-		for($i = 0; $i < Statics::ALL_INFUSION_COUNT; $i++)
+		for($i = 0; $i < ALL_INFUSION_COUNT; $i++)
 			if($this[$i] !== ItemId::_UNDEFINED)
 				return true;
 		return false;

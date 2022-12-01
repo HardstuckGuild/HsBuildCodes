@@ -52,7 +52,7 @@ class APICache {
 		else
 		{
 			if($effectiveWeapons->OffHand === WeaponType::_UNDEFINED
-				&& ($effectiveWeapons->MainHand === WeaponType::_UNDEFINED || !Statics::IsTwoHanded($effectiveWeapons->MainHand)))
+				&& ($effectiveWeapons->MainHand === WeaponType::_UNDEFINED || !IsTwoHanded($effectiveWeapons->MainHand)))
 				return SkillId::_UNDEFINED;
 
 			//NOTE(Rennorb): this isnt outside of the if to allow early bail if the guard condition isnt met.

@@ -3,7 +3,7 @@ import APILoader from "../../../include/ts/es6/APILoader";
 import ItemId from "../../../include/ts/es6/Database/ItemIds";
 import SkillId from "../../../include/ts/es6/Database/SkillIds";
 import SpecializationId from "../../../include/ts/es6/Database/SpecializationIds";
-import Static from "../../../include/ts/es6/Database/Static";
+import { ALL_EQUIPMENT_COUNT } from "../../../include/ts/es6/Database/Static";
 import StatId from "../../../include/ts/es6/Database/StatIds";
 import { Kind, Profession, TraitLineChoice, WeaponType } from "../../../include/ts/es6/Structures";
 import { TraitLineChoices } from "../../../include/ts/es6/Util/UtilStructs";
@@ -67,7 +67,7 @@ describe('BasicCodesTests', () => {
 		expect(code.WeaponSet2.Sigil2).toBe(ItemId.Legendary_Sigil_of_Paralyzation);
 
 		const celestialStatsKEKW = [ StatId.Celestial1, StatId.Celestial2, StatId.Celestial3, StatId.Celestial4 ];
-		for(let i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++)
+		for(let i = 0; i < ALL_EQUIPMENT_COUNT; i++)
 			if(i !== 13) // empty second main hand
 				expect(celestialStatsKEKW).toContain(code.EquipmentAttributes[i]);
 

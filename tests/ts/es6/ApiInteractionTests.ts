@@ -2,7 +2,7 @@ import {describe, expect, test} from '@jest/globals';
 import ItemId from '../../../include/ts/es6/Database/ItemIds';
 import SkillId from '../../../include/ts/es6/Database/SkillIds';
 import SpecializationId from '../../../include/ts/es6/Database/SpecializationIds';
-import Static from '../../../include/ts/es6/Database/Static';
+import { ResolveEffectiveWeapons } from '../../../include/ts/es6/Database/Static';
 import TraitId from '../../../include/ts/es6/Database/TraitIds';
 import APICache from '../../../include/ts/es6/OfficialAPI/APICache';
 import { BuildCode, Profession, TraitLineChoice, TraitSlot, WeaponSetNumber, WeaponType } from '../../../include/ts/es6/Structures';
@@ -11,7 +11,7 @@ describe("ResolveWeaponSkills", () => {
 	test('ResolveWeaponSkillsEmpty', async () => {
 		const code = new BuildCode();
 
-		const effective = Static.ResolveEffectiveWeapons(code, WeaponSetNumber.Set1);
+		const effective = ResolveEffectiveWeapons(code, WeaponSetNumber.Set1);
 
 		expect(effective.MainHand).toBe(WeaponType._UNDEFINED);
 		expect(effective.OffHand).toBe(WeaponType._UNDEFINED);
@@ -27,7 +27,7 @@ describe("ResolveWeaponSkills", () => {
 		code.Profession = Profession.Necromancer;
 		code.WeaponSet1.MainHand = WeaponType.Staff;
 
-		const effective = Static.ResolveEffectiveWeapons(code, WeaponSetNumber.Set1);
+		const effective = ResolveEffectiveWeapons(code, WeaponSetNumber.Set1);
 
 		expect(effective.MainHand).toBe(WeaponType.Staff);
 		expect(effective.OffHand).toBe(WeaponType._UNDEFINED);
@@ -44,7 +44,7 @@ describe("ResolveWeaponSkills", () => {
 		code.WeaponSet1.MainHand = WeaponType.Dagger;
 		code.WeaponSet1.OffHand  = WeaponType.Dagger;
 
-		const effective = Static.ResolveEffectiveWeapons(code, WeaponSetNumber.Set1);
+		const effective = ResolveEffectiveWeapons(code, WeaponSetNumber.Set1);
 
 		expect(effective.MainHand).toBe(WeaponType.Dagger);
 		expect(effective.OffHand).toBe(WeaponType.Dagger);
@@ -63,7 +63,7 @@ describe("ResolveWeaponSkills", () => {
 		code.WeaponSet2.OffHand  = WeaponType.Dagger;
 		code.WeaponSet2.Sigil2 = ItemId.Legendary_Sigil_of_Concentration;
 
-		const effective = Static.ResolveEffectiveWeapons(code, WeaponSetNumber.Set1);
+		const effective = ResolveEffectiveWeapons(code, WeaponSetNumber.Set1);
 
 		expect(effective.MainHand).toBe(WeaponType.Dagger);
 		expect(effective.Sigil1).toBe(ItemId.Legendary_Sigil_of_Demons);
@@ -85,7 +85,7 @@ describe("ResolveWeaponSkills", () => {
 		code.WeaponSet2.MainHand  = WeaponType.Staff;
 		code.WeaponSet2.Sigil2 = ItemId.Legendary_Sigil_of_Concentration;
 
-		const effective = Static.ResolveEffectiveWeapons(code, WeaponSetNumber.Set1);
+		const effective = ResolveEffectiveWeapons(code, WeaponSetNumber.Set1);
 
 		expect(effective.MainHand).toBe(WeaponType.Dagger);
 		expect(effective.Sigil1).toBe(ItemId.Legendary_Sigil_of_Demons);

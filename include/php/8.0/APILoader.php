@@ -25,7 +25,7 @@ class APILoader {
 	public static function LoadBuildCode(string $authToken, string $characterName, int $targetGameMode, bool $aquatic = false) : BuildCode
 	{
 		$code = new BuildCode();
-		$code->Version = Statics::CURRENT_VERSION;
+		$code->Version = CURRENT_VERSION;
 		$code->Kind    = $targetGameMode;
 
 		$playerData = API::RequestJson("/characters/$characterName", $authToken);
@@ -166,7 +166,7 @@ class APILoader {
 						$code->WeaponSet2->MainHand = APICache::ResolveWeaponType($item->id);
 						if($hasUpgrades) {
 							$code->WeaponSet2->Sigil1 = $item->upgrades[0];
-							if(Statics::IsTwoHanded($code->WeaponSet2->MainHand) && count($item->upgrades) > 1)
+							if(IsTwoHanded($code->WeaponSet2->MainHand) && count($item->upgrades) > 1)
 								$code->WeaponSet2->Sigil2 = $item->upgrades[1];
 						}
 						break;
@@ -246,8 +246,8 @@ class APILoader {
 				$revenantData = new RevenantData();
 
 				$legends = $aquatic ? $activeBuild->aquatic_legends : $activeBuild->legends;
-				$legend1 = Statics::ResolveLegend($code->Specializations->Choice3, $legends[0]);
-				$legend2 = Statics::ResolveLegend($code->Specializations->Choice3, $legends[1]);
+				$legend1 = ResolveLegend($code->Specializations->Choice3, $legends[0]);
+				$legend2 = ResolveLegend($code->Specializations->Choice3, $legends[1]);
 				if($legend1 !== null) // One legend is always set.
 				{
 					$revenantData->Legend1 = $legend1;

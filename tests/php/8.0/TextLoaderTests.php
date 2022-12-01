@@ -17,7 +17,6 @@ use Hardstuck\GuildWars2\BuildCodes\V2\RevenantData;
 use Hardstuck\GuildWars2\BuildCodes\V2\SkillId;
 use Hardstuck\GuildWars2\BuildCodes\V2\Specialization;
 use Hardstuck\GuildWars2\BuildCodes\V2\SpecializationId;
-use Hardstuck\GuildWars2\BuildCodes\V2\Statics;
 use Hardstuck\GuildWars2\BuildCodes\V2\StatId;
 use Hardstuck\GuildWars2\BuildCodes\V2\Tests\TestUtilities;
 use Hardstuck\GuildWars2\BuildCodes\V2\TextLoader;
@@ -25,6 +24,9 @@ use Hardstuck\GuildWars2\BuildCodes\V2\TraitLineChoice;
 use Hardstuck\GuildWars2\BuildCodes\V2\Util\StringView;
 use Hardstuck\GuildWars2\BuildCodes\V2\Util\TraitLineChoices;
 use Hardstuck\GuildWars2\BuildCodes\V2\WeaponType;
+
+use const Hardstuck\GuildWars2\BuildCodes\V2\ALL_EQUIPMENT_COUNT;
+use const Hardstuck\GuildWars2\BuildCodes\V2\ALL_INFUSION_COUNT;
 
 set_include_path(__DIR__.'/../../../include/common/');
 
@@ -105,12 +107,12 @@ class BasicCodesTests extends TestCase {
 		for($i = 0; $i < 5; $i++)
 			$this->assertEquals(SkillId::_UNDEFINED, $code->SlotSkills[$i]);
 		$this->assertEquals(ItemId::_UNDEFINED, $code->Rune);
-		for($i = 0; $i < Statics::ALL_EQUIPMENT_COUNT; $i++) {
+		for($i = 0; $i < ALL_EQUIPMENT_COUNT; $i++) {
 			if($i >= 11 && $i <= 14) $this->assertEquals(StatId::_UNDEFINED, $code->EquipmentAttributes[$i]);
-			else if($i === Statics::ALL_EQUIPMENT_COUNT - 1) $this->assertEquals(1, $code->EquipmentAttributes[$i]); 
+			else if($i === ALL_EQUIPMENT_COUNT - 1) $this->assertEquals(1, $code->EquipmentAttributes[$i]); 
 			else $this->assertEquals(StatId::_UNDEFINED, $code->EquipmentAttributes[$i]);
 		}
-		for($i = 0; $i < Statics::ALL_INFUSION_COUNT; $i++)
+		for($i = 0; $i < ALL_INFUSION_COUNT; $i++)
 			$this->assertEquals(ItemId::_UNDEFINED, $code->Infusions[$i]);
 		$this->assertEquals(ItemId::_UNDEFINED, $code->Food);
 		$this->assertEquals(ItemId::_UNDEFINED, $code->Utility);
@@ -132,11 +134,11 @@ class BasicCodesTests extends TestCase {
 		for($i = 0; $i < 5; $i++)
 			$this->assertEquals(SkillId::_UNDEFINED, $code->SlotSkills[$i]);
 		$this->assertEquals(ItemId::_UNDEFINED, $code->Rune);
-		for($i = 0; $i < Statics::ALL_EQUIPMENT_COUNT; $i++) {
+		for($i = 0; $i < ALL_EQUIPMENT_COUNT; $i++) {
 			if(11 <= $i && $i <= 14) $this->assertEquals(StatId::_UNDEFINED, $code->EquipmentAttributes[$i]);
 			else $this->assertEquals(1, $code->EquipmentAttributes[$i]);
 		}
-		for($i = 0; $i < Statics::ALL_INFUSION_COUNT; $i++)
+		for($i = 0; $i < ALL_INFUSION_COUNT; $i++)
 			$this->assertEquals(ItemId::_UNDEFINED, $code->Infusions[$i]);
 		$this->assertEquals(ItemId::_UNDEFINED, $code->Food);
 		$this->assertEquals(ItemId::_UNDEFINED, $code->Utility);
@@ -190,7 +192,7 @@ class BasicCodesTests extends TestCase {
 		$this->assertEquals(WeaponType::_UNDEFINED, $code->WeaponSet2->OffHand);
 
 		$this->assertEquals(ItemId::_UNDEFINED, $code->Rune);
-		for($i = 0; $i < Statics::ALL_EQUIPMENT_COUNT; $i++) {
+		for($i = 0; $i < ALL_EQUIPMENT_COUNT; $i++) {
 			$this->assertEquals(StatId::_UNDEFINED, $code->EquipmentAttributes[$i]);
 		}
 
@@ -239,11 +241,11 @@ class BasicCodesTests extends TestCase {
 
 		$this->assertEquals(ItemId::Superior_Rune_of_the_Scholar, $code->Rune);
 		$berserkers = [StatId::Berserkers1, StatId::Berserkers2, StatId::Berserkers3, StatId::Berserkers4, StatId::Berserkers5];
-		for($i = 0; $i < Statics::ALL_EQUIPMENT_COUNT; $i++) {
+		for($i = 0; $i < ALL_EQUIPMENT_COUNT; $i++) {
 			$this->assertContains($code->EquipmentAttributes[$i], $berserkers, "index$i");
 		}
 
-		for($i = 0; $i < Statics::ALL_INFUSION_COUNT; $i++) {
+		for($i = 0; $i < ALL_INFUSION_COUNT; $i++) {
 			$this->assertEquals(ItemId::Mighty_5_Agony_Infusion, $code->Infusions[$i]);
 		}
 
@@ -319,11 +321,11 @@ class BasicCodesTests extends TestCase {
 
 		$this->assertEquals(ItemId::Superior_Rune_of_the_Scholar, $code->Rune);
 		$berserkers = [StatId::Berserkers1, StatId::Berserkers2, StatId::Berserkers3, StatId::Berserkers4, StatId::Berserkers5];
-		for($i = 0; $i < Statics::ALL_EQUIPMENT_COUNT; $i++) {
+		for($i = 0; $i < ALL_EQUIPMENT_COUNT; $i++) {
 			$this->assertContains($code->EquipmentAttributes[$i], $berserkers, "index$i");
 		}
 
-		for($i = 0; $i < Statics::ALL_INFUSION_COUNT; $i++) {
+		for($i = 0; $i < ALL_INFUSION_COUNT; $i++) {
 			$this->assertEquals(ItemId::Mighty_5_Agony_Infusion, $code->Infusions[$i]);
 		}
 

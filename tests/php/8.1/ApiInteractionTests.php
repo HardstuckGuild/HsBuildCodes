@@ -6,13 +6,14 @@ use Hardstuck\GuildWars2\BuildCodes\V2\ItemId;
 use Hardstuck\GuildWars2\BuildCodes\V2\Profession;
 use Hardstuck\GuildWars2\BuildCodes\V2\SkillId;
 use Hardstuck\GuildWars2\BuildCodes\V2\SpecializationId;
-use Hardstuck\GuildWars2\BuildCodes\V2\Statics;
 use Hardstuck\GuildWars2\BuildCodes\V2\TraitId;
 use Hardstuck\GuildWars2\BuildCodes\V2\TraitLineChoice;
 use Hardstuck\GuildWars2\BuildCodes\V2\TraitSlot;
 use Hardstuck\GuildWars2\BuildCodes\V2\WeaponSetNumber;
 use Hardstuck\GuildWars2\BuildCodes\V2\WeaponType;
 use PHPUnit\Framework\TestCase;
+
+use function Hardstuck\GuildWars2\BuildCodes\V2\ResolveEffectiveWeapons;
 
 set_include_path(__DIR__.'/../../../include/common/');
 
@@ -21,7 +22,7 @@ class ResolveWeaponSkills extends TestCase {
 	public function ResolveWeaponSkillsEmpty() {
 		$code = new BuildCode();
 
-		$effective = Statics::ResolveEffectiveWeapons($code, WeaponSetNumber::Set1);
+		$effective = ResolveEffectiveWeapons($code, WeaponSetNumber::Set1);
 
 		$this->assertEquals(WeaponType::_UNDEFINED, $effective->MainHand);
 		$this->assertEquals(WeaponType::_UNDEFINED, $effective->OffHand);
@@ -38,7 +39,7 @@ class ResolveWeaponSkills extends TestCase {
 		$code->Profession = Profession::Necromancer;
 		$code->WeaponSet1->MainHand = WeaponType::Staff;
 
-		$effective = Statics::ResolveEffectiveWeapons($code, WeaponSetNumber::Set1);
+		$effective = ResolveEffectiveWeapons($code, WeaponSetNumber::Set1);
 
 		$this->assertEquals(WeaponType::Staff, $effective->MainHand);
 		$this->assertEquals(WeaponType::_UNDEFINED, $effective->OffHand);
@@ -56,7 +57,7 @@ class ResolveWeaponSkills extends TestCase {
 		$code->WeaponSet1->MainHand = WeaponType::Dagger;
 		$code->WeaponSet1->OffHand  = WeaponType::Dagger;
 
-		$effective = Statics::ResolveEffectiveWeapons($code, WeaponSetNumber::Set1);
+		$effective = ResolveEffectiveWeapons($code, WeaponSetNumber::Set1);
 
 		$this->assertEquals(WeaponType::Dagger, $effective->MainHand);
 		$this->assertEquals(WeaponType::Dagger, $effective->OffHand);
@@ -77,7 +78,7 @@ class ResolveWeaponSkills extends TestCase {
 		$code->WeaponSet2->OffHand  = WeaponType::Dagger;
 		$code->WeaponSet2->Sigil2 = ItemId::Legendary_Sigil_of_Concentration;
 
-		$effective = Statics::ResolveEffectiveWeapons($code, WeaponSetNumber::Set1);
+		$effective = ResolveEffectiveWeapons($code, WeaponSetNumber::Set1);
 
 		$this->assertEquals(WeaponType::Dagger, $effective->MainHand);
 		$this->assertEquals(ItemId::Legendary_Sigil_of_Demons, $effective->Sigil1);
@@ -101,7 +102,7 @@ class ResolveWeaponSkills extends TestCase {
 		$code->WeaponSet2->MainHand  = WeaponType::Staff;
 		$code->WeaponSet2->Sigil2 = ItemId::Legendary_Sigil_of_Concentration;
 
-		$effective = Statics::ResolveEffectiveWeapons($code, WeaponSetNumber::Set1);
+		$effective = ResolveEffectiveWeapons($code, WeaponSetNumber::Set1);
 
 		$this->assertEquals(WeaponType::Dagger, $effective->MainHand);
 		$this->assertEquals(ItemId::Legendary_Sigil_of_Demons, $effective->Sigil1);

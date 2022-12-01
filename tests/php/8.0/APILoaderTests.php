@@ -1,12 +1,12 @@
 <?php namespace Hardstuck\GuildWars2\BuildCodes\V2\Tests\API;
 
+use Hardstuck\GuildWars2\BuildCodes\V2;
 use Hardstuck\GuildWars2\BuildCodes\V2\APILoader;
 use Hardstuck\GuildWars2\BuildCodes\V2\ItemId;
 use Hardstuck\GuildWars2\BuildCodes\V2\Kind;
 use Hardstuck\GuildWars2\BuildCodes\V2\Profession;
 use Hardstuck\GuildWars2\BuildCodes\V2\SkillId;
 use Hardstuck\GuildWars2\BuildCodes\V2\SpecializationId;
-use Hardstuck\GuildWars2\BuildCodes\V2\Statics;
 use Hardstuck\GuildWars2\BuildCodes\V2\StatId;
 use Hardstuck\GuildWars2\BuildCodes\V2\TraitLineChoice;
 use Hardstuck\GuildWars2\BuildCodes\V2\Util\TraitLineChoices;
@@ -88,7 +88,7 @@ class BasicCodesTests extends TestCase {
 		$this->assertEquals(ItemId::Legendary_Sigil_of_Paralyzation, $code->WeaponSet2->Sigil2);
 
 		$celestialStatsKEKW = [ StatId::Celestial1, StatId::Celestial2, StatId::Celestial3, StatId::Celestial4 ];
-		for($i = 0; $i < Statics::ALL_EQUIPMENT_COUNT; $i++)
+		for($i = 0; $i < V2\ALL_EQUIPMENT_COUNT; $i++)
 			if($i !== 13) // empty second main hand
 				$this->assertContains($code->EquipmentAttributes[$i], $celestialStatsKEKW);
 

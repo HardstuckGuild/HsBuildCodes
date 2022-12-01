@@ -124,7 +124,7 @@ class BinaryLoader {
 
 		$code = new BuildCode();
 		$code->Version = $rawSpan->DecodeNext(8) - ord('a');
-		if($code->Version < Statics::FIRST_VERSIONED_VERSION || $code->Version > Statics::CURRENT_VERSION) throw new \Exception("Code version mismatch");
+		if($code->Version < FIRST_VERSIONED_VERSION || $code->Version > CURRENT_VERSION) throw new \Exception("Code version mismatch");
 		$code->Kind    = match ($rawSpan->DecodeNext(2)) {
 			0 => Kind::PvP,
 			1 => Kind::WvW,
@@ -176,7 +176,7 @@ class BinaryLoader {
 		$set = new WeaponSet();
 		$set->MainHand = WeaponType::from(WeaponType::_FIRST() + $rawSpan->DecodeNext_GetMinusMinIfAtLeast(2, 5));
 		$set->Sigil1 = $rawSpan->DecodeNext(24);
-		if($set->MainHand !== WeaponType::_UNDEFINED && !Statics::IsTwoHanded($set->MainHand))
+		if($set->MainHand !== WeaponType::_UNDEFINED && !IsTwoHanded($set->MainHand))
 			$set->OffHand = WeaponType::from(WeaponType::_FIRST() + $rawSpan->DecodeNext_GetMinusMinIfAtLeast(2, 5));
 		$set->Sigil2 = $rawSpan->DecodeNext(24);
 		return $set;
@@ -188,11 +188,11 @@ class BinaryLoader {
 
 		$repeatCount = 0;
 		$data = StatId::_UNDEFINED;
-		for($i = 0; $i < Statics::ALL_EQUIPMENT_COUNT; $i++) {
+		for($i = 0; $i < ALL_EQUIPMENT_COUNT; $i++) {
 			if($repeatCount === 0) {
 				$data = $rawSpan->DecodeNext(16);
 
-				if($i === Statics::ALL_EQUIPMENT_COUNT - 1) $repeatCount = 1;
+				if($i === ALL_EQUIPMENT_COUNT - 1) $repeatCount = 1;
 				else $repeatCount = $rawSpan->DecodeNext(4) + 1;
 			}
 
@@ -225,11 +225,11 @@ class BinaryLoader {
 
 		$repeatCount = 0;
 		$data = ItemId::_UNDEFINED;
-		for($i = 0; $i < Statics::ALL_INFUSION_COUNT; $i++) {
+		for($i = 0; $i < ALL_INFUSION_COUNT; $i++) {
 			if($repeatCount === 0) {
 				$data = $rawSpan->DecodeNext_GetMinusMinIfAtLeast(1, 24);
 
-				if($i === Statics::ALL_EQUIPMENT_COUNT - 1) $repeatCount = 1;
+				if($i === ALL_EQUIPMENT_COUNT - 1) $repeatCount = 1;
 				else $repeatCount = $rawSpan->DecodeNext(5) + 1;
 			}
 
@@ -346,7 +346,7 @@ class BinaryLoader {
 			{
 				$lastStat = null;
 				$repeatCount = 0;
-				for($i = 0; $i < Statics::ALL_EQUIPMENT_COUNT; $i++)
+				for($i = 0; $i < ALL_EQUIPMENT_COUNT; $i++)
 				{
 					switch($i)
 					{
@@ -393,7 +393,7 @@ class BinaryLoader {
 			{
 				$lastInfusion = ItemId::_UNDEFINED;
 				$repeatCount = 0;
-				for($i = 0; $i < Statics::ALL_INFUSION_COUNT; $i++)
+				for($i = 0; $i < ALL_INFUSION_COUNT; $i++)
 				{
 					switch($i)
 					{
@@ -485,7 +485,7 @@ class BinaryLoader {
 		assert($codeType === 0x0D);
 
 		$code = new BuildCode();
-		$code->Version    = Statics::CURRENT_VERSION;
+		$code->Version    = CURRENT_VERSION;
 		$code->Kind       = Kind::PvE;
 		$code->Profession = Profession::from($rawView->NextByte());
 

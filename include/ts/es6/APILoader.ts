@@ -1,7 +1,7 @@
 import ItemId from "./Database/ItemIds";
 import Overrides from "./Database/Overrides";
 import SkillId from "./Database/SkillIds";
-import Static from "./Database/Static";
+import { CURRENT_VERSION, IsTwoHanded, ResolveLegend } from "./Database/Static";
 import StatId from "./Database/StatIds";
 import API from "./OfficialAPI/API";
 import APICache from "./OfficialAPI/APICache";
@@ -28,7 +28,7 @@ class APILoader {
 	public static async LoadBuildCode(authToken : string, characterName : string, targetGameMode : Kind, aquatic : boolean = false) : Promise<BuildCode>
 	{
 		const code = new BuildCode();
-		code.Version = Static.CURRENT_VERSION;
+		code.Version = CURRENT_VERSION;
 		code.Kind    = targetGameMode;
 
 		const playerData = await API.RequestJson("/characters/"+characterName, authToken);
@@ -166,7 +166,7 @@ class APILoader {
 						code.WeaponSet2.MainHand = await APICache.ResolveWeaponType(item.id);
 						if(item.upgrades) {
 							code.WeaponSet2.Sigil1 = item.upgrades[0];
-							if(Static.IsTwoHanded(code.WeaponSet2.MainHand) && item.upgrades.length > 1)
+							if(IsTwoHanded(code.WeaponSet2.MainHand) && item.upgrades.length > 1)
 								code.WeaponSet2.Sigil2 = item.upgrades[1];
 						}
 						break;
@@ -246,8 +246,8 @@ class APILoader {
 				const revenantData = new RevenantData();
 
 				const legends = aquatic ? activeBuild.aquatic_legends : activeBuild.legends;
-				const legend1 = Static.ResolveLegend(code.Specializations.Choice3, legends[0]);
-				const legend2 = Static.ResolveLegend(code.Specializations.Choice3, legends[1]);
+				const legend1 = ResolveLegend(code.Specializations.Choice3, legends[0]);
+				const legend2 = ResolveLegend(code.Specializations.Choice3, legends[1]);
 				if(legend1 !== null) // One legend is always set.
 				{
 					revenantData.Legend1 = legend1;

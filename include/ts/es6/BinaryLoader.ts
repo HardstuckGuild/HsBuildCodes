@@ -3,7 +3,7 @@ import LazyLoadMode from "./Database/LazyLoadMode";
 import PerProfessionData from "./Database/PerProfessionData";
 import SpecializationId from "./Database/SpecializationIds";
 import Overrides from "./Database/Overrides";
-import Static from "./Database/Static";
+import { ALL_EQUIPMENT_COUNT, ALL_INFUSION_COUNT, CURRENT_VERSION, FIRST_VERSIONED_VERSION, IsTwoHanded } from "./Database/Static";
 import StatId from "./Database/StatIds";
 import { Arbitrary, BuildCode, IArbitrary, IProfessionSpecific, Kind, Legend, PetId, Profession, ProfessionSpecific, RangerData, RevenantData, Specialization, TraitLineChoice, WeaponSet, WeaponType } from "./Structures";
 import { AllEquipmentInfusions, AllEquipmentStats, TraitLineChoices } from "./Util/UtilStructs";
@@ -126,7 +126,7 @@ class BinaryLoader {
 
 		const code = new BuildCode();
 		code.Version = rawSpan.DecodeNext(8) - 'a'.charCodeAt(0);
-		Assert(code.Version >= Static.FIRST_VERSIONED_VERSION && code.Version <= Static.CURRENT_VERSION, "Code version mismatch");
+		Assert(code.Version >= FIRST_VERSIONED_VERSION && code.Version <= CURRENT_VERSION, "Code version mismatch");
 		switch (rawSpan.DecodeNext(2)) {
 			case 0: code.Kind = Kind.PvP; break;
 			case 1: code.Kind = Kind.WvW; break;
@@ -178,7 +178,7 @@ class BinaryLoader {
 		const set = new WeaponSet();
 		set.MainHand = (WeaponType._FIRST + rawSpan.DecodeNext_GetMinusMinIfAtLeast(2, 5)) as WeaponType;
 		set.Sigil1 = rawSpan.DecodeNext(24);
-		if(set.MainHand !== WeaponType._UNDEFINED && !Static.IsTwoHanded(set.MainHand))
+		if(set.MainHand !== WeaponType._UNDEFINED && !IsTwoHanded(set.MainHand))
 			set.OffHand = (WeaponType._FIRST + rawSpan.DecodeNext_GetMinusMinIfAtLeast(2, 5)) as WeaponType;
 		set.Sigil2 = rawSpan.DecodeNext(24);
 		return set;
@@ -190,11 +190,11 @@ class BinaryLoader {
 
 		let repeatCount = 0;
 		let data = StatId._UNDEFINED;
-		for(let i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++) {
+		for(let i = 0; i < ALL_EQUIPMENT_COUNT; i++) {
 			if(repeatCount === 0) {
 				data = rawSpan.DecodeNext(16);
 
-				if(i === Static.ALL_EQUIPMENT_COUNT - 1) repeatCount = 1;
+				if(i === ALL_EQUIPMENT_COUNT - 1) repeatCount = 1;
 				else repeatCount = rawSpan.DecodeNext(4) + 1;
 			}
 
@@ -227,11 +227,11 @@ class BinaryLoader {
 
 		let repeatCount = 0;
 		let data = ItemId._UNDEFINED;
-		for(let i = 0; i < Static.ALL_INFUSION_COUNT; i++) {
+		for(let i = 0; i < ALL_INFUSION_COUNT; i++) {
 			if(repeatCount === 0) {
 				data = rawSpan.DecodeNext_GetMinusMinIfAtLeast(1, 24);
 
-				if(i === Static.ALL_EQUIPMENT_COUNT - 1) repeatCount = 1;
+				if(i === ALL_EQUIPMENT_COUNT - 1) repeatCount = 1;
 				else repeatCount = rawSpan.DecodeNext(5) + 1;
 			}
 
@@ -348,7 +348,7 @@ class BinaryLoader {
 			{
 				let lastStat : StatId|null = null;
 				let repeatCount = 0;
-				for(let i = 0; i < Static.ALL_EQUIPMENT_COUNT; i++)
+				for(let i = 0; i < ALL_EQUIPMENT_COUNT; i++)
 				{
 					switch(i)
 					{
@@ -395,7 +395,7 @@ class BinaryLoader {
 			{
 				let lastInfusion = ItemId._UNDEFINED;
 				let repeatCount = 0;
-				for(let i = 0; i < Static.ALL_INFUSION_COUNT; i++)
+				for(let i = 0; i < ALL_INFUSION_COUNT; i++)
 				{
 					switch(i)
 					{
@@ -485,7 +485,7 @@ class BinaryLoader {
 		Assert(codeType === 0x0D);
 
 		const code = new BuildCode();
-		code.Version    = Static.CURRENT_VERSION;
+		code.Version    = CURRENT_VERSION;
 		code.Kind       = Kind.PvE;
 		code.Profession = rawView.NextByte() as Profession;
 

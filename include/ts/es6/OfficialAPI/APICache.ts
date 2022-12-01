@@ -1,7 +1,7 @@
 import ItemId from "../Database/ItemIds";
 import SkillId from "../Database/SkillIds";
 import SpecializationId from "../Database/SpecializationIds";
-import Static from "../Database/Static";
+import { IsTwoHanded } from "../Database/Static";
 import StatId from "../Database/StatIds";
 import TraitId from "../Database/TraitIds";
 import { BuildCode, Profession, Specialization, TraitLineChoice, TraitSlot, WeaponSet, WeaponType } from "../Structures";
@@ -58,7 +58,7 @@ class APICache {
 		else
 		{
 			if(effectiveWeapons.OffHand === WeaponType._UNDEFINED
-				&& (effectiveWeapons.MainHand === WeaponType._UNDEFINED || !Static.IsTwoHanded(effectiveWeapons.MainHand)))
+				&& (effectiveWeapons.MainHand === WeaponType._UNDEFINED || !IsTwoHanded(effectiveWeapons.MainHand)))
 				return SkillId._UNDEFINED;
 
 			//NOTE(Rennorb): this isnt outside of the if to allow early bail if the guard condition isnt met.

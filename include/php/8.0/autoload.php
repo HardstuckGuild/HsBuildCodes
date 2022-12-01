@@ -1,6 +1,8 @@
 <?php namespace Hardstuck\GuildWars2\BuildCodes\V2;
 
 set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__.'/../../common/');
+//NOTE(Rennorb): Include the statics directly since the autoloader will only be called for classes.
+require_once __DIR__.'/Database/Static.php';
 
 spl_autoload_register(function($class) {
 	$relNamespace = strstr($class, __NAMESPACE__);
@@ -15,7 +17,6 @@ spl_autoload_register(function($class) {
 			require __DIR__.str_replace('\\', '/', $relNamespace).'.php';
 			break;
 
-		case '\Statics':
 		case '\Overrides':
 		case '\PerProfessionData':
 		case '\LazyLoadMode':
