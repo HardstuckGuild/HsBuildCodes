@@ -27,6 +27,9 @@ function DetermineCodeVersion(string $code) : int
 	return $potentialVersion;
 }
 
+function ExistsAndIsTwoHanded(int $weaponType) {
+	return $weaponType !== WeaponType::_UNDEFINED && IsTwoHanded($weaponType);
+}
 function IsTwoHanded(int $weaponType) : bool
 {
 	switch($weaponType)
@@ -401,6 +404,30 @@ function ResolveWeightClass(int $profession) : int
 	};
 }
 
+/** @return True if the build code can have attributes at the given index. Useful for looping over all stats.
+ *  @remark Does not check out of bounds. */
+function HasAttributeSlot(BuildCode $code, int $index) : bool {
+	return match ($index) {
+		11 => $code->WeaponSet1->MainHand != WeaponType::_UNDEFINED,
+		12 => $code->WeaponSet1->OffHand  != WeaponType::_UNDEFINED,
+		13 => $code->WeaponSet2->MainHand != WeaponType::_UNDEFINED,
+		14 => $code->WeaponSet2->OffHand  != WeaponType::_UNDEFINED,
+		default => true,
+	};
+}
+
+/** @return True if the build code can have infusions at the given index. Useful for looping over all infusions.
+ *  @remark Does not check out of bounds. */
+function HasInfusionSlot(BuildCode $code, int $index) : bool {
+	return match ($index) {
+		16 => $code->WeaponSet1->MainHand != WeaponType::_UNDEFINED,
+		17 => $code->WeaponSet1->OffHand  != WeaponType::_UNDEFINED || ExistsAndIsTwoHanded($code->WeaponSet1->MainHand),
+		18 => $code->WeaponSet2->MainHand != WeaponType::_UNDEFINED,
+		19 => $code->WeaponSet2->OffHand  != WeaponType::_UNDEFINED || ExistsAndIsTwoHanded($code->WeaponSet2->MainHand),
+		default => true,
+	};
+}
+
 /** @return int Demoted rune/sigil. If the item is neither the original item is just returned. */
 function LegendaryToSuperior(int $item) : int { return match ($item) {
 	ItemId::Legendary_Rune_of_the_Afflicted    => ItemId::Superior_Rune_of_the_Afflicted   ,
@@ -587,4 +614,138 @@ function LegendaryToSuperior(int $item) : int { return match ($item) {
 
 	default => $item,
 };
+}
+
+class CompressionOptions {
+	public const NONE                       = 0;
+	public const REARRANGE_INFUSIONS        = 1 << 0;
+	public const SUBSTITUTE_INFUSIONS       = 1 << 1;
+	public const REMOVE_NON_STAT_INFUSIONS  = 1 << 2;
+	public const REMOVE_SWIM_SPEED_INFUSION = 1 << 3;
+
+	public const ALL = 0xffffffff;
+}
+
+function Compress(BuildCode $code, int $options) : void
+{
+	if($options & CompressionOptions::REMOVE_SWIM_SPEED_INFUSION)
+	{
+		$name = ItemId::TryGetName($code->Infusions->Helmet);
+		if(str_starts_with($name, '__not_defined')) //something something @performance
+			$code->Infusions->Helmet = ItemId::_UNDEFINED;
+	}
+
+	if($options & CompressionOptions::REMOVE_NON_STAT_INFUSIONS)
+	{
+		for($i = 0; $i < ALL_INFUSION_COUNT - 1; $i++) //NOTE(Rennorb): skip the amulet with - 1, as enrichments can't be moved
+		{
+			$old = $code->Infusions[$i];
+			$code->Infusions[$i] = match ($old) {
+				ItemId::Agony_Infusion_01 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_02 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_03 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_04 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_05 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_06 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_07 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_08 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_09 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_10 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_11 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_12 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_13 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_14 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_15 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_16 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_17 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_18 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_19 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_20 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_21 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_22 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_23 => ItemId::_UNDEFINED,
+				ItemId::Agony_Infusion_24 => ItemId::_UNDEFINED,
+				default => $old,
+			};
+		}
+	}
+
+	if($options & CompressionOptions::SUBSTITUTE_INFUSIONS)
+	{
+		for($i = 0; $i < ALL_INFUSION_COUNT - 1; $i++) //NOTE(Rennorb): skip the amulet with - 1, as enrichments can't be moved
+		{
+			$old = $code->Infusions[$i];
+			$old_name = ItemId::TryGetName($old);
+			if($old === ItemId::_UNDEFINED || str_starts_with($old_name, '__not_defined')) continue;
+
+			$last_underscore_pos = strrpos($old_name, '_');
+			if($last_underscore_pos === false) continue;
+
+			$code->Infusions[$i] = match (substr($old_name, $last_underscore_pos + 1)) {
+				"Concentration"    => ItemId::WvW_Infusion_Concentration,
+				"Condition_Damage" => ItemId::WvW_Infusion_Malign,
+				"Expertise"        => ItemId::WvW_Infusion_Expertise,
+				"Healing_Power"    => ItemId::WvW_Infusion_Healing,
+				"Power"            => str_ends_with($old_name, "Healing_Power") ? ItemId::WvW_Infusion_Healing : ItemId::WvW_Infusion_Mighty,
+				"Mighty"           => ItemId::WvW_Infusion_Mighty,
+				"Precision",
+				"Precise"          => ItemId::WvW_Infusion_Precise,
+				"Toughness",
+				"Resilient"        => ItemId::WvW_Infusion_Resilient,
+				"Vitality",
+				"Vital"            => ItemId::WvW_Infusion_Vital,
+				default => str_ends_with($old_name, "Condition_Damage") ? ItemId::WvW_Infusion_Malign : $old,
+			};
+		}
+	}
+
+	if($options & CompressionOptions::REARRANGE_INFUSIONS && $code->Kind !== Kind::PvP)
+	{
+		$infusions = [];
+		for($i = 0; $i < ALL_INFUSION_COUNT - 1; $i++) //NOTE(Rennorb): skip the amulet with - 1, as enrichments can't be moved
+		{
+			$item = $code->Infusions[$i];
+			if($item === ItemId::_UNDEFINED) continue;
+			$infusions[$item] = array_key_exists($item, $infusions) ? $infusions[$item] + 1 : 1;
+		}
+
+
+		$remaining = 0;
+		$current_inf = ItemId::_UNDEFINED;
+		$keys = array_keys($infusions);
+		$current_key = -1;
+		$NextInfusion = function() use(&$remaining, &$current_inf, &$current_key, $keys, $infusions) : int
+		{
+			if($remaining === 0)
+			{
+				$current_key++;
+				if($current_key < count($keys))
+				{
+					$current_inf = $keys[$current_key];
+					$remaining = $infusions[$current_inf];
+				}
+				else
+				{
+					$current_inf = ItemId::_UNDEFINED;
+					$remaining = ALL_INFUSION_COUNT;
+				}
+			}
+
+			$remaining--;
+			return $current_inf;
+		};
+
+		if($code->Infusions->Amulet === ItemId::_UNDEFINED)
+		{
+			for($i = 0; $i < ALL_INFUSION_COUNT - 1; $i++)
+				if(HasInfusionSlot($code, $i))
+					$code->Infusions[$i] = $NextInfusion();
+		}
+		else
+		{
+			for($i = ALL_INFUSION_COUNT - 1; $i >= 0; $i--)
+				if(HasInfusionSlot($code, $i))
+					$code->Infusions[$i] = $NextInfusion();
+		}
+	}
 }

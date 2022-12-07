@@ -137,22 +137,7 @@ public static class TextLoader {
 		var repeatCount = 0;
 		var data = StatId._UNDEFINED;
 		for(int i = 0; i < ALL_EQUIPMENT_COUNT; i++) {
-			switch(i) {
-				case 11:
-					if(!weaponRef.WeaponSet1.HasAny) { i += 3; continue; }
-					else if(weaponRef.WeaponSet1.MainHand == WeaponType._UNDEFINED) { continue; }
-					else break;
-				case 12:
-					if(weaponRef.WeaponSet1.OffHand == WeaponType._UNDEFINED) continue;
-					else break;
-				case 13:
-					if(!weaponRef.WeaponSet2.HasAny) { i++; continue; }
-					else if(weaponRef.WeaponSet2.MainHand == WeaponType._UNDEFINED) continue;
-					else break;
-				case 14:
-					if(weaponRef.WeaponSet2.OffHand == WeaponType._UNDEFINED) continue;
-					else break;
-			}
+			if(!HasAttributeSlot(weaponRef, i)) continue;
 
 			if(repeatCount == 0) {
 				data = (StatId)DecodeAndAdvance(ref text, 2);
@@ -175,22 +160,7 @@ public static class TextLoader {
 		var data = ItemId._UNDEFINED;
 		for(int i = 0; i < ALL_INFUSION_COUNT; i++)
 		{
-			switch(i) {
-				case 16:
-					if(!weaponRef.WeaponSet1.HasAny) { i += 3; continue; }
-					else if(weaponRef.WeaponSet1.MainHand == WeaponType._UNDEFINED) { continue; }
-					else break;
-				case 17:
-					if(weaponRef.WeaponSet1.OffHand == WeaponType._UNDEFINED && !IsTwoHanded(weaponRef.WeaponSet1.MainHand)) continue;
-					else break;
-				case 18:
-					if(!weaponRef.WeaponSet2.HasAny) { i++; continue; }
-					else if(weaponRef.WeaponSet2.MainHand == WeaponType._UNDEFINED) continue;
-					else break;
-				case 19:
-					if(weaponRef.WeaponSet2.OffHand == WeaponType._UNDEFINED && !IsTwoHanded(weaponRef.WeaponSet2.MainHand)) continue;
-					else break;
-			}
+			if(!HasInfusionSlot(weaponRef, i)) continue;
 
 			if(repeatCount == 0) {
 				data = EatToken(ref text, '_') ? ItemId._UNDEFINED : (ItemId)DecodeAndAdvance(ref text, 3);
@@ -354,22 +324,7 @@ public static class TextLoader {
 		var repeatCount = 0;
 		for(int i = 0; i < ALL_EQUIPMENT_COUNT; i++)
 		{
-			switch(i) {
-				case 11:
-					if(!weaponRef.WeaponSet1.HasAny) { i += 3; continue; }
-					else if(weaponRef.WeaponSet1.MainHand == WeaponType._UNDEFINED) { continue; }
-					else break;
-				case 12:
-					if(weaponRef.WeaponSet1.OffHand == WeaponType._UNDEFINED) continue;
-					else break;
-				case 13:
-					if(!weaponRef.WeaponSet2.HasAny) { i++; continue; }
-					else if(weaponRef.WeaponSet2.MainHand == WeaponType._UNDEFINED) continue;
-					else break;
-				case 14:
-					if(weaponRef.WeaponSet2.OffHand == WeaponType._UNDEFINED) continue;
-					else break;
-			}
+			if(!HasAttributeSlot(weaponRef, i)) continue;
 
 			if(weaponRef.EquipmentAttributes[i] != lastStat)
 			{
@@ -399,22 +354,7 @@ public static class TextLoader {
 		var repeatCount = 0;
 		for(int i = 0; i < ALL_INFUSION_COUNT; i++)
 		{
-			switch(i) {
-				case 16:
-					if(!weaponRef.WeaponSet1.HasAny) { i += 3; continue; }
-					else if(weaponRef.WeaponSet1.MainHand == WeaponType._UNDEFINED) { continue; }
-					else break;
-				case 17:
-					if(weaponRef.WeaponSet1.OffHand == WeaponType._UNDEFINED && !IsTwoHanded(weaponRef.WeaponSet1.MainHand)) continue;
-					else break;
-				case 18:
-					if(!weaponRef.WeaponSet2.HasAny) { i++; continue; }
-					else if(weaponRef.WeaponSet2.MainHand == WeaponType._UNDEFINED) continue;
-					else break;
-				case 19:
-					if(weaponRef.WeaponSet2.OffHand == WeaponType._UNDEFINED && !IsTwoHanded(weaponRef.WeaponSet2.MainHand)) continue;
-					else break;
-			}
+			if(!HasInfusionSlot(weaponRef, i)) continue;
 
 			if(weaponRef.Infusions[i] != lastInfusion)
 			{

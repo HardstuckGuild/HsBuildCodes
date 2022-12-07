@@ -196,22 +196,7 @@ class BinaryLoader {
 				else $repeatCount = $rawSpan->DecodeNext(4) + 1;
 			}
 
-			switch($i) {
-				case 11:
-					if(!$weaponRef->WeaponSet1->HasAny()) { $i += 3; continue 2; }
-					else if($weaponRef->WeaponSet1->MainHand === WeaponType::_UNDEFINED) { continue 2; }
-					else break;
-				case 12:
-					if($weaponRef->WeaponSet1->OffHand === WeaponType::_UNDEFINED) continue 2;
-					else break;
-				case 13:
-					if(!$weaponRef->WeaponSet2->HasAny()) { $i++; continue 2; }
-					else if($weaponRef->WeaponSet2->MainHand === WeaponType::_UNDEFINED) continue 2;
-					else break;
-				case 14:
-					if($weaponRef->WeaponSet2->OffHand === WeaponType::_UNDEFINED) continue 2;
-					else break;
-			}
+			if(!HasAttributeSlot($weaponRef, $i)) continue;
 
 			$allData[$i] = $data;
 			$repeatCount--;
@@ -233,22 +218,7 @@ class BinaryLoader {
 				else $repeatCount = $rawSpan->DecodeNext(5) + 1;
 			}
 
-			switch($i) {
-				case 16:
-					if(!$weaponRef->WeaponSet1->HasAny()) { $i += 3; continue 2; }
-					else if($weaponRef->WeaponSet1->MainHand === WeaponType::_UNDEFINED) { continue 2; }
-					else break;
-				case 17:
-					if($weaponRef->WeaponSet1->OffHand === WeaponType::_UNDEFINED) continue 2;
-					else break;
-				case 18:
-					if(!$weaponRef->WeaponSet2->HasAny()) { $i++; continue 2; }
-					else if($weaponRef->WeaponSet2->MainHand === WeaponType::_UNDEFINED) continue 2;
-					else break;
-				case 19:
-					if($weaponRef->WeaponSet2->OffHand === WeaponType::_UNDEFINED) continue 2;
-					else break;
-			}
+			if(!HasInfusionSlot($weaponRef, $i)) continue;
 
 			$allData[$i] = $data;
 			$repeatCount--;
@@ -348,23 +318,7 @@ class BinaryLoader {
 				$repeatCount = 0;
 				for($i = 0; $i < ALL_EQUIPMENT_COUNT; $i++)
 				{
-					switch($i)
-					{
-						case 11:
-							if(!$code->WeaponSet1->HasAny()) { $i += 3; continue 2; }
-							else if($code->WeaponSet1->MainHand === WeaponType::_UNDEFINED) { continue 2; }
-							else break;
-						case 12:
-							if($code->WeaponSet1->OffHand === WeaponType::_UNDEFINED) continue 2;
-							else break;
-						case 13:
-							if(!$code->WeaponSet2->HasAny()) { $i++; continue 2; }
-							else if($code->WeaponSet2->MainHand === WeaponType::_UNDEFINED) continue 2;
-							else break;
-						case 14:
-							if($code->WeaponSet2->OffHand === WeaponType::_UNDEFINED) continue 2;
-							else break;
-					}
+					if(!HasAttributeSlot($code, $i)) continue;
 
 					if($code->EquipmentAttributes[$i] !== $lastStat)
 					{
@@ -395,23 +349,7 @@ class BinaryLoader {
 				$repeatCount = 0;
 				for($i = 0; $i < ALL_INFUSION_COUNT; $i++)
 				{
-					switch($i)
-					{
-						case 16:
-							if(!$code->WeaponSet1->HasAny()) { $i += 3; continue 2; }
-							else if($code->WeaponSet1->MainHand === WeaponType::_UNDEFINED) { continue 2; }
-							else break;
-						case 17:
-							if($code->WeaponSet1->OffHand === WeaponType::_UNDEFINED) continue 2;
-							else break;
-						case 18:
-							if(!$code->WeaponSet2->HasAny()) { $i++; continue 2; }
-							else if($code->WeaponSet2->MainHand === WeaponType::_UNDEFINED) continue 2;
-							else break;
-						case 19:
-							if($code->WeaponSet2->OffHand === WeaponType::_UNDEFINED) continue 2;
-							else break;
-					}
+					if(!HasInfusionSlot($code, $i)) continue;
 
 					if($code->Infusions[$i] !== $lastInfusion)
 					{

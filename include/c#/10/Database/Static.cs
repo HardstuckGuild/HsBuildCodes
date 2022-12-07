@@ -1,3 +1,4 @@
+using Hardstuck.GuildWars2.BuildCodes.V2;
 using System.Diagnostics;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2;
@@ -30,6 +31,8 @@ public static class Static
 		return potentialVersion;
 	}
 
+	public static bool ExistsAndIsTwoHanded(WeaponType weaponType) 
+		=> weaponType != WeaponType._UNDEFINED && IsTwoHanded(weaponType);
 	public static bool IsTwoHanded(WeaponType weaponType)
 	{
 		switch(weaponType)
@@ -402,6 +405,26 @@ public static class Static
 		};
 	}
 
+	/// <returns> True if the build code can have attributes at the given index. Useful for looping over all stats. </returns>
+	/// <remarks> Does not check out of bounds. </remarks>
+	public static bool HasAttributeSlot(BuildCode code, int index) => (index) switch {
+		11 => code.WeaponSet1.MainHand != WeaponType._UNDEFINED,
+		12 => code.WeaponSet1.OffHand  != WeaponType._UNDEFINED,
+		13 => code.WeaponSet2.MainHand != WeaponType._UNDEFINED,
+		14 => code.WeaponSet2.OffHand  != WeaponType._UNDEFINED,
+		_ => true,
+	};
+
+	/// <returns> True if the build code can have infusions at the given index. Useful for looping over all infusions. </returns>
+	/// <remarks> Does not check out of bounds. </remarks>
+	public static bool HasInfusionSlot(BuildCode code, int index) => (index) switch {
+		16 => code.WeaponSet1.MainHand != WeaponType._UNDEFINED,
+		17 => code.WeaponSet1.OffHand  != WeaponType._UNDEFINED || ExistsAndIsTwoHanded(code.WeaponSet1.MainHand),
+		18 => code.WeaponSet2.MainHand != WeaponType._UNDEFINED,
+		19 => code.WeaponSet2.OffHand  != WeaponType._UNDEFINED || ExistsAndIsTwoHanded(code.WeaponSet2.MainHand),
+		_ => true,
+	};
+
 	/// <returns> Demoted rune/sigil. If the item is neither the original item is just returned. </returns>
 	public static ItemId LegendaryToSuperior(ItemId item) => (item) switch {
 		ItemId.Legendary_Rune_of_the_Afflicted    => ItemId.Superior_Rune_of_the_Afflicted,
@@ -588,4 +611,138 @@ public static class Static
 
 		_ => item,
 	};
+
+	[Flags]
+	public enum CompressionOptions : uint {
+		NONE                       = default,
+		REARRANGE_INFUSIONS        = 1 << 0,
+		SUBSTITUTE_INFUSIONS       = 1 << 1,
+		REMOVE_NON_STAT_INFUSIONS  = 1 << 2,
+		REMOVE_SWIM_SPEED_INFUSION = 1 << 3,
+
+		ALL = uint.MaxValue,
+	}
+
+	public static void Compress(BuildCode code, CompressionOptions options)
+	{
+		if(options.HasFlag(CompressionOptions.REMOVE_SWIM_SPEED_INFUSION))
+		{
+			var name = Enum.GetName(code.Infusions.Helmet);
+			if(name != null && name.Contains("Swim_Speed_Infusion")) //something something @performance
+				code.Infusions.Helmet = ItemId._UNDEFINED;
+		}
+
+		if(options.HasFlag(CompressionOptions.REMOVE_NON_STAT_INFUSIONS))
+		{
+			for(int i = 0; i < ALL_INFUSION_COUNT - 1; i++) //NOTE(Rennorb): skip the amulet with - 1, as enrichments can't be moved
+			{
+				var old = code.Infusions[i];
+				code.Infusions[i] = (old) switch {
+					ItemId.Agony_Infusion_01 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_02 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_03 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_04 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_05 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_06 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_07 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_08 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_09 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_10 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_11 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_12 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_13 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_14 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_15 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_16 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_17 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_18 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_19 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_20 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_21 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_22 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_23 => ItemId._UNDEFINED,
+					ItemId.Agony_Infusion_24 => ItemId._UNDEFINED,
+					_ => old,
+				};
+			}
+		}
+
+		if(options.HasFlag(CompressionOptions.SUBSTITUTE_INFUSIONS))
+		{
+			for(int i = 0; i < ALL_INFUSION_COUNT - 1; i++) //NOTE(Rennorb): skip the amulet with - 1, as enrichments can't be moved
+			{
+				var old = code.Infusions[i];
+				if(old == ItemId._UNDEFINED || !Enum.IsDefined(old)) continue;
+
+				var old_name = Enum.GetName(old)!;
+				var last_underscore_pos = old_name.LastIndexOf('_');
+				if(last_underscore_pos == -1) continue;
+
+				//NOTE(Rennorb): in c#11 this could at least be done with spans
+				code.Infusions[i] = (old_name[(last_underscore_pos + 1)..]) switch {
+					"Concentration" => ItemId.WvW_Infusion_Concentration,
+					"Malign"    or _ when old_name.EndsWith("Condition_Damage") => ItemId.WvW_Infusion_Malign,
+					"Expertise"     => ItemId.WvW_Infusion_Expertise,
+					"Healing"       => ItemId.WvW_Infusion_Healing,
+					"Power"         => old_name.EndsWith("Healing_Power") ? ItemId.WvW_Infusion_Healing : ItemId.WvW_Infusion_Mighty,
+					"Mighty"        => ItemId.WvW_Infusion_Mighty,
+					"Precision" or
+					"Precise"       => ItemId.WvW_Infusion_Precise,
+					"Toughness" or
+					"Resilient"     => ItemId.WvW_Infusion_Resilient,
+					"Vitality"  or
+					"Vital"         => ItemId.WvW_Infusion_Vital,
+					_ => old,
+				};
+			}
+		}
+
+		if(options.HasFlag(CompressionOptions.REARRANGE_INFUSIONS) && code.Kind != Kind.PvP)
+		{
+			var infusions = new Dictionary<ItemId, int>();
+			for(int i = 0; i < ALL_INFUSION_COUNT - 1; i++) //NOTE(Rennorb): skip the amulet with - 1, as enrichments can't be moved
+			{
+				var item = code.Infusions[i];
+				if(item == ItemId._UNDEFINED) continue;
+				infusions[item] = infusions.TryGetValue(item, out int count) ? count + 1 : 1;
+			}
+
+
+			int remaining = 0;
+			var current_inf = ItemId._UNDEFINED;
+			var iter = infusions.GetEnumerator();
+			ItemId NextInfusion()
+			{
+				if(remaining == 0)
+				{
+					var moved = iter.MoveNext();
+					if(moved)
+					{
+						(current_inf, remaining) = iter.Current;
+					}
+					else
+					{
+						current_inf = ItemId._UNDEFINED;
+						remaining = ALL_INFUSION_COUNT;
+					}
+				}
+
+				remaining--;
+				return current_inf;
+			}
+
+			if(code.Infusions.Amulet == ItemId._UNDEFINED)
+			{
+				for(int i = 0; i < ALL_INFUSION_COUNT - 1; i++)
+					if(HasInfusionSlot(code, i))
+						code.Infusions[i] = NextInfusion();
+			}
+			else
+			{
+				for(int i = ALL_INFUSION_COUNT - 1; i >= 0; i--)
+					if(HasInfusionSlot(code, i))
+						code.Infusions[i] = NextInfusion();
+			}
+		}
+	}
 }

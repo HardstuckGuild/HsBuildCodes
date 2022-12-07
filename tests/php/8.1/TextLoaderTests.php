@@ -246,7 +246,7 @@ class BasicCodesTests extends TestCase {
 		}
 
 		for($i = 0; $i < ALL_INFUSION_COUNT; $i++) {
-			$this->assertEquals(ItemId::Mighty_5_Agony_Infusion, $code->Infusions[$i]);
+			$this->assertEquals(ItemId::Agony_Infusion_05_Mighty, $code->Infusions[$i]);
 		}
 
 		$this->assertEquals(SpecializationId::Spite, $code->Specializations[0]->SpecializationId);
@@ -326,7 +326,7 @@ class BasicCodesTests extends TestCase {
 		}
 
 		for($i = 0; $i < ALL_INFUSION_COUNT; $i++) {
-			$this->assertEquals(ItemId::Mighty_5_Agony_Infusion, $code->Infusions[$i]);
+			$this->assertEquals(ItemId::Agony_Infusion_05_Mighty, $code->Infusions[$i]);
 		}
 
 		$this->assertEquals(SpecializationId::Spite, $code->Specializations[0]->SpecializationId);
@@ -380,22 +380,22 @@ class BasicCodesTests extends TestCase {
 		$code->EquipmentAttributes->WeaponSet1OffHand  = StatId::_UNDEFINED;
 		$code->EquipmentAttributes->WeaponSet2MainHand  = StatId::Celestial1;
 		$code->EquipmentAttributes->WeaponSet2OffHand  = StatId::Celestial1;
-		$code->Infusions->Helmet  = ItemId::Plus_9_Agony_Infusion;
-		$code->Infusions->Shoulders  = ItemId::Plus_9_Agony_Infusion;
-		$code->Infusions->Chest  = ItemId::Plus_9_Agony_Infusion;
-		$code->Infusions->Gloves  = ItemId::Plus_9_Agony_Infusion;
-		$code->Infusions->Leggings  = ItemId::Plus_9_Agony_Infusion;
-		$code->Infusions->Boots  = ItemId::Plus_9_Agony_Infusion;
-		$code->Infusions->BackItem_1  = ItemId::Plus_9_Agony_Infusion;
+		$code->Infusions->Helmet  = ItemId::Agony_Infusion_09;
+		$code->Infusions->Shoulders  = ItemId::Agony_Infusion_09;
+		$code->Infusions->Chest  = ItemId::Agony_Infusion_09;
+		$code->Infusions->Gloves  = ItemId::Agony_Infusion_09;
+		$code->Infusions->Leggings  = ItemId::Agony_Infusion_09;
+		$code->Infusions->Boots  = ItemId::Agony_Infusion_09;
+		$code->Infusions->BackItem_1  = ItemId::Agony_Infusion_09;
 		$code->Infusions->BackItem_2  = ItemId::_UNDEFINED;
-		$code->Infusions->Accessory1  = ItemId::Expertise_WvW_Infusion;
-		$code->Infusions->Accessory2  = ItemId::Expertise_WvW_Infusion;
-		$code->Infusions->Ring1_1  = ItemId::Plus_9_Agony_Infusion;
-		$code->Infusions->Ring1_2  = ItemId::Plus_9_Agony_Infusion;
-		$code->Infusions->Ring1_3  = ItemId::Plus_9_Agony_Infusion;
-		$code->Infusions->Ring2_1  = ItemId::Plus_9_Agony_Infusion;
-		$code->Infusions->Ring2_2  = ItemId::Plus_9_Agony_Infusion;
-		$code->Infusions->Ring2_3  = ItemId::Plus_9_Agony_Infusion;
+		$code->Infusions->Accessory1  = ItemId::WvW_Infusion_Expertise;
+		$code->Infusions->Accessory2  = ItemId::WvW_Infusion_Expertise;
+		$code->Infusions->Ring1_1  = ItemId::Agony_Infusion_09;
+		$code->Infusions->Ring1_2  = ItemId::Agony_Infusion_09;
+		$code->Infusions->Ring1_3  = ItemId::Agony_Infusion_09;
+		$code->Infusions->Ring2_1  = ItemId::Agony_Infusion_09;
+		$code->Infusions->Ring2_2  = ItemId::Agony_Infusion_09;
+		$code->Infusions->Ring2_3  = ItemId::Agony_Infusion_09;
 		$code->Infusions->WeaponSet1_1  = ItemId::_UNDEFINED;
 		$code->Infusions->WeaponSet1_2  = ItemId::_UNDEFINED;
 		$code->Infusions->WeaponSet2_1  = ItemId::_UNDEFINED;
@@ -439,24 +439,24 @@ class BasicCodesTests extends TestCase {
 		$code->EquipmentAttributes->WeaponSet2MainHand = StatId::_UNDEFINED;
 		$code->EquipmentAttributes->WeaponSet2OffHand  = StatId::_UNDEFINED;
 		$code->EquipmentAttributes->Amulet             = StatId::Berserkers2;
-		$code->Infusions->Helmet       = ItemId::Mighty_7_Agony_Infusion;
-		$code->Infusions->Shoulders    = ItemId::Precise_7_Agony_Infusion;
-		$code->Infusions->Chest        = ItemId::Precise_7_Agony_Infusion;
-		$code->Infusions->Gloves       = ItemId::Precise_7_Agony_Infusion;
-		$code->Infusions->Leggings     = ItemId::Precise_7_Agony_Infusion;
-		$code->Infusions->Boots        = ItemId::Precise_7_Agony_Infusion;
-		$code->Infusions->BackItem_1   = ItemId::Concentration_WvW_Infusion;
+		$code->Infusions->Helmet       = ItemId::Agony_Infusion_07_Mighty;
+		$code->Infusions->Shoulders    = ItemId::Agony_Infusion_07_Precise;
+		$code->Infusions->Chest        = ItemId::Agony_Infusion_07_Precise;
+		$code->Infusions->Gloves       = ItemId::Agony_Infusion_07_Precise;
+		$code->Infusions->Leggings     = ItemId::Agony_Infusion_07_Precise;
+		$code->Infusions->Boots        = ItemId::Agony_Infusion_07_Precise;
+		$code->Infusions->BackItem_1   = ItemId::WvW_Infusion_Concentration;
 		$code->Infusions->BackItem_2   = ItemId::_UNDEFINED;
-		$code->Infusions->Accessory1   = ItemId::Concentration_WvW_Infusion;
-		$code->Infusions->Accessory2   = ItemId::Precise_WvW_Infusion;
-		$code->Infusions->Ring1_1      = ItemId::Concentration_WvW_Infusion;
-		$code->Infusions->Ring1_2      = ItemId::Concentration_WvW_Infusion;
-		$code->Infusions->Ring1_3      = ItemId::Concentration_WvW_Infusion;
-		$code->Infusions->Ring2_1      = ItemId::Concentration_WvW_Infusion;
-		$code->Infusions->Ring2_2      = ItemId::Concentration_WvW_Infusion;
-		$code->Infusions->Ring2_3      = ItemId::Concentration_WvW_Infusion;
-		$code->Infusions->WeaponSet1_1 = ItemId::Concentration_WvW_Infusion;
-		$code->Infusions->WeaponSet1_2 = ItemId::Concentration_WvW_Infusion;
+		$code->Infusions->Accessory1   = ItemId::WvW_Infusion_Concentration;
+		$code->Infusions->Accessory2   = ItemId::WvW_Infusion_Precise;
+		$code->Infusions->Ring1_1      = ItemId::WvW_Infusion_Concentration;
+		$code->Infusions->Ring1_2      = ItemId::WvW_Infusion_Concentration;
+		$code->Infusions->Ring1_3      = ItemId::WvW_Infusion_Concentration;
+		$code->Infusions->Ring2_1      = ItemId::WvW_Infusion_Concentration;
+		$code->Infusions->Ring2_2      = ItemId::WvW_Infusion_Concentration;
+		$code->Infusions->Ring2_3      = ItemId::WvW_Infusion_Concentration;
+		$code->Infusions->WeaponSet1_1 = ItemId::WvW_Infusion_Concentration;
+		$code->Infusions->WeaponSet1_2 = ItemId::WvW_Infusion_Concentration;
 		$code->Infusions->WeaponSet2_1 = ItemId::_UNDEFINED;
 		$code->Infusions->WeaponSet2_2 = ItemId::_UNDEFINED;
 		$code->Infusions->Amulet       = ItemId::_UNDEFINED;

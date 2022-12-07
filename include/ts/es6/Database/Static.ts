@@ -1,4 +1,4 @@
-import { BuildCode, Legend, Profession, Specialization, WeaponSet, WeaponSetNumber, WeaponType, WeightClass } from "../Structures";
+import { BuildCode, Kind, Legend, Profession, Specialization, WeaponSet, WeaponSetNumber, WeaponType, WeightClass } from "../Structures";
 import TextLoader from "../TextLoader";
 import { Assert } from "../Util/Static";
 import ItemId from "./ItemIds";
@@ -32,6 +32,7 @@ export function DetermineCodeVersion(code : string) : number
 	return potentialVersion;
 }
 
+export const ExistsAndIsTwoHanded = (weaponType : WeaponType) => weaponType != WeaponType._UNDEFINED && IsTwoHanded(weaponType);
 export function IsTwoHanded(weaponType : WeaponType) : boolean
 {
 	switch(weaponType)
@@ -387,6 +388,32 @@ export function ResolveWeightClass(profession : Profession) : WeightClass
 	};
 }
 
+/**
+ * @return True if the build code can have attributes at the given index. Useful for looping over all stats.
+ * @remark Does not check out of bounds. */
+export function HasAttributeSlot(code : BuildCode, index : number) : boolean {
+	switch (index) {
+		case 11: return code.WeaponSet1.MainHand != WeaponType._UNDEFINED;
+		case 12: return code.WeaponSet1.OffHand  != WeaponType._UNDEFINED;
+		case 13: return code.WeaponSet2.MainHand != WeaponType._UNDEFINED;
+		case 14: return code.WeaponSet2.OffHand  != WeaponType._UNDEFINED;
+		default: return true;
+	};
+}
+
+/**
+ * @return True if the build code can have infusions at the given index. Useful for looping over all infusions.
+ * @remark Does not check out of bounds. */
+export function HasInfusionSlot(code : BuildCode, index : number) : boolean {
+	switch (index) {
+		case 16: return code.WeaponSet1.MainHand != WeaponType._UNDEFINED;
+		case 17: return code.WeaponSet1.OffHand  != WeaponType._UNDEFINED || ExistsAndIsTwoHanded(code.WeaponSet1.MainHand);
+		case 18: return code.WeaponSet2.MainHand != WeaponType._UNDEFINED;
+		case 19: return code.WeaponSet2.OffHand  != WeaponType._UNDEFINED || ExistsAndIsTwoHanded(code.WeaponSet2.MainHand);
+		default: return true;
+	};
+}
+
 /** @return int Demoted rune/sigil. If the item is neither the original item is just returned. */
 export function LegendaryToSuperior(item : ItemId) : ItemId 
 {
@@ -574,5 +601,138 @@ export function LegendaryToSuperior(item : ItemId) : ItemId
 		case ItemId.Legendary_Sigil_of_Hologram_Slaying : return ItemId.Superior_Sigil_of_Hologram_Slaying ;
 
 		default: return item;
+	}
+}
+
+export enum CompressionOptions {
+	NONE                       = 0,
+	REARRANGE_INFUSIONS        = 1 << 0,
+	SUBSTITUTE_INFUSIONS       = 1 << 1,
+	REMOVE_NON_STAT_INFUSIONS  = 1 << 2,
+	REMOVE_SWIM_SPEED_INFUSION = 1 << 3,
+	ALL = 0xffffffff
+}
+
+export function Compress(code : BuildCode, options : CompressionOptions) : void
+{
+	if(options & CompressionOptions.REMOVE_SWIM_SPEED_INFUSION)
+	{
+		let name = ItemId[code.Infusions.Helmet];
+		if(name !== undefined && name.includes("Swim_Speed_Infusion")) //something something @performance
+			code.Infusions.Helmet = ItemId._UNDEFINED;
+	}
+
+	if(options & CompressionOptions.REMOVE_NON_STAT_INFUSIONS)
+	{
+		for(let i = 0; i < ALL_INFUSION_COUNT - 1; i++) //NOTE(Rennorb): skip the amulet with - 1, as enrichments can't be moved
+		{
+			switch (code.Infusions[i]) {
+				case ItemId.Agony_Infusion_01: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_02: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_03: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_04: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_05: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_06: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_07: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_08: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_09: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_10: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_11: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_12: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_13: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_14: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_15: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_16: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_17: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_18: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_19: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_20: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_21: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_22: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_23: code.Infusions[i] = ItemId._UNDEFINED; break;
+				case ItemId.Agony_Infusion_24: code.Infusions[i] = ItemId._UNDEFINED; break;
+			};
+		}
+	}
+
+	if(options & CompressionOptions.SUBSTITUTE_INFUSIONS)
+	{
+		for(let i = 0; i < ALL_INFUSION_COUNT - 1; i++) //NOTE(Rennorb): skip the amulet with - 1, as enrichments can't be moved
+		{
+			let old = code.Infusions[i];
+			let old_name = ItemId[old];
+			if(old == ItemId._UNDEFINED || old_name === undefined) continue;
+
+			let last_underscore_pos = old_name.lastIndexOf('_');
+			if(last_underscore_pos == -1) continue;
+
+			switch (old_name.substring(last_underscore_pos + 1)) {
+				case "Concentration": code.Infusions[i] = ItemId.WvW_Infusion_Concentration; break;
+				case "Malign"       : code.Infusions[i] = ItemId.WvW_Infusion_Malign;        break;
+				case "Expertise"    : code.Infusions[i] = ItemId.WvW_Infusion_Expertise;     break;
+				case "Healing"      : code.Infusions[i] = ItemId.WvW_Infusion_Healing;       break;
+				case "Mighty"       : code.Infusions[i] = ItemId.WvW_Infusion_Mighty;        break;
+				case "Power"        : code.Infusions[i] = old_name.endsWith("Healing_Power") ? ItemId.WvW_Infusion_Healing : ItemId.WvW_Infusion_Mighty; break;
+				case "Precise"      :
+				case "Precision"    : code.Infusions[i] = ItemId.WvW_Infusion_Precise;       break;
+				case "Resilient"    :
+				case "Toughness"    : code.Infusions[i] = ItemId.WvW_Infusion_Resilient;     break;
+				case "Vital"        :
+				case "Vitality"     : code.Infusions[i] = ItemId.WvW_Infusion_Vital;         break;
+				default: 
+					if(old_name.endsWith("Condition_Damage"))
+						code.Infusions[i] = ItemId.WvW_Infusion_Malign;
+			};
+		}
+	}
+
+	if(options & CompressionOptions.REARRANGE_INFUSIONS && code.Kind != Kind.PvP)
+	{
+		let infusions = {};
+		for(let i = 0; i < ALL_INFUSION_COUNT - 1; i++) //NOTE(Rennorb): skip the amulet with - 1, as enrichments can't be moved
+		{
+			let item = code.Infusions[i];
+			if(item === ItemId._UNDEFINED) continue;
+			infusions[item] = (infusions[item] || 0) + 1;
+		}
+
+
+		let remaining = 0;
+		let current_inf = ItemId._UNDEFINED;
+		let keys = Object.keys(infusions);
+		let current_key = -1;
+		function NextInfusion() : ItemId
+		{
+			if(remaining === 0)
+			{
+				current_key++;
+				if(current_key < keys.length)
+				{
+					current_inf = parseInt(keys[current_key]);
+					remaining = infusions[current_inf];
+				}
+				else
+				{
+					current_inf = ItemId._UNDEFINED;
+					remaining = ALL_INFUSION_COUNT;
+				}
+			}
+
+			remaining--;
+			return current_inf;
+		}
+
+		if(code.Infusions.Amulet === ItemId._UNDEFINED)
+		{
+			for(let i = 0; i < ALL_INFUSION_COUNT - 1; i++)
+				if(HasInfusionSlot(code, i))
+					code.Infusions[i] = NextInfusion();
+		}
+		else
+		{
+			for(let i = ALL_INFUSION_COUNT - 1; i >= 0; i--)
+				if(HasInfusionSlot(code, i))
+					code.Infusions[i] = NextInfusion();
+		}
 	}
 }
