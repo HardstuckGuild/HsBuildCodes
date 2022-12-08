@@ -31,26 +31,11 @@ public static class APILoader {
 
 		if(string.IsNullOrEmpty(_mumble.Data.Identity?.Name)) return null;
 
-		var gamemode = Kind.PvE;
-		switch(_mumble.Data.Context.MapType)
-		{
-			case MapType.PvP:
-			case MapType.GvG:
-			case MapType.Tournament:
-			case MapType.UserTournament:
-				gamemode = Kind.PvP;
-				break;
-
-			case MapType.WvW_EBG:
-			case MapType.WvW_BBL:
-			case MapType.WvW_GBL:
-			case MapType.WvW_RBL:
-			case MapType.WvW_OS:
-			case MapType.WvW_EotM:
-			case MapType.WvW_Lounge:
-				gamemode = Kind.WvW;
-				break;
-		}
+		var gamemode = (_mumble.Data.Context.GameMode) switch {
+			GameMode.PvP => Kind.PvP,
+			GameMode.WvW => Kind.WvW,
+			_ => Kind.PvE,
+		}; 
 		return await LoadBuildCode(authToken, _mumble.Data.Identity.Name, gamemode, aquatic);
 	}
 
@@ -97,7 +82,7 @@ public static class APILoader {
 				}
 			}
 
-			foreach(var item in activeEquipment.Equipment!) {
+			foreach(var item in activeEquipment.Equipment) {
 				switch(item.Slot)
 				{
 					case EquipmentItemSlot.Helm       : if( aquatic) break; SetArmorData(0, item); break;
@@ -244,6 +229,17 @@ public static class APILoader {
 		else // WvW, PvE
 		{
 			var pvpEquip = activeEquipment.EquipmentPvp!;
+
+			foreach(var item in activeEquipment.Equipment) {
+				switch(item.Slot) {
+					case EquipmentItemSlot.WeaponA1:       if(!aquatic) code.WeaponSet1.MainHand = await APICache.ResolveWeaponType(item.Id); break;
+					case EquipmentItemSlot.WeaponAquaticA: if( aquatic) code.WeaponSet1.MainHand = await APICache.ResolveWeaponType(item.Id); break;
+					case EquipmentItemSlot.WeaponA2:       if(!aquatic) code.WeaponSet1.OffHand  = await APICache.ResolveWeaponType(item.Id); break;
+					case EquipmentItemSlot.WeaponB1:       if(!aquatic) code.WeaponSet2.MainHand = await APICache.ResolveWeaponType(item.Id); break;
+					case EquipmentItemSlot.WeaponAquaticB: if( aquatic) code.WeaponSet2.MainHand = await APICache.ResolveWeaponType(item.Id); break;
+					case EquipmentItemSlot.WeaponB2:       if(!aquatic) code.WeaponSet2.OffHand  = await APICache.ResolveWeaponType(item.Id); break;
+				}
+			}
 
 			code.EquipmentAttributes.Helmet = (StatId)pvpEquip.Amulet.GetValueOrDefault();
 			code.Rune = (ItemId?)pvpEquip.Rune ?? ItemId._UNDEFINED;

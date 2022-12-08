@@ -109,8 +109,8 @@ class Skills {
 }
 
 class Pets {
-	public List<int> Terrestrial = new();
-	public List<int> Aquatic     = new();
+	public List<int?> Terrestrial = new();
+	public List<int?> Aquatic     = new();
 }
 
 class BuildSpecialization {
