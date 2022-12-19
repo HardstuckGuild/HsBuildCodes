@@ -281,5 +281,5 @@ class APILoader {
 	}
 
 	private static function ResolveStatId($item) : int
-	{ return $item->stats !== null ? $item->stats->id : APICache::ResolveStatId($item->id); }
+	{ return !empty($item->stats) ? $item->stats->id : APICache::ResolveStatId($item->id); }
 }
