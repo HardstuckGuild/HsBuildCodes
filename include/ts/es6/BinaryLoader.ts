@@ -253,14 +253,14 @@ class BinaryLoader {
 				return data;
 			}
 
-			default: return ProfessionSpecific.NONE.GetInstance();
+			default: return ProfessionSpecific.NONE.Instance;
 		}
 	}
 
 	private static LoadArbitrary(rawSpan : BitReader) : IArbitrary
 	{
 		//implement extensions here in the future
-		return Arbitrary.NONE.GetInstance();
+		return Arbitrary.NONE.Instance;
 	}
 
 	public static WriteBuildCode(code : BuildCode) : Uint8Array

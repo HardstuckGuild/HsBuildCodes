@@ -18,8 +18,8 @@ export class BuildCode {
 	public Infusions           : AllEquipmentInfusions = new AllEquipmentInfusions();
 	public Food                : ItemId                = ItemId._UNDEFINED;
 	public Utility             : ItemId                = ItemId._UNDEFINED;
-	public ProfessionSpecific  : IProfessionSpecific   = ProfessionSpecific.NONE.GetInstance();
-	public Arbitrary           : IArbitrary            = Arbitrary.NONE.GetInstance();
+	public ProfessionSpecific  : IProfessionSpecific   = ProfessionSpecific.NONE.Instance;
+	public Arbitrary           : IArbitrary            = Arbitrary.NONE.Instance;
 }
 
 export enum Kind {
@@ -122,13 +122,8 @@ export interface IProfessionSpecific { }
 export namespace ProfessionSpecific {
 
 	export class NONE implements IProfessionSpecific {
-	private static _instance : NONE|null = null;
-	//TODO(Rennorb): replace these with calls to construct static
-	public static GetInstance() : NONE {
-		if(NONE._instance === null) NONE._instance = new NONE();
-		return NONE._instance;
+		public static Instance = new NONE();
 	}
-}
 
 }
 
@@ -181,12 +176,7 @@ export interface IArbitrary { }
 export namespace Arbitrary {
 
 	export class NONE implements IArbitrary {
-		private static _instance : NONE|null = null;
-		//TODO(Rennorb): replace these with calls to construct static
-		public static GetInstance() {
-			if(NONE._instance === null) NONE._instance = new NONE();
-			return NONE._instance;
-		}
+		public static Instance = new NONE();
 	}
 
 }

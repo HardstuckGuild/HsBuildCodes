@@ -82,8 +82,8 @@ describe('BasicCodesTests', () => {
 			expect(code.Infusions[i]).toBe(ItemId._UNDEFINED);
 		expect(code.Food).toBe(ItemId._UNDEFINED);
 		expect(code.Utility).toBe(ItemId._UNDEFINED);
-		expect(code.ProfessionSpecific).toBe(ProfessionSpecific.NONE.GetInstance());
-		expect(code.Arbitrary)         .toBe(Arbitrary         .NONE.GetInstance());
+		expect(code.ProfessionSpecific).toBe(ProfessionSpecific.NONE.Instance);
+		expect(code.Arbitrary)         .toBe(Arbitrary         .NONE.Instance);
 	});
 
 	test('MinimalPvE', () => {
@@ -106,8 +106,8 @@ describe('BasicCodesTests', () => {
 			expect(code.Infusions[i]).toBe(ItemId._UNDEFINED);
 		expect(code.Food).toBe(ItemId._UNDEFINED);
 		expect(code.Utility).toBe(ItemId._UNDEFINED);
-		expect(code.ProfessionSpecific).toBe(ProfessionSpecific.NONE.GetInstance());
-		expect(code.Arbitrary)         .toBe(Arbitrary         .NONE.GetInstance());
+		expect(code.ProfessionSpecific).toBe(ProfessionSpecific.NONE.Instance);
+		expect(code.Arbitrary)         .toBe(Arbitrary         .NONE.Instance);
 	});
 
 	test('MinimalRanger', () => {

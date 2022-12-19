@@ -201,14 +201,14 @@ class TextLoader {
 				return data;
 			}
 
-			default: return ProfessionSpecific.NONE.GetInstance();
+			default: return ProfessionSpecific.NONE.Instance;
 		}
 	}
 
 	private static LoadArbitrary(text : StringView) : IArbitrary
 	{
 		//implement extensions here in the future
-		return Arbitrary.NONE.GetInstance();
+		return Arbitrary.NONE.Instance;
 	}
 
 	public static Encode(value : number, width : number) : string
