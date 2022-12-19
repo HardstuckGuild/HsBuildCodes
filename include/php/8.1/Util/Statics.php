@@ -31,7 +31,7 @@ trait Enum {
 
 	public static function TryGetValue(string $name) : int
 	{
-		if(property_exists(static::class, $name))
+		if(defined(static::class.'::'.$name))
 			return constant(static::class.'::'.$name);
 		else
 			return 0;
