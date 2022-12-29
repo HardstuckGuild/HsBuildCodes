@@ -63,6 +63,7 @@ V T P S.TS.TS.T WS..wS..WS..wS.. S..S..S..S..S.. R.. A..n,,,, I..n,,,, F..U.. A,
   3. repeat of (1.)
   4. repeat of (2.)
   - If the weapon is two handed, the id is stored in the first slot of the set, and the second weapon type index in the set is omitted.
+  - If the weapon is not set and the first weapon is not two handed the sigil corresponding to that weapon is omitted. 
   - The second weapon set may be omitted from the code by replacing the whole second set (`[WS..wS..]`) with a `~` (tilde).
   - This section can be omitted completely by replacing the whole section with a single `~` (tilde).
 

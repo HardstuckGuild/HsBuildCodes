@@ -1,7 +1,7 @@
 import BinaryLoader from "./BinaryLoader";
 import ItemId from "./Database/ItemIds";
 import SpecializationId from "./Database/SpecializationIds";
-import { ALL_EQUIPMENT_COUNT, ALL_INFUSION_COUNT, CURRENT_VERSION, HasAttributeSlot, HasInfusionSlot, IsTwoHanded } from "./Database/Static";
+import { ALL_EQUIPMENT_COUNT, ALL_INFUSION_COUNT, CURRENT_VERSION, ExistsAndIsTwoHanded, HasAttributeSlot, HasInfusionSlot, IsTwoHanded } from "./Database/Static";
 import StatId from "./Database/StatIds";
 import { Arbitrary, BuildCode, IArbitrary, IProfessionSpecific, Kind, Legend, PetId, Profession, ProfessionSpecific, RangerData, RevenantData, Specialization, TraitLineChoice, WeaponSet, WeaponType } from "./Structures";
 import StringView from "./Util/StringView"
@@ -119,9 +119,9 @@ class TextLoader {
 		if(set.MainHand)
 			if(!TextLoader.EatToken(text, '_')) set.Sigil1 = TextLoader.DecodeAndAdvance(text, 3);
 
-		if(set.MainHand === WeaponType._UNDEFINED || !IsTwoHanded(set.MainHand))
+		if(!ExistsAndIsTwoHanded(set.MainHand))
 			if(!TextLoader.EatToken(text, '_')) set.OffHand = (WeaponType._FIRST + TextLoader.DecodeAndAdvance(text)) as WeaponType;
-		if(set.OffHand || (set.MainHand && IsTwoHanded(set.MainHand)))
+		if(set.OffHand || ExistsAndIsTwoHanded(set.MainHand))
 			if(!TextLoader.EatToken(text, '_')) set.Sigil2 = TextLoader.DecodeAndAdvance(text, 3);
 		return set;
 	}
@@ -286,19 +286,24 @@ class TextLoader {
 	private static EncodeWeaponSet(set : WeaponSet) : string
 	{
 		let destination = '';
-		if(set.MainHand == WeaponType._UNDEFINED) destination += '_';
+		if(set.MainHand === WeaponType._UNDEFINED) destination += '_';
 		else {
 			destination += TextLoader.CHARSET[set.MainHand - WeaponType._FIRST];
-			if(set.Sigil1 == ItemId._UNDEFINED) destination += '_';
+			if(set.Sigil1 === ItemId._UNDEFINED) destination += '_';
 			else destination += TextLoader.Encode(set.Sigil1, 3);
 		}
-		if(set.MainHand == WeaponType._UNDEFINED || !IsTwoHanded(set.MainHand))
+
+		if(!ExistsAndIsTwoHanded(set.MainHand))
 		{
-			if(set.OffHand == WeaponType._UNDEFINED) destination += '_';
+			if(set.OffHand === WeaponType._UNDEFINED) destination += '_';
 			else destination += TextLoader.CHARSET[set.OffHand - WeaponType._FIRST];
 		}
-		if(set.Sigil2 == ItemId._UNDEFINED) destination += '_';
-		else destination += TextLoader.Encode(set.Sigil2, 3);
+
+		if(set.OffHand !== WeaponType._UNDEFINED || ExistsAndIsTwoHanded(set.MainHand))
+		{
+			if(set.Sigil2 === ItemId._UNDEFINED) destination += '_';
+			else destination += TextLoader.Encode(set.Sigil2, 3);
+		}
 
 		return destination;
 	}

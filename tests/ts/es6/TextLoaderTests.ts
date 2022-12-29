@@ -415,6 +415,27 @@ describe('BasicCodesTests', () => {
 
 		expect(reencode).toStrictEqual(code);
 	});
+
+	/** @test */ /* regression: encoder did not properly handle empty second weapon*/
+	test('Plenyx3', () => {
+		const code = new BuildCode();
+		code.Kind = Kind.PvE;
+		code.Version = 3;
+		code.Profession = Profession.Warrior;
+		code.WeaponSet1.MainHand = WeaponType.Rifle;
+		code.WeaponSet1.OffHand  = WeaponType._UNDEFINED;
+		code.WeaponSet1.Sigil1   = ItemId.Legendary_Sigil_of_Force;
+		code.WeaponSet1.Sigil2   = ItemId.Legendary_Sigil_of_the_Night;
+		code.WeaponSet2.MainHand = WeaponType.Scepter;
+		code.WeaponSet2.OffHand  = WeaponType._UNDEFINED;
+		code.WeaponSet2.Sigil1   = ItemId.Superior_Sigil_of_Absorption;
+		code.WeaponSet2.Sigil2   = ItemId._UNDEFINED;
+
+		const text = TextLoader.WriteBuildCode(code);
+		const reencode = TextLoader.LoadBuildCode(text);
+
+		expect(reencode).toStrictEqual(code);
+	});
 });
 
 describe.each([true])('OfficialChatLinks', (lazyload) => {

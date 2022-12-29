@@ -123,9 +123,9 @@ public static class TextLoader {
 		if(set.MainHand != WeaponType._UNDEFINED)
 			if(!EatToken(ref text, '_')) set.Sigil1 = (ItemId)DecodeAndAdvance(ref text, 3);
 		
-		if(set.MainHand == WeaponType._UNDEFINED || !Static.IsTwoHanded(set.MainHand))
+		if(!ExistsAndIsTwoHanded(set.MainHand))
 			if(!EatToken(ref text, '_')) set.OffHand = WeaponType._FIRST + DecodeAndAdvance(ref text);
-		if(set.OffHand != WeaponType._UNDEFINED || (set.MainHand != WeaponType._UNDEFINED && Static.IsTwoHanded(set.MainHand)))
+		if(set.OffHand != WeaponType._UNDEFINED || ExistsAndIsTwoHanded(set.MainHand))
 			if(!EatToken(ref text, '_')) set.Sigil2 = (ItemId)DecodeAndAdvance(ref text, 3);
 		return set;
 	}
@@ -309,13 +309,18 @@ public static class TextLoader {
 			if(set.Sigil1 == ItemId._UNDEFINED) WriteAndAdvance(ref destination, '_');
 			else EncodeAndAdvance(ref destination, (int)set.Sigil1, 3);
 		}
-		if(set.MainHand == WeaponType._UNDEFINED || !Static.IsTwoHanded(set.MainHand))
+
+		if(!ExistsAndIsTwoHanded(set.MainHand))
 		{
 			if(set.OffHand == WeaponType._UNDEFINED) WriteAndAdvance(ref destination, '_');
 			else WriteAndAdvance(ref destination, CHARSET[set.OffHand - WeaponType._FIRST]);
 		}
-		if(set.Sigil2 == ItemId._UNDEFINED) WriteAndAdvance(ref destination, '_');
-		else EncodeAndAdvance(ref destination, (int)set.Sigil2, 3);
+
+		if(set.OffHand != WeaponType._UNDEFINED || ExistsAndIsTwoHanded(set.MainHand))
+		{
+			if(set.Sigil2 == ItemId._UNDEFINED) WriteAndAdvance(ref destination, '_');
+			else EncodeAndAdvance(ref destination, (int)set.Sigil2, 3);
+		}
 	}
 
 	private static void EncodeStatsAndAdvance(ref Span<char> destination, BuildCode weaponRef)

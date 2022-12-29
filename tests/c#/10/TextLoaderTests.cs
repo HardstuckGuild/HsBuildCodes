@@ -388,10 +388,10 @@ public class BasicCodesTests {
 				Sigil2  = ItemId.Legendary_Sigil_of_Renewal,
 			},
 			WeaponSet2  = {
-			MainHand  = WeaponType.Sword,
-			OffHand  = WeaponType.Warhorn,
-			Sigil1  = ItemId.Legendary_Sigil_of_Transference,
-			Sigil2  = ItemId.Legendary_Sigil_of_Energy,
+				MainHand  = WeaponType.Sword,
+				OffHand  = WeaponType.Warhorn,
+				Sigil1  = ItemId.Legendary_Sigil_of_Transference,
+				Sigil2  = ItemId.Legendary_Sigil_of_Energy,
 			}
 		};
 
@@ -454,6 +454,29 @@ public class BasicCodesTests {
 		code.WeaponSet2.MainHand = WeaponType._UNDEFINED;
 		code.WeaponSet2.OffHand  = WeaponType._UNDEFINED;
 		code.WeaponSet2.Sigil1   = ItemId._UNDEFINED;
+		code.WeaponSet2.Sigil2   = ItemId._UNDEFINED;
+
+		var text = TextLoader.WriteBuildCode(code);
+		var reencode = TextLoader.LoadBuildCode(text);
+
+		var options = new JsonSerializerOptions() { IncludeFields = true, };
+		Assert.Equal(JsonSerializer.Serialize(code, options), JsonSerializer.Serialize(reencode, options));
+	}
+
+	[Fact] /* regression: encoder did not properly handle empty second weapon*/
+	public void Plenyx3()
+	{
+		var code = new BuildCode();
+		code.Kind = Kind.PvE;
+		code.Version = 3;
+		code.Profession = Profession.Warrior;
+		code.WeaponSet1.MainHand = WeaponType.Rifle;
+		code.WeaponSet1.OffHand  = WeaponType._UNDEFINED;
+		code.WeaponSet1.Sigil1   = ItemId.Legendary_Sigil_of_Force;
+		code.WeaponSet1.Sigil2   = ItemId.Legendary_Sigil_of_the_Night;
+		code.WeaponSet2.MainHand = WeaponType.Scepter;
+		code.WeaponSet2.OffHand  = WeaponType._UNDEFINED;
+		code.WeaponSet2.Sigil1   = ItemId.Superior_Sigil_of_Absorption;
 		code.WeaponSet2.Sigil2   = ItemId._UNDEFINED;
 
 		var text = TextLoader.WriteBuildCode(code);

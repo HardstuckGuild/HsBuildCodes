@@ -115,9 +115,9 @@ class TextLoader {
 		if($set->MainHand->value)
 			if(!TextLoader::EatToken($text, '_')) $set->Sigil1 = TextLoader::DecodeAndAdvance($text, 3);
 
-		if($set->MainHand === WeaponType::_UNDEFINED || !IsTwoHanded($set->MainHand))
+		if(!ExistsAndIsTwoHanded($set->MainHand))
 			if(!TextLoader::EatToken($text, '_')) $set->OffHand = WeaponType::from(WeaponType::_FIRST() + TextLoader::DecodeAndAdvance($text));
-		if($set->OffHand->value || ($set->MainHand->value && IsTwoHanded($set->MainHand)))
+		if($set->OffHand->value || ExistsAndIsTwoHanded($set->MainHand))
 			if(!TextLoader::EatToken($text, '_')) $set->Sigil2 = TextLoader::DecodeAndAdvance($text, 3);
 		return $set;
 	}
@@ -287,13 +287,18 @@ class TextLoader {
 			if($set->Sigil1 === ItemId::_UNDEFINED) $destination .= '_';
 			else TextLoader::EncodeAndAdvance($destination, $set->Sigil1, 3);
 		}
-		if($set->MainHand === WeaponType::_UNDEFINED || !IsTwoHanded($set->MainHand))
+		
+		if(!ExistsAndIsTwoHanded($set->MainHand))
 		{
-			if($set->OffHand === ItemId::_UNDEFINED) $destination .= '_';
+			if($set->OffHand === WeaponType::_UNDEFINED) $destination .= '_';
 			else $destination .= TextLoader::CHARSET[$set->OffHand->value - WeaponType::_FIRST()];
-		} 
+		}
+		
+		if($set->OffHand != WeaponType::_UNDEFINED || ExistsAndIsTwoHanded($set->MainHand))
+		{
 			if($set->Sigil2 === ItemId::_UNDEFINED) $destination .= '_';
 			else TextLoader::EncodeAndAdvance($destination, $set->Sigil2, 3);
+		}
 	}
 
 	private static function EncodeStatsAndAdvance(string &$destination, BuildCode $weaponRef) :  void
