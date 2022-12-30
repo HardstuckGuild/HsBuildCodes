@@ -99,16 +99,18 @@ public static class Static
 		}
 	}
 
-	public static Legend? ResolveLegend(in Specialization eliteSpec, string? str) => (str) switch {
-		"Legend1" => Legend.GLINT,
-		"Legend2" => Legend.SHIRO,
-		"Legend3" => Legend.JALIS,
-		"Legend4" => Legend.MALLYX,
-		"Legend5" => Legend.KALLA,
-		"Legend6" => Legend.VENTARI,
-		null when eliteSpec.SpecializationId == SpecializationId.Vindicator => Legend.VINDICATOR,
-		_ => null,
-	};
+	/// <remarks> This also handles unusual values from the characters api endpoint </remarks>
+	public static Legend? ResolveLegend(in Specialization eliteSpec, string? str) {
+		return (str) switch {
+			"Legend1" => Legend.GLINT,
+			"Legend2" => Legend.SHIRO,
+			"Legend3" => Legend.JALIS,
+			"Legend4" => Legend.MALLYX,
+			"Legend5" => Legend.KALLA,
+			"Legend6" => Legend.VENTARI,
+			_ => Overrides.ResolveLegend(in eliteSpec, str),
+		};
+	}
 
 	public static WeaponSet ResolveEffectiveWeapons(BuildCode code, WeaponSetNumber setNumber)
 	{

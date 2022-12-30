@@ -96,6 +96,7 @@ function IsAquatic(int $weaponType) : bool
 	}
 }
 
+/** @remark This also handles unusual values from the characters api endpoint */
 function ResolveLegend(Specialization $eliteSpec, ?string $str) : ?Legend
 { 
 	switch ($str) {
@@ -105,8 +106,7 @@ function ResolveLegend(Specialization $eliteSpec, ?string $str) : ?Legend
 		case "Legend4": return Legend::MALLYX;
 		case "Legend5": return Legend::KALLA;
 		case "Legend6": return Legend::VENTARI;
-		case null: if($eliteSpec->SpecializationId === SpecializationId::Vindicator) return Legend::VINDICATOR;
-		default: return null;
+		default: return Overrides::ResolveLegend($eliteSpec, $str);
 	};
 }
 

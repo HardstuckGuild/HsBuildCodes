@@ -112,6 +112,22 @@ class Overrides {
 		return PerProfessionData::$Revenant->SkillToPallette[$skillId];
 	}
 
+	//NOTE(Rennorb): meme values returned from the characters api
+	public static function ResolveLegend(Specialization $eliteSpec, ?string $str) : ?Legend
+	{ 
+		switch ($str) {
+			case "Fire" : return Legend::GLINT;
+			case "Water": return Legend::SHIRO;
+			case "Air"  : return Legend::JALIS;
+			case "Earth": return Legend::MALLYX;
+			case "Deathshroud": return Legend::VENTARI;
+			case null: 
+				if($eliteSpec->SpecializationId === SpecializationId::Vindicator) return Legend::VINDICATOR;
+				if($eliteSpec->SpecializationId === SpecializationId::Renegade) return Legend::KALLA;
+			default: return null;
+		};
+	}
+
 	public static function PostfixApiBuild(BuildCode $code) : void
 	{
 		//NOTE(Rennorb): Apparrently, mortar kit is utterly broken with the api.

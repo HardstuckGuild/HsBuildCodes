@@ -111,6 +111,18 @@ public static class Overrides {
 		return PerProfessionData.Revenant.SkillToPallette[skillId];
 	}
 
+	//NOTE(Rennorb): meme values returned from the characters api
+	public static Legend? ResolveLegend(in Specialization eliteSpec, string? str) => (str) switch {
+		"Fire"  => Legend.GLINT,
+		"Water" => Legend.SHIRO,
+		"Air"   => Legend.JALIS,
+		"Earth" => Legend.MALLYX,
+		null when eliteSpec.SpecializationId == SpecializationId.Renegade => Legend.KALLA,
+		"Deathshroud" => Legend.VENTARI,
+		null when eliteSpec.SpecializationId == SpecializationId.Vindicator => Legend.VINDICATOR,
+		_ => null,
+	};
+
 	public static void PostfixApiBuild(BuildCode code)
 	{
 		//NOTE(Rennorb): Apparrently, mortar kit is utterly broken with the api.

@@ -1,6 +1,7 @@
-import { BuildCode, Legend, Profession } from "../Structures";
+import { BuildCode, Legend, Profession, Specialization } from "../Structures";
 import SkillId from "./SkillIds";
 import PerProfessionData from "./PerProfessionData";
+import SpecializationId from "./SpecializationIds";
 
 class Overrides {
 	/** @remarks Requires PerProfessionData for Revs to be loaded first. */
@@ -110,6 +111,22 @@ class Overrides {
 		}
 
 		return PerProfessionData.Revenant.SkillToPallette[skillId];
+	}
+
+	//NOTE(Rennorb): meme values returned from the characters api
+	public static ResolveLegend(eliteSpec : Specialization, str : string|null) : Legend|null
+	{ 
+		switch (str) {
+			case "Fire" : return Legend.GLINT;
+			case "Water": return Legend.SHIRO;
+			case "Air"  : return Legend.JALIS;
+			case "Earth": return Legend.MALLYX;
+			case "Deathshroud": return Legend.VENTARI;
+			case null:
+				if(eliteSpec.SpecializationId === SpecializationId.Vindicator) return Legend.VINDICATOR;
+				if(eliteSpec.SpecializationId === SpecializationId.Renegade) return Legend.KALLA;
+			default: return null;
+		};
 	}
 
 	public static PostfixApiBuild(code : BuildCode) : void

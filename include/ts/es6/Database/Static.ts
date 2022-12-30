@@ -2,6 +2,7 @@ import { BuildCode, Kind, Legend, Profession, Specialization, WeaponSet, WeaponS
 import TextLoader from "../TextLoader";
 import { Assert } from "../Util/Static";
 import ItemId from "./ItemIds";
+import Overrides from "./Overrides";
 import SpecializationId from "./SpecializationIds";
 import StatId from "./StatIds";
 
@@ -99,6 +100,7 @@ export function IsAquatic(weaponType : WeaponType) : boolean
 	}
 }
 
+/** @remark This also handles unusual values from the characters api endpoint */
 export function ResolveLegend(eliteSpec : Specialization, str : string|null) : Legend|null
 { 
 	switch (str) {
@@ -108,8 +110,7 @@ export function ResolveLegend(eliteSpec : Specialization, str : string|null) : L
 		case "Legend4": return Legend.MALLYX;
 		case "Legend5": return Legend.KALLA;
 		case "Legend6": return Legend.VENTARI;
-		case null: if(eliteSpec.SpecializationId === SpecializationId.Vindicator) return Legend.VINDICATOR;
-		default: return null;
+		default: return Overrides.ResolveLegend(eliteSpec, str);
 	};
 }
 
