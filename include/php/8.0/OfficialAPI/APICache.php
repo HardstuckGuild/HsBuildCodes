@@ -64,10 +64,19 @@ class APICache {
 
 		}
 
-		foreach($weapon->skills as $skill)
+		if($code->Profession === Profession::Elementalist)
 		{
-			if($skill->slot === "Weapon_" . ($skillIndex + 1))
-				return $skill->id;
+			foreach(array_reverse($weapon->skills) as $skill) {
+				if($skill->attunement === 'Fire' && $skill->slot === "Weapon_" . ($skillIndex + 1))
+					return $skill->id;
+			}
+		}
+		else
+		{
+			foreach($weapon->skills as $skill) {
+				if($skill->slot === "Weapon_" . ($skillIndex + 1))
+					return $skill->id;
+			}
 		}
 		
 		return SkillId::_UNDEFINED;

@@ -1,3 +1,4 @@
+using Hardstuck.GuildWars2.BuildCodes.V2.OfficialAPI;
 using System.Diagnostics;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2;
@@ -64,7 +65,14 @@ public static class APICache {
 
 		}
 
-		return (SkillId)weapon.Skills.First(w => w.Slot == $"Weapon_{skillIndex + 1}").Id;
+		WeaponSkill? skill;
+		if(code.Profession == Profession.Elementalist) {
+			skill = weapon.Skills.LastOrDefault(skill => skill.Attunement == "Fire" && skill.Slot == $"Weapon_{skillIndex + 1}");
+		}
+		else {
+			skill = weapon.Skills.FirstOrDefault(skill => skill.Slot == $"Weapon_{skillIndex + 1}");
+		}
+		return (SkillId)(skill?.Id ?? 0);
 	}
 
 	/// <returns> <see cref="TraitId._UNDEFINED" />  If spec is empty </returns>

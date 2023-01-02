@@ -31,6 +31,7 @@ class SkillId {
 	public const Armor_of_Earth = 5639;
 	public const Arcane_Shield = 5641;
 	public const Glyph_of_Elementals5 = 5666;
+	public const Flame_Burst = 5679;
 	public const Glyph_of_Summoning = 5706;
 	public const Glyph_of_Storms = 5734;
 	public const Ice_Storm = 5735;
@@ -390,7 +391,6 @@ class SkillId {
 	public const Glyph_of_Lesser_Elementals4 = 25497;
 	public const Stomp1 = 25498;
 	public const Flame_Barrage = 25499;
-	public const Flame_Burst = 25500;
 	public const Illusion_of_Life2 = 25541;
 	public const Vengeful_Hammers = 26557;
 	public const Facet_of_Strength = 26644;

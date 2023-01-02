@@ -67,8 +67,9 @@ class Weapon {
 }
 
 class WeaponSkill {
-	public int    Id   = 0;
-	public string Slot = string.Empty;
+	public int     Id         = 0;
+	public string  Slot       = string.Empty;
+	public string? Attunement = null;
 }
 
 class Specialization {

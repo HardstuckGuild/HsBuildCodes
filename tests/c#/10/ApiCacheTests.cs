@@ -121,4 +121,17 @@ public class ResolveWeaponSkills {
 
 		Assert.Equal(TraitId.Desperate_Decoy, id);
 	}
+
+	[Fact] /* regression: the third skill on ele staff was not the correct attunement */
+	public async Task LoadEleStaffSkills()
+	{
+		var code = new BuildCode();
+		code.Profession = Profession.Elementalist;
+		code.WeaponSet1.MainHand = WeaponType.Staff;
+
+		var weapons = Static.ResolveEffectiveWeapons(code, WeaponSetNumber.Set1);
+		var thirdSkill = await V2.APICache.ResolveWeaponSkill(code, weapons, 2);
+
+		Assert.Equal(SkillId.Flame_Burst, thirdSkill);
+	}
 }
