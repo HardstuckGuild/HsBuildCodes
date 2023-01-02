@@ -295,7 +295,7 @@ public static class TextLoader {
 			EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)code.Utility, 3);
 		}
 
-		EncodeProfessionArbitrary(ref destination, code.ProfessionSpecific);
+		EncodeProfessionSpecific(ref destination, code);
 		EncodeArbitrary(ref destination, code.Arbitrary);
 
 		return oldLen - destination.Length;
@@ -383,28 +383,43 @@ public static class TextLoader {
 			WriteAndAdvance(ref destination, CHARSET[repeatCount]);
 	}
 
-	private static void EncodeProfessionArbitrary(ref Span<char> destination, IProfessionSpecific professionSpecific)
+	private static void EncodeProfessionSpecific(ref Span<char> destination, BuildCode code)
 	{
-		switch(professionSpecific)
+		switch(code.Profession)
 		{
-			case RangerData rangerData:
-				if(rangerData.Pet1 == PetId._UNDEFINED && rangerData.Pet2 == PetId._UNDEFINED) WriteAndAdvance(ref destination, '~');
+			case Profession.Ranger:
+				if(code.ProfessionSpecific is RangerData rangerData)
+				{
+					if(rangerData.Pet1 == PetId._UNDEFINED && rangerData.Pet2 == PetId._UNDEFINED) WriteAndAdvance(ref destination, '~');
+					else
+					{
+						EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)rangerData.Pet1, 2);
+						EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)rangerData.Pet2, 2);
+					}
+				}
 				else
 				{
-					EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)rangerData.Pet1, 2);
-					EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)rangerData.Pet2, 2);
+					WriteAndAdvance(ref destination, '~');
 				}
 				break;
 
-			case RevenantData revenantData:
-				WriteAndAdvance(ref destination, CHARSET[revenantData.Legend1 - Legend._FIRST]);
-				if(revenantData.Legend2 == Legend._UNDEFINED) WriteAndAdvance(ref destination, '_');
+			case Profession.Revenant:
+				if(code.ProfessionSpecific is RevenantData revenantData)
+				{
+					WriteAndAdvance(ref destination, CHARSET[revenantData.Legend1 - Legend._FIRST]);
+					if(revenantData.Legend2 == Legend._UNDEFINED) WriteAndAdvance(ref destination, '_');
+					else
+					{
+						WriteAndAdvance(ref destination, CHARSET[revenantData.Legend2 - Legend._FIRST]);
+						EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)revenantData.AltUtilitySkill1, 3);
+						EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)revenantData.AltUtilitySkill2, 3);
+						EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)revenantData.AltUtilitySkill3, 3);
+					}
+				}
 				else
 				{
-					WriteAndAdvance(ref destination, CHARSET[revenantData.Legend2 - Legend._FIRST]);
-					EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)revenantData.AltUtilitySkill1, 3);
-					EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)revenantData.AltUtilitySkill2, 3);
-					EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)revenantData.AltUtilitySkill3, 3);
+					WriteAndAdvance(ref destination, '_');
+					WriteAndAdvance(ref destination, '_');
 				}
 				break;
 		}

@@ -277,7 +277,7 @@ class TextLoader {
 			destination += TextLoader.EncodeOrUnderscoreOnZero(code.Utility, 3);
 		}
 
-		destination += TextLoader.EncodeProfessionArbitrary(code.ProfessionSpecific);
+		destination += TextLoader.EncodeProfessionSpecific(code);
 		destination += TextLoader.EncodeArbitrary(code.Arbitrary);
 
 		return destination;
@@ -374,27 +374,44 @@ class TextLoader {
 		return destination;
 	}
 
-	private static EncodeProfessionArbitrary(professionSpecific : IProfessionSpecific) : string
+	private static EncodeProfessionSpecific(code : BuildCode) : string
 	{
 		let destination = '';
-		if(professionSpecific instanceof RangerData)
+		switch(code.Profession)
 		{
-			if(professionSpecific.Pet1 === PetId._UNDEFINED && professionSpecific.Pet2 === PetId._UNDEFINED) destination += '~';
-			else
-			{
-				destination += TextLoader.EncodeOrUnderscoreOnZero(professionSpecific.Pet1, 2);
-				destination += TextLoader.EncodeOrUnderscoreOnZero(professionSpecific.Pet2, 2);
-			}
-		} else if(professionSpecific instanceof RevenantData) {
-			destination += TextLoader.CHARSET[professionSpecific.Legend1 - Legend._FIRST];
-			if(professionSpecific.Legend2 === Legend._UNDEFINED) destination += '_';
-			else
-			{
-				destination += TextLoader.CHARSET[professionSpecific.Legend2 - Legend._FIRST];
-				destination += TextLoader.EncodeOrUnderscoreOnZero(professionSpecific.AltUtilitySkill1, 3);
-				destination += TextLoader.EncodeOrUnderscoreOnZero(professionSpecific.AltUtilitySkill2, 3);
-				destination += TextLoader.EncodeOrUnderscoreOnZero(professionSpecific.AltUtilitySkill3, 3);
-			}
+			case Profession.Ranger:
+				if(code.ProfessionSpecific instanceof RangerData)
+				{
+					if(code.ProfessionSpecific.Pet1 === PetId._UNDEFINED && code.ProfessionSpecific.Pet2 === PetId._UNDEFINED) destination += '~';
+					else
+					{
+						destination += TextLoader.EncodeOrUnderscoreOnZero(code.ProfessionSpecific.Pet1, 2);
+						destination += TextLoader.EncodeOrUnderscoreOnZero(code.ProfessionSpecific.Pet2, 2);
+					}
+				}
+				else
+				{
+					destination += '~';
+				}
+				break;
+
+			case Profession.Revenant:
+				if(code.ProfessionSpecific instanceof RevenantData) {
+					destination += TextLoader.CHARSET[code.ProfessionSpecific.Legend1 - Legend._FIRST];
+					if(code.ProfessionSpecific.Legend2 === Legend._UNDEFINED) destination += '_';
+					else
+					{
+						destination += TextLoader.CHARSET[code.ProfessionSpecific.Legend2 - Legend._FIRST];
+						destination += TextLoader.EncodeOrUnderscoreOnZero(code.ProfessionSpecific.AltUtilitySkill1, 3);
+						destination += TextLoader.EncodeOrUnderscoreOnZero(code.ProfessionSpecific.AltUtilitySkill2, 3);
+						destination += TextLoader.EncodeOrUnderscoreOnZero(code.ProfessionSpecific.AltUtilitySkill3, 3);
+					}
+				}
+				else
+				{
+					destination += '__';
+				}
+				break;
 		}
 
 		return destination;

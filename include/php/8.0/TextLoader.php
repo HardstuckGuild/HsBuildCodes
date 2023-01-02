@@ -273,7 +273,7 @@ class TextLoader {
 			TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $code->Utility, 3);
 		}
 
-		TextLoader::EncodeProfessionArbitrary($destination, $code->ProfessionSpecific);
+		TextLoader::EncodeProfessionSpecific($destination, $code);
 		TextLoader::EncodeArbitrary($destination, $code->Arbitrary);
 
 		return $destination;
@@ -362,32 +362,46 @@ class TextLoader {
 			$destination .= TextLoader::CHARSET[$repeatCount];
 	}
 
-	private static function EncodeProfessionArbitrary(string &$destination, IProfessionSpecific $professionSpecific) : void
+	private static function EncodeProfessionSpecific(string &$destination, BuildCode $code) : void
 	{
-		switch(get_class($professionSpecific))
+		switch($code->Profession)
 		{
-			case RangerData::class:
-				/** @var RangerData $rangerData */
-				$rangerData = $professionSpecific;
-				if($rangerData->Pet1 === PetId::_UNDEFINED && $rangerData->Pet2 === PetId::_UNDEFINED) $destination .= '~';
+			case Profession::Ranger:
+				if(get_class($code->ProfessionSpecific) === RangerData::class)
+				{
+					/** @var RangerData $rangerData */
+					$rangerData = $code->ProfessionSpecific;
+					if($rangerData->Pet1 === PetId::_UNDEFINED && $rangerData->Pet2 === PetId::_UNDEFINED) $destination .= '~';
+					else
+					{
+						TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $rangerData->Pet1, 2);
+						TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $rangerData->Pet2, 2);
+					}
+				}
 				else
 				{
-					TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $rangerData->Pet1, 2);
-					TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $rangerData->Pet2, 2);
+					$destination .= '~';
 				}
 				break;
 
-			case RevenantData::class:
-				/** @var RevenantData $revenantData */
-				$revenantData = $professionSpecific;
-				$destination .= TextLoader::CHARSET[$revenantData->Legend1 - Legend::_FIRST()];
-				if($revenantData->Legend2 === Legend::_UNDEFINED) $destination .= '_';
+			case Profession::Revenant:
+				if(get_class($code->ProfessionSpecific) === RevenantData::class)
+				{
+					/** @var RevenantData $revenantData */
+					$revenantData = $code->ProfessionSpecific;
+					$destination .= TextLoader::CHARSET[$revenantData->Legend1 - Legend::_FIRST()];
+					if($revenantData->Legend2 === Legend::_UNDEFINED) $destination .= '_';
+					else
+					{
+						$destination .= TextLoader::CHARSET[$revenantData->Legend2 - Legend::_FIRST()];
+						TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $revenantData->AltUtilitySkill1, 3);
+						TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $revenantData->AltUtilitySkill2, 3);
+						TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $revenantData->AltUtilitySkill3, 3);
+					}
+				}
 				else
 				{
-					$destination .= TextLoader::CHARSET[$revenantData->Legend2 - Legend::_FIRST()];
-					TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $revenantData->AltUtilitySkill1, 3);
-					TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $revenantData->AltUtilitySkill2, 3);
-					TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $revenantData->AltUtilitySkill3, 3);
+					$destination .= '__';
 				}
 				break;
 		}
