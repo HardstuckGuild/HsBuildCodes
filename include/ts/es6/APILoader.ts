@@ -209,7 +209,18 @@ class APILoader {
 		{
 			const pvpEquip = activeEquipment.equipment_pvp;
 
-			code.EquipmentAttributes.Helmet = pvpEquip.amulet ?? 0;
+			for(const item of activeEquipment.equipment) {
+				switch(item.slot) {
+					case "WeaponA1"      : if(!aquatic) code.WeaponSet1.MainHand = await APICache.ResolveWeaponType(item.id); break;
+					case "WeaponAquaticA": if( aquatic) code.WeaponSet1.MainHand = await APICache.ResolveWeaponType(item.id); break;
+					case "WeaponA2"      : if(!aquatic) code.WeaponSet1.OffHand  = await APICache.ResolveWeaponType(item.id); break;
+					case "WeaponB1"      : if(!aquatic) code.WeaponSet2.MainHand = await APICache.ResolveWeaponType(item.id); break;
+					case "WeaponAquaticB": if( aquatic) code.WeaponSet2.MainHand = await APICache.ResolveWeaponType(item.id); break;
+					case "WeaponB2"      : if(!aquatic) code.WeaponSet2.OffHand  = await APICache.ResolveWeaponType(item.id); break;
+				}
+			}
+
+			code.EquipmentAttributes.Amulet = pvpEquip.amulet ?? 0;
 			code.Rune = pvpEquip.rune ?? 0;
 			code.WeaponSet1.Sigil1 = pvpEquip.sigils[0] ?? 0;
 			code.WeaponSet1.Sigil2 = pvpEquip.sigils[1] ?? 0;
