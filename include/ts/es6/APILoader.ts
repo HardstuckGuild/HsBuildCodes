@@ -5,7 +5,7 @@ import { CURRENT_VERSION, IsTwoHanded, ResolveLegend } from "./Database/Static";
 import StatId from "./Database/StatIds";
 import API from "./OfficialAPI/API";
 import APICache from "./OfficialAPI/APICache";
-import { BuildCode, Kind, Legend, Profession, RangerData, RevenantData, Specialization } from "./Structures";
+import { BuildCode, Kind, Legend, Profession, RangerData, RevenantData, Specialization, WeaponSet } from "./Structures";
 import { TraitLineChoices } from "./Util/UtilStructs";
 
 class APILoader {
@@ -47,7 +47,7 @@ class APILoader {
 			code.Specializations[i] = new Specialization(spec.id, choices);
 		}
 
-		const activeEquipment = playerData.equipment_tabs[playerData.active_equipment_tab - 1];
+		const activeEquipment = playerData.equipment_tabs.find(tab => tab.is_active);
 		if(targetGameMode !== Kind.PvP)
 		{
 			let runeId : ItemId|null = null;
@@ -77,7 +77,7 @@ class APILoader {
 						if(item.infusions) {
 							code.Infusions.BackItem_1 = item.infusions[0];
 							if(item.infusions.length > 1)
-								code.Infusions.BackItem_1 = item.infusions[1];
+								code.Infusions.BackItem_2 = item.infusions[1];
 						}
 						break;
 
@@ -232,6 +232,7 @@ class APILoader {
 		if(!code.WeaponSet1.HasAny() && code.WeaponSet2.HasAny())
 		{
 			code.WeaponSet1 = code.WeaponSet2;
+			code.WeaponSet2 = new WeaponSet();
 		}
 
 		const apiSkills = aquatic ? activeBuild.aquatic_skills : activeBuild.skills;

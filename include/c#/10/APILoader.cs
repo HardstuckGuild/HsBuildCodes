@@ -98,7 +98,7 @@ public static class APILoader {
 						if(item.Infusions != null) {
 							code.Infusions.BackItem_1 = (ItemId)item.Infusions[0];
 							if(item.Infusions.Count > 1)
-								code.Infusions.BackItem_1 = (ItemId)item.Infusions[1];
+								code.Infusions.BackItem_2 = (ItemId)item.Infusions[1];
 						}
 						break;
 
@@ -253,6 +253,7 @@ public static class APILoader {
 		if(!code.WeaponSet1.HasAny && code.WeaponSet2.HasAny)
 		{
 			code.WeaponSet1 = code.WeaponSet2;
+			code.WeaponSet2 = new();
 		}
 
 		var apiSkills = aquatic ? activeBuild.AquaticSkills : activeBuild.Skills;

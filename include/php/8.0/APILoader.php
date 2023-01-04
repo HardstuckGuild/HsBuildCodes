@@ -75,9 +75,9 @@ class APILoader {
 					case "Backpack":
 						$code->EquipmentAttributes->BackItem = APILoader::ResolveStatId($item);
 						if($hasInfusions) {
-							$code->Infusions->back_item_1 = $item->infusions[0];
+							$code->Infusions->BackItem_1 = $item->infusions[0];
 							if(count($item->infusions) > 1)
-								$code->Infusions->back_item_1 = $item->infusions[1];
+								$code->Infusions->BackItem_2 = $item->infusions[1];
 						}
 						break;
 
@@ -232,6 +232,7 @@ class APILoader {
 		if(!$code->WeaponSet1->HasAny() && $code->WeaponSet2->HasAny())
 		{
 			$code->WeaponSet1 = $code->WeaponSet2;
+			$code->WeaponSet2 = new WeaponSet();
 		}
 
 		$apiSkills = $aquatic ? $activeBuild->aquatic_skills : $activeBuild->skills;
