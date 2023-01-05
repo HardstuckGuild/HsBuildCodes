@@ -35,7 +35,7 @@ class APILoader {
 		
 		code.Profession = Profession[playerData.profession as keyof typeof Profession];
 
-		const activeBuild = playerData.build_tabs[playerData.active_build_tab - 1].build;
+		const activeBuild = playerData.build_tabs.find(tab => tab.is_active).build;
 		for(let i = 0; i < 3; i++) {
 			const spec = activeBuild.specializations[i];
 			if(spec.id === null) continue;
@@ -47,7 +47,8 @@ class APILoader {
 			code.Specializations[i] = new Specialization(spec.id, choices);
 		}
 
-		const activeEquipment = playerData.equipment_tabs.find(tab => tab.is_active);
+		//const activeEquipment = playerData.equipment_tabs.find(tab => tab.is_active);
+		const activeEquipment = playerData; // #15
 		if(targetGameMode !== Kind.PvP)
 		{
 			let runeId : ItemId|null = null;
@@ -62,6 +63,10 @@ class APILoader {
 			};
 
 			for(const item of activeEquipment.equipment) {
+				//NOTE(Rennorb): #15 can be removed once the api bug is fixed as the data in templates already only shows the equipped stuff
+				if(item.Location === "Armory" || item.Location === "LegendaryArmory")
+					continue;
+
 				switch(item.slot)
 				{
 					case "Helm"       : if( aquatic) break; SetArmorData(0, item); break;
@@ -207,9 +212,14 @@ class APILoader {
 		}
 		else // WvW, PvE
 		{
-			const pvpEquip = activeEquipment.equipment_pvp;
+			//const pvpEquip = activeEquipment.equipment_pvp;
+			const pvpEquip = playerData.equipment_tabs.find(tab => tab.is_active).equipment_pvp; // #15
 
 			for(const item of activeEquipment.equipment) {
+				//NOTE(Rennorb): #15 can be removed once the api bug is fixed as the data in templates already only shows the equipped stuff
+				if(item.Location === "Armory" || item.Location === "LegendaryArmory")
+					continue;
+
 				switch(item.slot) {
 					case "WeaponA1"      : if(!aquatic) code.WeaponSet1.MainHand = await APICache.ResolveWeaponType(item.id); break;
 					case "WeaponAquaticA": if( aquatic) code.WeaponSet1.MainHand = await APICache.ResolveWeaponType(item.id); break;

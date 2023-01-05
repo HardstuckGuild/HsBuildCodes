@@ -44,7 +44,8 @@ class APILoader {
 			$code->Specializations[$i] = new Specialization($spec->id, $choices);
 		}
 
-		$activeEquipment = $playerData->equipment_tabs[$playerData->active_equipment_tab - 1];
+		//$activeEquipment = $playerData->equipment_tabs[$playerData->active_equipment_tab - 1];
+		$activeEquipment = $playerData; // #15
 		if($targetGameMode !== Kind::PvP)
 		{
 			$runeId = null;
@@ -59,6 +60,10 @@ class APILoader {
 			};
 
 			foreach($activeEquipment->equipment as $item) {
+				//NOTE(Rennorb): #15 can be removed once the api bug is fixed as the data in templates already only shows the equipped stuff
+				if($item->location === "Armory" || $item->location === "LegendaryArmory")
+					continue;
+
 				$hasInfusions = property_exists($item, "infusions");
 				$hasUpgrades  = property_exists($item, "upgrades");
 
@@ -207,9 +212,14 @@ class APILoader {
 		}
 		else // WvW, PvE
 		{
-			$pvpEquip = $activeEquipment->equipment_pvp;
+			//$pvpEquip = $activeEquipment->equipment_pvp;
+			$pvpEquip = $playerData->equipment_tabs[$playerData->active_equipment_tab - 1]->equipment_pvp; // #15
 
 			foreach($activeEquipment->equipment as $item) {
+				//NOTE(Rennorb): #15 can be removed once the api bug is fixed as the data in templates already only shows the equipped stuff
+				if($item->location === "Armory" || $item->location === "LegendaryArmory")
+					continue;
+
 				switch($item->slot) {
 					case "WeaponA1"      : if(!$aquatic) $code->WeaponSet1->MainHand = APICache::ResolveWeaponType($item->id); break;
 					case "WeaponAquaticA": if( $aquatic) $code->WeaponSet1->MainHand = APICache::ResolveWeaponType($item->id); break;

@@ -3,6 +3,7 @@ using Hardstuck.GuildWars2.MumbleLink;
 using static Hardstuck.GuildWars2.BuildCodes.V2.Static;
 using Permission = Hardstuck.GuildWars2.BuildCodes.V2.OfficialAPI.Permission;
 using EquipmentItemSlot = Hardstuck.GuildWars2.BuildCodes.V2.OfficialAPI.EquipmentItemSlot;
+using Hardstuck.GuildWars2.BuildCodes.V2.OfficialAPI;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
@@ -67,7 +68,8 @@ public static class APILoader {
 			};
 		}
 
-		var activeEquipment = playerData.EquipmentTabs.First(t => t.IsActive);
+		//var activeEquipment = playerData.EquipmentTabs.First(t => t.IsActive);
+		var activeEquipment = playerData; // #15
 		if(targetGameMode != Kind.PvP)
 		{
 			ItemId? runeId = null;
@@ -83,6 +85,10 @@ public static class APILoader {
 			}
 
 			foreach(var item in activeEquipment.Equipment) {
+				//NOTE(Rennorb): #15 can be removed once the api bug is fixed as the data in templates already only shows the equipped stuff
+				if(item.Location == ItemLocation.ARMORY || item.Location == ItemLocation.LEGENDARY_ARMORY)
+					continue;
+
 				switch(item.Slot)
 				{
 					case EquipmentItemSlot.Helm       : if( aquatic) break; SetArmorData(0, item); break;
@@ -228,9 +234,14 @@ public static class APILoader {
 		}
 		else // WvW, PvE
 		{
-			var pvpEquip = activeEquipment.EquipmentPvp!;
+			//var pvpEquip = activeEquipment.EquipmentPvP;
+			var pvpEquip = playerData.EquipmentTabs.First(tab => tab.IsActive).EquipmentPvP; // #15
 
 			foreach(var item in activeEquipment.Equipment) {
+				//NOTE(Rennorb): #15 can be removed once the api bug is fixed as the data in templates already only shows the equipped stuff
+				if(item.Location == ItemLocation.ARMORY || item.Location == ItemLocation.LEGENDARY_ARMORY)
+					continue;
+
 				switch(item.Slot) {
 					case EquipmentItemSlot.WeaponA1:       if(!aquatic) code.WeaponSet1.MainHand = await APICache.ResolveWeaponType(item.Id); break;
 					case EquipmentItemSlot.WeaponAquaticA: if( aquatic) code.WeaponSet1.MainHand = await APICache.ResolveWeaponType(item.Id); break;

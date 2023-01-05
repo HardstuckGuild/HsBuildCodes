@@ -82,10 +82,13 @@ class TokenInfo {
 }
 
 class Character {
-	public string             Name          = string.Empty;
-	public string             Profession    = string.Empty;
-	public List<BuildTab>     BuildTabs     = new();
-	public List<EquipmentTab> EquipmentTabs = new();
+	public string              Name          = string.Empty;
+	public string              Profession    = string.Empty;
+	public List<BuildTab>      BuildTabs     = new();
+	//NOTE(Rennorb): #15 Apparently the data provided by this is not fully correct, missing stats and infusions. Use `Equipment` for now.
+	// see https://github.com/gw2-api/issues/issues/12
+	public List<EquipmentTab>  EquipmentTabs = new();
+	public List<EquipmentItem> Equipment     = new();
 }
 
 class BuildTab {
@@ -123,15 +126,19 @@ class EquipmentTab {
 	public int                 Id           = 0;
 	public bool                IsActive     = false;
 	public List<EquipmentItem> Equipment    = new();
-	public PvPEquipment        EquipmentPvp = new();
+	[JsonPropertyName("equipment_pvp")]
+	public PvPEquipment        EquipmentPvP = new();
 }
 
 class EquipmentItem {
 	public int        Id        = 0;
-	public string     Slot      = string.Empty;
+	public string     Location  = string.Empty;
+	public string?    Slot      = null;
 	public List<int>? Upgrades  = null;
 	public List<int>? Infusions = null;
 	public Stats?     Stats     = null;
+
+	public override string ToString() => $"[{Slot}] -> {Id} ({(Upgrades != null ? string.Join(", ", Upgrades) : "<null>")}) ({(Infusions != null ? string.Join(", ", Infusions) : "<null>")})";
 }
 
 class Stats {
@@ -142,6 +149,13 @@ class PvPEquipment {
 	public int?       Amulet = null;
 	public int?       Rune   = null;
 	public List<int?> Sigils = new();
+}
+
+public static class ItemLocation {
+	public const string EQUIPPED         = "Equipped";
+	public const string EQUIPPED_FROM_LEGENDARY_ARMORY = "EquippedFromLegendaryArmory";
+	public const string ARMORY           = "Armory";
+	public const string LEGENDARY_ARMORY = "LegendaryArmory";
 }
 
 #pragma warning restore CS0649
