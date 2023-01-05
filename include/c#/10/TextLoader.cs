@@ -185,7 +185,7 @@ public static class TextLoader {
 					if(!EatToken(ref text, '_'))
 						data.Pet1 = (PetId)DecodeAndAdvance(ref text, 2);
 					if(!EatToken(ref text, '_'))
-						data.Pet1 = (PetId)DecodeAndAdvance(ref text, 2);
+						data.Pet2 = (PetId)DecodeAndAdvance(ref text, 2);
 				}
 				return data;
 			}

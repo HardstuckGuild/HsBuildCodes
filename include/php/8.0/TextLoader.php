@@ -177,7 +177,7 @@ class TextLoader {
 					if(!TextLoader::EatToken($text, '_'))
 						$data->Pet1 = TextLoader::DecodeAndAdvance($text, 2);
 					if(!TextLoader::EatToken($text, '_'))
-						$data->Pet1 = TextLoader::DecodeAndAdvance($text, 2);
+						$data->Pet2 = TextLoader::DecodeAndAdvance($text, 2);
 				}
 				return $data;
 			}
