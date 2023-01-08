@@ -12,8 +12,8 @@
 				//"--stop-on-failure",
 				"--colors=auto",
 				"--test-suffix", "Tests.php",
-				"--bootstrap", "./include/php/8.1/autoload.php",
-				"./tests/php/8.1/"
+				"--bootstrap", "./include/php/8.0/autoload.php",
+				"./tests/php/8.0/"
 			],
 			"problemMatcher": []
 		},

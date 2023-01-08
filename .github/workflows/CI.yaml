@@ -45,7 +45,7 @@ jobs:
         tools: none, phpunit:9.5.26
         
     - name: Test
-      run: phpunit --colors=auto --test-suffix Tests.php --bootstrap include/php/${{ matrix.php_version }}/autoload.php ./tests/php/${{ matrix.php_version }}
+      run: phpunit --colors=auto --test-suffix Tests.php --bootstrap include/php/8.0/autoload.php ./tests/php/8.0
 
   Jest:
     runs-on: ubuntu-latest
