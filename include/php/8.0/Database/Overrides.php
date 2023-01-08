@@ -112,8 +112,60 @@ class Overrides {
 		return PerProfessionData::$Revenant->SkillToPallette[$skillId];
 	}
 
+	public static function FixRevApiSkill(int $legend, int $skillFromApi) : int
+	{
+		switch($skillFromApi) {
+			case SkillId::Selfish_Spirit: switch($legend) {
+					case Legend::SHIRO  : return SkillId::Enchanted_Daggers;
+					case Legend::VENTARI: return SkillId::Project_Tranquility;
+					case Legend::MALLYX : return SkillId::Empowering_Misery;
+					case Legend::GLINT  : return SkillId::Facet_of_Light;
+					case Legend::JALIS  : return SkillId::Soothing_Stone1;
+					case Legend::KALLA  : return SkillId::Breakrazors_Bastion;
+				} break;
+
+			case SkillId::Reavers_Rage: switch($legend) {
+					case Legend::SHIRO  : return SkillId::Impossible_Odds;
+					case Legend::VENTARI: return SkillId::Purifying_Essence1;
+					case Legend::MALLYX : return SkillId::Call_to_Anguish1;
+					case Legend::GLINT  : return SkillId::Facet_of_Strength;
+					case Legend::JALIS  : return SkillId::Vengeful_Hammers;
+					case Legend::KALLA  : return SkillId::Darkrazors_Daring;
+				} break;
+
+			case SkillId::Nomads_Advance: switch($legend) {
+					case Legend::SHIRO  : return SkillId::Riposting_Shadows;
+					case Legend::VENTARI: return SkillId::Protective_Solace1;
+					case Legend::MALLYX : return SkillId::Pain_Absorption;
+					case Legend::GLINT  : return SkillId::Facet_of_Darkness;
+					case Legend::JALIS  : return SkillId::Inspiring_Reinforcement1;
+					case Legend::KALLA  : return SkillId::Razorclaws_Rage;
+				} break;
+
+			case SkillId::Scavenger_Burst: switch($legend) {
+					case Legend::SHIRO  : return SkillId::Phase_Traversal;
+					case Legend::VENTARI: return SkillId::Natural_Harmony1;
+					case Legend::MALLYX : return SkillId::Banish_Enchantment;
+					case Legend::GLINT  : return SkillId::Facet_of_Elements;
+					case Legend::JALIS  : return SkillId::Forced_Engagement;
+					case Legend::KALLA  : return SkillId::Icerazors_Ire;
+				} break;
+
+			case SkillId::Spear_of_Archemorus: switch($legend) {
+					case Legend::SHIRO  : return SkillId::Jade_Winds1;
+					case Legend::VENTARI: return SkillId::Energy_Expulsion1;
+					case Legend::MALLYX : return SkillId::Embrace_the_Darkness;
+					case Legend::GLINT  : return SkillId::Facet_of_Chaos;
+					case Legend::JALIS  : return SkillId::Rite_of_the_Great_Dwarf;
+					case Legend::KALLA  : return SkillId::Soulcleaves_Summit;
+				} break;
+		}
+		
+		return $skillFromApi;
+	}
+
 	//NOTE(Rennorb): meme values returned from the characters api
-	public static function ResolveLegend(Specialization $eliteSpec, ?string $str) : ?Legend
+	public static function ResolveLegend(Specialization $eliteSpec, ?string $str) : ?int
 	{ 
 		switch ($str) {
 			case "Fire" : return Legend::GLINT;
@@ -135,6 +187,23 @@ class Overrides {
 		if($code->Profession === Profession::Engineer && $code->SlotSkills->Elite === SkillId::_UNDEFINED)
 		{
 			$code->SlotSkills->Elite = SkillId::Elite_Mortar_Kit;
+		}
+
+		//NOTE(Rennorb): Skill ids from the api for rev are always legendary alliance.
+		// Swap them according to the legend
+		if($code->Profession === Profession::Revenant)
+		{
+			/** @var RevenantData */
+			$revData = $code->ProfessionSpecific;
+			for($i = 0; $i < 5; $i++)
+				$code->SlotSkills[$i] = Overrides::FixRevApiSkill($revData->Legend1, $code->SlotSkills[$i]);
+			
+			if($revData->Legend2 !== Legend::_UNDEFINED)
+			{
+				$revData->AltUtilitySkill1 = Overrides::FixRevApiSkill($revData->Legend2, $revData->AltUtilitySkill1);
+				$revData->AltUtilitySkill2 = Overrides::FixRevApiSkill($revData->Legend2, $revData->AltUtilitySkill2);
+				$revData->AltUtilitySkill3 = Overrides::FixRevApiSkill($revData->Legend2, $revData->AltUtilitySkill3);
+			}
 		}
 	}
 }

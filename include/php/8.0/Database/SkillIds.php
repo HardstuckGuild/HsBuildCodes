@@ -632,6 +632,11 @@ class SkillId {
 	public const Soothing_Stone2 = 56661;
 	public const Pitfall = 56880;
 	public const Thousand_Needles = 56898;
+	public const Selfish_Spirit = 62719;
+	public const Nomads_Advance = 62832;
+	public const Reavers_Rage = 62878;
+	public const Spear_of_Archemorus = 62942;
+	public const Scavenger_Burst = 62962;
 	public const Rectifier_Signet = 63049;
 	public const Overclock_Signet = 63095;
 	public const Force_Signet = 63253;

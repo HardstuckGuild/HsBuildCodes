@@ -1,4 +1,3 @@
-using Hardstuck.GuildWars2.BuildCodes.V2;
 using System.Diagnostics;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2;
@@ -109,6 +108,35 @@ public static class Static
 			"Legend5" => Legend.KALLA,
 			"Legend6" => Legend.VENTARI,
 			_ => Overrides.ResolveLegend(in eliteSpec, str),
+		};
+	}
+
+	public static Util.AllSkills ResolveAltRevSkills(RevenantData revData)
+	{
+		if(revData.Legend2 == Legend._UNDEFINED) return default;
+
+		return new() {
+			Heal = (revData.Legend2) switch {
+				Legend.SHIRO   => SkillId.Enchanted_Daggers,
+				Legend.VENTARI => SkillId.Project_Tranquility,
+				Legend.MALLYX  => SkillId.Empowering_Misery,
+				Legend.GLINT   => SkillId.Facet_of_Light,
+				Legend.JALIS   => SkillId.Soothing_Stone1,
+				Legend.KALLA   => SkillId.Breakrazors_Bastion,
+				_ => SkillId._UNDEFINED,
+			},
+			Utility1 = revData.AltUtilitySkill1,
+			Utility2 = revData.AltUtilitySkill2,
+			Utility3 = revData.AltUtilitySkill3,
+			Elite = (revData.Legend2) switch {
+				Legend.SHIRO   => SkillId.Jade_Winds1,
+				Legend.VENTARI => SkillId.Energy_Expulsion1,
+				Legend.MALLYX  => SkillId.Embrace_the_Darkness,
+				Legend.GLINT   => SkillId.Facet_of_Chaos,
+				Legend.JALIS   => SkillId.Rite_of_the_Great_Dwarf,
+				Legend.KALLA   => SkillId.Soulcleaves_Summit,
+				_ => SkillId._UNDEFINED,
+			},
 		};
 	}
 

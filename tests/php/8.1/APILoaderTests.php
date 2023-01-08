@@ -12,6 +12,8 @@ use Hardstuck\GuildWars2\BuildCodes\V2\Util\TraitLineChoices;
 use Hardstuck\GuildWars2\BuildCodes\V2\WeaponType;
 use PHPUnit\Framework\TestCase;
 
+use function Hardstuck\GuildWars2\BuildCodes\V2\ResolveAltRevSkills;
+
 use const Hardstuck\GuildWars2\BuildCodes\V2\ALL_EQUIPMENT_COUNT;
 
 class FunctionTests extends TestCase {
@@ -100,5 +102,25 @@ class BasicCodesTests extends TestCase {
 		$this->assertEquals(SkillId::Shadowfall     , $code->SlotSkills->Elite);
 
 		$this->assertEquals(ItemId::Legendary_Rune_of_the_Traveler, $code->Rune);
+	}
+
+	
+	/** @test */ /* regression: revenant skills would always show the alliance stance*/
+	public function Teapot1()
+	{
+		$code = APILoader::LoadBuildCode(FunctionTests::VALID_KEY, "Hardstuck Revenant", Kind::PvE);
+
+		$this->assertEquals(SkillId::Facet_of_Light   , $code->SlotSkills->Heal);
+		$this->assertEquals(SkillId::Facet_of_Darkness, $code->SlotSkills->Utility1);
+		$this->assertEquals(SkillId::Facet_of_Elements, $code->SlotSkills->Utility2);
+		$this->assertEquals(SkillId::Facet_of_Strength, $code->SlotSkills->Utility3);
+		$this->assertEquals(SkillId::Facet_of_Chaos   , $code->SlotSkills->Elite);
+
+		$altSkills = ResolveAltRevSkills($code->ProfessionSpecific);
+		$this->assertEquals(SkillId::Project_Tranquility, $altSkills->Heal);
+		$this->assertEquals(SkillId::Protective_Solace1 , $altSkills->Utility1);
+		$this->assertEquals(SkillId::Natural_Harmony1   , $altSkills->Utility2);
+		$this->assertEquals(SkillId::Purifying_Essence1 , $altSkills->Utility3);
+		$this->assertEquals(SkillId::Energy_Expulsion1  , $altSkills->Elite);
 	}
 }

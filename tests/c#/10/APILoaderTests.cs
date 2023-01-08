@@ -97,6 +97,25 @@ public class BasicCodesTests {
 		Assert.Equal(ItemId.Legendary_Rune_of_the_Traveler, code.Rune);
 	}
 
+	[Fact] /* regression: revenant skills would always show the alliance stance*/
+	public async Task Teapot1()
+	{
+		var code = await APILoader.LoadBuildCode(FunctionTests.VALID_KEY, "Hardstuck Revenant", default);
+
+		Assert.Equal(SkillId.Facet_of_Light   , code.SlotSkills.Heal);
+		Assert.Equal(SkillId.Facet_of_Darkness, code.SlotSkills.Utility1);
+		Assert.Equal(SkillId.Facet_of_Elements, code.SlotSkills.Utility2);
+		Assert.Equal(SkillId.Facet_of_Strength, code.SlotSkills.Utility3);
+		Assert.Equal(SkillId.Facet_of_Chaos   , code.SlotSkills.Elite);
+
+		var altSkills = Static.ResolveAltRevSkills((RevenantData)code.ProfessionSpecific);
+		Assert.Equal(SkillId.Project_Tranquility, altSkills.Heal);
+		Assert.Equal(SkillId.Protective_Solace1 , altSkills.Utility1);
+		Assert.Equal(SkillId.Natural_Harmony1   , altSkills.Utility2);
+		Assert.Equal(SkillId.Purifying_Essence1 , altSkills.Utility3);
+		Assert.Equal(SkillId.Energy_Expulsion1  , altSkills.Elite);
+	}
+
 	[PlatformFact(PlatformID.Win32NT)]
 	public async Task FromCurrentCharacterNullIfUnavailable()
 	{

@@ -584,13 +584,13 @@ public static class BinaryLoader {
 				profSpecificDest[legendOffset] = (byte)revenantData.Legend1;
 				profSpecificDest[legendOffset + 1] = (byte)revenantData.Legend2;
 
-				ushort altSkill1PalletteId = professionData.SkillToPallette[revenantData.AltUtilitySkill1];
+				ushort altSkill1PalletteId = Overrides.RevSkillToPallette(revenantData.AltUtilitySkill1);
 				BinaryPrimitives.WriteUInt16LittleEndian(profSpecificDest[skillOffset..], altSkill1PalletteId);
 
-				ushort altSkill2PalletteId = professionData.SkillToPallette[revenantData.AltUtilitySkill2];
+				ushort altSkill2PalletteId = Overrides.RevSkillToPallette(revenantData.AltUtilitySkill2);
 				BinaryPrimitives.WriteUInt16LittleEndian(profSpecificDest[(skillOffset + 2)..], altSkill2PalletteId);
 
-				ushort altSkill3PalletteId = professionData.SkillToPallette[revenantData.AltUtilitySkill3];
+				ushort altSkill3PalletteId = Overrides.RevSkillToPallette(revenantData.AltUtilitySkill3);
 				BinaryPrimitives.WriteUInt16LittleEndian(profSpecificDest[(skillOffset + 4)..], altSkill3PalletteId);
 				break;
 		}

@@ -1,9 +1,10 @@
-import { BuildCode, Kind, Legend, Profession, Specialization, WeaponSet, WeaponSetNumber, WeaponType, WeightClass } from "../Structures";
+import { BuildCode, Kind, Legend, Profession, RevenantData, Specialization, WeaponSet, WeaponSetNumber, WeaponType, WeightClass } from "../Structures";
 import TextLoader from "../TextLoader";
 import { Assert } from "../Util/Static";
+import { AllSkills } from "../Util/UtilStructs";
 import ItemId from "./ItemIds";
 import Overrides from "./Overrides";
-import SpecializationId from "./SpecializationIds";
+import SkillId from "./SkillIds";
 import StatId from "./StatIds";
 
 export const FIRST_VERSIONED_VERSION = 3;
@@ -112,6 +113,34 @@ export function ResolveLegend(eliteSpec : Specialization, str : string|null) : L
 		case "Legend6": return Legend.VENTARI;
 		default: return Overrides.ResolveLegend(eliteSpec, str);
 	};
+}
+
+export function ResolveAltRevSkills(revData : RevenantData) : AllSkills
+{
+	const skills = new AllSkills();
+	if(revData.Legend2 == Legend._UNDEFINED) return skills;
+
+	switch (revData.Legend2)  {
+		case Legend.SHIRO  : skills.Heal = SkillId.Enchanted_Daggers;   break;
+		case Legend.VENTARI: skills.Heal = SkillId.Project_Tranquility; break;
+		case Legend.MALLYX : skills.Heal = SkillId.Empowering_Misery;   break;
+		case Legend.GLINT  : skills.Heal = SkillId.Facet_of_Light;      break;
+		case Legend.JALIS  : skills.Heal = SkillId.Soothing_Stone1;     break;
+		case Legend.KALLA  : skills.Heal = SkillId.Breakrazors_Bastion; break;
+	};
+	skills.Utility1 = revData.AltUtilitySkill1;
+	skills.Utility2 = revData.AltUtilitySkill2;
+	skills.Utility3 = revData.AltUtilitySkill3;
+	switch (revData.Legend2) {
+		case Legend.SHIRO  : skills.Elite = SkillId.Jade_Winds1;             break;
+		case Legend.VENTARI: skills.Elite = SkillId.Energy_Expulsion1;       break;
+		case Legend.MALLYX : skills.Elite = SkillId.Embrace_the_Darkness;    break;
+		case Legend.GLINT  : skills.Elite = SkillId.Facet_of_Chaos;          break;
+		case Legend.JALIS  : skills.Elite = SkillId.Rite_of_the_Great_Dwarf; break;
+		case Legend.KALLA  : skills.Elite = SkillId.Soulcleaves_Summit;      break;
+	};
+
+	return skills;
 }
 
 export function ResolveEffectiveWeapons(code : BuildCode, setNumber : WeaponSetNumber) : WeaponSet

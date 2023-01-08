@@ -269,27 +269,23 @@ class APILoader {
 				$legends = $aquatic ? $activeBuild->aquatic_legends : $activeBuild->legends;
 				$legend1 = ResolveLegend($code->Specializations->Choice3, $legends[0]);
 				$legend2 = ResolveLegend($code->Specializations->Choice3, $legends[1]);
-				if($legend1 !== null) // One legend is always set.
+				if($legend1 !== null)
 				{
 					$revenantData->Legend1 = $legend1;
 					$revenantData->Legend2 = $legend2 ?? Legend::_UNDEFINED;
 
-					//NOTE(Rennorb): doesnt seem to be available via the api
-					// activeBuild.Skills = 
+					if($legend2 !== null)
+					{
+						//NOTE(Rennorb): inactive skills dont seem to be available so we just use the one that are selected on the other legend
+						$revenantData->AltUtilitySkill1 = $code->SlotSkills->Utility1;
+						$revenantData->AltUtilitySkill2 = $code->SlotSkills->Utility2;
+						$revenantData->AltUtilitySkill3 = $code->SlotSkills->Utility3;
+					}
 				}
 				else // Flip so the legend 1 has the data.
 				{
-					$revenantData->Legend1 = $legend2;
+					$revenantData->Legend1 = $legend2; // One legend is always set.
 					$revenantData->Legend2 = Legend::_UNDEFINED;
-
-					$revenantData->AltUtilitySkill1 = $code->SlotSkills->Utility1;
-					$revenantData->AltUtilitySkill2 = $code->SlotSkills->Utility2;
-					$revenantData->AltUtilitySkill3 = $code->SlotSkills->Utility3;
-
-					// inactive skills dont seem to be available
-					$code->SlotSkills->Utility1 = SkillId::_UNDEFINED;
-					$code->SlotSkills->Utility2 = SkillId::_UNDEFINED;
-					$code->SlotSkills->Utility3 = SkillId::_UNDEFINED;
 				}
 
 				$code->ProfessionSpecific = $revenantData;

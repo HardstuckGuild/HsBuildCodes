@@ -292,27 +292,24 @@ public static class APILoader {
 				var legends = aquatic ? activeBuild.AquaticLegends! : activeBuild.Legends!;
 				var legend1 = ResolveLegend(in code.Specializations.Choice3, legends[0]);
 				var legend2 = ResolveLegend(in code.Specializations.Choice3, legends[1]);
-				if(legend1.HasValue) // One legend is always set.
+
+				if(legend1.HasValue)
 				{
 					revenantData.Legend1 = legend1.Value;
-					revenantData.Legend2 = legend2 ?? Legend._UNDEFINED;
+					revenantData.Legend2 = legend2.GetValueOrDefault();
 
-					//NOTE(Rennorb): doesnt seem to be available via the api
-					// activeBuild.Skills = 
+					if(legend2.HasValue)
+					{
+						//NOTE(Rennorb): inactive skills dont seem to be available so we just use the one that are selected on the other legend
+						revenantData.AltUtilitySkill1 = code.SlotSkills.Utility1;
+						revenantData.AltUtilitySkill2 = code.SlotSkills.Utility2;
+						revenantData.AltUtilitySkill3 = code.SlotSkills.Utility3;
+					}
 				}
 				else // Flip so the legend 1 has the data.
 				{
-					revenantData.Legend1 = legend2!.Value;
-					revenantData.Legend2 = legend1 ?? Legend._UNDEFINED;
-
-					revenantData.AltUtilitySkill1 = code.SlotSkills.Utility1;
-					revenantData.AltUtilitySkill2 = code.SlotSkills.Utility2;
-					revenantData.AltUtilitySkill3 = code.SlotSkills.Utility3;
-
-					// inactive skills dont seem to be available
-					code.SlotSkills.Utility1 = SkillId._UNDEFINED;
-					code.SlotSkills.Utility2 = SkillId._UNDEFINED;
-					code.SlotSkills.Utility3 = SkillId._UNDEFINED;
+					revenantData.Legend1 = legend2!.Value; // One legend is always set.
+					revenantData.Legend2 = Legend._UNDEFINED;
 				}
 
 				code.ProfessionSpecific = revenantData;

@@ -1,5 +1,7 @@
 <?php namespace Hardstuck\GuildWars2\BuildCodes\V2;
 
+use Hardstuck\GuildWars2\BuildCodes\V2\Util\AllSkills;
+
 const FIRST_VERSIONED_VERSION = 3;
 const CURRENT_VERSION = 3;
 const OFFICIAL_CHAT_CODE_BYTE_LENGTH = 44;
@@ -97,7 +99,7 @@ function IsAquatic(int $weaponType) : bool
 }
 
 /** @remark This also handles unusual values from the characters api endpoint */
-function ResolveLegend(Specialization $eliteSpec, ?string $str) : ?Legend
+function ResolveLegend(Specialization $eliteSpec, ?string $str) : ?int
 { 
 	switch ($str) {
 		case "Legend1": return Legend::GLINT;
@@ -108,6 +110,36 @@ function ResolveLegend(Specialization $eliteSpec, ?string $str) : ?Legend
 		case "Legend6": return Legend::VENTARI;
 		default: return Overrides::ResolveLegend($eliteSpec, $str);
 	};
+}
+
+function ResolveAltRevSkills(RevenantData $revData) : AllSkills
+{
+	$skills = new AllSkills();
+	if($revData->Legend2 == Legend::_UNDEFINED) return $skills;
+
+	$skills->Heal = match ($revData->Legend2)  {
+		Legend::SHIRO   => SkillId::Enchanted_Daggers,
+		Legend::VENTARI => SkillId::Project_Tranquility,
+		Legend::MALLYX  => SkillId::Empowering_Misery,
+		Legend::GLINT   => SkillId::Facet_of_Light,
+		Legend::JALIS   => SkillId::Soothing_Stone1,
+		Legend::KALLA   => SkillId::Breakrazors_Bastion,
+		default => SkillId::_UNDEFINED,
+	};
+	$skills->Utility1 = $revData->AltUtilitySkill1;
+	$skills->Utility2 = $revData->AltUtilitySkill2;
+	$skills->Utility3 = $revData->AltUtilitySkill3;
+	$skills->Elite = match ($revData->Legend2) {
+		Legend::SHIRO   => SkillId::Jade_Winds1,
+		Legend::VENTARI => SkillId::Energy_Expulsion1,
+		Legend::MALLYX  => SkillId::Embrace_the_Darkness,
+		Legend::GLINT   => SkillId::Facet_of_Chaos,
+		Legend::JALIS   => SkillId::Rite_of_the_Great_Dwarf,
+		Legend::KALLA   => SkillId::Soulcleaves_Summit,
+		default => SkillId::_UNDEFINED,
+	};
+
+	return $skills;
 }
 
 function ResolveEffectiveWeapons(BuildCode $code, int $setNumber) : WeaponSet

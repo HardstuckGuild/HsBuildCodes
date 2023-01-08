@@ -3,9 +3,9 @@ import APILoader from "../../../include/ts/es6/APILoader";
 import ItemId from "../../../include/ts/es6/Database/ItemIds";
 import SkillId from "../../../include/ts/es6/Database/SkillIds";
 import SpecializationId from "../../../include/ts/es6/Database/SpecializationIds";
-import { ALL_EQUIPMENT_COUNT } from "../../../include/ts/es6/Database/Static";
+import { ALL_EQUIPMENT_COUNT, ResolveAltRevSkills } from "../../../include/ts/es6/Database/Static";
 import StatId from "../../../include/ts/es6/Database/StatIds";
-import { Kind, Profession, TraitLineChoice, WeaponType } from "../../../include/ts/es6/Structures";
+import { Kind, Profession, RevenantData, TraitLineChoice, WeaponType } from "../../../include/ts/es6/Structures";
 import { TraitLineChoices } from "../../../include/ts/es6/Util/UtilStructs";
 
 const VALID_KEY = "92CE5A6C-E594-9D4D-B92B-5621ACFE047D436C02BD-0810-47D9-B9D4-2620EB7DD598";
@@ -78,5 +78,23 @@ describe('BasicCodesTests', () => {
 		expect(code.SlotSkills.Elite).toBe(SkillId.Shadowfall     );
 
 		expect(code.Rune).toBe(ItemId.Legendary_Rune_of_the_Traveler);
+	});
+
+	/* regression: revenant skills would always show the alliance stance*/
+	test('teapot1', async () => {
+		var code = await APILoader.LoadBuildCode(VALID_KEY, "Hardstuck Revenant", Kind.PvE);
+
+		expect(code.SlotSkills.Heal    ).toBe(SkillId.Facet_of_Light   );
+		expect(code.SlotSkills.Utility1).toBe(SkillId.Facet_of_Darkness);
+		expect(code.SlotSkills.Utility2).toBe(SkillId.Facet_of_Elements);
+		expect(code.SlotSkills.Utility3).toBe(SkillId.Facet_of_Strength);
+		expect(code.SlotSkills.Elite   ).toBe(SkillId.Facet_of_Chaos   );
+
+		var altSkills = ResolveAltRevSkills(code.ProfessionSpecific as RevenantData);
+		expect(altSkills.Heal    ).toBe(SkillId.Project_Tranquility);
+		expect(altSkills.Utility1).toBe(SkillId.Protective_Solace1 );
+		expect(altSkills.Utility2).toBe(SkillId.Natural_Harmony1   );
+		expect(altSkills.Utility3).toBe(SkillId.Purifying_Essence1 );
+		expect(altSkills.Elite   ).toBe(SkillId.Energy_Expulsion1  );
 	});
 });
