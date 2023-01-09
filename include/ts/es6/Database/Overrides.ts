@@ -57,60 +57,56 @@ class Overrides {
 			return PerProfessionData.Revenant.PalletteToSkill[palletteId];
 	}
 
-	/** @remarks Requires PerProfessionData for Revs to be loaded first. */
-	public static RevSkillToPallette(skillId : SkillId) : number
+	public static LoadAdditionalPerProfessionData(profession : Profession, data : PerProfessionData) : void
 	{
-		switch(skillId) {
-			case SkillId.Enchanted_Daggers:
-			case SkillId.Project_Tranquility:
-			case SkillId.Empowering_Misery:
-			case SkillId.Facet_of_Light:
-			case SkillId.Soothing_Stone1:
-			case SkillId.Soothing_Stone2:
-			case SkillId.Breakrazors_Bastion:
-				return 4572;
+		if(profession === Profession.Revenant) {
+			const defaults = {
+				[SkillId.Enchanted_Daggers  ]: 4572,
+				[SkillId.Project_Tranquility]: 4572,
+				[SkillId.Empowering_Misery  ]: 4572,
+				[SkillId.Facet_of_Light     ]: 4572,
+				[SkillId.Soothing_Stone1    ]: 4572,
+				[SkillId.Soothing_Stone2    ]: 4572,
+				[SkillId.Breakrazors_Bastion]: 4572,
 
-			case SkillId.Impossible_Odds:
-			case SkillId.Purifying_Essence1:
-			case SkillId.Purifying_Essence2:
-			case SkillId.Call_to_Anguish1:
-			case SkillId.Call_to_Anguish2:
-			case SkillId.Facet_of_Strength:
-			case SkillId.Vengeful_Hammers:
-			case SkillId.Darkrazors_Daring:
-				return 4564;
+				[SkillId.Impossible_Odds   ]: 4564,
+				[SkillId.Purifying_Essence1]: 4564,
+				[SkillId.Purifying_Essence2]: 4564,
+				[SkillId.Call_to_Anguish1  ]: 4564,
+				[SkillId.Call_to_Anguish2  ]: 4564,
+				[SkillId.Facet_of_Strength ]: 4564,
+				[SkillId.Vengeful_Hammers  ]: 4564,
+				[SkillId.Darkrazors_Daring ]: 4564,
 
-			case SkillId.Riposting_Shadows:
-			case SkillId.Protective_Solace1:
-			case SkillId.Protective_Solace2:
-			case SkillId.Pain_Absorption:
-			case SkillId.Facet_of_Darkness:
-			case SkillId.Inspiring_Reinforcement1:
-			case SkillId.Inspiring_Reinforcement2:
-			case SkillId.Razorclaws_Rage:
-				return 4614;
+				[SkillId.Riposting_Shadows       ]: 4614,
+				[SkillId.Protective_Solace1      ]: 4614,
+				[SkillId.Protective_Solace2      ]: 4614,
+				[SkillId.Pain_Absorption         ]: 4614,
+				[SkillId.Facet_of_Darkness       ]: 4614,
+				[SkillId.Inspiring_Reinforcement1]: 4614,
+				[SkillId.Inspiring_Reinforcement2]: 4614,
+				[SkillId.Razorclaws_Rage         ]: 4614,
 
-			case SkillId.Phase_Traversal:
-			case SkillId.Natural_Harmony1:
-			case SkillId.Natural_Harmony2:
-			case SkillId.Banish_Enchantment:
-			case SkillId.Facet_of_Elements:
-			case SkillId.Forced_Engagement:
-			case SkillId.Icerazors_Ire:
-				return 4651;
+				[SkillId.Phase_Traversal   ]: 4651,
+				[SkillId.Natural_Harmony1  ]: 4651,
+				[SkillId.Natural_Harmony2  ]: 4651,
+				[SkillId.Banish_Enchantment]: 4651,
+				[SkillId.Facet_of_Elements ]: 4651,
+				[SkillId.Forced_Engagement ]: 4651,
+				[SkillId.Icerazors_Ire     ]: 4651,
 
-			case SkillId.Jade_Winds1:
-			case SkillId.Jade_Winds2:
-			case SkillId.Energy_Expulsion1:
-			case SkillId.Energy_Expulsion2:
-			case SkillId.Embrace_the_Darkness:
-			case SkillId.Facet_of_Chaos:
-			case SkillId.Rite_of_the_Great_Dwarf:
-			case SkillId.Soulcleaves_Summit:
-				return 4554;
+				[SkillId.Jade_Winds1            ]: 4554,
+				[SkillId.Jade_Winds2            ]: 4554,
+				[SkillId.Energy_Expulsion1      ]: 4554,
+				[SkillId.Energy_Expulsion2      ]: 4554,
+				[SkillId.Embrace_the_Darkness   ]: 4554,
+				[SkillId.Facet_of_Chaos         ]: 4554,
+				[SkillId.Rite_of_the_Great_Dwarf]: 4554,
+				[SkillId.Soulcleaves_Summit     ]: 4554,
+			};
+
+			data.SkillToPallette = Object.assign(defaults, data.SkillToPallette);
 		}
-
-		return PerProfessionData.Revenant.SkillToPallette[skillId];
 	}
 
 	public static FixRevApiSkill(legend : Legend, skillFromApi : SkillId) : SkillId

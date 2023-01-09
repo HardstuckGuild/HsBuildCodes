@@ -577,9 +577,9 @@ class BinaryLoader {
 				if($aquatic) $destination .= pack('x6');
 				else $destination .= pack('x2');
 
-				$altSkill1PalletteId = Overrides::RevSkillToPallette($revenantData->AltUtilitySkill1);
-				$altSkill2PalletteId = Overrides::RevSkillToPallette($revenantData->AltUtilitySkill2);
-				$altSkill3PalletteId = Overrides::RevSkillToPallette($revenantData->AltUtilitySkill3);
+				$altSkill1PalletteId = $professionData->SkillToPallette[$revenantData->AltUtilitySkill1];
+				$altSkill2PalletteId = $professionData->SkillToPallette[$revenantData->AltUtilitySkill2];
+				$altSkill3PalletteId = $professionData->SkillToPallette[$revenantData->AltUtilitySkill3];
 
 				$destination .= pack('v3', $altSkill1PalletteId, $altSkill2PalletteId, $altSkill3PalletteId);
 

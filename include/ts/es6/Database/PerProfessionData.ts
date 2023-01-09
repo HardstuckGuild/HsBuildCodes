@@ -1,6 +1,7 @@
 import APICache from "../OfficialAPI/APICache";
 import { Profession } from "../Structures";
 import LazyLoadMode from "./LazyLoadMode";
+import Overrides from "./Overrides";
 import SkillId from "./SkillIds";
 import SpecializationId from "./SpecializationIds";
 
@@ -158,6 +159,8 @@ class PerProfessionData {
 		// if(!loaded) {
 		// 	targetData.ReloadFromOfflineFiles(profession);
 		// }
+
+		Overrides.LoadAdditionalPerProfessionData(profession, targetData);
 
 		//NOTE(Rennorb): no trimming either
 		//targetData.TrimExcess();

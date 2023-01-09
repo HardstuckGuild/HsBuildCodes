@@ -554,8 +554,7 @@ public static class BinaryLoader {
 
 		var skillsDestination = destination[(aquatic ? 10 : 8)..];
 		for(int i = 0; i < 5; i++) {
-			ushort palletteIndex = 0;
-			if(code.SlotSkills[i] != SkillId._UNDEFINED) palletteIndex = professionData.SkillToPallette[code.SlotSkills[i]];
+			ushort palletteIndex = professionData.SkillToPallette[code.SlotSkills[i]];
 			BinaryPrimitives.WriteUInt16LittleEndian(skillsDestination[(i * 4)..], palletteIndex);
 		}
 
@@ -584,13 +583,12 @@ public static class BinaryLoader {
 				profSpecificDest[legendOffset] = (byte)revenantData.Legend1;
 				profSpecificDest[legendOffset + 1] = (byte)revenantData.Legend2;
 
-				ushort altSkill1PalletteId = Overrides.RevSkillToPallette(revenantData.AltUtilitySkill1);
+				ushort altSkill1PalletteId = professionData.SkillToPallette[revenantData.AltUtilitySkill1];
+				ushort altSkill2PalletteId = professionData.SkillToPallette[revenantData.AltUtilitySkill2];
+				ushort altSkill3PalletteId = professionData.SkillToPallette[revenantData.AltUtilitySkill3];
+				
 				BinaryPrimitives.WriteUInt16LittleEndian(profSpecificDest[skillOffset..], altSkill1PalletteId);
-
-				ushort altSkill2PalletteId = Overrides.RevSkillToPallette(revenantData.AltUtilitySkill2);
 				BinaryPrimitives.WriteUInt16LittleEndian(profSpecificDest[(skillOffset + 2)..], altSkill2PalletteId);
-
-				ushort altSkill3PalletteId = Overrides.RevSkillToPallette(revenantData.AltUtilitySkill3);
 				BinaryPrimitives.WriteUInt16LittleEndian(profSpecificDest[(skillOffset + 4)..], altSkill3PalletteId);
 				break;
 		}

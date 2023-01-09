@@ -163,6 +163,8 @@ public class PerProfessionData {
 			targetData.ReloadFromOfflineFiles(profession);
 		}
 
+		Overrides.LoadAdditionalPerProfessionData(profession, targetData);
+
 		targetData.TrimExcess();
 
 		targetData._lastUpdate = DateTime.Now;

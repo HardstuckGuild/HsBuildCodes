@@ -168,6 +168,8 @@ class PerProfessionData {
 			$targetData->ReloadFromOfflineFiles($profession);
 		}
 
+		Overrides::LoadAdditionalPerProfessionData($profession, $targetData);
+
 		//NOTE(Rennorb): no trimming either
 		//$targetData->TrimExcess();
 

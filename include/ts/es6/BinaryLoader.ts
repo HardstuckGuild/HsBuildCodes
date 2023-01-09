@@ -581,9 +581,9 @@ class BinaryLoader {
 				if(aquatic) pos += 6;
 				else pos += 2;
 
-				const altSkill1PalletteId = Overrides.RevSkillToPallette(revenantData.AltUtilitySkill1);
-				const altSkill2PalletteId = Overrides.RevSkillToPallette(revenantData.AltUtilitySkill2);
-				const altSkill3PalletteId = Overrides.RevSkillToPallette(revenantData.AltUtilitySkill3);
+				const altSkill1PalletteId = professionData.SkillToPallette[revenantData.AltUtilitySkill1];
+				const altSkill2PalletteId = professionData.SkillToPallette[revenantData.AltUtilitySkill2];
+				const altSkill3PalletteId = professionData.SkillToPallette[revenantData.AltUtilitySkill3];
 
 				{
 					var view = new DataView(destination.buffer, pos);

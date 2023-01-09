@@ -55,60 +55,52 @@ public static class Overrides {
 		return PerProfessionData.Revenant.PalletteToSkill[palletteId];
 	}
 
-	/// <remarks> Requires PerProfessionData for Revs to be loaded first. </remarks>
-	public static ushort RevSkillToPallette(SkillId skillId)
+	public static void LoadAdditionalPerProfessionData(V2.Profession profession, PerProfessionData data)
 	{
-		switch(skillId) {
-			case SkillId.Enchanted_Daggers:
-			case SkillId.Project_Tranquility:
-			case SkillId.Empowering_Misery:
-			case SkillId.Facet_of_Light:
-			case SkillId.Soothing_Stone1:
-			case SkillId.Soothing_Stone2:
-			case SkillId.Breakrazors_Bastion:
-				return 4572;
+		if(profession == V2.Profession.Revenant) {
+			data.SkillToPallette.TryAdd(SkillId.Enchanted_Daggers  , 4572);
+			data.SkillToPallette.TryAdd(SkillId.Project_Tranquility, 4572);
+			data.SkillToPallette.TryAdd(SkillId.Empowering_Misery  , 4572);
+			data.SkillToPallette.TryAdd(SkillId.Facet_of_Light     , 4572);
+			data.SkillToPallette.TryAdd(SkillId.Soothing_Stone1    , 4572);
+			data.SkillToPallette.TryAdd(SkillId.Soothing_Stone2    , 4572);
+			data.SkillToPallette.TryAdd(SkillId.Breakrazors_Bastion, 4572);
 
-			case SkillId.Impossible_Odds:
-			case SkillId.Purifying_Essence1:
-			case SkillId.Purifying_Essence2:
-			case SkillId.Call_to_Anguish1:
-			case SkillId.Call_to_Anguish2:
-			case SkillId.Facet_of_Strength:
-			case SkillId.Vengeful_Hammers:
-			case SkillId.Darkrazors_Daring:
-				return 4564;
+			data.SkillToPallette.TryAdd(SkillId.Impossible_Odds   , 4564);
+			data.SkillToPallette.TryAdd(SkillId.Purifying_Essence1, 4564);
+			data.SkillToPallette.TryAdd(SkillId.Purifying_Essence2, 4564);
+			data.SkillToPallette.TryAdd(SkillId.Call_to_Anguish1  , 4564);
+			data.SkillToPallette.TryAdd(SkillId.Call_to_Anguish2  , 4564);
+			data.SkillToPallette.TryAdd(SkillId.Facet_of_Strength , 4564);
+			data.SkillToPallette.TryAdd(SkillId.Vengeful_Hammers  , 4564);
+			data.SkillToPallette.TryAdd(SkillId.Darkrazors_Daring , 4564);
 
-			case SkillId.Riposting_Shadows:
-			case SkillId.Protective_Solace1:
-			case SkillId.Protective_Solace2:
-			case SkillId.Pain_Absorption:
-			case SkillId.Facet_of_Darkness:
-			case SkillId.Inspiring_Reinforcement1:
-			case SkillId.Inspiring_Reinforcement2:
-			case SkillId.Razorclaws_Rage:
-				return 4614;
+			data.SkillToPallette.TryAdd(SkillId.Riposting_Shadows       , 4614);
+			data.SkillToPallette.TryAdd(SkillId.Protective_Solace1      , 4614);
+			data.SkillToPallette.TryAdd(SkillId.Protective_Solace2      , 4614);
+			data.SkillToPallette.TryAdd(SkillId.Pain_Absorption         , 4614);
+			data.SkillToPallette.TryAdd(SkillId.Facet_of_Darkness       , 4614);
+			data.SkillToPallette.TryAdd(SkillId.Inspiring_Reinforcement1, 4614);
+			data.SkillToPallette.TryAdd(SkillId.Inspiring_Reinforcement2, 4614);
+			data.SkillToPallette.TryAdd(SkillId.Razorclaws_Rage         , 4614);
 
-			case SkillId.Phase_Traversal:
-			case SkillId.Natural_Harmony1:
-			case SkillId.Natural_Harmony2:
-			case SkillId.Banish_Enchantment:
-			case SkillId.Facet_of_Elements:
-			case SkillId.Forced_Engagement:
-			case SkillId.Icerazors_Ire:
-				return 4651;
+			data.SkillToPallette.TryAdd(SkillId.Phase_Traversal   , 4651);
+			data.SkillToPallette.TryAdd(SkillId.Natural_Harmony1  , 4651);
+			data.SkillToPallette.TryAdd(SkillId.Natural_Harmony2  , 4651);
+			data.SkillToPallette.TryAdd(SkillId.Banish_Enchantment, 4651);
+			data.SkillToPallette.TryAdd(SkillId.Facet_of_Elements , 4651);
+			data.SkillToPallette.TryAdd(SkillId.Forced_Engagement , 4651);
+			data.SkillToPallette.TryAdd(SkillId.Icerazors_Ire     , 4651);
 
-			case SkillId.Jade_Winds1:
-			case SkillId.Jade_Winds2:
-			case SkillId.Energy_Expulsion1:
-			case SkillId.Energy_Expulsion2:
-			case SkillId.Embrace_the_Darkness:
-			case SkillId.Facet_of_Chaos:
-			case SkillId.Rite_of_the_Great_Dwarf:
-			case SkillId.Soulcleaves_Summit:
-				return 4554;
+			data.SkillToPallette.TryAdd(SkillId.Jade_Winds1            , 4554);
+			data.SkillToPallette.TryAdd(SkillId.Jade_Winds2            , 4554);
+			data.SkillToPallette.TryAdd(SkillId.Energy_Expulsion1      , 4554);
+			data.SkillToPallette.TryAdd(SkillId.Energy_Expulsion2      , 4554);
+			data.SkillToPallette.TryAdd(SkillId.Embrace_the_Darkness   , 4554);
+			data.SkillToPallette.TryAdd(SkillId.Facet_of_Chaos         , 4554);
+			data.SkillToPallette.TryAdd(SkillId.Rite_of_the_Great_Dwarf, 4554);
+			data.SkillToPallette.TryAdd(SkillId.Soulcleaves_Summit     , 4554);
 		}
-
-		return PerProfessionData.Revenant.SkillToPallette[skillId];
 	}
 
 	public static SkillId FixRevApiSkill(Legend legend, SkillId skillFromApi)

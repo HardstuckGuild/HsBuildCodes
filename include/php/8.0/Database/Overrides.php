@@ -57,59 +57,56 @@ class Overrides {
 	}
 
 	/** @remarks Requires PerProfessionData for Revs to be loaded first. */
-	public static function RevSkillToPallette(int $skillId) : int
+	public static function LoadAdditionalPerProfessionData(int $profession, PerProfessionData $data) : void
 	{
-		switch($skillId) {
-			case SkillId::Enchanted_Daggers:
-			case SkillId::Project_Tranquility:
-			case SkillId::Empowering_Misery:
-			case SkillId::Facet_of_Light:
-			case SkillId::Soothing_Stone1:
-			case SkillId::Soothing_Stone2:
-			case SkillId::Breakrazors_Bastion:
-				return 4572;
+		if($profession === Profession::Revenant) {
+			$AddIfNotSet = function(int $key, int $value) use($data) {
+				if(!array_key_exists($key, $data->SkillToPallette)) $data->SkillToPallette[$key] = $value;
+			};
 
-			case SkillId::Impossible_Odds:
-			case SkillId::Purifying_Essence1:
-			case SkillId::Purifying_Essence2:
-			case SkillId::Call_to_Anguish1:
-			case SkillId::Call_to_Anguish2:
-			case SkillId::Facet_of_Strength:
-			case SkillId::Vengeful_Hammers:
-			case SkillId::Darkrazors_Daring:
-				return 4564;
+			$AddIfNotSet(SkillId::Enchanted_Daggers  , 4572);
+			$AddIfNotSet(SkillId::Project_Tranquility, 4572);
+			$AddIfNotSet(SkillId::Empowering_Misery  , 4572);
+			$AddIfNotSet(SkillId::Facet_of_Light     , 4572);
+			$AddIfNotSet(SkillId::Soothing_Stone1    , 4572);
+			$AddIfNotSet(SkillId::Soothing_Stone2    , 4572);
+			$AddIfNotSet(SkillId::Breakrazors_Bastion, 4572);
 
-			case SkillId::Riposting_Shadows:
-			case SkillId::Protective_Solace1:
-			case SkillId::Protective_Solace2:
-			case SkillId::Pain_Absorption:
-			case SkillId::Facet_of_Darkness:
-			case SkillId::Inspiring_Reinforcement1:
-			case SkillId::Inspiring_Reinforcement2:
-			case SkillId::Razorclaws_Rage:
-				return 4614;
+			$AddIfNotSet(SkillId::Impossible_Odds   , 4564);
+			$AddIfNotSet(SkillId::Purifying_Essence1, 4564);
+			$AddIfNotSet(SkillId::Purifying_Essence2, 4564);
+			$AddIfNotSet(SkillId::Call_to_Anguish1  , 4564);
+			$AddIfNotSet(SkillId::Call_to_Anguish2  , 4564);
+			$AddIfNotSet(SkillId::Facet_of_Strength , 4564);
+			$AddIfNotSet(SkillId::Vengeful_Hammers  , 4564);
+			$AddIfNotSet(SkillId::Darkrazors_Daring , 4564);
 
-			case SkillId::Phase_Traversal:
-			case SkillId::Natural_Harmony1:
-			case SkillId::Natural_Harmony2:
-			case SkillId::Banish_Enchantment:
-			case SkillId::Facet_of_Elements:
-			case SkillId::Forced_Engagement:
-			case SkillId::Icerazors_Ire:
-				return 4651;
+			$AddIfNotSet(SkillId::Riposting_Shadows       , 4614);
+			$AddIfNotSet(SkillId::Protective_Solace1      , 4614);
+			$AddIfNotSet(SkillId::Protective_Solace2      , 4614);
+			$AddIfNotSet(SkillId::Pain_Absorption         , 4614);
+			$AddIfNotSet(SkillId::Facet_of_Darkness       , 4614);
+			$AddIfNotSet(SkillId::Inspiring_Reinforcement1, 4614);
+			$AddIfNotSet(SkillId::Inspiring_Reinforcement2, 4614);
+			$AddIfNotSet(SkillId::Razorclaws_Rage         , 4614);
 
-			case SkillId::Jade_Winds1:
-			case SkillId::Jade_Winds2:
-			case SkillId::Energy_Expulsion1:
-			case SkillId::Energy_Expulsion2:
-			case SkillId::Embrace_the_Darkness:
-			case SkillId::Facet_of_Chaos:
-			case SkillId::Rite_of_the_Great_Dwarf:
-			case SkillId::Soulcleaves_Summit:
-				return 4554;
+			$AddIfNotSet(SkillId::Phase_Traversal   , 4651);
+			$AddIfNotSet(SkillId::Natural_Harmony1  , 4651);
+			$AddIfNotSet(SkillId::Natural_Harmony2  , 4651);
+			$AddIfNotSet(SkillId::Banish_Enchantment, 4651);
+			$AddIfNotSet(SkillId::Facet_of_Elements , 4651);
+			$AddIfNotSet(SkillId::Forced_Engagement , 4651);
+			$AddIfNotSet(SkillId::Icerazors_Ire     , 4651);
+
+			$AddIfNotSet(SkillId::Jade_Winds1            , 4554);
+			$AddIfNotSet(SkillId::Jade_Winds2            , 4554);
+			$AddIfNotSet(SkillId::Energy_Expulsion1      , 4554);
+			$AddIfNotSet(SkillId::Energy_Expulsion2      , 4554);
+			$AddIfNotSet(SkillId::Embrace_the_Darkness   , 4554);
+			$AddIfNotSet(SkillId::Facet_of_Chaos         , 4554);
+			$AddIfNotSet(SkillId::Rite_of_the_Great_Dwarf, 4554);
+			$AddIfNotSet(SkillId::Soulcleaves_Summit     , 4554);
 		}
-
-		return PerProfessionData::$Revenant->SkillToPallette[$skillId];
 	}
 
 	public static function FixRevApiSkill(int $legend, int $skillFromApi) : int
