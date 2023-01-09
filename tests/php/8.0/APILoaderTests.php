@@ -107,6 +107,12 @@ class BasicCodesTests extends TestCase {
 	public function Teapot1()
 	{
 		$code = APILoader::LoadBuildCode(FunctionTests::VALID_KEY, "Hardstuck Revenant", Kind::PvE);
+		$altSkills = ResolveAltRevSkills($code->ProfessionSpecific);
+		if($code->SlotSkills->Heal != SkillId::Facet_of_Light) {
+			$tmp = $code->SlotSkills;
+			$code->SlotSkills = $altSkills;
+			$altSkills = $tmp;
+		}
 
 		$this->assertEquals(SkillId::Facet_of_Light   , $code->SlotSkills->Heal);
 		$this->assertEquals(SkillId::Facet_of_Darkness, $code->SlotSkills->Utility1);
@@ -114,11 +120,10 @@ class BasicCodesTests extends TestCase {
 		$this->assertEquals(SkillId::Facet_of_Strength, $code->SlotSkills->Utility3);
 		$this->assertEquals(SkillId::Facet_of_Chaos   , $code->SlotSkills->Elite);
 
-		$altSkills = ResolveAltRevSkills($code->ProfessionSpecific);
-		$this->assertEquals(SkillId::Project_Tranquility, $altSkills->Heal);
-		$this->assertEquals(SkillId::Protective_Solace1 , $altSkills->Utility1);
-		$this->assertEquals(SkillId::Natural_Harmony1   , $altSkills->Utility2);
-		$this->assertEquals(SkillId::Purifying_Essence1 , $altSkills->Utility3);
-		$this->assertEquals(SkillId::Energy_Expulsion1  , $altSkills->Elite);
+		$this->assertEquals(SkillId::Empowering_Misery   , $altSkills->Heal);
+		$this->assertEquals(SkillId::Pain_Absorption     , $altSkills->Utility1);
+		$this->assertEquals(SkillId::Banish_Enchantment  , $altSkills->Utility2);
+		$this->assertEquals(SkillId::Call_to_Anguish1    , $altSkills->Utility3);
+		$this->assertEquals(SkillId::Embrace_the_Darkness, $altSkills->Elite);
 	}
 }

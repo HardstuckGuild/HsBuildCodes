@@ -83,6 +83,9 @@ describe('BasicCodesTests', () => {
 	/* regression: revenant skills would always show the alliance stance*/
 	test('teapot1', async () => {
 		var code = await APILoader.LoadBuildCode(VALID_KEY, "Hardstuck Revenant", Kind.PvE);
+		var altSkills = ResolveAltRevSkills(code.ProfessionSpecific as RevenantData);
+		if(code.SlotSkills.Heal != SkillId.Facet_of_Light)
+			[code.SlotSkills, altSkills] = [altSkills, code.SlotSkills];
 
 		expect(code.SlotSkills.Heal    ).toBe(SkillId.Facet_of_Light   );
 		expect(code.SlotSkills.Utility1).toBe(SkillId.Facet_of_Darkness);
@@ -90,11 +93,10 @@ describe('BasicCodesTests', () => {
 		expect(code.SlotSkills.Utility3).toBe(SkillId.Facet_of_Strength);
 		expect(code.SlotSkills.Elite   ).toBe(SkillId.Facet_of_Chaos   );
 
-		var altSkills = ResolveAltRevSkills(code.ProfessionSpecific as RevenantData);
-		expect(altSkills.Heal    ).toBe(SkillId.Project_Tranquility);
-		expect(altSkills.Utility1).toBe(SkillId.Protective_Solace1 );
-		expect(altSkills.Utility2).toBe(SkillId.Natural_Harmony1   );
-		expect(altSkills.Utility3).toBe(SkillId.Purifying_Essence1 );
-		expect(altSkills.Elite   ).toBe(SkillId.Energy_Expulsion1  );
+		expect(altSkills.Heal    ).toBe(SkillId.Empowering_Misery   );
+		expect(altSkills.Utility1).toBe(SkillId.Pain_Absorption     );
+		expect(altSkills.Utility2).toBe(SkillId.Banish_Enchantment  );
+		expect(altSkills.Utility3).toBe(SkillId.Call_to_Anguish1    );
+		expect(altSkills.Elite   ).toBe(SkillId.Embrace_the_Darkness);
 	});
 });

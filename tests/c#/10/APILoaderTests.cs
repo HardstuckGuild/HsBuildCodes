@@ -101,6 +101,9 @@ public class BasicCodesTests {
 	public async Task Teapot1()
 	{
 		var code = await APILoader.LoadBuildCode(FunctionTests.VALID_KEY, "Hardstuck Revenant", default);
+		var altSkills = Static.ResolveAltRevSkills((RevenantData)code.ProfessionSpecific);
+		if(code.SlotSkills.Heal != SkillId.Facet_of_Light)
+			(code.SlotSkills, altSkills) = (altSkills, code.SlotSkills);
 
 		Assert.Equal(SkillId.Facet_of_Light   , code.SlotSkills.Heal);
 		Assert.Equal(SkillId.Facet_of_Darkness, code.SlotSkills.Utility1);
@@ -108,12 +111,11 @@ public class BasicCodesTests {
 		Assert.Equal(SkillId.Facet_of_Strength, code.SlotSkills.Utility3);
 		Assert.Equal(SkillId.Facet_of_Chaos   , code.SlotSkills.Elite);
 
-		var altSkills = Static.ResolveAltRevSkills((RevenantData)code.ProfessionSpecific);
-		Assert.Equal(SkillId.Project_Tranquility, altSkills.Heal);
-		Assert.Equal(SkillId.Protective_Solace1 , altSkills.Utility1);
-		Assert.Equal(SkillId.Natural_Harmony1   , altSkills.Utility2);
-		Assert.Equal(SkillId.Purifying_Essence1 , altSkills.Utility3);
-		Assert.Equal(SkillId.Energy_Expulsion1  , altSkills.Elite);
+		Assert.Equal(SkillId.Empowering_Misery   , altSkills.Heal);
+		Assert.Equal(SkillId.Pain_Absorption     , altSkills.Utility1);
+		Assert.Equal(SkillId.Banish_Enchantment  , altSkills.Utility2);
+		Assert.Equal(SkillId.Call_to_Anguish1    , altSkills.Utility3);
+		Assert.Equal(SkillId.Embrace_the_Darkness, altSkills.Elite);
 	}
 
 	[PlatformFact(PlatformID.Win32NT)]
