@@ -57,9 +57,9 @@ class Overrides {
 	}
 
 	/** @remarks Requires PerProfessionData for Revs to be loaded first. */
-	public static function RevSkillToPallette(SkillId $skillId) : int
+	public static function RevSkillToPallette(int $skillId) : int
 	{
-		switch($skillId->value) {
+		switch($skillId) {
 			case SkillId::Enchanted_Daggers:
 			case SkillId::Project_Tranquility:
 			case SkillId::Empowering_Misery:
