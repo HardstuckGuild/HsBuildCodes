@@ -57,7 +57,7 @@
           } else {
             
           	console.log('skipping', name);
-          	resolve();  
+          	resolve();
           }
         }
       }
@@ -926,7 +926,7 @@ public enum ItemId {
 	Suuns_Harpoon_Gun   = 96029,
 	Suuns_Impaler       = 96974,
 	Suuns_Trident       = 96417,
-	
+
 	Suuns_Masque        = 97161,
 	Suuns_Epaulets      = 96731,
 	Suuns_Doublet       = 95626,

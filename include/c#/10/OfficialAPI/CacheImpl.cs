@@ -47,7 +47,7 @@ class DefaultCacheImpl : ICache {
 				Response  = ret = ret_,
 			});
 		}
-		
+
 		return ret;
 	}
 

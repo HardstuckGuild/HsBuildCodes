@@ -5,7 +5,7 @@ namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
 static class API {
 	public const string BASE_PATH = "https://api.guildwars2.com/v2";
-	
+
 	internal const string LATEST_SCHEMA = "latest";
 	static readonly HttpClient _client = new();
 	static readonly JsonSerializerOptions _jsonConfig = new() {

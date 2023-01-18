@@ -50,7 +50,7 @@ public static class APILoader {
 		code.Kind    = targetGameMode;
 
 		var playerData = await API.RequestJson<OfficialAPI.Character>($"/characters/{characterName}", authToken);
-		
+
 		code.Profession = Enum.Parse<Profession>(playerData.Profession);
 
 		var activeBuild = playerData.BuildTabs.First(t => t.IsActive).Build;
@@ -98,7 +98,7 @@ public static class APILoader {
 					case EquipmentItemSlot.Gloves     :                     SetArmorData(3, item); break;
 					case EquipmentItemSlot.Leggings   :                     SetArmorData(4, item); break;
 					case EquipmentItemSlot.Boots      :                     SetArmorData(5, item); break;
-						
+
 					case EquipmentItemSlot.Backpack:
 						code.EquipmentAttributes.BackItem = await ResolveStatId(item);
 						if(item.Infusions != null) {
@@ -129,7 +129,7 @@ public static class APILoader {
 							}
 						}
 						break;
-						
+		
 					case EquipmentItemSlot.Ring2:
 						code.EquipmentAttributes.Ring2 = await ResolveStatId(item);
 						if(item.Infusions != null) {
@@ -141,7 +141,7 @@ public static class APILoader {
 							}
 						}
 						break;
-						
+
 					case EquipmentItemSlot.WeaponA1:
 						if(aquatic) break;
 						code.EquipmentAttributes.WeaponSet1MainHand = await ResolveStatId(item);

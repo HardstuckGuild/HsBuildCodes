@@ -86,7 +86,7 @@ public static class Static
 			case WeaponType.Rifle:
 			case WeaponType.Staff:
 				return false;
-			
+
 			case WeaponType.HarpoonGun:
 			case WeaponType.Spear:
 			case WeaponType.Trident:
@@ -736,7 +736,6 @@ public static class Static
 				if(item == ItemId._UNDEFINED) continue;
 				infusions[item] = infusions.TryGetValue(item, out int count) ? count + 1 : 1;
 			}
-
 
 			int remaining = 0;
 			var current_inf = ItemId._UNDEFINED;

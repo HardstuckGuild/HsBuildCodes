@@ -43,7 +43,7 @@ public static class TextLoader {
 	{
 		if(text[0] == token) {
 			text = text[1..];
-			return true; 
+			return true;
 		}
 		return false;
 	}
@@ -93,10 +93,10 @@ public static class TextLoader {
 		for(int i = 0; i < 5; i++)
 			if(!EatToken(ref text, '_'))
 				code.SlotSkills[i] = (SkillId)DecodeAndAdvance(ref text, 3);
-		
+
 		if(!EatToken(ref text, '_'))
 			code.Rune = (ItemId)DecodeAndAdvance(ref text, 3);
-		
+
 		if(code.Kind != Kind.PvP)
 			code.EquipmentAttributes = LoadAllEquipmentStats(ref text, code);
 		else
@@ -122,7 +122,7 @@ public static class TextLoader {
 		if(!EatToken(ref text, '_')) set.MainHand = WeaponType._FIRST + DecodeAndAdvance(ref text);
 		if(set.MainHand != WeaponType._UNDEFINED)
 			if(!EatToken(ref text, '_')) set.Sigil1 = (ItemId)DecodeAndAdvance(ref text, 3);
-		
+
 		if(!ExistsAndIsTwoHanded(set.MainHand))
 			if(!EatToken(ref text, '_')) set.OffHand = WeaponType._FIRST + DecodeAndAdvance(ref text);
 		if(set.OffHand != WeaponType._UNDEFINED || ExistsAndIsTwoHanded(set.MainHand))
@@ -265,7 +265,7 @@ public static class TextLoader {
 				]);
 			}
 		}
-		
+
 		if(!code.WeaponSet1.HasAny) WriteAndAdvance(ref destination, '~');
 		else
 		{

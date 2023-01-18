@@ -140,7 +140,7 @@ public class PerProfessionData {
 		{
 			try
 			{
-				
+
 				var professionData = await APICache.Get<OfficialAPI.Profession>($"/professions/{Enum.GetName(profession)}", "2019-12-19T00:00:00.000Z");
 				foreach(var (pallete, skill) in professionData.SkillsByPalette!)
 				{
