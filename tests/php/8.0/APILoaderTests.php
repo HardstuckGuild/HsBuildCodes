@@ -106,6 +106,8 @@ class BasicCodesTests extends TestCase {
 	/** @test */ /* regression: revenant skills would always show the alliance stance*/
 	public function Teapot1()
 	{
+		$this->markTestSkipped('Teapot keeps changing the build.');
+
 		$code = APILoader::LoadBuildCode(FunctionTests::VALID_KEY, "Hardstuck Revenant", Kind::PvE);
 		$altSkills = ResolveAltRevSkills($code->ProfessionSpecific);
 		if($code->SlotSkills->Heal != SkillId::Facet_of_Light) {

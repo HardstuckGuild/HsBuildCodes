@@ -97,7 +97,7 @@ public class BasicCodesTests {
 		Assert.Equal(ItemId.Legendary_Rune_of_the_Traveler, code.Rune);
 	}
 
-	[Fact] /* regression: revenant skills would always show the alliance stance*/
+	[Fact(Skip = "Teapot keeps changing the build")] /* regression: revenant skills would always show the alliance stance*/
 	public async Task Teapot1()
 	{
 		var code = await APILoader.LoadBuildCode(FunctionTests.VALID_KEY, "Hardstuck Revenant", default);

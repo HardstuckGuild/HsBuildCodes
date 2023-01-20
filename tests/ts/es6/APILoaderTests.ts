@@ -80,8 +80,8 @@ describe('BasicCodesTests', () => {
 		expect(code.Rune).toBe(ItemId.Legendary_Rune_of_the_Traveler);
 	});
 
-	/* regression: revenant skills would always show the alliance stance*/
-	test('teapot1', async () => {
+	/* regression: revenant skills would always show the alliance stance*/ /* skip reason: teapot keeps changing the build */
+	test.skip('teapot1', async () => {
 		var code = await APILoader.LoadBuildCode(VALID_KEY, "Hardstuck Revenant", Kind.PvE);
 		var altSkills = ResolveAltRevSkills(code.ProfessionSpecific as RevenantData);
 		if(code.SlotSkills.Heal != SkillId.Facet_of_Light)

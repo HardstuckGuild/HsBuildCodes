@@ -19,4 +19,6 @@ class TestCase {
 	public function expectWarning() : void { }
 	public function expectWarningMessage(string $message) : void { }
 	public function expectWarningMessageMatches(string $regex) : void { }
+
+	public function markTestSkipped(string $reason): void { }
 }
