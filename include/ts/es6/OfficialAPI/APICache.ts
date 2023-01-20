@@ -69,11 +69,19 @@ class APICache {
 				weapon = professionData.weapons[WeaponType[effectiveWeapons.MainHand]];
 		}
 
-		if(code.Profession === Profession.Elementalist)
+		
+		if(code.Profession === Profession.Thief)
+		{
+			for(const skill of weapon.skills) {
+				if(skill.slot === "Weapon_" + (skillIndex + 1) && (skillIndex !== 2 || skill.offhand === WeaponType[effectiveWeapons.OffHand]))
+					return skill.id;
+			}
+		}
+		else if(code.Profession === Profession.Elementalist)
 		{
 			let skills = weapon.skills;
 			for(const skill of skills.reverse()) {
-				if(skill.attunement === 'Fire' && skill.slot === "Weapon_" + (skillIndex + 1))
+				if(skill.slot === "Weapon_" + (skillIndex + 1) && skill.attunement === 'Fire')
 					return skill.id;
 			}
 		}

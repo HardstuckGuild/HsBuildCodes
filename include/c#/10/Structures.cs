@@ -80,9 +80,10 @@ public struct WeaponSet {
 
 //NOTE(Rennorb): names match official API
 public enum WeaponType {
-	_UNDEFINED = default,
+	Nothing = _UNDEFINED, // for mapping thief weapon skills
 	Axe = 1, Dagger, Mace, Pistol, Sword, Scepter, Focus, Shield, Torch, Warhorn, 
 	ShortBow, Greatsword, Hammer, Longbow, Rifle, Staff, HarpoonGun, Spear, Trident,
+	_UNDEFINED = default,
 	_FIRST = Axe,
 }
 

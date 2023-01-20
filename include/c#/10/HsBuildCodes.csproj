@@ -6,7 +6,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<RootNamespace>Hardstuck.GuildWars2.BuildCodes.V2</RootNamespace>
-		<Version>2.1.0</Version>
+		<Version>2.1.1</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
 		<PackageId>Hardstuck.GuildWars2.BuildCodes</PackageId>
