@@ -99,6 +99,28 @@ describe("ResolveWeaponSkills", () => {
 			expect(await APICache.ResolveWeaponSkill(code, effective, i)).toBe(reference[i]);
 	});
 
+	test('ResolveThiefWeaponSkillsDD', async () => {
+		var code = new BuildCode();
+		code.Profession = Profession.Thief;
+		code.WeaponSet1.MainHand = WeaponType.Dagger;
+		code.WeaponSet1.OffHand  = WeaponType.Dagger;
+
+		var reference = [ SkillId.Double_Strike, SkillId.Heartseeker, SkillId.Death_Blossom, SkillId.Dancing_Dagger, SkillId.Cloak_and_Dagger ];
+		for(let i = 0; i < reference.length; i++)
+			expect(await APICache.ResolveWeaponSkill(code, code.WeaponSet1, i)).toBe(reference[i]);
+	});
+
+	test('ResolveThiefWeaponSkillsNoSecond', async () => {
+		var code = new BuildCode();
+		code.Profession = Profession.Thief;
+		code.WeaponSet1.MainHand = WeaponType.Dagger;
+		code.WeaponSet1.OffHand  = WeaponType._UNDEFINED;
+
+		var reference = [ SkillId.Double_Strike, SkillId.Heartseeker, SkillId.Twisting_Fangs, SkillId._UNDEFINED, SkillId._UNDEFINED ];
+		for(let i = 0; i < reference.length; i++)
+			expect(await APICache.ResolveWeaponSkill(code, code.WeaponSet1, i)).toBe(reference[i]);
+	});
+
 	test('ResolveTraitId', async () => {
 		const code = new BuildCode();
 		code.Profession = Profession.Mesmer;

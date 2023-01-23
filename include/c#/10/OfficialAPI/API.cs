@@ -1,5 +1,6 @@
 using Hardstuck.GuildWars2.BuildCodes.OfficialAPI;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
@@ -11,6 +12,9 @@ static class API {
 	static readonly JsonSerializerOptions _jsonConfig = new() {
 		PropertyNamingPolicy = new SnakeCaseNamingPolicy(),
 		IncludeFields        = true,
+		Converters           = {
+			new JsonStringEnumConverter(allowIntegerValues: true),
+		},
 	};
 
 	/// <inheritdoc cref="Request(string, string?, string)"/>

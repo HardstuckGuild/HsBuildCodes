@@ -117,6 +117,32 @@ class ResolveWeaponSkills extends TestCase {
 	}
 
 	/** @test */
+	public function ResolveThiefWeaponSkillsDD()
+	{
+		$code = new BuildCode();
+		$code->Profession = Profession::Thief;
+		$code->WeaponSet1->MainHand = WeaponType::Dagger;
+		$code->WeaponSet1->OffHand  = WeaponType::Dagger;
+
+		$reference = [ SkillId::Double_Strike, SkillId::Heartseeker, SkillId::Death_Blossom, SkillId::Dancing_Dagger, SkillId::Cloak_and_Dagger ];
+		for($i = 0; $i < count($reference); $i++)
+			$this->assertEquals($reference[$i], APICache::ResolveWeaponSkill($code, $code->WeaponSet1, $i));
+	}
+
+	/** @test */
+	public function ResolveThiefWeaponSkillsNoSecond()
+	{
+		$code = new BuildCode();
+		$code->Profession = Profession::Thief;
+		$code->WeaponSet1->MainHand = WeaponType::Dagger;
+		$code->WeaponSet1->OffHand  = WeaponType::_UNDEFINED;
+
+		$reference = [ SkillId::Double_Strike, SkillId::Heartseeker, SkillId::Twisting_Fangs, SkillId::_UNDEFINED, SkillId::_UNDEFINED ];
+		for($i = 0; $i < count($reference); $i++)
+			$this->assertEquals($reference[$i], APICache::ResolveWeaponSkill($code, $code->WeaponSet1, $i));
+	}
+
+	/** @test */
 	public function ResolveTraitId()
 	{
 		$code = new BuildCode();

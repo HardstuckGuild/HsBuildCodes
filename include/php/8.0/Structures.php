@@ -125,7 +125,7 @@ class WeaponType {
 	use Util\Enum;
 	use Util\First;
 
-	public const _UNDEFINED =  0;
+	public const Nothing    =  0; // thief weapon mapping
 	public const Axe        =  1;
 	public const Dagger     =  2;
 	public const Mace       =  3;
@@ -146,6 +146,8 @@ class WeaponType {
 	public const HarpoonGun = 17;
 	public const Spear      = 18;
 	public const Trident    = 19;
+
+	public const _UNDEFINED =  0;
 }
 
 interface IProfessionSpecific {}

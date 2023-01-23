@@ -65,13 +65,11 @@ public static class APICache {
 
 		}
 
-		WeaponSkill? skill;
-		if(code.Profession == Profession.Elementalist) {
-			skill = weapon.Skills.LastOrDefault(skill => skill.Attunement == "Fire" && skill.Slot == $"Weapon_{skillIndex + 1}");
-		}
-		else {
-			skill = weapon.Skills.FirstOrDefault(skill => skill.Slot == $"Weapon_{skillIndex + 1}");
-		}
+		var skill = (code.Profession) switch {
+			Profession.Thief        => weapon.Skills.FirstOrDefault(skill => skill.Slot == $"Weapon_{skillIndex + 1}" && (skillIndex != 2 || skill.Offhand == effectiveWeapons.OffHand)),
+			Profession.Elementalist => weapon.Skills. LastOrDefault(skill => skill.Slot == $"Weapon_{skillIndex + 1}" && skill.Attunement == "Fire"),
+			_                       => weapon.Skills.FirstOrDefault(skill => skill.Slot == $"Weapon_{skillIndex + 1}"),
+		};
 		return (SkillId)(skill?.Id ?? 0);
 	}
 

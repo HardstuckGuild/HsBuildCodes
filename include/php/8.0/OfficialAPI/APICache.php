@@ -64,10 +64,17 @@ class APICache {
 
 		}
 
-		if($code->Profession === Profession::Elementalist)
+		if($code->Profession === Profession::Thief)
+		{
+			foreach($weapon->skills as $skill) {
+				if($skill->slot === "Weapon_" . ($skillIndex + 1) && ($skillIndex !== 2 || $skill->offhand === WeaponType::TryGetName($effectiveWeapons->OffHand)))
+					return $skill->id;
+			}
+		}
+		else if($code->Profession === Profession::Elementalist)
 		{
 			foreach(array_reverse($weapon->skills) as $skill) {
-				if($skill->attunement === 'Fire' && $skill->slot === "Weapon_" . ($skillIndex + 1))
+				if($skill->slot === "Weapon_" . ($skillIndex + 1) && $skill->attunement === 'Fire')
 					return $skill->id;
 			}
 		}

@@ -92,7 +92,8 @@ export class WeaponSet {
 //NOTE(Rennorb): names match official API
 export enum WeaponType {
 	_UNDEFINED =  0,
-
+	
+	Nothing    =  0, // thief weapon mapping
 	Axe        =  1,
 	Dagger     =  2,
 	Mace       =  3,
@@ -114,6 +115,7 @@ export enum WeaponType {
 	Spear      = 18,
 	Trident    = 19,
 
+	
 	_FIRST     = Axe,
 }
 

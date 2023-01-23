@@ -293,6 +293,9 @@ class SkillId {
 	public const Guard = 12632;
 	public const Sic_Em = 12633;
 	public const Shadowstep = 13002;
+	public const Double_Strike = 13004;
+	public const Death_Blossom = 13006;
+	public const Dancing_Dagger = 13019;
 	public const Scorpion_Wire = 13020;
 	public const Withdraw = 13021;
 	public const Prepare_Thousand_Needles = 13026;
@@ -315,9 +318,11 @@ class SkillId {
 	public const Thieves_Guild = 13082;
 	public const Dagger_Storm = 13085;
 	public const Devourer_Venom = 13093;
+	public const Heartseeker = 13097;
 	public const Ice_Drake_Venom = 13096;
 	public const Seal_Area = 13099;
 	public const Shadow_Return = 13106;
+	public const Twisting_Fangs = 13110;
 	public const Shadow_Refuge = 13117;
 	public const Basilisk_Venom = 13132;
 	public const Throw_Bolas = 14354;
@@ -352,6 +357,7 @@ class SkillId {
 	public const Banner_of_Tactics2 = 14573;
 	public const On_My_Mark = 14575;
 	public const Mist_Form1 = 15795;
+	public const Cloak_and_Dagger = 16432;
 	public const Shadow_Portal = 16435;
 	public const Reapers_Mark = 19115;
 	public const Putrid_Mark = 19116;
