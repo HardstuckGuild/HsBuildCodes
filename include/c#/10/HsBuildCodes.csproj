@@ -22,7 +22,6 @@ Replaces Hardstuck.GuildWars2.Builds.
 		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/HardstuckGuild/HsBuildCodes.git</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/HardstuckGuild/HsBuildCodes</PackageProjectUrl>
-		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<PackageTags>hardstuck;guildwars2;gw2;guild wars 2;build code;hsbuildcodes</PackageTags>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
