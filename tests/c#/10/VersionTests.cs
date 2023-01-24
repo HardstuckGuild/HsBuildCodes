@@ -7,9 +7,9 @@ public class VersionTests {
 		var invalidCodes = new[] {
 			TestUtilities.CodesInvalid["wrong-version"],
 		};
-		
+
 		var v1Codes = TestUtilities.CodesV1.Values;
-		
+
 		var v2Codes = TestUtilities.CodesV2.Values;
 
 		return invalidCodes.Select(c => new object[] { c, -1 })

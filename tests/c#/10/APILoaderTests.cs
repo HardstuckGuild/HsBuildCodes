@@ -14,7 +14,7 @@ public class FunctionTests {
 			var code = await APILoader.LoadBuildCode("xxx", "sss", default);
 		});
 	}
-	
+
 	[Fact]
 	public async Task ShouldThrowInvalidScopes()
 	{
@@ -24,7 +24,7 @@ public class FunctionTests {
 	}
 
 	[Fact]
-	public async Task ShouldFindMissinScopes()
+	public async Task ShouldFindMissingScopes()
 	{
 		var missingScopes = await APILoader.ValidateScopes(MISSING_PERMS_KEY);
 

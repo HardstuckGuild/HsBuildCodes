@@ -151,7 +151,6 @@ public class BasicCodeTests {
 					if(counter != 0) Debug.Assert(false, "only on byte boundries");
 					list.Add((byte)c);
 					break;
-
 			}
 
 			if(counter == 8)
@@ -181,7 +180,6 @@ public class BasicCodeTests {
 		var rawCode2 = BitStringToBytes("b0100_01");
 		Assert.Equal(new byte[] { (byte)'b', 0b01000100 }, rawCode2);
 	}
-
 
 	[Fact]
 	public void ShouldThrowVersion()
@@ -419,4 +417,3 @@ public class OfficialChatLinks
 		Assert.Equal(SkillId._UNDEFINED, code.SlotSkills[4]);
 	}
 }
-

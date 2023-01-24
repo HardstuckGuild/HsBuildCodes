@@ -363,14 +363,14 @@ public class BasicCodesTests {
 				BackItem_2  = ItemId._UNDEFINED,
 				Accessory1  = ItemId.WvW_Infusion_Expertise,
 				Accessory2  = ItemId.WvW_Infusion_Expertise,
-				
+
 				Ring1_1  = ItemId.Agony_Infusion_09,
 				Ring1_2  = ItemId.Agony_Infusion_09,
 				Ring1_3  = ItemId.Agony_Infusion_09,
 				Ring2_1  = ItemId.Agony_Infusion_09,
 				Ring2_2  = ItemId.Agony_Infusion_09,
 				Ring2_3  = ItemId.Agony_Infusion_09,
-				
+
 				WeaponSet1_1  = ItemId._UNDEFINED,
 				WeaponSet1_2  = ItemId._UNDEFINED,
 				WeaponSet2_1  = ItemId._UNDEFINED,
@@ -394,7 +394,6 @@ public class BasicCodesTests {
 				Sigil2  = ItemId.Legendary_Sigil_of_Energy,
 			}
 		};
-
 
 		var text = TextLoader.WriteBuildCode(code);
 		var reencode = TextLoader.LoadBuildCode(text);
