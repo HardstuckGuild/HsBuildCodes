@@ -52,5 +52,9 @@ Replaces Hardstuck.GuildWars2.Builds.
 			<Pack>true</Pack>
 			<PackagePath></PackagePath>
 		</None>
+		<None Include="README.md">
+			<Pack>true</Pack>
+			<PackagePath></PackagePath>
+		</None>
 	</ItemGroup>
 </Project>
