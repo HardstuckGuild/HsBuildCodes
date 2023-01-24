@@ -32,8 +32,10 @@ class Trait {
 class Profession {
 	public Dictionary<string, Weapon>          Weapons         = new();
 	public List<int>                           Specializations = new();
-	/// <remarks> schema version == 2019-12-19T00:00:00.000Z </remarks>
-	[JsonConverter(typeof(PaletteConverter))]
+    /// <summary>
+    /// schema version == 2019-12-19T00:00:00.000Z
+    /// </summary>
+    [JsonConverter(typeof(PaletteConverter))]
 	public List<(int paletteID, int skillId)>? SkillsByPalette = new();
 }
 

@@ -21,12 +21,17 @@ public static class APILoader {
 
 	static readonly MumbleReader _mumble = new(false);
 
-	/// <summary> This method assumes the scopes account, character and build are available, but does not explicitely test for them. </summary>
-	/// <exception cref="Gw2Sharp.WebApi.Exceptions.NotFoundException">If the character can't be found. Usually happens if the api key doenst actaully correspond to the logged in account.</exception>
-	/// <exception cref="Gw2Sharp.WebApi.Exceptions.MissingScopesException"></exception>
-	/// <exception cref="Gw2Sharp.WebApi.Exceptions.InvalidAccessTokenException">If the token is not valid.</exception>
-	/// <returns> Null if the characer can't be determined. </returns>
-	public static async ValueTask<BuildCode?> LoadBuildCodeFromCurrentCharacter(string authToken, bool aquatic = false)
+    /// <summary>
+    /// This method assumes the scopes account, character and build are available, but does not explicitely test for them but throws an exception upon error.
+    /// </summary>
+    /// <param name="authToken">Guild Wars 2 API key.</param>
+    /// <param name="aquatic">Whether the character is underwater.</param>
+    /// <exception cref="HttpRequestException">Any Http problem when trying to obtain data from API.</exception>
+    /// <exception cref="InvalidAccessTokenException">The Guild Wars 2 API key is invalid.</exception>
+    /// <exception cref="MissingScopesException">The Guild Wars 2 API key is missing required scopes.</exception>
+    /// <exception cref="NotFoundException">The characterName is not associated with given Guild Wars 2 API key.</exception>
+    /// <returns>BuildCode class or null if the character is nit determined</returns>
+    public static async ValueTask<BuildCode?> LoadBuildCodeFromCurrentCharacter(string authToken, bool aquatic = false)
 	{
 		_mumble.Update();
 
@@ -40,16 +45,26 @@ public static class APILoader {
 		return await LoadBuildCode(authToken, _mumble.Data.Identity.Name, gamemode, aquatic);
 	}
 
-	/// <summary> This method assumes the scopes account, character and build are available, but does not explicitely test for them. </summary>
-	/// <exception cref="Gw2Sharp.WebApi.Exceptions.NotFoundException">If the character can't be found.</exception>
-	/// <exception cref="Gw2Sharp.WebApi.Exceptions.MissingScopesException"></exception>
-	/// <exception cref="Gw2Sharp.WebApi.Exceptions.InvalidAccessTokenException">If the token is not valid.</exception>
-	public static async Task<BuildCode> LoadBuildCode(string authToken, string characterName, Kind targetGameMode, bool aquatic = false) {
-		var code = new BuildCode();
-		code.Version = CURRENT_VERSION;
-		code.Kind    = targetGameMode;
+    /// <summary>
+    /// This method assumes the scopes account, character and build are available, but does not explicitely test for them but throws an exception upon error.
+    /// </summary>
+    /// <param name="authToken">Guild Wars 2 API key.</param>
+    /// <param name="characterName">Name of the character to load the build from.</param>
+    /// <param name="targetGameMode">The gamemode to generate the code for.</param>
+    /// <param name="aquatic">Whether the character is underwater.</param>
+    /// <exception cref="HttpRequestException">Any Http problem when trying to obtain data from API.</exception>
+	/// <exception cref="InvalidAccessTokenException">The Guild Wars 2 API key is invalid.</exception>
+	/// <exception cref="MissingScopesException">The Guild Wars 2 API key is missing required scopes.</exception>
+	/// <exception cref="NotFoundException">The characterName is not associated with given Guild Wars 2 API key.</exception>
+    /// <returns>BuildCode class or null if the character is nit determined</returns>
+    public static async Task<BuildCode> LoadBuildCode(string authToken, string characterName, Kind targetGameMode, bool aquatic = false) {
+        var code = new BuildCode
+        {
+            Version = CURRENT_VERSION,
+            Kind    = targetGameMode,
+        };
 
-		var playerData = await API.RequestJson<OfficialAPI.Character>($"/characters/{characterName}", authToken);
+        var playerData = await API.RequestJson<OfficialAPI.Character>($"/characters/{characterName}", authToken);
 
 		code.Profession = Enum.Parse<Profession>(playerData.Profession);
 
@@ -129,7 +144,7 @@ public static class APILoader {
 							}
 						}
 						break;
-		
+
 					case EquipmentItemSlot.Ring2:
 						code.EquipmentAttributes.Ring2 = await ResolveStatId(item);
 						if(item.Infusions != null) {
@@ -322,5 +337,5 @@ public static class APILoader {
 	}
 
 	internal static async ValueTask<StatId> ResolveStatId(OfficialAPI.EquipmentItem item)
-		=> item.Stats != null ? (StatId)item.Stats.Id : await APICache.ResolveStatId(item.Id);
+		=> item.Stats is not null ? (StatId)item.Stats.Id : await APICache.ResolveStatId(item.Id);
 }
