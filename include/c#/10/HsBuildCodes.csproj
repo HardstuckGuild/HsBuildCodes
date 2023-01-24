@@ -6,9 +6,10 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<RootNamespace>Hardstuck.GuildWars2.BuildCodes.V2</RootNamespace>
-		<Version>2.1.1</Version>
+		<Version>2.1.2</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
+		<Title>Hardstuck.GuildWars2.BuildCodes</Title>
 		<PackageId>Hardstuck.GuildWars2.BuildCodes</PackageId>
 		<Description>
 A collection of generators and converters for Hardstuck GW2 BuildCodes used by `hardstuck.gg/gw2/builds?b=[code]`.
@@ -19,11 +20,15 @@ Replaces Hardstuck.GuildWars2.Builds.
 		<Copyright>Apache-2.0</Copyright>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<RepositoryType>git</RepositoryType>
-		<RepositoryUrl>https://github.com/HardstuckGuild/HsBuildCodes</RepositoryUrl>
+		<RepositoryUrl>https://github.com/HardstuckGuild/HsBuildCodes.git</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/HardstuckGuild/HsBuildCodes</PackageProjectUrl>
+		<PackageTags>hardstuck;guildwars2;gw2;guild wars 2;build code;hsbuildcodes</PackageTags>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<IncludeSymbols>true</IncludeSymbols>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
@@ -44,6 +49,10 @@ Replaces Hardstuck.GuildWars2.Builds.
 
 	<ItemGroup>
 		<None Include="../../../LICENSE">
+			<Pack>true</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="README.md">
 			<Pack>true</Pack>
 			<PackagePath></PackagePath>
 		</None>

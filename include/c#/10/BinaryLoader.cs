@@ -103,7 +103,7 @@ public static class BinaryLoader {
 
 			this.BitPos += bitWidth;
 		}
-		
+
 		public string DebugPrint()
 		{
 			var s = "";
@@ -160,7 +160,7 @@ public static class BinaryLoader {
 			code.SlotSkills[i] = (SkillId)rawSpan.DecodeNext(24);
 
 		code.Rune = (ItemId)rawSpan.DecodeNext(24);
-		
+
 		if(code.Kind != Kind.PvP)
 			code.EquipmentAttributes = LoadAllEquipmentStats(ref rawSpan, code);
 		else
@@ -275,14 +275,14 @@ public static class BinaryLoader {
 		var rawBits = new BitWriter(destination);
 		rawBits.Data[0] = (byte)('a' + code.Version);
 		rawBits.BitPos += 8;
-		
+
 		rawBits.Write((code.Kind) switch {
 			Kind.PvP => 0,
 			Kind.WvW => 1,
 			Kind.PvE => 2,
 			_=> throw new ArgumentOutOfRangeException(nameof(code.Kind)),
 		}, 2);
-		
+
 		rawBits.Write((int)code.Profession - 1, 4);
 
 
@@ -586,7 +586,7 @@ public static class BinaryLoader {
 				ushort altSkill1PalletteId = professionData.SkillToPallette[revenantData.AltUtilitySkill1];
 				ushort altSkill2PalletteId = professionData.SkillToPallette[revenantData.AltUtilitySkill2];
 				ushort altSkill3PalletteId = professionData.SkillToPallette[revenantData.AltUtilitySkill3];
-				
+
 				BinaryPrimitives.WriteUInt16LittleEndian(profSpecificDest[skillOffset..], altSkill1PalletteId);
 				BinaryPrimitives.WriteUInt16LittleEndian(profSpecificDest[(skillOffset + 2)..], altSkill2PalletteId);
 				BinaryPrimitives.WriteUInt16LittleEndian(profSpecificDest[(skillOffset + 4)..], altSkill3PalletteId);

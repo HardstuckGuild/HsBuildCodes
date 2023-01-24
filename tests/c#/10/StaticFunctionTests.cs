@@ -45,7 +45,7 @@ public class CompressionTests
 			}
 			return infusions;
 		}
-		
+
 		var code_reference = TextLoader.LoadBuildCode(TestUtilities.CodesV2["compressed1-rearange-inf"]);
 
 		Assert.Equal(ExtractInfusions(code_reference), ExtractInfusions(code));

@@ -51,7 +51,7 @@ public static class Overrides {
 					case Legend.KALLA  : return SkillId.Soulcleaves_Summit;
 				} break;
 		}
-		
+
 		return PerProfessionData.Revenant.PalletteToSkill[palletteId];
 	}
 
@@ -151,7 +151,7 @@ public static class Overrides {
 					case Legend.KALLA  : return SkillId.Soulcleaves_Summit;
 				} break;
 		}
-		
+
 		return skillFromApi;
 	}
 
@@ -183,7 +183,7 @@ public static class Overrides {
 			var revData = (RevenantData)code.ProfessionSpecific;
 			for(int i = 0; i < 5; i++)
 				code.SlotSkills[i] = FixRevApiSkill(revData.Legend1, code.SlotSkills[i]);
-			
+
 			if(revData.Legend2 != Legend._UNDEFINED)
 			{
 				revData.AltUtilitySkill1 = FixRevApiSkill(revData.Legend2, revData.AltUtilitySkill1);

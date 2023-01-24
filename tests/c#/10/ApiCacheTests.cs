@@ -66,7 +66,6 @@ public class ResolveWeaponSkills {
 		Assert.Equal(WeaponType.Dagger, effective.OffHand);
 		Assert.Equal(ItemId.Legendary_Sigil_of_Concentration, effective.Sigil2);
 
-
 		var reference = new SkillId[5] { SkillId.Necrotic_Slash, SkillId.Life_Siphon, SkillId.Dark_Pact, SkillId.Deathly_Swarm, SkillId.Enfeebling_Blood };
 
 		for(int i = 0; i < reference.Length; i++)
@@ -94,7 +93,6 @@ public class ResolveWeaponSkills {
 		Assert.Equal(ItemId.Legendary_Sigil_of_Demons, effective.Sigil1);
 		Assert.Equal(WeaponType._UNDEFINED, effective.OffHand);
 		Assert.Equal(ItemId._UNDEFINED, effective.Sigil2);
-
 
 		var reference = new SkillId[5] { SkillId.Necrotic_Slash, SkillId.Life_Siphon, SkillId.Dark_Pact, SkillId._UNDEFINED, SkillId._UNDEFINED };
 

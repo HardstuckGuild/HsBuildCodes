@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2.OfficialAPI;
 
-//NOTE(Rennorb): These types are incomplete and only have the filds required for internal processing.
+//NOTE(Rennorb): These types are incomplete and only have the fields required for internal processing.
 //NOTE(Rennorb): Names match api names.
 
 #pragma warning disable CS0649 // value is never assigned to

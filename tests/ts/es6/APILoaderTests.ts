@@ -20,7 +20,7 @@ describe('FunctionTests', () => {
 		await expect(APILoader.LoadBuildCode(MISSING_PERMS_KEY, "sss", Kind.PvE)).rejects.toBeInstanceOf(Error);
 	});
 
-	test('ShouldFindMissinScopes', async () => {
+	test('ShouldFindMissingScopes', async () => {
 		const missingScopes = await APILoader.ValidateScopes(MISSING_PERMS_KEY);
 		expect(missingScopes).toStrictEqual(["characters", "builds"]);
 	});
