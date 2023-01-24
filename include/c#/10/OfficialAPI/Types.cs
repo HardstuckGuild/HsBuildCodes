@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2.OfficialAPI;
 
-//NOTE(Rennorb): These types are incomplete and only have the filds required for internal processing.
+//NOTE(Rennorb): These types are incomplete and only have the fields required for internal processing.
 //NOTE(Rennorb): Names match api names.
 
 #pragma warning disable CS0649 // value is never assigned to
@@ -32,10 +32,8 @@ class Trait {
 class Profession {
 	public Dictionary<string, Weapon>          Weapons         = new();
 	public List<int>                           Specializations = new();
-    /// <summary>
-    /// schema version == 2019-12-19T00:00:00.000Z
-    /// </summary>
-    [JsonConverter(typeof(PaletteConverter))]
+	/// <remarks> schema version == 2019-12-19T00:00:00.000Z </remarks>
+	[JsonConverter(typeof(PaletteConverter))]
 	public List<(int paletteID, int skillId)>? SkillsByPalette = new();
 }
 

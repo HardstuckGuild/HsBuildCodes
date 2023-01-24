@@ -36,7 +36,7 @@ class FunctionTests extends TestCase {
 	}
 
 	/** @test */
-	public function ShouldFindMissinScopes()
+	public function ShouldFindMissingScopes()
 	{
 		$missingScopes = APILoader::ValidateScopes(FunctionTests::MISSING_PERMS_KEY);
 		$this->assertEquals(["characters", "builds"], $missingScopes);
