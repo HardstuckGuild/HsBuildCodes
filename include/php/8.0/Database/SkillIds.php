@@ -298,12 +298,16 @@ class SkillId {
 	public const Dancing_Dagger = 13019;
 	public const Scorpion_Wire = 13020;
 	public const Withdraw = 13021;
+	public const Surprise_Shot = 13022;
+	public const Choking_Gas = 13024;
+	public const Infiltrators_Arrow = 13025;
 	public const Prepare_Thousand_Needles = 13026;
 	public const Hide_in_Shadows = 13027;
 	public const Caltrops = 13028;
 	public const Roll_for_Initiative = 13035;
 	public const Spider_Venom = 13037;
 	public const Prepare_Shadow_Portal = 13038;
+	public const Cluster_Bomb = 13041;
 	public const Blinding_Powder = 13044;
 	public const Assassins_Signet = 13046;
 	public const Signet_of_Malice = 13050;
@@ -316,6 +320,7 @@ class SkillId {
 	public const Smoke_Screen2 = 13065;
 	public const Haste = 13066;
 	public const Thieves_Guild = 13082;
+	public const Disabling_Shot = 13083;
 	public const Dagger_Storm = 13085;
 	public const Devourer_Venom = 13093;
 	public const Heartseeker = 13097;

@@ -120,6 +120,16 @@ describe("ResolveWeaponSkills", () => {
 		for(let i = 0; i < reference.length; i++)
 			expect(await APICache.ResolveWeaponSkill(code, code.WeaponSet1, i)).toBe(reference[i]);
 	});
+	
+	test('ResolveThiefWeaponSkillsTwohanded', async () => {
+		const code = new BuildCode();
+		code.Profession = Profession.Thief;
+		code.WeaponSet1.MainHand = WeaponType.Shortbow;
+
+		const reference = [ SkillId.Surprise_Shot, SkillId.Cluster_Bomb, SkillId.Disabling_Shot, SkillId.Choking_Gas, SkillId.Infiltrators_Arrow ];
+		for(let i = 0; i < reference.length; i++)
+			expect(await APICache.ResolveWeaponSkill(code, code.WeaponSet1, i)).toBe(reference[i]);
+	});
 
 	test('ResolveTraitId', async () => {
 		const code = new BuildCode();

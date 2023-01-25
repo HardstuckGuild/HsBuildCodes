@@ -67,7 +67,7 @@ class APICache {
 		if($code->Profession === Profession::Thief)
 		{
 			foreach($weapon->skills as $skill) {
-				if($skill->slot === "Weapon_" . ($skillIndex + 1) && ($skillIndex !== 2 || $skill->offhand === WeaponType::TryGetName($effectiveWeapons->OffHand)))
+				if($skill->slot === "Weapon_" . ($skillIndex + 1) && (IsTwoHanded($effectiveWeapons->MainHand) || $skillIndex !== 2 || $skill->offhand === WeaponType::TryGetName($effectiveWeapons->OffHand)))
 					return $skill->id;
 			}
 		}

@@ -73,7 +73,7 @@ class APICache {
 		if(code.Profession === Profession.Thief)
 		{
 			for(const skill of weapon.skills) {
-				if(skill.slot === "Weapon_" + (skillIndex + 1) && (skillIndex !== 2 || skill.offhand === WeaponType[effectiveWeapons.OffHand]))
+				if(skill.slot === "Weapon_" + (skillIndex + 1) && (IsTwoHanded(effectiveWeapons.MainHand) || skillIndex !== 2 || skill.offhand === WeaponType[effectiveWeapons.OffHand]))
 					return skill.id;
 			}
 		}

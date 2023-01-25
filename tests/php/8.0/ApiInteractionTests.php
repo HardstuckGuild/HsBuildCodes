@@ -143,6 +143,18 @@ class ResolveWeaponSkills extends TestCase {
 	}
 
 	/** @test */
+	public function ResolveThiefWeaponSkillsTwohanded()
+	{
+		$code = new BuildCode();
+		$code->Profession = Profession::Thief;
+		$code->WeaponSet1->MainHand = WeaponType::Shortbow;
+
+		$reference = [ SkillId::Surprise_Shot, SkillId::Cluster_Bomb, SkillId::Disabling_Shot, SkillId::Choking_Gas, SkillId::Infiltrators_Arrow ];
+		for($i = 0; $i < count($reference); $i++)
+			$this->assertEquals($reference[$i], APICache::ResolveWeaponSkill($code, $code->WeaponSet1, $i));
+	}
+
+	/** @test */
 	public function ResolveTraitId()
 	{
 		$code = new BuildCode();

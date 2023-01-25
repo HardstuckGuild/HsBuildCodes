@@ -137,7 +137,7 @@ class WeaponType {
 	public const Torch      =  9;
 	public const Warhorn    = 10;
 
-	public const ShortBow   = 11;
+	public const Shortbow   = 11;
 	public const Greatsword = 12;
 	public const Hammer     = 13;
 	public const Longbow    = 14;

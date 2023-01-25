@@ -127,6 +127,18 @@ public class ResolveWeaponSkills {
 	}
 
 	[Fact]
+	public async Task ResolveThiefWeaponSkillsTwohanded()
+	{
+		var code = new BuildCode();
+		code.Profession = Profession.Thief;
+		code.WeaponSet1.MainHand = WeaponType.Shortbow;
+
+		var reference = new SkillId[5] { SkillId.Surprise_Shot, SkillId.Cluster_Bomb, SkillId.Disabling_Shot, SkillId.Choking_Gas, SkillId.Infiltrators_Arrow };
+		for(int i = 0; i < reference.Length; i++)
+			Assert.Equal(reference[i], await V2.APICache.ResolveWeaponSkill(code, code.WeaponSet1, i));
+	}
+
+	[Fact]
 	public async Task ResolveTraitId()
 	{
 		var code = new BuildCode(){

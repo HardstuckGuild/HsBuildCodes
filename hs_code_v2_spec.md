@@ -57,7 +57,7 @@ V T P S.TS.TS.T WS..wS..WS..wS.. S..S..S..S..S.. R.. A..n,,,, I..n,,,, F..U.. A,
 `[WS..wS..WS..wS..]` Weapons [2 * 3-8 characters] pairs of (1 char weapon type index, 1-3 char sigil id, 0-1 char weapon type index, 1-3 char sigil id):
   - Repeat twice, once for each weapon set (or for each underwater weapon):
   1. - `_` (underscore): empty weapon slot
-     - `A-T`: weapon type index. Axe, Dagger, Mace, Pistol, Sword, Scepter, Focus, Shield, Torch, Warhorn, ShortBow, Greatsword, Hammer, Longbow, Rifle, Staff, HarpoonGun, Spear, Trident
+     - `A-T`: weapon type index. Axe, Dagger, Mace, Pistol, Sword, Scepter, Focus, Shield, Torch, Warhorn, Shortbow, Greatsword, Hammer, Longbow, Rifle, Staff, HarpoonGun, Spear, Trident
   2. - `_` (underscore): empty sigil slot
      - `1-3 characters`: sigil id resolved by `/v2/items`, `encode(id, 3)`
   3. repeat of (1.)

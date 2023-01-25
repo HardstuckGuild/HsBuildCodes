@@ -48,7 +48,7 @@ function IsTwoHanded(int $weaponType) : bool
 		case WeaponType::Warhorn:
 			return false;
 
-		case WeaponType::ShortBow:
+		case WeaponType::Shortbow:
 		case WeaponType::Greatsword:
 		case WeaponType::Hammer:
 		case WeaponType::Longbow:
@@ -79,7 +79,7 @@ function IsAquatic(int $weaponType) : bool
 		case WeaponType::Shield:
 		case WeaponType::Torch:
 		case WeaponType::Warhorn:
-		case WeaponType::ShortBow:
+		case WeaponType::Shortbow:
 		case WeaponType::Greatsword:
 		case WeaponType::Hammer:
 		case WeaponType::Longbow:
@@ -224,7 +224,7 @@ function ResolveDummyItemForWeaponType(int $weaponType, int $statId) : int
 			WeaponType::Hammer     => ItemId::Suuns_Warhammer   ,
 			WeaponType::Longbow    => ItemId::Suuns_Greatbow    ,
 			WeaponType::Rifle      => ItemId::Suuns_Musket      ,
-			WeaponType::ShortBow   => ItemId::Suuns_Short_Bow   ,
+			WeaponType::Shortbow   => ItemId::Suuns_Short_Bow   ,
 			WeaponType::Staff      => ItemId::Suuns_Spire       ,
 			WeaponType::HarpoonGun => ItemId::Suuns_Harpoon_Gun ,
 			WeaponType::Spear      => ItemId::Suuns_Impaler     ,
@@ -246,7 +246,7 @@ function ResolveDummyItemForWeaponType(int $weaponType, int $statId) : int
 			WeaponType::Hammer     => ItemId::Togos_Warhammer   ,
 			WeaponType::Longbow    => ItemId::Togos_Greatbow    ,
 			WeaponType::Rifle      => ItemId::Togos_Musket      ,
-			WeaponType::ShortBow   => ItemId::Togos_Short_Bow   ,
+			WeaponType::Shortbow   => ItemId::Togos_Short_Bow   ,
 			WeaponType::Staff      => ItemId::Togos_Spire       ,
 			WeaponType::HarpoonGun => ItemId::Togos_Harpoon_Gun ,
 			WeaponType::Spear      => ItemId::Togos_Impaler     ,
@@ -268,7 +268,7 @@ function ResolveDummyItemForWeaponType(int $weaponType, int $statId) : int
 			WeaponType::Hammer     => ItemId::Mist_Lords_Hammer       ,
 			WeaponType::Longbow    => ItemId::Mist_Lords_Longbow      ,
 			WeaponType::Rifle      => ItemId::Mist_Lords_Rifle        ,
-			WeaponType::ShortBow   => ItemId::Mist_Lords_Short_Bow    ,
+			WeaponType::Shortbow   => ItemId::Mist_Lords_Short_Bow    ,
 			WeaponType::Staff      => ItemId::Mist_Lords_Staff        ,
 			WeaponType::HarpoonGun => ItemId::Harpoon_Gun_of_the_Scion,
 			WeaponType::Spear      => ItemId::Impaler_of_the_Scion    ,

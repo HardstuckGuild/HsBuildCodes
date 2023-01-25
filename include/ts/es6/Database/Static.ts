@@ -51,7 +51,7 @@ export function IsTwoHanded(weaponType : WeaponType) : boolean
 		case WeaponType.Warhorn:
 			return false;
 
-		case WeaponType.ShortBow:
+		case WeaponType.Shortbow:
 		case WeaponType.Greatsword:
 		case WeaponType.Hammer:
 		case WeaponType.Longbow:
@@ -82,7 +82,7 @@ export function IsAquatic(weaponType : WeaponType) : boolean
 		case WeaponType.Shield:
 		case WeaponType.Torch:
 		case WeaponType.Warhorn:
-		case WeaponType.ShortBow:
+		case WeaponType.Shortbow:
 		case WeaponType.Greatsword:
 		case WeaponType.Hammer:
 		case WeaponType.Longbow:
@@ -226,7 +226,7 @@ export function ResolveDummyItemForWeaponType(weaponType : WeaponType, statId : 
 			case WeaponType.Hammer     : return ItemId.Suuns_Warhammer   ;
 			case WeaponType.Longbow    : return ItemId.Suuns_Greatbow    ;
 			case WeaponType.Rifle      : return ItemId.Suuns_Musket      ;
-			case WeaponType.ShortBow   : return ItemId.Suuns_Short_Bow   ;
+			case WeaponType.Shortbow   : return ItemId.Suuns_Short_Bow   ;
 			case WeaponType.Staff      : return ItemId.Suuns_Spire       ;
 			case WeaponType.HarpoonGun : return ItemId.Suuns_Harpoon_Gun ;
 			case WeaponType.Spear      : return ItemId.Suuns_Impaler     ;
@@ -248,7 +248,7 @@ export function ResolveDummyItemForWeaponType(weaponType : WeaponType, statId : 
 			case WeaponType.Hammer     : return ItemId.Togos_Warhammer   ;
 			case WeaponType.Longbow    : return ItemId.Togos_Greatbow    ;
 			case WeaponType.Rifle      : return ItemId.Togos_Musket      ;
-			case WeaponType.ShortBow   : return ItemId.Togos_Short_Bow   ;
+			case WeaponType.Shortbow   : return ItemId.Togos_Short_Bow   ;
 			case WeaponType.Staff      : return ItemId.Togos_Spire       ;
 			case WeaponType.HarpoonGun : return ItemId.Togos_Harpoon_Gun ;
 			case WeaponType.Spear      : return ItemId.Togos_Impaler     ;
@@ -270,7 +270,7 @@ export function ResolveDummyItemForWeaponType(weaponType : WeaponType, statId : 
 			case WeaponType.Hammer     : return ItemId.Mist_Lords_Hammer       ;
 			case WeaponType.Longbow    : return ItemId.Mist_Lords_Longbow      ;
 			case WeaponType.Rifle      : return ItemId.Mist_Lords_Rifle        ;
-			case WeaponType.ShortBow   : return ItemId.Mist_Lords_Short_Bow    ;
+			case WeaponType.Shortbow   : return ItemId.Mist_Lords_Short_Bow    ;
 			case WeaponType.Staff      : return ItemId.Mist_Lords_Staff        ;
 			case WeaponType.HarpoonGun : return ItemId.Harpoon_Gun_of_the_Scion;
 			case WeaponType.Spear      : return ItemId.Impaler_of_the_Scion    ;

@@ -105,7 +105,7 @@ export enum WeaponType {
 	Torch      =  9,
 	Warhorn    = 10,
 
-	ShortBow   = 11,
+	Shortbow   = 11,
 	Greatsword = 12,
 	Hammer     = 13,
 	Longbow    = 14,
