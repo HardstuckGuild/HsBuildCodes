@@ -1,4 +1,5 @@
 import ItemId from "../Database/ItemIds";
+import Overrides from "../Database/Overrides";
 import SkillId from "../Database/SkillIds";
 import SpecializationId from "../Database/SpecializationIds";
 import { IsTwoHanded } from "../Database/Static";
@@ -23,7 +24,7 @@ class APICache {
 		const itemData = await APICache.Get("/items/"+itemId);
 		Assert(itemData.type === "Weapon", "Item is not a weapon:", itemData);
 
-		return WeaponType[itemData.details.type as keyof typeof WeaponType];
+		return WeaponType[Overrides.FixWeaponTypeName(itemData.details.type) as keyof typeof WeaponType];
 	}
 
 	/** 

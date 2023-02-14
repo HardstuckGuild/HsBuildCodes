@@ -203,4 +203,13 @@ class Overrides {
 			}
 		}
 	}
+
+	public static function FixWeaponTypeName(string $apiName) : string {
+		return match ($apiName) {
+			//other spellings because of issue #21
+			"LongBow"  => "Longbow",
+			"ShortBow" => "Shortbow",
+			default => $apiName,
+		};
+	}
 }

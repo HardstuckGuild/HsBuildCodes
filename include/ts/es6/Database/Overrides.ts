@@ -202,5 +202,14 @@ class Overrides {
 			}
 		}
 	}
+
+	public static FixWeaponTypeName(apiName : string) : string {
+		switch (apiName)  {
+			//other spellings because of issue #21
+			case "LongBow" : return "Longbow";
+			case "ShortBow": return "Shortbow";
+			default: return apiName;
+		};
+	}
 }
 export default Overrides;

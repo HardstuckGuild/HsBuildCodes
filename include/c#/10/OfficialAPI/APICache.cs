@@ -18,7 +18,7 @@ public static class APICache {
 		var itemData = await Get<OfficialAPI.Item>($"/items/{itemId}");
 		Debug.Assert(itemData.Type == OfficialAPI.WeaponType.Weapon, $"Item is not a weapon:\n{itemData.Id}");
 
-		if(!Enum.TryParse(itemData.Details.Type, out WeaponType type)) type = WeaponType._UNDEFINED;
+		if(!Enum.TryParse(Overrides.FixWeaponTypeName(itemData.Details.Type), out WeaponType type)) type = WeaponType._UNDEFINED;
 		return type;
 	}
 

@@ -17,7 +17,7 @@ class APICache {
 		$itemData = APICache::Get("/items/$itemId");
 		assert($itemData->type === "Weapon", "Item is not a weapon:\n".json_encode($itemData));
 
-		return WeaponType::GetValue($itemData->details->type);
+		return WeaponType::GetValue(Overrides::FixWeaponTypeName($itemData->details->type));
 	}
 
 	/** 

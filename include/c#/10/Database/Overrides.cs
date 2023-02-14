@@ -192,4 +192,11 @@ public static class Overrides {
 			}
 		}
 	}
+
+	public static string FixWeaponTypeName(string apiName) => (apiName) switch {
+		//other spellings because of issue #21
+		"LongBow"  => "Longbow",
+		"ShortBow" => "Shortbow",
+		_ => apiName,
+	};
 }
