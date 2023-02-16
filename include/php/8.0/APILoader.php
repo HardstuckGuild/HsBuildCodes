@@ -28,6 +28,7 @@ class APILoader {
 		$code->Version = CURRENT_VERSION;
 		$code->Kind    = $targetGameMode;
 
+		$characterName = str_replace(' ', '%20', $characterName);
 		$playerData = API::RequestJson("/characters/$characterName", $authToken);
 		
 		$code->Profession = Profession::GetValue($playerData->profession);
