@@ -11,10 +11,8 @@ One of the main concerns when creating the implementation was to keep the interf
 
 ## [C# doc](./include/c%23/10/README.md)
 
-## [PHP 8.0 doc](./include/c%23/10/README.md)
+## [PHP 8.0/8.1 doc](./include/php/8.0/README.md)
 
-## [PHP 8.1 doc](./include/c%23/10/README.md)
-
-## [TS ES6 doc](./include/c%23/10/README.md)
+## [TS ES6 doc](./include/ts/es6/README.md)
 
 ## Implementations can be found in the corresponding directories.
