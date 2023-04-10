@@ -1,5 +1,12 @@
 {
 	"cSpell.words": [
 		"Hardstuck"
-	]
+	],
+	"phpunit.php": "G:/privat/programms/php/php-8.0.25-Win32-vs16-x64/php.exe",
+	"phpunit.phpunit": "G:/privat/programms/php/phpunit-9.5.26.phar",
+	"phpunit.args": [
+		"--test-suffix", "Tests.php",
+		"--bootstrap", "./include/php/8.0/autoload.php",
+		"./tests/php/8.0/"
+	],
 }

@@ -553,15 +553,15 @@ class BinaryLoader {
 		}
 
 		{
-			if(aquatic) pos += 2;
-			var view = new DataView(destination.buffer, pos);
+			var view = new DataView(destination.buffer, aquatic ? pos + 2 : pos);
 			for(let i = 0; i < 5; i++) {
 				const palletteIndex = professionData.SkillToPallette[code.SlotSkills[i]];
 				view.setUint16(i * 4, palletteIndex, true);
+				pos += 4;
 			}
-			if(!aquatic) pos += 2;
 		}
-
+		
+		console.assert(pos == 28);
 		switch(code.Profession)
 		{
 			case Profession.Ranger:
@@ -573,6 +573,7 @@ class BinaryLoader {
 
 			case Profession.Revenant:
 				const revenantData = code.ProfessionSpecific as RevenantData;
+
 
 				if(aquatic) pos += 2;
 				WriteByte(revenantData.Legend1);

@@ -571,4 +571,13 @@ public class OfficialChatLinks {
 		var result = TextLoader.WriteOfficialBuildCode(code);
 		Assert.Equal(reference, result);
 	}
+
+	[Fact] /* regression: issues with rev data padding */
+	public void OfficialRevenantCode()
+	{
+		PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
+		var code = TextLoader.LoadBuildCode(TestUtilities.CodesV2["revenant"]);
+
+		Assert.Equal(TestUtilities.CodesIngame["revenant"], TextLoader.WriteOfficialBuildCode(code));
+	}
 }

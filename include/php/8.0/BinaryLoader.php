@@ -549,12 +549,13 @@ class BinaryLoader {
 			$destination .= chr($spec->Choices[0] | ($spec->Choices[1] << 2) | ($spec->Choices[2] << 4));
 		}
 
-		if($aquatic) $destination .= pack('x2');
-		for($i = 0; $i < 5; $i++) {
-			$palletteIndex = $professionData->SkillToPallette[$code->SlotSkills[$i]];
-			$destination .= pack('vx2', $palletteIndex);
+		{
+			$format = $aquatic ? 'x2v' : 'vx2';
+			for($i = 0; $i < 5; $i++) {
+				$palletteIndex = $professionData->SkillToPallette[$code->SlotSkills[$i]];
+				$destination .= pack($format, $palletteIndex);
+			}
 		}
-		if(!$aquatic) $destination .= pack('x2');
 
 		switch($code->Profession)
 		{

@@ -579,4 +579,13 @@ class OfficialChatLinks extends TestCase {
 		$result = TextLoader::WriteOfficialBuildCode($code);
 		$this->assertEquals($reference, $result);
 	}
+
+	/** @test */ /* regression: issues with rev data padding */
+	public function OfficialRevenantCode() : void
+	{
+		PerProfessionData::$LazyLoadMode = LazyLoadMode::OFFLINE_ONLY;
+		$code = TextLoader::LoadBuildCode(TestUtilities::$CodesV2["revenant"]);
+
+		$this->assertEquals(TestUtilities::$CodesIngame["revenant"], TextLoader::WriteOfficialBuildCode($code));
+	}
 }

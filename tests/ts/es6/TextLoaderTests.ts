@@ -416,7 +416,7 @@ describe('BasicCodesTests', () => {
 		expect(reencode).toStrictEqual(code);
 	});
 
-	/** @test */ /* regression: encoder did not properly handle empty second weapon*/
+	/* regression: encoder did not properly handle empty second weapon*/
 	test('Plenyx3', () => {
 		const code = new BuildCode();
 		code.Kind = Kind.PvE;
@@ -511,5 +511,13 @@ describe.each([true])('OfficialChatLinks', (lazyload) => {
 		const reference = TestUtilities.CodesIngame["full-necro2"];
 		const result = await TextLoader.WriteOfficialBuildCode(code);
 		expect(result).toBe(reference);
+	});
+
+	/* regression: issues with rev data padding */
+	test('OfficialRevenantCode', async () => {
+		PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
+		var code = TextLoader.LoadBuildCode(TestUtilities.CodesV2["revenant"]);
+
+		expect(await TextLoader.WriteOfficialBuildCode(code)).toBe(TestUtilities.CodesIngame["revenant"]);
 	});
 });
