@@ -5,6 +5,7 @@ namespace Hardstuck.GuildWars2.BuildCodes.V2.Tests.API;
 
 public class FunctionTests {
 	public const string VALID_KEY = "92CE5A6C-E594-9D4D-B92B-5621ACFE047D436C02BD-0810-47D9-B9D4-2620EB7DD598";
+	public const string UMLAUT_KEY = "D95CE863-D1B6-284F-B347-4B66C993759EDD490996-37AE-4E71-839A-DA51A0B6D40B";
 	public const string MISSING_PERMS_KEY = "AD041D99-AEEF-2E45-8732-0057285EFE370740BF1D-6427-4191-8C4F-84DD1C97F05F";
 
 	[Fact]
@@ -95,6 +96,12 @@ public class BasicCodesTests {
 		Assert.Equal(SkillId.Shadowfall     , code.SlotSkills.Elite);
 
 		Assert.Equal(ItemId.Legendary_Rune_of_the_Traveler, code.Rune);
+	}
+
+	[Fact]
+	public async Task LoadCharacterWithUmlaut()
+	{
+		var code = await APILoader.LoadBuildCode(FunctionTests.UMLAUT_KEY, "Brönski Van Gönski", default);
 	}
 
 	[Fact(Skip = "Teapot keeps changing the build")] /* regression: revenant skills would always show the alliance stance*/

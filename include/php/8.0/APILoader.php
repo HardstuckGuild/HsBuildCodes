@@ -17,6 +17,7 @@ class APILoader {
 	//NOTE(Rennorb): Removed Load from current character because php is not run on clients
 
 	/** 
+	 * @param string $characterName assumed to be the unencoded character name
 	 * @remarks This method assumes the scopes account, character and build are available, but does not explicitly test for them.
 	 * @throws \Exception If the character can't be found.
 	 * @throws \Exception If scopes are missing.
@@ -28,7 +29,8 @@ class APILoader {
 		$code->Version = CURRENT_VERSION;
 		$code->Kind    = $targetGameMode;
 
-		$characterName = str_replace(' ', '%20', $characterName);
+		//NOTE(Rennorb): ' ' must be %20, a '+' does _not_ work
+		$characterName = rawurlencode($characterName);
 		$playerData = API::RequestJson("/characters/$characterName", $authToken);
 		
 		$code->Profession = Profession::GetValue($playerData->profession);

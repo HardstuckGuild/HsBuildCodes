@@ -20,6 +20,7 @@ class APILoader {
 	//NOTE(Rennorb): Removed Load from current character because php is not run on clients
 
 	/** 
+	 * @param characterName unescaped character name
 	 * @remarks This method assumes the scopes account, character and build are available, but does not explicitly test for them.
 	 * @throws Error If the character can't be found.
 	 * @throws Error If scopes are missing.
@@ -31,7 +32,8 @@ class APILoader {
 		code.Version = CURRENT_VERSION;
 		code.Kind    = targetGameMode;
 
-		const playerData = await API.RequestJson("/characters/"+characterName, authToken);
+		//NOTE(Rennorb): ' ' must be %20, a '+' does _not_ work
+		const playerData = await API.RequestJson("/characters/"+encodeURIComponent(characterName), authToken);
 		
 		code.Profession = Profession[playerData.profession as keyof typeof Profession];
 
@@ -299,6 +301,6 @@ class APILoader {
 	}
 
 	private static ResolveStatId(item) : StatId
-	{ return item.stats !== null ? item.stats.id : APICache.ResolveStatId(item.id); }
+	{  return item.stats ? item.stats.id : APICache.ResolveStatId(item.id); }
 }
 export default APILoader;

@@ -4,6 +4,7 @@ using static Hardstuck.GuildWars2.BuildCodes.V2.Static;
 using Permission = Hardstuck.GuildWars2.BuildCodes.V2.OfficialAPI.Permission;
 using EquipmentItemSlot = Hardstuck.GuildWars2.BuildCodes.V2.OfficialAPI.EquipmentItemSlot;
 using Hardstuck.GuildWars2.BuildCodes.V2.OfficialAPI;
+using System.Web;
 
 namespace Hardstuck.GuildWars2.BuildCodes.V2;
 
@@ -45,7 +46,7 @@ public static class APILoader {
 
 	/// <remarks> This method assumes the scopes account, character and build are available, but does not explicitly test for them. </remarks>
 	/// <param name="authToken"> Guild Wars 2 API key. </param>
-	/// <param name="characterName"> Name of the character to load the data from. </param>
+	/// <param name="characterName"> Unencoded name of the character to load the data from. </param>
 	/// <param name="targetGameMode"> The gamemode to load the data from. </param>
 	/// <param name="aquatic"> Whether to load the aquatic data or the usual terrestrial. </param>
 	/// <exception cref="HttpRequestException"> Any Http problem when trying to obtain data from API. </exception>
@@ -59,7 +60,8 @@ public static class APILoader {
 				Kind    = targetGameMode,
 		};
 
-		var playerData = await API.RequestJson<OfficialAPI.Character>($"/characters/{characterName}", authToken);
+		//NOTE(Rennorb): ' ' must be %20, a '+' does _not_ work
+		var playerData = await API.RequestJson<OfficialAPI.Character>($"/characters/{Uri.EscapeDataString(characterName)}", authToken);
 
 		code.Profession = Enum.Parse<Profession>(playerData.Profession);
 
