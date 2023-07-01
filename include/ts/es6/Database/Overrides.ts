@@ -66,7 +66,6 @@ class Overrides {
 				[SkillId.Empowering_Misery  ]: 4572,
 				[SkillId.Facet_of_Light     ]: 4572,
 				[SkillId.Soothing_Stone1    ]: 4572,
-				[SkillId.Soothing_Stone2    ]: 4572,
 				[SkillId.Breakrazors_Bastion]: 4572,
 
 				[SkillId.Impossible_Odds   ]: 4564,

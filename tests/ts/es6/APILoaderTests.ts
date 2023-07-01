@@ -32,7 +32,8 @@ describe('FunctionTests', () => {
 });
 
 describe('BasicCodesTests', () => {
-	test('LoadBuild', async () => {
+	/* skip reason: teapot keeps changing the build */
+	test.skip('LoadBuild', async () => {
 		const code = await APILoader.LoadBuildCode(VALID_KEY, "Hardstuck Thief", Kind.PvE);
 		expect(code.Profession).toBe(Profession.Thief);
 

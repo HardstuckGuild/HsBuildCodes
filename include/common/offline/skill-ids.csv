@@ -25,7 +25,6 @@ SkillId;PalletteId;Skill Name
 5639;335;Armor of Earth
 5641;246;Arcane Shield
 5666;38;Glyph of Elementals
-5706;114;Glyph of Summoning
 5734;446;Glyph of Storms
 5735;446;Ice Storm
 5736;446;Firestorm
@@ -131,10 +130,6 @@ SkillId;PalletteId;Skill Name
 9175;329;Bow of Truth
 9182;330;Shield of the Avenger
 9187;332;Purging Flames
-9241;254;Bane Signet
-9242;326;Signet of Judgment
-9243;306;Signet of Mercy
-9244;305;Signet of Wrath
 9245;376;Smite Condition
 9246;441;Merciful Intervention
 9247;327;Judge's Intervention
@@ -270,10 +265,10 @@ SkillId;PalletteId;Skill Name
 12569;407;Spirit of Nature
 12570;190;Flame Trap
 12580;192;Entangle
-12592;189;Solar Flare
-12593;188;Cold Snap
-12594;182;Call Lightning
-12595;185;Quicksand
+12597;189;Solar Flare
+12600;188;Cold Snap
+12598;182;Call Lightning
+12599;185;Quicksand
 12596;407;Nature's Renewal
 12631;187;"""""""Protect Me!"""""""
 12632;183;"""""""Guard!"""""""
@@ -347,7 +342,7 @@ SkillId;PalletteId;Skill Name
 21750;3875;Signet of the Ether
 21762;3880;Signet of Vampirism
 21773;3877;Water Spirit
-21775;3877;Aqua Surge
+21776;3877;Aqua Surge
 21778;3876;Skelk Venom
 21815;3881;Defiant Stance
 22572;334;Arcane Wave
@@ -357,10 +352,9 @@ SkillId;PalletteId;Skill Name
 24410;285;Renewal of Water
 24411;285;Renewal of Earth
 24414;306;Signet of Mercy
-24415;306;Signet of Mercy
 24544;367;Signet of Undeath
-25476;114;Frozen Ground
-25478;114;Windborne Speed
+5515;114;Frozen Ground
+5682;114;Windborne Speed
 25480;38;Shocking Bolt
 25486;114;Glyph of Lesser Elementals
 25487;114;Glyph of Lesser Elementals
@@ -369,7 +363,6 @@ SkillId;PalletteId;Skill Name
 25490;38;Glyph of Elementals
 25491;38;Glyph of Elementals
 25492;38;Crashing Waves
-25494;114;Enervating Punch
 25495;114;Glyph of Lesser Elementals
 25497;114;Glyph of Lesser Elementals
 25498;38;Stomp

@@ -63,7 +63,6 @@ public static class Overrides {
 			data.SkillToPallette.TryAdd(SkillId.Empowering_Misery  , 4572);
 			data.SkillToPallette.TryAdd(SkillId.Facet_of_Light     , 4572);
 			data.SkillToPallette.TryAdd(SkillId.Soothing_Stone1    , 4572);
-			data.SkillToPallette.TryAdd(SkillId.Soothing_Stone2    , 4572);
 			data.SkillToPallette.TryAdd(SkillId.Breakrazors_Bastion, 4572);
 
 			data.SkillToPallette.TryAdd(SkillId.Impossible_Odds   , 4564);

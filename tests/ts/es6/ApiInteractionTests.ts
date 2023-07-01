@@ -52,7 +52,7 @@ describe("ResolveWeaponSkills", () => {
 		const reference = [ SkillId.Necrotic_Slash, SkillId.Life_Siphon, SkillId.Dark_Pact, SkillId.Deathly_Swarm, SkillId.Enfeebling_Blood ];
 
 		for(let i = 0; i < reference.length; i++)
-			expect(await APICache.ResolveWeaponSkill(code, effective, i)).toBe(reference[i]);
+			expect([i, await APICache.ResolveWeaponSkill(code, effective, i)]).toStrictEqual([i, reference[i]]);
 	});
 
 	test('ResolveWeaponSkillsFromOtherSet', async () => {

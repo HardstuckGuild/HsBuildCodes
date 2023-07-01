@@ -69,7 +69,6 @@ class Overrides {
 			$AddIfNotSet(SkillId::Empowering_Misery  , 4572);
 			$AddIfNotSet(SkillId::Facet_of_Light     , 4572);
 			$AddIfNotSet(SkillId::Soothing_Stone1    , 4572);
-			$AddIfNotSet(SkillId::Soothing_Stone2    , 4572);
 			$AddIfNotSet(SkillId::Breakrazors_Bastion, 4572);
 
 			$AddIfNotSet(SkillId::Impossible_Odds   , 4564);

@@ -92,6 +92,7 @@ export class WeaponSet {
 //NOTE(Rennorb): names match official API
 export enum WeaponType {
 	_UNDEFINED =  0,
+	_FIRST     =  1,
 	
 	Nothing    =  0, // thief weapon mapping
 	Axe        =  1,
@@ -114,9 +115,6 @@ export enum WeaponType {
 	HarpoonGun = 17,
 	Spear      = 18,
 	Trident    = 19,
-
-	
-	_FIRST     = Axe,
 }
 
 export interface IProfessionSpecific { }
@@ -155,6 +153,7 @@ export class RevenantData implements IProfessionSpecific {
 
 export enum Legend {
 	_UNDEFINED = 0,
+	_FIRST = 1,
 	/** Assasin */
 	SHIRO = 1,
 	/** Dragon */
@@ -169,8 +168,6 @@ export enum Legend {
 	KALLA = 6,
 	/** Alliance */
 	VINDICATOR = 7,
-
-	_FIRST = SHIRO,
 }
 
 export interface IArbitrary { }

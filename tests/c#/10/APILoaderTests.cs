@@ -44,7 +44,7 @@ public class FunctionTests {
 }
 
 public class BasicCodesTests {
-	[Fact]
+	[Fact(Skip = "Teapot keeps changing the build")]
 	public async Task LoadBuild()
 	{
 		var code = await APILoader.LoadBuildCode(FunctionTests.VALID_KEY, "Hardstuck Thief", default);

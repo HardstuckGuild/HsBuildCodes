@@ -7,7 +7,7 @@ class API {
 		if (response.status !== 200) {
 			let text = '';
 			try {
-				test = (await response.json()).text;
+				text = (await response.json()).text;
 			}
 			finally {
 				throw new Error(`${path}: [${response.status}] ${response.statusText}: \n${text}`);
