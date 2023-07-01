@@ -180,7 +180,7 @@ class PetId {
 }
 
 class RevenantData implements IProfessionSpecific {
-	public int $Legend1 = Legend::_UNDEFINED;
+	public int $Legend1 = Legend::SHIRO; // first
 	/** @remarks Is Legend::_UNDEFINED if the Legend is not set. */
 	public int $Legend2 = Legend::_UNDEFINED;
 

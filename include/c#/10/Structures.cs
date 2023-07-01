@@ -106,7 +106,7 @@ public enum PetId {
 }
 
 public class RevenantData : IProfessionSpecific {
-	public Legend Legend1;
+	public Legend Legend1 = Legend._FIRST;
 	/// <remarks> Is <see cref="Legend._UNDEFINED"/> if the legend is not set. </remarks>
 	public Legend Legend2;
 

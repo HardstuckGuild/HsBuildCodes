@@ -139,7 +139,7 @@ export enum PetId {
 }
 
 export class RevenantData implements IProfessionSpecific {
-	public Legend1 : Legend = Legend._UNDEFINED;
+	public Legend1 : Legend = Legend._FIRST;
 	/** @remarks Is Legend._UNDEFINED if the Legend is not set. */
 	public Legend2 : Legend = Legend._UNDEFINED;
 
