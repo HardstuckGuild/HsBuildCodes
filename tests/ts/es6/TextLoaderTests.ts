@@ -520,4 +520,12 @@ describe.each([true])('OfficialChatLinks', (lazyload) => {
 
 		expect(await TextLoader.WriteOfficialBuildCode(code)).toBe(TestUtilities.CodesIngame["revenant"]);
 	});
+
+	/* regression: ranger pets are off by one */
+	test('WriteOfficialRangerCode', async () => {
+		PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
+		var code = TextLoader.LoadBuildCode(TestUtilities.CodesV2["ranger-pets"]);
+
+		expect(await TextLoader.WriteOfficialBuildCode(code)).toBe(TestUtilities.CodesIngame["ranger-pets"]);
+	});
 });

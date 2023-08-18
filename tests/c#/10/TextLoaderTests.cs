@@ -580,4 +580,14 @@ public class OfficialChatLinks {
 
 		Assert.Equal(TestUtilities.CodesIngame["revenant"], TextLoader.WriteOfficialBuildCode(code));
 	}
+
+	[Fact] /* regression: ranger pets are off by one */
+	public void WriteOfficialRangerCode()
+	{
+		PerProfessionData.LazyLoadMode = LazyLoadMode.OFFLINE_ONLY;
+
+		var code = TextLoader.LoadBuildCode(TestUtilities.CodesV2["ranger-pets"]);
+
+		Assert.Equal(TestUtilities.CodesIngame["ranger-pets"], TextLoader.WriteOfficialBuildCode(code));
+	}
 }

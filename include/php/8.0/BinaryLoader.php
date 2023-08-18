@@ -563,8 +563,8 @@ class BinaryLoader {
 				/** @var RangerData */
 				$rangerData = $code->ProfessionSpecific;
 				if($aquatic) $destination .= pack('x2');
-				$destination .= chr(1 + $rangerData->Pet1);
-				$destination .= chr(1 + $rangerData->Pet2);
+				$destination .= chr($rangerData->Pet1);
+				$destination .= chr($rangerData->Pet2);
 				break;
 
 			case Profession::Revenant:

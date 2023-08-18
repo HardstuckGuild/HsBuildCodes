@@ -567,8 +567,8 @@ class BinaryLoader {
 			case Profession.Ranger:
 				const rangerData = code.ProfessionSpecific as RangerData;
 				if(aquatic) pos += 2;
-				WriteByte(1 + rangerData.Pet1);
-				WriteByte(1 + rangerData.Pet2);
+				WriteByte(rangerData.Pet1);
+				WriteByte(rangerData.Pet2);
 				break;
 
 			case Profession.Revenant:

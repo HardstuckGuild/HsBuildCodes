@@ -564,8 +564,8 @@ public static class BinaryLoader {
 			case Profession.Ranger:
 				var rangerData = (RangerData)code.ProfessionSpecific;
 				var offset = aquatic ? 2 : 0;
-				profSpecificDest[offset + 0] = (byte)(1 + rangerData.Pet1);
-				profSpecificDest[offset + 1] = (byte)(1 + rangerData.Pet2);
+				profSpecificDest[offset + 0] = (byte)rangerData.Pet1;
+				profSpecificDest[offset + 1] = (byte)rangerData.Pet2;
 				break;
 
 			case Profession.Revenant:

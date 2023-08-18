@@ -588,4 +588,14 @@ class OfficialChatLinks extends TestCase {
 
 		$this->assertEquals(TestUtilities::$CodesIngame["revenant"], TextLoader::WriteOfficialBuildCode($code));
 	}
+
+	/** @test */ /* regression: ranger pets are off by one */
+	public function WriteOfficialRangerCode()
+	{
+		PerProfessionData::$LazyLoadMode = LazyLoadMode::OFFLINE_ONLY;
+
+		$code = TextLoader::LoadBuildCode(TestUtilities::$CodesV2["ranger-pets"]);
+
+		$this->assertEquals(TestUtilities::$CodesIngame["ranger-pets"], TextLoader::WriteOfficialBuildCode($code));
+	}
 }
