@@ -13,6 +13,7 @@ export class BuildCode {
 	public WeaponSet2          : WeaponSet             = new WeaponSet();
 	public SlotSkills          : AllSkills             = new AllSkills();
 	public Rune                : ItemId                = ItemId._UNDEFINED;
+	public Relic               : ItemId                = ItemId._UNDEFINED;
 	/** Note: For simplicity, pvp codes only have their amulet id set on the amulet. */
 	public EquipmentAttributes : AllEquipmentStats     = new AllEquipmentStats();
 	public Infusions           : AllEquipmentInfusions = new AllEquipmentInfusions();

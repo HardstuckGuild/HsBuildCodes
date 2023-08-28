@@ -207,6 +207,10 @@ class APILoader {
 						code.EquipmentAttributes.Amulet = APILoader.ResolveStatId(item);
 						code.Infusions          .Amulet = item.infusions ? item.infusions[0] : ItemId._UNDEFINED;
 						break;
+
+					case "Relic":
+						code.Relic = item.id;
+						break;
 				}
 			}
 

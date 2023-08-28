@@ -97,6 +97,11 @@ public static class TextLoader {
 		if(!EatToken(ref text, '_'))
 			code.Rune = (ItemId)DecodeAndAdvance(ref text, 3);
 
+		if(code.Version >= 4) {
+			if(!EatToken(ref text, '_'))
+				code.Relic = (ItemId)DecodeAndAdvance(ref text, 3);
+		}
+
 		if(code.Kind != Kind.PvP)
 			code.EquipmentAttributes = LoadAllEquipmentStats(ref text, code);
 		else
@@ -282,6 +287,9 @@ public static class TextLoader {
 			EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)code.SlotSkills[i], 3);
 
 		EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)code.Rune, 3);
+
+		if(code.Version >= 4)
+			EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)code.Relic, 3);
 
 		if(code.Kind != Kind.PvP) EncodeStatsAndAdvance(ref destination, code);
 		else EncodeAndAdvance(ref destination, (int)code.EquipmentAttributes.Amulet, 2);

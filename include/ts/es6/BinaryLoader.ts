@@ -154,7 +154,11 @@ class BinaryLoader {
 			code.SlotSkills[i] = rawSpan.DecodeNext(24);
 
 		code.Rune = rawSpan.DecodeNext(24);
-		
+
+		if(code.Version >= 4) {
+			code.Relic = rawSpan.DecodeNext(24);
+		}
+
 		if(code.Kind !== Kind.PvP)
 			code.EquipmentAttributes = BinaryLoader.LoadAllEquipmentStats(rawSpan, code);
 		else
@@ -311,6 +315,10 @@ class BinaryLoader {
 			rawBits.Write(code.SlotSkills[i], 24);
 
 		rawBits.Write(code.Rune, 24);
+
+		if(code.Version >= 4) {
+			rawBits.Write(code.Relic, 24);
+		}
 
 		if(code.Kind === Kind.PvP) rawBits.Write(code.EquipmentAttributes.Amulet, 16);
 		else

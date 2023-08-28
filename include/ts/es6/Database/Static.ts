@@ -8,7 +8,7 @@ import SkillId from "./SkillIds";
 import StatId from "./StatIds";
 
 export const FIRST_VERSIONED_VERSION = 3;
-export const CURRENT_VERSION = 3;
+export const CURRENT_VERSION = 4;
 export const OFFICIAL_CHAT_CODE_BYTE_LENGTH = 44;
 
 export const ALL_EQUIPMENT_COUNT = 16;

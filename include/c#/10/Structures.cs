@@ -12,6 +12,7 @@ public class BuildCode {
 	public WeaponSet              WeaponSet2;
 	public AllSkills              SlotSkills;
 	public ItemId                 Rune;
+	public ItemId                 Relic;
 	/// <summary> Note: for simplicity, pvp codes only have their amulet id set on the amulet </summary> //TODO @nocommit
 	public AllEquipmentStats      EquipmentAttributes;
 	public AllEquipmentInfusions  Infusions;

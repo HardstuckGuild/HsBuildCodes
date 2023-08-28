@@ -239,6 +239,10 @@ public static class APILoader {
 						code.EquipmentAttributes.Amulet = await ResolveStatId(item);
 						code.Infusions          .Amulet = (ItemId?)item.Infusions?[0] ?? ItemId._UNDEFINED;
 						break;
+
+					case EquipmentItemSlot.Relic:
+						code.Relic = (ItemId)item.Id;
+						break;
 				}
 			}
 

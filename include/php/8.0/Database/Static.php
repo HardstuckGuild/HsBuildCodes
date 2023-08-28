@@ -3,7 +3,7 @@
 use Hardstuck\GuildWars2\BuildCodes\V2\Util\AllSkills;
 
 const FIRST_VERSIONED_VERSION = 3;
-const CURRENT_VERSION = 3;
+const CURRENT_VERSION = 4;
 const OFFICIAL_CHAT_CODE_BYTE_LENGTH = 44;
 
 const ALL_EQUIPMENT_COUNT = 16;

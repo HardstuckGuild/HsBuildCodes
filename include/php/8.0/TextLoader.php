@@ -88,6 +88,11 @@ class TextLoader {
 		
 		if(!TextLoader::EatToken($view, '_'))
 			$code->Rune = TextLoader::DecodeAndAdvance($view, 3);
+
+		if($code->Version >= 4) {
+			if(!TextLoader::EatToken($view, '_'))
+				$code->Relic = TextLoader::DecodeAndAdvance($view, 3);
+		}
 		
 		if($code->Kind !== Kind::PvP)
 			$code->EquipmentAttributes = TextLoader::LoadAllEquipmentStats($view, $code);
@@ -260,6 +265,10 @@ class TextLoader {
 			TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $code->SlotSkills[$i], 3);
 
 		TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $code->Rune, 3);
+
+		if($code->Version >= 4) {
+			TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $code->Relic, 3);
+		}
 
 		if($code->Kind !== Kind::PvP)TextLoader:: EncodeStatsAndAdvance($destination, $code);
 		else TextLoader::EncodeAndAdvance($destination, $code->EquipmentAttributes->Amulet, 2);

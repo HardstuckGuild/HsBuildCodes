@@ -36,4 +36,5 @@ public static class EquipmentItemSlot {
 	public const string Sickle         = "Sickle";
 	public const string Axe            = "Axe";
 	public const string Pick           = "Pick";
+	public const string Relic          = "Relic";
 }

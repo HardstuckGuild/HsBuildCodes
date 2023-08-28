@@ -1,10 +1,13 @@
-# HS BuildCode V2.D Spec RFC
+# HS BuildCode V2.E Spec RFC
+
+## Edits
+2023-08-23: Added Relics after the release of the 'Secrets of the Obscure' expansion.
 
 ## Ethos
 The following considerations were taken into account in descending priority:
 
 1. Printable characters only: The codes are meant to be used in chats and urls, so the codes must only use standard printable ASCII/UTF8 characters. They should avoid 'special characters' as to not break urls (_or commonly used url highlighters/parsers!_) that contain them. This basically means the character pool is reduced to the alphanumerical set (character code 0x30 - 0x39, 0x41 - 0x5A, 0x6A - 0x7A).
-4. Completeness: The codes must cover all possible scenarios. This includes all gamemodes, professions, (elite-)specializations, trait choices, weapon sets (weapon types), slot skills, stat attributes, sigils, runes, infusions and all special class features. [RFC] Rune mixing was deemed irrelevant. [/RFC]
+4. Completeness: The codes must cover all possible scenarios. This includes all gamemodes, professions, (elite-)specializations, trait choices, weapon sets (weapon types), slot skills, stat attributes, sigils, runes, relics, infusions and all special class features. [RFC] Rune mixing was deemed irrelevant. [/RFC]
 3. Compactness: The codes must be as short as possible. Allow omission of fields where sensible.
 2. Robustness: The codes should be as robust to further game (content-) updates as possible. It is, however, quite hard to anticipate game-mechanical updates and the changes introduced by those. This mostly boils down to use or enforce stable ordering wherever possible and using sufficiently large fields to store ids that won't overflow in the forseeable future.
 
@@ -32,11 +35,11 @@ All references to an API without hostname (e.g: `/v2/pets`) reference the offici
 
 The first line contains a v1 buildcode with only two weapons and uniform stats for width comparison. It is aligned to cover the width of fields that would be present, not rearranged to match the fields that exist in v1.
 ```
-a c e ccabbcbgc bbcSUTRge        -cfc-cfm_GTxg_i ft_ ikm+     +        +  +
-V T P S.TS.TS.T WS..wS..WS..wS.. S..S..S..S..S.. R.. A..n,,,, I..n,,,, F..U.. A,,,,,
+a c e ccabbcbgc bbcSUTRge        -cfc-cfm_GTxg_i ft_     ikm+     +        +  +
+V T P S.TS.TS.T WS..wS..WS..wS.. S..S..S..S..S.. R.. R.. A..n,,,, I..n,,,, F..U.. A,,,,,
 ```
 
-`[V]` Version [1 character. currently `D`] used for backwards compatibility.
+`[V]` Version [1 character. currently `E`] used for backwards compatibility.
   - Not contained in codes below version `D`.
   - Lower case letters indicate binary format base64 encoded.
 
@@ -72,6 +75,10 @@ V T P S.TS.TS.T WS..wS..WS..wS.. S..S..S..S..S.. R.. A..n,,,, I..n,,,, F..U.. A,
   - `1-3 characters`: skill id resolved by `/v2/skills`, `encode(id, 3)`
 
 `[R..]` Rune [1-3 characters]. Always the same for all slots.
+ - `_` (underscore): if empty
+ - `1-3 characters`: item id resolved by `/v2/items`, `encode(id, 3)`
+
+`[R..]` Relic [1-3 characters].
  - `_` (underscore): if empty
  - `1-3 characters`: item id resolved by `/v2/items`, `encode(id, 3)`
 
@@ -159,6 +166,8 @@ repeat 5: skill ids
 	24 : 0 if empty, Skill id otherwise
 
 24 : 0 if empty, Rune item id otherwise
+
+24 : 0 if empty, Relic item id otherwise
 
 either
 	16 : stat id (when type = pvp)

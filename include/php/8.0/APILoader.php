@@ -208,6 +208,10 @@ class APILoader {
 						$code->EquipmentAttributes->Amulet = APILoader::ResolveStatId($item);
 						$code->Infusions          ->Amulet = $hasInfusions ? $item->infusions[0] : ItemId::_UNDEFINED;
 						break;
+
+					case "Relic":
+						$code->Relic = $item->id;
+						break;
 				}
 			}
 

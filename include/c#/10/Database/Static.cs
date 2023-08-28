@@ -5,7 +5,7 @@ namespace Hardstuck.GuildWars2.BuildCodes.V2;
 public static class Static
 {
 	public const int FIRST_VERSIONED_VERSION = 3;
-	public const int CURRENT_VERSION = 3;
+	public const int CURRENT_VERSION = 4;
 	public const int OFFICIAL_CHAT_CODE_BYTE_LENGTH = 44;
 
 	public const int ALL_EQUIPMENT_COUNT = 16;

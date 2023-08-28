@@ -15,6 +15,7 @@ class BuildCode {
 	public WeaponSet              $WeaponSet2;
 	public AllSkills              $SlotSkills;
 	public int                    $Rune;
+	public int                    $Relic;
 	/** Note: For simplicity, pvp codes only have their amulet id set on the amulet. */
 	public AllEquipmentStats      $EquipmentAttributes;
 	public AllEquipmentInfusions  $Infusions;

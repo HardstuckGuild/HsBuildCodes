@@ -1,11 +1,11 @@
 import BinaryLoader from "./BinaryLoader";
 import ItemId from "./Database/ItemIds";
 import SpecializationId from "./Database/SpecializationIds";
-import { ALL_EQUIPMENT_COUNT, ALL_INFUSION_COUNT, CURRENT_VERSION, ExistsAndIsTwoHanded, HasAttributeSlot, HasInfusionSlot, IsTwoHanded } from "./Database/Static";
+import { ALL_EQUIPMENT_COUNT, ALL_INFUSION_COUNT, CURRENT_VERSION, ExistsAndIsTwoHanded, FIRST_VERSIONED_VERSION, HasAttributeSlot, HasInfusionSlot } from "./Database/Static";
 import StatId from "./Database/StatIds";
 import { Arbitrary, BuildCode, IArbitrary, IProfessionSpecific, Kind, Legend, PetId, Profession, ProfessionSpecific, RangerData, RevenantData, Specialization, TraitLineChoice, WeaponSet, WeaponType } from "./Structures";
 import StringView from "./Util/StringView"
-import { AllEquipmentInfusions, AllEquipmentStats, SpecializationChoices, TraitLineChoices } from "./Util/UtilStructs";
+import { AllEquipmentInfusions, AllEquipmentStats, TraitLineChoices } from "./Util/UtilStructs";
 import { Assert, Base64Decode, Base64Encode } from "./Util/Static";
 
 class TextLoader {
@@ -65,7 +65,7 @@ class TextLoader {
 		const view = new StringView(text);
 		const code = new BuildCode();
 		code.Version    = TextLoader.DecodeAndAdvance(view);
-		Assert(code.Version === CURRENT_VERSION, "Code version mismatch");
+		Assert(code.Version >= FIRST_VERSIONED_VERSION && code.Version <= CURRENT_VERSION, "Code version mismatch");
 		code.Kind       = TextLoader.DecodeAndAdvance(view) as Kind;
 		Assert(code.Kind !== Kind._UNDEFINED, "Code type not valid");
 		code.Profession = (1 + TextLoader.DecodeAndAdvance(view)) as Profession;
@@ -92,7 +92,12 @@ class TextLoader {
 		
 		if(!TextLoader.EatToken(view, '_'))
 			code.Rune = TextLoader.DecodeAndAdvance(view, 3);
-		
+
+		if(code.Version >= 4) {
+			if(!TextLoader.EatToken(view, '_'))
+				code.Relic = TextLoader.DecodeAndAdvance(view, 3);
+		}
+
 		if(code.Kind !== Kind.PvP)
 			code.EquipmentAttributes = TextLoader.LoadAllEquipmentStats(view, code);
 		else
@@ -263,7 +268,11 @@ class TextLoader {
 		for(let i = 0; i < 5; i++)
 			destination += TextLoader.EncodeOrUnderscoreOnZero(code.SlotSkills[i], 3);
 
-			destination += TextLoader.EncodeOrUnderscoreOnZero(code.Rune, 3);
+		destination += TextLoader.EncodeOrUnderscoreOnZero(code.Rune, 3);
+
+		if(code.Version >= 4) {
+			destination += TextLoader.EncodeOrUnderscoreOnZero(code.Relic, 3);
+		}
 
 		if(code.Kind !== Kind.PvP) destination += TextLoader.EncodeStats(code);
 		else destination += TextLoader.Encode(code.EquipmentAttributes.Amulet, 2);
