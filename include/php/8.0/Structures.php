@@ -32,6 +32,7 @@ class BuildCode {
 		$this->WeaponSet2          = new WeaponSet();
 		$this->SlotSkills          = new AllSkills();
 		$this->Rune                = ItemId::_UNDEFINED;
+		$this->Relic               = ItemId::_UNDEFINED;
 		$this->EquipmentAttributes = new AllEquipmentStats();
 		$this->Infusions           = new AllEquipmentInfusions();
 		$this->Food                = ItemId::_UNDEFINED;
