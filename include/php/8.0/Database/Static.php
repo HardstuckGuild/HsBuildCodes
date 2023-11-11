@@ -118,24 +118,26 @@ function ResolveAltRevSkills(RevenantData $revData) : AllSkills
 	if($revData->Legend2 == Legend::_UNDEFINED) return $skills;
 
 	$skills->Heal = match ($revData->Legend2)  {
-		Legend::SHIRO   => SkillId::Enchanted_Daggers,
-		Legend::VENTARI => SkillId::Project_Tranquility,
-		Legend::MALLYX  => SkillId::Empowering_Misery,
-		Legend::GLINT   => SkillId::Facet_of_Light,
-		Legend::JALIS   => SkillId::Soothing_Stone1,
-		Legend::KALLA   => SkillId::Breakrazors_Bastion,
+		Legend::SHIRO      => SkillId::Enchanted_Daggers,
+		Legend::VENTARI    => SkillId::Project_Tranquility,
+		Legend::MALLYX     => SkillId::Empowering_Misery,
+		Legend::GLINT      => SkillId::Facet_of_Light,
+		Legend::JALIS      => SkillId::Soothing_Stone1,
+		Legend::KALLA      => SkillId::Breakrazors_Bastion,
+		Legend::VINDICATOR => SkillId::Selfish_Spirit,
 		default => SkillId::_UNDEFINED,
 	};
 	$skills->Utility1 = $revData->AltUtilitySkill1;
 	$skills->Utility2 = $revData->AltUtilitySkill2;
 	$skills->Utility3 = $revData->AltUtilitySkill3;
 	$skills->Elite = match ($revData->Legend2) {
-		Legend::SHIRO   => SkillId::Jade_Winds1,
-		Legend::VENTARI => SkillId::Energy_Expulsion1,
-		Legend::MALLYX  => SkillId::Embrace_the_Darkness,
-		Legend::GLINT   => SkillId::Facet_of_Chaos,
-		Legend::JALIS   => SkillId::Rite_of_the_Great_Dwarf,
-		Legend::KALLA   => SkillId::Soulcleaves_Summit,
+		Legend::SHIRO      => SkillId::Jade_Winds1,
+		Legend::VENTARI    => SkillId::Energy_Expulsion1,
+		Legend::MALLYX     => SkillId::Embrace_the_Darkness,
+		Legend::GLINT      => SkillId::Facet_of_Chaos,
+		Legend::JALIS      => SkillId::Rite_of_the_Great_Dwarf,
+		Legend::KALLA      => SkillId::Soulcleaves_Summit,
+		Legend::VINDICATOR => SkillId::Spear_of_Archemorus,
 		default => SkillId::_UNDEFINED,
 	};
 
