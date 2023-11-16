@@ -652,8 +652,14 @@ class ItemId {
 	public const Winters_Heart_Infusion_Precision = 79957;
 	public const Winters_Heart_Infusion_Toughness = 80063;
 	public const Winters_Heart_Infusion_Vitality = 79943;
+	public const Clockwork_Infusion_Concentration = 99213;
+	public const Clockwork_Infusion_Condition_Damage = 99195;
+	public const Clockwork_Infusion_Expertise = 99237;
 	public const Clockwork_Infusion_Healing_Power = 99248;
 	public const Clockwork_Infusion_Power = 99240;
+	public const Clockwork_Infusion_Precision = 99244;
+	public const Clockwork_Infusion_Toughness = 99206;
+	public const Clockwork_Infusion_Vitality = 99209;
 	public const Peerless_Infusion_Concentration = 91221;
 	public const Peerless_Infusion_Condition_Damage = 91152;
 	public const Peerless_Infusion_Expertise = 91236;
@@ -694,6 +700,46 @@ class ItemId {
 	public const Imperial_Everbloom_Precision = 98088;
 	public const Imperial_Everbloom_Toughness = 98083;
 	public const Imperial_Everbloom_Vitality = 98145;
+	public const Mote_Of_Darkness_Infusion_Concentration = 99894;
+        public const Mote_Of_Darkness_Infusion_Condition_Damage = 99880;
+        public const Mote_Of_Darkness_Infusion_Expertise = 99869;
+        public const Mote_Of_Darkness_Infusion_Healing_Power = 99887;
+        public const Mote_Of_Darkness_Infusion_Power = 99878;
+        public const Mote_Of_Darkness_Infusion_Precision = 99882;
+        public const Mote_Of_Darkness_Infusion_Toughness = 99898;
+        public const Mote_Of_Darkness_Infusion_Vitality = 99881;
+        public const Arcane_Flow_Infusion_Concentration = 101234;
+        public const Arcane_Flow_Infusion_Condition_Damage = 101237;
+        public const Arcane_Flow_Infusion_Expertise = 101223;
+        public const Arcane_Flow_Infusion_Healing_Power = 101261;
+        public const Arcane_Flow_Infusion_Power = 101199;
+        public const Arcane_Flow_Infusion_Precision = 101279;
+        public const Arcane_Flow_Infusion_Thoughness = 101263;
+        public const Arcane_Flow_Infusion_Vitality = 101278;
+        public const Mistwalker_Infusion_Concentration = 99790;
+        public const Mistwalker_Infusion_Condition_Damage = 99784;
+        public const Mistwalker_Infusion_Expertise = 99809;
+        public const Mistwalker_Infusion_Healing_Power = 99839;
+        public const Mistwalker_Infusion_Power = 99789;
+        public const Mistwalker_Infusion_Precision = 99824;
+        public const Mistwalker_Infusion_Thoughness = 99848;
+        public const Mistwalker_Infusion_Vitality = 99850;
+        public const Silent_Symphony_Infusion_Concentration = 99921;
+        public const Silent_Symphony_Infusion_Condition_Damage = 99948;
+        public const Silent_Symphony_Infusion_Expertise = 99932;
+        public const Silent_Symphony_Infusion_Healing_Power = 99929;
+        public const Silent_Symphony_Infusion_Power = 99940;
+        public const Silent_Symphony_Infusion_Precision = 99939;
+        public const Silent_Symphony_Infusion_Thoughness = 99914;
+        public const Silent_Symphony_Infusion_Vitality = 99946;
+        public const Jotun_Infusion_Concentration = 101169;
+        public const Jotun_Infusion_Condition_Damage = 101124;
+        public const Jotun_Infusion_Expertise = 101262;
+        public const Jotun_Infusion_Healing_Power = 101146;
+        public const Jotun_Infusion_Power = 101276;
+        public const Jotun_Infusion_Precision = 101226;
+        public const Jotun_Infusion_Thoughness = 101171;
+        public const Jotun_Infusion_Vitality = 101259;
 
 	//basic laurel ones
 	public const Malign_Infusion    = 39337;
@@ -741,7 +787,20 @@ class ItemId {
 	public const Otters_Blessing_Enrichment      = 93798;
 	public const Celebratory_Birthday_Enrichment = 93953;
 
-	public const WxP_Enrichment             = 87417;
+	public const Wurms_Experienced_Blessing_Enrichment      = 101250;
+    	public const Wurms_Gilded_Blessing_Enrichment           = 101272;
+    	public const Wurms_Karmic_Blessing_Enrichment           = 101126;
+    	public const Wurms_Magical_Blessing_Enrichment          = 101302;
+    	public const Wurms_WvW_Reward_Track_Blessing_Enrichment = 101193;
+    	public const Wurms_WXP_Blessing_Enrichment              = 101250;
+
+    	public const Experienced_Enrichment = 39330;
+    	public const Golded_Enrichment      = 39331;
+    	public const Karmic_Enrichment      = 39332;
+    	public const Magical_Enrichment     = 39333;
+
+    	public const WvW_Reward_Track_Enrichment = 87398;
+    	public const WxP_Enrichment              = 87417;
 
 	public const Mist_Lords_Axe           = 91622;
 	public const Mist_Lords_Dagger        = 91636;
@@ -935,4 +994,10 @@ class ItemId {
 	public const Relic_of_Cerus               = 100074;
 	public const Relic_of_Mabon               = 100115;
 	public const Relic_of_the_Astral_War      = 100949;
+	public const Relic_of_Febe                = 101116;
+   	public const Relic_of_the_Demon_Queen     = 101166;
+   	public const Relic_of_Karakosa            = 101268;
+  	public const Relic_of_the_Midnight_King   = 101139;
+  	public const Relic_of_Nayos               = 101198;
+   	public const Relic_of_Nourys              = 101191;
 }
