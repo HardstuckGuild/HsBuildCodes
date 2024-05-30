@@ -125,8 +125,12 @@ class SkillId {
 	public const Save_Yourselves = 9085;
 	public const Bane_Signet1 = 9093;
 	public const Shelter = 9102;
+	public const Bolt_of_Wrath = 9122;
 	public const Hammer_of_Wisdom4 = 9125;
 	public const Sanctuary2 = 9128;
+	public const Holy_Strike = 9140;
+	public const Symbol_of_Swiftness = 9143;
+	public const Line_of_Warding = 9144;
 	public const Signet_of_Judgment1 = 9150;
 	public const Signet_of_Wrath1 = 9151;
 	public const Hold_the_Line = 9152;
@@ -148,6 +152,7 @@ class SkillId {
 	public const Contemplation_of_Purity = 9248;
 	public const Wall_of_Reflection = 9251;
 	public const Hallowed_Ground = 9253;
+	public const Empower = 9265;
 	public const Ether_Feast = 10176;
 	public const Mirror = 10177;
 	public const Arcane_Thievery = 10185;

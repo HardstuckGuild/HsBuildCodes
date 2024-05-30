@@ -179,4 +179,17 @@ class ResolveWeaponSkills extends TestCase {
 
 		$this->assertEquals(SkillId::Flame_Burst, $thirdSkill);
 	}
+
+	/** @test */ /* regression: guardian staff would show tome skills */
+	public function GuardianStaff() {
+		$code = new BuildCode();
+		$code->Profession = Profession::Guardian;
+		$code->WeaponSet1->MainHand = WeaponType::Staff;
+
+		$this->assertEquals(SkillId::Bolt_of_Wrath      , APICache::ResolveWeaponSkill($code, $code->WeaponSet1, 0));
+		$this->assertEquals(SkillId::Holy_Strike        , APICache::ResolveWeaponSkill($code, $code->WeaponSet1, 1));
+		$this->assertEquals(SkillId::Symbol_of_Swiftness, APICache::ResolveWeaponSkill($code, $code->WeaponSet1, 2));
+		$this->assertEquals(SkillId::Empower            , APICache::ResolveWeaponSkill($code, $code->WeaponSet1, 3));
+		$this->assertEquals(SkillId::Line_of_Warding    , APICache::ResolveWeaponSkill($code, $code->WeaponSet1, 4));
+	}
 }

@@ -170,4 +170,17 @@ public class ResolveWeaponSkills {
 
 		Assert.Equal(SkillId.Flame_Burst, thirdSkill);
 	}
+
+	[Fact] /* regression: guardian staff would show tome skills */
+	public async Task GuardianStaff() {
+		var code = new BuildCode();
+		code.Profession = Profession.Guardian;
+		code.WeaponSet1.MainHand = WeaponType.Staff;
+
+		Assert.Equal(SkillId.Bolt_of_Wrath      , await V2.APICache.ResolveWeaponSkill(code, code.WeaponSet1, 0));
+		Assert.Equal(SkillId.Holy_Strike        , await V2.APICache.ResolveWeaponSkill(code, code.WeaponSet1, 1));
+		Assert.Equal(SkillId.Symbol_of_Swiftness, await V2.APICache.ResolveWeaponSkill(code, code.WeaponSet1, 2));
+		Assert.Equal(SkillId.Empower            , await V2.APICache.ResolveWeaponSkill(code, code.WeaponSet1, 3));
+		Assert.Equal(SkillId.Line_of_Warding    , await V2.APICache.ResolveWeaponSkill(code, code.WeaponSet1, 4));
+	}
 }

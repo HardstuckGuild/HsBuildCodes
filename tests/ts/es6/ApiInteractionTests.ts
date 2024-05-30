@@ -153,4 +153,17 @@ describe("ResolveWeaponSkills", () => {
 
 		expect(thirdSkill).toBe(SkillId.Flame_Burst);
 	});
+
+	/* regression: guardian staff would show tome skills */
+	test('GuardianStaff', async () => {
+		var code = new BuildCode();
+		code.Profession = Profession.Guardian;
+		code.WeaponSet1.MainHand = WeaponType.Staff;
+
+		expect(await APICache.ResolveWeaponSkill(code, code.WeaponSet1, 0)).toBe(SkillId.Bolt_of_Wrath);
+		expect(await APICache.ResolveWeaponSkill(code, code.WeaponSet1, 1)).toBe(SkillId.Holy_Strike);
+		expect(await APICache.ResolveWeaponSkill(code, code.WeaponSet1, 2)).toBe(SkillId.Symbol_of_Swiftness);
+		expect(await APICache.ResolveWeaponSkill(code, code.WeaponSet1, 3)).toBe(SkillId.Empower);
+		expect(await APICache.ResolveWeaponSkill(code, code.WeaponSet1, 4)).toBe(SkillId.Line_of_Warding);
+	});
 });
