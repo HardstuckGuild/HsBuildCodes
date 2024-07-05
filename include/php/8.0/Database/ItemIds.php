@@ -1111,4 +1111,10 @@ class ItemId {
 	public const Relic_of_the_Midnight_King   = 101139;
 	public const Relic_of_Nayos               = 101198;
 	public const Relic_of_Nourys              = 101191;
+	public const Relic_of_the_Founding        = 101737;
+	public const Relic_of_Mosyn               = 101801;
+	public const Relic_of_the_Sorcerer        = 101863;
+	public const Relic_of_the_Twin_Generals   = 101767;
+	public const Relic_of_the_Wayfinder       = 101943;
+	public const Relic_of_Zakiros             = 101955;
 }

@@ -1184,4 +1184,10 @@ public enum ItemId {
 	Relic_of_the_Midnight_King   = 101139,
 	Relic_of_Nayos               = 101198,
 	Relic_of_Nourys              = 101191,
+	Relic_of_the_Founding        = 101737,
+	Relic_of_Mosyn               = 101801,
+	Relic_of_the_Sorcerer        = 101863,
+	Relic_of_the_Twin_Generals   = 101767,
+	Relic_of_the_Wayfinder       = 101943,
+	Relic_of_Zakiros             = 101955,
 }
