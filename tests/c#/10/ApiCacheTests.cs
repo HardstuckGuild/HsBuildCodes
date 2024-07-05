@@ -171,7 +171,7 @@ public class ResolveWeaponSkills {
 		Assert.Equal(SkillId.Flame_Burst, thirdSkill);
 	}
 
-	[Fact] /* regression: guardian staff would show tome skills */
+	[Fact] /* guardian staff would show tome skills */
 	public async Task GuardianStaff() {
 		var code = new BuildCode();
 		code.Profession = Profession.Guardian;

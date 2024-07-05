@@ -154,7 +154,7 @@ describe("ResolveWeaponSkills", () => {
 		expect(thirdSkill).toBe(SkillId.Flame_Burst);
 	});
 
-	/* regression: guardian staff would show tome skills */
+	/* guardian staff would show tome skills */
 	test('GuardianStaff', async () => {
 		var code = new BuildCode();
 		code.Profession = Profession.Guardian;

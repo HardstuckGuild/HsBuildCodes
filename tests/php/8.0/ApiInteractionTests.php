@@ -180,7 +180,7 @@ class ResolveWeaponSkills extends TestCase {
 		$this->assertEquals(SkillId::Flame_Burst, $thirdSkill);
 	}
 
-	/** @test */ /* regression: guardian staff would show tome skills */
+	/** @test */ /* guardian staff would show tome skills */
 	public function GuardianStaff() {
 		$code = new BuildCode();
 		$code->Profession = Profession::Guardian;
