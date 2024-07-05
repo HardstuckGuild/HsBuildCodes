@@ -317,12 +317,12 @@ export function ResolveDummyItemForEquipment(equipmentIndex : number, weightClas
 				case WeightClass.Medium: return ItemId.Suuns_Striders;
 				case WeightClass.Heavy : return ItemId.Suuns_Greaves;
 			};
-			case  6: return ItemId.Ad_Infinitum               ;
+			case  6: return ItemId.Ad_Infinitum;
 			case  7: return ItemId.Mists_Charged_Jade_Talisman;
 			case  8: return ItemId.Mists_Charged_Jade_Talisman;
-			case  9: return ItemId.Mists_Charged_Jade_Band    ;
-			case 10: return ItemId.Mists_Charged_Jade_Band    ;
-			case 15: return ItemId.Mists_Charged_Jade_Pendant ;
+			case  9: return ItemId.Mists_Charged_Jade_Band_Attuned_Infused;
+			case 10: return ItemId.Mists_Charged_Jade_Band_Attuned_Infused;
+			case 15: return ItemId.Mists_Charged_Jade_Pendant;
 		};
 		case StatId.Ritualists1: case StatId.Ritualists2: case StatId.Ritualists3: case StatId.Ritualists4: switch(equipmentIndex) {
 			case 0: switch (weightClass) {
@@ -355,12 +355,12 @@ export function ResolveDummyItemForEquipment(equipmentIndex : number, weightClas
 				case WeightClass.Medium: return ItemId.Togos_Striders;
 				case WeightClass.Heavy : return ItemId.Togos_Greaves;
 			};
-			case  6: return ItemId.Ad_Infinitum               ;
+			case  6: return ItemId.Ad_Infinitum;
 			case  7: return ItemId.Mists_Charged_Jade_Talisman;
 			case  8: return ItemId.Mists_Charged_Jade_Talisman;
-			case  9: return ItemId.Mists_Charged_Jade_Band    ;
-			case 10: return ItemId.Mists_Charged_Jade_Band    ;
-			case 15: return ItemId.Mists_Charged_Jade_Pendant ;
+			case  9: return ItemId.Mists_Charged_Jade_Band_Attuned_Infused;
+			case 10: return ItemId.Mists_Charged_Jade_Band_Attuned_Infused;
+			case 15: return ItemId.Mists_Charged_Jade_Pendant;
 		};
 		default: switch (equipmentIndex) {
 			case 0: switch (weightClass) {
@@ -393,12 +393,12 @@ export function ResolveDummyItemForEquipment(equipmentIndex : number, weightClas
 				case WeightClass.Medium: return ItemId.Illustrious_Striders;
 				case WeightClass.Heavy : return ItemId.Illustrious_Greaves;
 			};
-			case  6: return ItemId.Quiver_of_a_Thousand_Arrows;
-			case  7: return ItemId.Black_Ice_Earing           ;
-			case  8: return ItemId.Asgeirs_Talisman           ;
-			case  9: return ItemId.Black_Ice_Band             ;
-			case 10: return ItemId.Mistborn_Band              ;
-			case 15: return ItemId.Asgeirs_Amulet             ;
+			case  6: return ItemId.Quiver_of_a_Thousand_Arrows_Infused;
+			case  7: return ItemId.Black_Ice_Earing;
+			case  8: return ItemId.Asgeirs_Talisman;
+			case  9: return ItemId.Black_Ice_Band_Attuned_Infused;
+			case 10: return ItemId.Mistborn_Band_Attuned_Infused;
+			case 15: return ItemId.Asgeirs_Amulet;
 		}
 	};
 	return ItemId._UNDEFINED;

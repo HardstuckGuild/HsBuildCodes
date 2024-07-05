@@ -926,12 +926,15 @@ enum ItemId {
 	Impaler_of_the_Scion     = 90226,
 	Trident_of_the_Scion     = 90637,
 
-	Quiver_of_a_Thousand_Arrows = 37000,
-	Black_Ice_Earing            = 79745,
-	Asgeirs_Talisman            = 92706,
-	Asgeirs_Amulet              = 92215,
-	Black_Ice_Band              = 79712,
-	Mistborn_Band               = 90369,
+	Quiver_of_a_Thousand_Arrows         = 37000,
+	Quiver_of_a_Thousand_Arrows_Infused = 49365,
+	Black_Ice_Earing                    = 79745,
+	Asgeirs_Talisman                    = 92706,
+	Asgeirs_Amulet                      = 92215,
+	Black_Ice_Band                      = 79712,
+	Black_Ice_Band_Attuned_Infused      = 79710,
+	Mistborn_Band                       = 90369,
+	Mistborn_Band_Attuned_Infused       = 90238,
 
 	Illustrious_Masque        = 85128, //light helmet
 	Illustrious_Epaulets      = 84918, //light shoulders
@@ -1039,10 +1042,11 @@ enum ItemId {
 	Suuns_Greaves       = 95583,
 
 	// dragons / ritu accessories
-	Ad_Infinitum                = 74155,
-	Mists_Charged_Jade_Talisman = 98322,
-	Mists_Charged_Jade_Pendant  = 98299,
-	Mists_Charged_Jade_Band     = 98321,
+	Ad_Infinitum                            = 74155,
+	Mists_Charged_Jade_Talisman             = 98322,
+	Mists_Charged_Jade_Pendant              = 98299,
+	Mists_Charged_Jade_Band                 = 98321,
+	Mists_Charged_Jade_Band_Attuned_Infused = 98303,
 
 	//relics
 	Relic_of_Resistance          = 100794,

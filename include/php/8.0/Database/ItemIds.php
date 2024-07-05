@@ -929,12 +929,15 @@ class ItemId {
 	public const Impaler_of_the_Scion     = 90226;
 	public const Trident_of_the_Scion     = 90637;
 
-	public const Quiver_of_a_Thousand_Arrows = 37000;
-	public const Black_Ice_Earing            = 79745;
-	public const Asgeirs_Talisman            = 92706;
-	public const Asgeirs_Amulet              = 92215;
-	public const Black_Ice_Band              = 79712;
-	public const Mistborn_Band               = 90369;
+	public const Quiver_of_a_Thousand_Arrows         = 37000;
+	public const Quiver_of_a_Thousand_Arrows_Infused = 49365;
+	public const Black_Ice_Earing                    = 79745;
+	public const Asgeirs_Talisman                    = 92706;
+	public const Asgeirs_Amulet                      = 92215;
+	public const Black_Ice_Band                      = 79712;
+	public const Black_Ice_Band_Attuned_Infused      = 79710;
+	public const Mistborn_Band                       = 90369;
+	public const Mistborn_Band_Attuned_Infused       = 90238;
 
 	public const Illustrious_Masque        = 85128; //light helmet
 	public const Illustrious_Epaulets      = 84918; //light shoulders
@@ -1042,10 +1045,11 @@ class ItemId {
 	public const Suuns_Greaves       = 95583;
 
 	// dragons / ritu accessories
-	public const Ad_Infinitum                = 74155;
-	public const Mists_Charged_Jade_Talisman = 98322;
-	public const Mists_Charged_Jade_Pendant  = 98299;
-	public const Mists_Charged_Jade_Band     = 98321;
+	public const Ad_Infinitum                            = 74155;
+	public const Mists_Charged_Jade_Talisman             = 98322;
+	public const Mists_Charged_Jade_Pendant              = 98299;
+	public const Mists_Charged_Jade_Band                 = 98321;
+	public const Mists_Charged_Jade_Band_Attuned_Infused = 98303;
 
 	//relics
 	public const Relic_of_Resistance          = 100794;
