@@ -181,3 +181,10 @@ unsafe struct OfficialBuildCode {
 		}
 	}
 }
+
+
+public enum Tristate {
+	True    =  1,
+	False   =  0,
+	Unknown = -1,
+}

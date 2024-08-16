@@ -65,7 +65,8 @@ public static class Static
 		}
 	}
 
-	public static bool IsAquatic(WeaponType weaponType)
+	/// Returns Tristate.Unknown for spears because they may be used on land or underwater.
+	public static Tristate IsAquatic(WeaponType weaponType)
 	{
 		switch(weaponType)
 		{
@@ -85,16 +86,18 @@ public static class Static
 			case WeaponType.Longbow:
 			case WeaponType.Rifle:
 			case WeaponType.Staff:
-				return false;
+				return Tristate.False;
 
 			case WeaponType.HarpoonGun:
-			case WeaponType.Spear:
 			case WeaponType.Trident:
-				return true;
+				return Tristate.True;
+
+			case WeaponType.Spear:
+				return Tristate.Unknown;
 
 			default:
 				Debug.Assert(false, $"invalid weapon {weaponType}");
-				return false;
+				return Tristate.Unknown;
 		}
 	}
 

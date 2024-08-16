@@ -229,3 +229,12 @@ class NONE implements \Hardstuck\GuildWars2\BuildCodes\V2\IArbitrary {
 }
 
 namespace Hardstuck\GuildWars2\BuildCodes\V2;
+
+
+class Tristate {
+	use Util\Enum;
+
+	public const True    =  1;
+	public const False   =  0;
+	public const Unknown = -1;
+}

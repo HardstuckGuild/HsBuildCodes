@@ -1,4 +1,4 @@
-import { BuildCode, Kind, Legend, Profession, RevenantData, Specialization, WeaponSet, WeaponSetNumber, WeaponType, WeightClass } from "../Structures";
+import { BuildCode, Kind, Legend, Profession, RevenantData, Specialization, WeaponSet, WeaponSetNumber, WeaponType, WeightClass, Tristate } from "../Structures";
 import TextLoader from "../TextLoader";
 import { Assert } from "../Util/Static";
 import { AllSkills } from "../Util/UtilStructs";
@@ -68,7 +68,7 @@ export function IsTwoHanded(weaponType : WeaponType) : boolean
 	}
 }
 
-export function IsAquatic(weaponType : WeaponType) : boolean
+export function IsAquatic(weaponType : WeaponType) : Tristate
 {
 	switch(weaponType)
 	{
@@ -88,16 +88,18 @@ export function IsAquatic(weaponType : WeaponType) : boolean
 		case WeaponType.Longbow:
 		case WeaponType.Rifle:
 		case WeaponType.Staff:
-			return false;
+			return Tristate.False;
 		
 		case WeaponType.HarpoonGun:
-		case WeaponType.Spear:
 		case WeaponType.Trident:
-			return true;
+			return Tristate.True;
+
+		case WeaponType.Spear:
+			return Tristate.Unknown;
 
 		default:
 			Assert(false, "invalid weapon", weaponType);
-			return false;
+			return Tristate.False;
 	}
 }
 

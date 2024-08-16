@@ -180,3 +180,10 @@ export namespace Arbitrary {
 	}
 
 }
+
+
+export const enum Tristate {
+	True    =  1,
+	False   =  0,
+	Unknown = -1,
+}

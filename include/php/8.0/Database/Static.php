@@ -65,7 +65,11 @@ function IsTwoHanded(int $weaponType) : bool
 	}
 }
 
-function IsAquatic(int $weaponType) : bool
+/** 
+ * @remark Returns Tristate::Unknown for spears because they may be used on land or underwater.
+ * @return Tristate 
+ * */
+function IsAquatic(int $weaponType) : int
 {
 	switch($weaponType)
 	{
@@ -85,16 +89,18 @@ function IsAquatic(int $weaponType) : bool
 		case WeaponType::Longbow:
 		case WeaponType::Rifle:
 		case WeaponType::Staff:
-			return false;
+			return Tristate::False;
 		
 		case WeaponType::HarpoonGun:
-		case WeaponType::Spear:
 		case WeaponType::Trident:
-			return true;
+			return Tristate::True;
+
+		case WeaponType::Spear:
+			return Tristate::Unknown;
 
 		default:
 			assert(false, "invalid weapon {$weaponType}");
-			return false;
+			return Tristate::Unknown;
 	}
 }
 

@@ -65,7 +65,7 @@ There are multiple overloads available for most of those operations.
 
 ```php
 Static::IsTwoHanded(int $weapon) : boolean;
-Static::IsAquatic(int $weapon) : boolean;
+Static::IsAquatic(int $weapon) : Tristate;
 Static::ResolveEffectiveWeapons(BuildCode $code, int $set) : WeaponSet;
 Static::ResolveDummyItemForWeaponType(int $weaponType, int $statId) : int;
 Static::ResolveDummyItemForEquipment(int $equipmentIndex, int $weightClass, int $statId) : int;

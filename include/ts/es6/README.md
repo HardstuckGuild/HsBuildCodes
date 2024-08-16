@@ -61,7 +61,7 @@ There are multiple overloads available for most of those operations.
 
 ```ts
 Static.IsTwoHanded(weapon : WeaponType) : boolean;
-Static.IsAquatic(weapon : WeaponType) : boolean;
+Static.IsAquatic(weapon : WeaponType) : Tristate;
 Static.ResolveEffectiveWeapons(code : BuildCode, set : WeaponSetNumber) : WeaponSet;
 Static.ResolveDummyItemForWeaponType(weaponType : WeaponType, statId : StatId) : ItemId;
 Static.ResolveDummyItemForEquipment(equipmentIndex : int, weightClass : WeightClass, statId : StatId) : ItemId;
