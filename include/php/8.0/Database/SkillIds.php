@@ -662,4 +662,10 @@ class SkillId {
 	public const Shadowfall = 63275;
 	public const Well_of_Sorrow = 63276;
 	public const Well_of_Bounty = 63323;
+	public const Abyssal_Fire = 72931;
+	public const Abyssal_Blitz = 72938;
+	public const Abyssal_Blot = 72954;
+	public const Abyssal_Force = 72972;
+	public const Abyssal_Strike = 73015;
+	public const Abyssal_Raze = 73059;
 }

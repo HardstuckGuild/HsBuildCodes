@@ -1,6 +1,7 @@
 <?php namespace Hardstuck\GuildWars2\BuildCodes\V2\Tests\API;
 
 use Hardstuck\GuildWars2\BuildCodes\V2;
+use Hardstuck\GuildWars2\BuildCodes\V2\APICache;
 use Hardstuck\GuildWars2\BuildCodes\V2\APILoader;
 use Hardstuck\GuildWars2\BuildCodes\V2\ItemId;
 use Hardstuck\GuildWars2\BuildCodes\V2\Kind;
@@ -136,5 +137,24 @@ class BasicCodesTests extends TestCase {
 		$this->assertEquals(SkillId::Banish_Enchantment  , $altSkills->Utility2);
 		$this->assertEquals(SkillId::Call_to_Anguish1    , $altSkills->Utility3);
 		$this->assertEquals(SkillId::Embrace_the_Darkness, $altSkills->Elite);
+	}
+
+	/** @test */ /* spears should just work */
+	public function LandSpears()
+	{
+		$code = APILoader::LoadBuildCode(FunctionTests::VALID_KEY, "Hardstuck Revenant", Kind::PvE);
+		
+		if($code->WeaponSet1->MainHand === WeaponType::Spear)   $set = $code->WeaponSet1;
+		else if($code->WeaponSet2->MainHand === WeaponType::Spear)   $set = $code->WeaponSet2;
+		else {
+			$this->markTestSkipped('This character no longer holds a land spear.');
+			return;
+		}
+
+		$this->assertEquals(SkillId::Abyssal_Strike, APICache::ResolveWeaponSkill($code, $set, 0));
+		$this->assertEquals(SkillId::Abyssal_Force , APICache::ResolveWeaponSkill($code, $set, 1));
+		$this->assertEquals(SkillId::Abyssal_Blitz , APICache::ResolveWeaponSkill($code, $set, 2));
+		$this->assertEquals(SkillId::Abyssal_Blot  , APICache::ResolveWeaponSkill($code, $set, 3));
+		$this->assertEquals(SkillId::Abyssal_Raze  , APICache::ResolveWeaponSkill($code, $set, 4));
 	}
 }

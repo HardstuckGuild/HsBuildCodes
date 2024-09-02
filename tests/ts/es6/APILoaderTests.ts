@@ -7,6 +7,7 @@ import { ALL_EQUIPMENT_COUNT, ResolveAltRevSkills } from "../../../include/ts/es
 import StatId from "../../../include/ts/es6/Database/StatIds";
 import { Kind, Profession, RevenantData, TraitLineChoice, WeaponType } from "../../../include/ts/es6/Structures";
 import { TraitLineChoices } from "../../../include/ts/es6/Util/UtilStructs";
+import APICache from "../../../include/ts/es6/OfficialAPI/APICache";
 
 const VALID_KEY = "92CE5A6C-E594-9D4D-B92B-5621ACFE047D436C02BD-0810-47D9-B9D4-2620EB7DD598";
 const UMLAUT_KEY = "D95CE863-D1B6-284F-B347-4B66C993759EDD490996-37AE-4E71-839A-DA51A0B6D40B";
@@ -104,5 +105,24 @@ describe('BasicCodesTests', () => {
 		expect(altSkills.Utility2).toBe(SkillId.Banish_Enchantment  );
 		expect(altSkills.Utility3).toBe(SkillId.Call_to_Anguish1    );
 		expect(altSkills.Elite   ).toBe(SkillId.Embrace_the_Darkness);
+	});
+
+	/* spears should just work */
+	test('LandSpears', async () => {
+		var code = await APILoader.LoadBuildCode(VALID_KEY, "Hardstuck Revenant", Kind.PvE);
+		
+		let set;
+		if(code.WeaponSet1.MainHand === WeaponType.Spear)   set = code.WeaponSet1;
+		else if(code.WeaponSet2.MainHand === WeaponType.Spear)   set = code.WeaponSet2;
+		else {
+			 console.warn("This character no longer holds a land spear.");
+			return;
+		}
+
+		expect(await APICache.ResolveWeaponSkill(code, set, 0)).toBe(SkillId.Abyssal_Strike, );
+		expect(await APICache.ResolveWeaponSkill(code, set, 1)).toBe(SkillId.Abyssal_Force , );
+		expect(await APICache.ResolveWeaponSkill(code, set, 2)).toBe(SkillId.Abyssal_Blitz , );
+		expect(await APICache.ResolveWeaponSkill(code, set, 3)).toBe(SkillId.Abyssal_Blot  , );
+		expect(await APICache.ResolveWeaponSkill(code, set, 4)).toBe(SkillId.Abyssal_Raze  , );
 	});
 });

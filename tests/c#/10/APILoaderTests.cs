@@ -1,3 +1,4 @@
+using static Hardstuck.GuildWars2.BuildCodes.V2.APICache;
 using Hardstuck.GuildWars2.BuildCodes.V2.OfficialAPI;
 using Xunit;
 
@@ -124,6 +125,27 @@ public class BasicCodesTests {
 		Assert.Equal(SkillId.Call_to_Anguish1    , altSkills.Utility3);
 		Assert.Equal(SkillId.Embrace_the_Darkness, altSkills.Elite);
 	}
+
+	[Fact] /* spears should just work */
+	public async Task LandSpears()
+	{
+		var code = await APILoader.LoadBuildCode(FunctionTests.VALID_KEY, "Hardstuck Revenant", default);
+		
+		WeaponSet set;
+		if(code.WeaponSet1.MainHand == WeaponType.Spear)   set = code.WeaponSet1;
+		else if(code.WeaponSet2.MainHand == WeaponType.Spear)   set = code.WeaponSet2;
+		else {
+			Console.WriteLine("This character no longer holds a land spear.");
+			return;
+		}
+
+		Assert.Equal(SkillId.Abyssal_Strike, await ResolveWeaponSkill(code, set, 0));
+		Assert.Equal(SkillId.Abyssal_Force , await ResolveWeaponSkill(code, set, 1));
+		Assert.Equal(SkillId.Abyssal_Blitz , await ResolveWeaponSkill(code, set, 2));
+		Assert.Equal(SkillId.Abyssal_Blot  , await ResolveWeaponSkill(code, set, 3));
+		Assert.Equal(SkillId.Abyssal_Raze  , await ResolveWeaponSkill(code, set, 4));
+	}
+
 
 	[PlatformFact(PlatformID.Win32NT)]
 	public async Task FromCurrentCharacterNullIfUnavailable()

@@ -208,6 +208,7 @@ class Overrides {
 			//other spellings because of issue #21
 			"LongBow"  => "Longbow",
 			"ShortBow" => "Shortbow",
+			"Harpoon"  => "Spear",
 			default => $apiName,
 		};
 	}

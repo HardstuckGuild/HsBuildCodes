@@ -659,4 +659,10 @@ const enum SkillId {
 	Shadowfall = 63275,
 	Well_of_Sorrow = 63276,
 	Well_of_Bounty = 63323,
+	Abyssal_Fire = 72931,
+	Abyssal_Blitz = 72938,
+	Abyssal_Blot = 72954,
+	Abyssal_Force = 72972,
+	Abyssal_Strike = 73015,
+	Abyssal_Raze = 73059,
 }

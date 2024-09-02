@@ -207,6 +207,7 @@ class Overrides {
 			//other spellings because of issue #21
 			case "LongBow" : return "Longbow";
 			case "ShortBow": return "Shortbow";
+			case "Harpoon" : return "Spear";
 			default: return apiName;
 		};
 	}
