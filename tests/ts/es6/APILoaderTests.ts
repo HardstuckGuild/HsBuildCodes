@@ -119,10 +119,10 @@ describe('BasicCodesTests', () => {
 			return;
 		}
 
-		expect(await APICache.ResolveWeaponSkill(code, set, 0)).toBe(SkillId.Abyssal_Strike, );
-		expect(await APICache.ResolveWeaponSkill(code, set, 1)).toBe(SkillId.Abyssal_Force , );
-		expect(await APICache.ResolveWeaponSkill(code, set, 2)).toBe(SkillId.Abyssal_Blitz , );
-		expect(await APICache.ResolveWeaponSkill(code, set, 3)).toBe(SkillId.Abyssal_Blot  , );
-		expect(await APICache.ResolveWeaponSkill(code, set, 4)).toBe(SkillId.Abyssal_Raze  , );
+		expect(await APICache.ResolveWeaponSkill(code, set, 0)).toBe(SkillId.Abyssal_Strike);
+		expect(await APICache.ResolveWeaponSkill(code, set, 1)).toBe(SkillId.Abyssal_Force );
+		expect(await APICache.ResolveWeaponSkill(code, set, 2)).toBe(SkillId.Abyssal_Blitz );
+		expect(await APICache.ResolveWeaponSkill(code, set, 3)).toBe(SkillId.Abyssal_Blot  );
+		expect(await APICache.ResolveWeaponSkill(code, set, 4)).toBe(SkillId.Abyssal_Raze  );
 	});
 });
