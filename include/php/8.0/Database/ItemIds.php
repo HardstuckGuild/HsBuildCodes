@@ -1117,4 +1117,10 @@ class ItemId {
 	public const Relic_of_the_Twin_Generals   = 101767;
 	public const Relic_of_the_Wayfinder       = 101943;
 	public const Relic_of_Zakiros             = 101955;
+	public const Relic_of_Sorrow              = 103424;
+	public const Relic_of_Rivers              = 103015;
+	public const Relic_of_the_Claw            = 103574;
+	public const Relic_of_Atrocity            = 102245;
+	public const Relic_of_the_Stormsinger     = 102595;
+	public const Relic_of_the_Blightbringer   = 102199;
 }

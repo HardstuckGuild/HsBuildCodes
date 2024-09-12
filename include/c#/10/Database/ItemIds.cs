@@ -1190,4 +1190,10 @@ public enum ItemId {
 	Relic_of_the_Twin_Generals   = 101767,
 	Relic_of_the_Wayfinder       = 101943,
 	Relic_of_Zakiros             = 101955,
+	Relic_of_Sorrow              = 103424,
+	Relic_of_Rivers              = 103015,
+	Relic_of_the_Claw            = 103574,
+	Relic_of_Atrocity            = 102245,
+	Relic_of_the_Stormsinger     = 102595,
+	Relic_of_the_Blightbringer   = 102199,
 }
