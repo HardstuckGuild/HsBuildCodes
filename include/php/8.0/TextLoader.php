@@ -108,7 +108,7 @@ class TextLoader {
 				$code->Utility = TextLoader::DecodeAndAdvance($view, 3);
 		}
 
-		$code->ProfessionSpecific = TextLoader::LoadProfessionSpecific($view, $code->Profession);
+		$code->ProfessionSpecific = TextLoader::LoadProfessionSpecific($view, $code->Profession, $code->Specializations->Choice3->SpecializationId);
 		$code->Arbitrary          = TextLoader::LoadArbitrary($view);
 		return $code;
 	}
@@ -172,7 +172,7 @@ class TextLoader {
 		return $allData;
 	}
 
-	private static function LoadProfessionSpecific(StringView $text, int $profession) : IProfessionSpecific
+	private static function LoadProfessionSpecific(StringView $text, int $profession, int $eliteSpec) : IProfessionSpecific
 	{
 		switch($profession)
 		{
@@ -201,6 +201,18 @@ class TextLoader {
 				}
 				return $data;
 			}
+
+			case Profession::Engineer: if($eliteSpec === SpecializationId::Amalgam) {
+				$data = new AmalgamData();
+				if(!TextLoader::EatToken($text, '_'))
+					$data->ToolbeltSkill2 = TextLoader::DecodeAndAdvance($text, 3);
+				if(!TextLoader::EatToken($text, '_'))
+					$data->ToolbeltSkill3 = TextLoader::DecodeAndAdvance($text, 3);
+				if(!TextLoader::EatToken($text, '_'))
+					$data->ToolbeltSkill4 = TextLoader::DecodeAndAdvance($text, 3);
+				return $data;
+			}
+			// fallthrough
 
 			default: return ProfessionSpecific\NONE::GetInstance();
 		}
@@ -411,6 +423,24 @@ class TextLoader {
 				else
 				{
 					$destination .= '__';
+				}
+				break;
+
+			case Profession::Engineer:
+				if($code->Specializations->Choice3->SpecializationId === SpecializationId::Amalgam)
+				{
+					if(get_class($code->ProfessionSpecific) === AmalgamData::class)
+					{
+						/** @var AmalgamData $amalgamData */
+						$amalgamData = $code->ProfessionSpecific;
+						TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $amalgamData->ToolbeltSkill2, 3);
+						TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $amalgamData->ToolbeltSkill3, 3);
+						TextLoader::EncodeOrUnderscoreOnZeroAndAdvance($destination, $amalgamData->ToolbeltSkill4, 3);
+					}
+					else
+					{
+						$destination .= '___';
+					}
 				}
 				break;
 		}

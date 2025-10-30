@@ -111,12 +111,18 @@ public class RevenantData : IProfessionSpecific {
 	/// <remarks> Is <see cref="Legend._UNDEFINED"/> if the legend is not set. </remarks>
 	public Legend Legend2;
 
-	/// <remarks> Is <see cref="Legend._UNDEFINED"/> if the second legend is not set. </remarks>
+	/// <remarks> Is <see cref="SkillId._UNDEFINED"/> if the second legend is not set. </remarks>
 	public SkillId AltUtilitySkill1;
-	/// <remarks> Is <see cref="Legend._UNDEFINED"/> if the second legend is not set. </remarks>
+	/// <remarks> Is <see cref="SkillId._UNDEFINED"/> if the second legend is not set. </remarks>
 	public SkillId AltUtilitySkill2;
-	/// <remarks> Is <see cref="Legend._UNDEFINED"/> if the second legend is not set. </remarks>
+	/// <remarks> Is <see cref="SkillId._UNDEFINED"/> if the second legend is not set. </remarks>
 	public SkillId AltUtilitySkill3;
+}
+
+public class AmalgamData : IProfessionSpecific {
+	public SkillId ToolbeltSkill2;
+	public SkillId ToolbeltSkill3;
+	public SkillId ToolbeltSkill4;
 }
 
 public enum Legend {

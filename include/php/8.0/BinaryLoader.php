@@ -169,7 +169,7 @@ class BinaryLoader {
 			$code->Food    = $rawSpan->DecodeNext(24);
 			$code->Utility = $rawSpan->DecodeNext(24);
 		}
-		$code->ProfessionSpecific = BinaryLoader::LoadProfessionSpecific($rawSpan, $code->Profession);
+		$code->ProfessionSpecific = BinaryLoader::LoadProfessionSpecific($rawSpan, $code->Profession, $code->Specializations->Choice3->SpecializationId);
 		$code->Arbitrary          = BinaryLoader::LoadArbitrary($rawSpan);
 
 		return $code;
@@ -230,7 +230,7 @@ class BinaryLoader {
 		return $allData;
 	}
 
-	private static function LoadProfessionSpecific(BitReader $rawSpan, int $profession) : IProfessionSpecific
+	private static function LoadProfessionSpecific(BitReader $rawSpan, int $profession, int $eliteSpec) : IProfessionSpecific
 	{
 		switch($profession)
 		{
@@ -254,6 +254,15 @@ class BinaryLoader {
 				}
 				return $data;
 			}
+
+			case Profession::Engineer: if($eliteSpec === SpecializationId::Amalgam) {
+				$data = new AmalgamData();
+				$data->ToolbeltSkill2 = $rawSpan->DecodeNext(24);
+				$data->ToolbeltSkill3 = $rawSpan->DecodeNext(24);
+				$data->ToolbeltSkill4 = $rawSpan->DecodeNext(24);
+				return $data;
+			}
+			// fallthrough
 
 			default: return ProfessionSpecific\NONE::GetInstance();
 		}
@@ -409,6 +418,16 @@ class BinaryLoader {
 					$rawBits->Write($revenantData->AltUtilitySkill1, 24);
 					$rawBits->Write($revenantData->AltUtilitySkill2, 24);
 					$rawBits->Write($revenantData->AltUtilitySkill3, 24);
+				}
+				break;
+
+			case Profession::Engineer:
+				if($code->Specializations->Choice3->SpecializationId === SpecializationId::Amalgam) {
+					/** @var AmalgamData */
+					$amalgamData = $code->ProfessionSpecific;
+					$rawBits->Write($amalgamData->ToolbeltSkill2, 24);
+					$rawBits->Write($amalgamData->ToolbeltSkill3, 24);
+					$rawBits->Write($amalgamData->ToolbeltSkill4, 24);
 				}
 				break;
 		}

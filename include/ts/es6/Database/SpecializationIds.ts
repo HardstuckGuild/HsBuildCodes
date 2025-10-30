@@ -74,4 +74,13 @@ const enum SpecializationId {
 	 Mechanist = 70,
 	 Specter = 71,
 	 Untamed = 72,
+	 Troubadour = 73,
+	 Paragon = 74,
+	 Amalgam = 75,
+	 Ritualist = 76,
+	 Antiquary = 77,
+	 Galeshot = 78,
+	 Conduit = 79,
+	 Evoker = 80,
+	 Luminary = 81,
 }

@@ -194,6 +194,12 @@ class RevenantData implements IProfessionSpecific {
 	public int $AltUtilitySkill3 = SkillId::_UNDEFINED;
 }
 
+class AmalgamData implements IProfessionSpecific {
+	public int $ToolbeltSkill2 = SkillId::_UNDEFINED;
+	public int $ToolbeltSkill3 = SkillId::_UNDEFINED;
+	public int $ToolbeltSkill4 = SkillId::_UNDEFINED;
+}
+
 class Legend {
 	use Util\Enum;
 	use Util\First;

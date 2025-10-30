@@ -176,7 +176,7 @@ public static class BinaryLoader {
 			code.Food    = (ItemId)rawSpan.DecodeNext(24);
 			code.Utility = (ItemId)rawSpan.DecodeNext(24);
 		}
-		code.ProfessionSpecific = LoadProfessionSpecific(ref rawSpan, code.Profession);
+		code.ProfessionSpecific = LoadProfessionSpecific(ref rawSpan, code.Profession, code.Specializations.Choice3.SpecializationId);
 		code.Arbitrary          = LoadArbitrary(ref rawSpan);
 
 		return code;
@@ -237,7 +237,7 @@ public static class BinaryLoader {
 		return allData;
 	}
 
-	private static IProfessionSpecific LoadProfessionSpecific(ref BitReader rawSpan, Profession profession)
+	private static IProfessionSpecific LoadProfessionSpecific(ref BitReader rawSpan, Profession profession, SpecializationId eliteSpec)
 	{
 		switch(profession)
 		{
@@ -255,12 +255,21 @@ public static class BinaryLoader {
 				data.Legend1 = (Legend)rawSpan.DecodeNext(4);
 				if(!rawSpan.EatIfExpected(0, 4)){
 					data.Legend2 = (Legend)rawSpan.DecodeNext(4);
-					rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref data.AltUtilitySkill1, 1, 24);
-					rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref data.AltUtilitySkill2, 1, 24);
-					rawSpan.DecodeNext_WriteMinusMinIfAtLeast(ref data.AltUtilitySkill3, 1, 24);
+					data.AltUtilitySkill1 = (SkillId)rawSpan.DecodeNext(24);
+					data.AltUtilitySkill2 = (SkillId)rawSpan.DecodeNext(24);
+					data.AltUtilitySkill3 = (SkillId)rawSpan.DecodeNext(24);
 				}
 				return data;
 			}
+
+			case Profession.Engineer: if(eliteSpec == SpecializationId.Amalgam) {
+				var data = new AmalgamData();
+				data.ToolbeltSkill2 = (SkillId)rawSpan.DecodeNext(24);
+				data.ToolbeltSkill3 = (SkillId)rawSpan.DecodeNext(24);
+				data.ToolbeltSkill4 = (SkillId)rawSpan.DecodeNext(24);
+				return data;
+			}
+			goto default;
 
 			default: return IProfessionSpecific.NONE.Instance;
 		}
@@ -415,6 +424,16 @@ public static class BinaryLoader {
 					rawBits.Write((int)revenantData.AltUtilitySkill1, 24);
 					rawBits.Write((int)revenantData.AltUtilitySkill2, 24);
 					rawBits.Write((int)revenantData.AltUtilitySkill3, 24);
+				}
+				break;
+
+				
+			case Profession.Engineer:
+				if(code.Specializations.Choice3.SpecializationId == SpecializationId.Amalgam) {
+					var amalgamData = (AmalgamData)code.ProfessionSpecific;
+					rawBits.Write((int)amalgamData.ToolbeltSkill2, 24);
+					rawBits.Write((int)amalgamData.ToolbeltSkill3, 24);
+					rawBits.Write((int)amalgamData.ToolbeltSkill4, 24);
 				}
 				break;
 		}

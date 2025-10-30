@@ -77,4 +77,13 @@ class SpecializationId {
 	public const Mechanist = 70;
 	public const Specter = 71;
 	public const Untamed = 72;
+	public const Troubadour = 73;
+	public const Paragon = 74;
+	public const Amalgam = 75;
+	public const Ritualist = 76;
+	public const Antiquary = 77;
+	public const Galeshot = 78;
+	public const Conduit = 79;
+	public const Evoker = 80;
+	public const Luminary = 81;
 }
