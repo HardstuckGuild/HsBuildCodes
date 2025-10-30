@@ -3,7 +3,7 @@ import ItemId from "./Database/ItemIds";
 import SpecializationId from "./Database/SpecializationIds";
 import { ALL_EQUIPMENT_COUNT, ALL_INFUSION_COUNT, CURRENT_VERSION, ExistsAndIsTwoHanded, FIRST_VERSIONED_VERSION, HasAttributeSlot, HasInfusionSlot } from "./Database/Static";
 import StatId from "./Database/StatIds";
-import { Arbitrary, BuildCode, IArbitrary, IProfessionSpecific, Kind, Legend, PetId, Profession, ProfessionSpecific, RangerData, RevenantData, Specialization, TraitLineChoice, WeaponSet, WeaponType } from "./Structures";
+import { Arbitrary, BuildCode, IArbitrary, IProfessionSpecific, Kind, Legend, PetId, Profession, ProfessionSpecific, RangerData, RevenantData, AmalgamData, Specialization, TraitLineChoice, WeaponSet, WeaponType } from "./Structures";
 import StringView from "./Util/StringView"
 import { AllEquipmentInfusions, AllEquipmentStats, TraitLineChoices } from "./Util/UtilStructs";
 import { Assert, Base64Decode, Base64Encode } from "./Util/Static";
@@ -112,7 +112,7 @@ class TextLoader {
 				code.Utility = TextLoader.DecodeAndAdvance(view, 3);
 		}
 
-		code.ProfessionSpecific = TextLoader.LoadProfessionSpecific(view, code.Profession);
+		code.ProfessionSpecific = TextLoader.LoadProfessionSpecific(view, code.Profession, code.Specializations.Choice3.SpecializationId);
 		code.Arbitrary          = TextLoader.LoadArbitrary(view);
 		return code;
 	}
@@ -176,7 +176,7 @@ class TextLoader {
 		return allData;
 	}
 
-	private static LoadProfessionSpecific(text : StringView, profession : Profession) : IProfessionSpecific
+	private static LoadProfessionSpecific(text : StringView, profession : Profession, eliteSpec : SpecializationId) : IProfessionSpecific
 	{
 		switch(profession)
 		{
@@ -205,6 +205,18 @@ class TextLoader {
 				}
 				return data;
 			}
+
+			case Profession.Engineer: if(eliteSpec == SpecializationId.Amalgam) {
+				const data = new AmalgamData();
+				if(!TextLoader.EatToken(text, '_'))
+					data.ToolbeltSkill2 = TextLoader.DecodeAndAdvance(text, 3);
+				if(!TextLoader.EatToken(text, '_'))
+					data.ToolbeltSkill3 = TextLoader.DecodeAndAdvance(text, 3);
+				if(!TextLoader.EatToken(text, '_'))
+					data.ToolbeltSkill4 = TextLoader.DecodeAndAdvance(text, 3);
+				return data;
+			}
+			// fallthrough
 
 			default: return ProfessionSpecific.NONE.Instance;
 		}
@@ -419,6 +431,22 @@ class TextLoader {
 				else
 				{
 					destination += '__';
+				}
+				break;
+
+			case Profession.Engineer:
+				if(code.Specializations.Choice3.SpecializationId == SpecializationId.Amalgam)
+				{
+					if(code.ProfessionSpecific instanceof AmalgamData)
+					{
+						destination += TextLoader.EncodeOrUnderscoreOnZero(code.ProfessionSpecific.ToolbeltSkill2, 3);
+						destination += TextLoader.EncodeOrUnderscoreOnZero(code.ProfessionSpecific.ToolbeltSkill3, 3);
+						destination += TextLoader.EncodeOrUnderscoreOnZero(code.ProfessionSpecific.ToolbeltSkill4, 3);
+					}
+					else
+					{
+						destination += '___';
+					}
 				}
 				break;
 		}

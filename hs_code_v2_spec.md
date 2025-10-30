@@ -2,6 +2,7 @@
 
 ## Edits
 2023-08-23: Added Relics after the release of the 'Secrets of the Obscure' expansion.
+2025-10-30: Added Amalgam toolbelt selected skills to profession specific section.
 
 ## Ethos
 The following considerations were taken into account in descending priority:
@@ -117,6 +118,10 @@ V T P S.TS.TS.T WS..wS..WS..wS.. S..S..S..S..S.. R.. R.. A..n,,,, I..n,,,, F..U.
        - `_` (underscore): empty alternate legend utility skill slot
        - `1-3 characters`: alternate legend utility skill id resolved by `/v2/skills`, `encode(id, 3)`
        - omit whole block if second legend is empty
+  - Amalgam F2-F4 Skills: [3-9 characters]
+    - 3 times
+      - `_` (underscore): if empty
+      - `1-3 characters`: skill id resolved by `/v2/skills`, `encode(id, 3)`
     
 ### A note on underwater Codes:
 There are no special fields defined for handling underwater data. To define underwater data just make the following adjustments:
@@ -197,6 +202,9 @@ or
 
 	repeat 3. alternate legend skills. omit if legend 2 is empty
 		24 : 0 if empty, Skill id otherwise
+or
+  repeat 3.
+    24 : 0 if empty, Skill id otherwise
 ```
-(406 <-> 482) bits / 8 * 4/3 = (68 <-> 81) chars.
+(407 <-> 483) bits / 8 * 4/3 = (68 <-> 81) chars.
 Interestingly only about 12 chars (~ 20%) less than the textual representation, the encoding _does_ expand it a lot.

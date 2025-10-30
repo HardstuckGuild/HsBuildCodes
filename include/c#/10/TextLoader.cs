@@ -116,7 +116,7 @@ public static class TextLoader {
 				code.Utility = (ItemId)DecodeAndAdvance(ref text, 3);
 		}
 
-		code.ProfessionSpecific = LoadProfessionSpecific(ref text, code.Profession);
+		code.ProfessionSpecific = LoadProfessionSpecific(ref text, code.Profession, code.Specializations.Choice3.SpecializationId);
 		code.Arbitrary          = LoadArbitrary(ref text);
 		return code;
 	}
@@ -180,7 +180,7 @@ public static class TextLoader {
 		return allData;
 	}
 
-	private static IProfessionSpecific LoadProfessionSpecific(ref ReadOnlySpan<char> text, Profession profession)
+	private static IProfessionSpecific LoadProfessionSpecific(ref ReadOnlySpan<char> text, Profession profession, SpecializationId eliteSpec)
 	{
 		switch(profession)
 		{
@@ -209,6 +209,18 @@ public static class TextLoader {
 				}
 				return data;
 			}
+
+			case Profession.Engineer: if(eliteSpec == SpecializationId.Amalgam) {
+				var data = new AmalgamData();
+				if(!EatToken(ref text, '_'))
+					data.ToolbeltSkill2 = (SkillId)DecodeAndAdvance(ref text, 3);
+				if(!EatToken(ref text, '_'))
+					data.ToolbeltSkill3 = (SkillId)DecodeAndAdvance(ref text, 3);
+				if(!EatToken(ref text, '_'))
+					data.ToolbeltSkill4 = (SkillId)DecodeAndAdvance(ref text, 3);
+				return data;
+			}
+			goto default;
 
 			default: return IProfessionSpecific.NONE.Instance;
 		}
@@ -428,6 +440,24 @@ public static class TextLoader {
 				{
 					WriteAndAdvance(ref destination, '_');
 					WriteAndAdvance(ref destination, '_');
+				}
+				break;
+
+			case Profession.Engineer:
+				if(code.Specializations.Choice3.SpecializationId == SpecializationId.Amalgam)
+				{
+					if(code.ProfessionSpecific is AmalgamData amalgamData)
+					{
+						EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)amalgamData.ToolbeltSkill2, 3);
+						EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)amalgamData.ToolbeltSkill3, 3);
+						EncodeOrUnderscoreOnZeroAndAdvance(ref destination, (int)amalgamData.ToolbeltSkill4, 3);
+					}
+					else
+					{
+						WriteAndAdvance(ref destination, '_');
+						WriteAndAdvance(ref destination, '_');
+						WriteAndAdvance(ref destination, '_');
+					}
 				}
 				break;
 		}

@@ -152,6 +152,12 @@ export class RevenantData implements IProfessionSpecific {
 	public AltUtilitySkill3 : SkillId = SkillId._UNDEFINED;
 }
 
+export class AmalgamData implements IProfessionSpecific {
+	public ToolbeltSkill2 : SkillId = SkillId._UNDEFINED;
+	public ToolbeltSkill3 : SkillId = SkillId._UNDEFINED;
+	public ToolbeltSkill4 : SkillId = SkillId._UNDEFINED;
+}
+
 export enum Legend {
 	_UNDEFINED = 0,
 	_FIRST = 1,
