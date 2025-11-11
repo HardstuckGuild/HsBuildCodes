@@ -70,6 +70,8 @@ jobs:
       run: npm test
 
   build-and-publish-nuget:
+    permissions:
+      id-token: write
     needs: [ XUnit, PHPUnit, Jest ]
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -98,8 +100,12 @@ jobs:
 
     - name: Pack
       run: dotnet pack include/c#/10 --configuration Release --no-build --output .
+
+    - name: Login
+      uses: NuGet/login@v1
+      id: login
+      with:
+        user: ${{ secrets.NUGET_USER_NAME }}
       
     - name: Push
-      run: dotnet nuget push "*.${VERSION}.nupkg" -k ${NUGET_API_KEY} -s https://api.nuget.org/v3/index.json
-      env:
-        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      run: dotnet nuget push "*.${VERSION}.nupkg" -k ${{ steps.login.outputs.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
